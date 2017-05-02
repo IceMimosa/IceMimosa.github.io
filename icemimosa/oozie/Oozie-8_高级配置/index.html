@@ -100,7 +100,7 @@
     </p>
   <p class="article-time">
     <time datetime="2016-07-16T07:30:16.000Z" itemprop="datePublished">2016-07-16</time>
-    更新日期:<time datetime="2016-10-08T05:04:46.000Z" itemprop="dateModified">2016-10-08</time>
+    更新日期:<time datetime="2016-12-10T10:42:40.000Z" itemprop="dateModified">2016-12-10</time>
     
   </p>
 </header>
@@ -109,7 +109,7 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oozie-8-高级配置"><span class="toc-text">Oozie-8_高级配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-时区的配置"><span class="toc-text">1. 时区的配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-High-Availability-HA"><span class="toc-text">2. High Availability (HA)</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oozie-8-高级配置"><span class="toc-text">Oozie-8_高级配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-时区的配置"><span class="toc-text">1. 时区的配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-oozie-launcher-分队列运行"><span class="toc-text">2. oozie launcher 分队列运行</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-High-Availability-HA"><span class="toc-text">3. High Availability (HA)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-三方jar"><span class="toc-text">4. 三方jar</span></a></li></ol>
 		</div>
 		
 		<h1 id="Oozie-8-高级配置"><a href="#Oozie-8-高级配置" class="headerlink" title="Oozie-8_高级配置"></a>Oozie-8_高级配置</h1><p>[TOC]</p>
@@ -122,7 +122,21 @@
 <li>以后提交 Coordinator Job 的时候，修改参数如下：</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">1. 修改 timezone 为 GMT+0800</div><div class="line">2. 修改 start 和 end 时间格式，比如以前是 2016-01-01T00:00Z 的格式。那么现在需要修改成 2016-01-01T00:00+0800 的格式，然后提交</div></pre></td></tr></table></figure>
-<h1 id="2-High-Availability-HA"><a href="#2-High-Availability-HA" class="headerlink" title="2. High Availability (HA)"></a>2. High Availability (HA)</h1><p>Oozie允许针对同一台数据库建立 许多的 <code>Oozie Servers</code>，来提供高可用的 Oozie 服务。</p>
+<h1 id="2-oozie-launcher-分队列运行"><a href="#2-oozie-launcher-分队列运行" class="headerlink" title="2. oozie launcher 分队列运行"></a>2. oozie launcher 分队列运行</h1><p>场景：比如一个oozie任务里面有个sqoop任务，那么在提交给yarn执行的时候是会分成两个任务执行的。即 <code>oozie launcher</code> 和 <code>action(sqoop)</code>两个任务。且默认情况下是在一个队列中执行。由于一个队列执行的任务数量有限(可配置)，当多个<code>oozie launcher</code> 同时执行时，<code>action(sqoop)</code>任务没法开启。。这样就会<code>导致死锁</code>的问题。</p>
+<blockquote>
+<p>参考：</p>
+</blockquote>
+<ul>
+<li><a href="http://www.lamborryan.com/oozie-action-dead-lock/" target="_blank" rel="external">http://www.lamborryan.com/oozie-action-dead-lock/</a></li>
+<li><a href="http://stackoverflow.com/questions/27653937/error-on-running-multiple-workflow-in-oozie-4-1-0/27855432#27855432" target="_blank" rel="external">http://stackoverflow.com/questions/27653937/error-on-running-multiple-workflow-in-oozie-4-1-0/27855432#27855432</a></li>
+<li><a href="http://stackoverflow.com/questions/32438052/job-queue-for-hive-action-in-oozie" target="_blank" rel="external">http://stackoverflow.com/questions/32438052/job-queue-for-hive-action-in-oozie</a></li>
+<li><a href="http://www.163java.com/l/7490801483380675428/hadoop-oozie-hivehuepig" target="_blank" rel="external">http://www.163java.com/l/7490801483380675428/hadoop-oozie-hivehuepig</a></li>
+</ul>
+<blockquote>
+<p>解决：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">## 公平调度器的参考：</div><div class="line">* http://t.dbdao.com/archives/hadoop-fair-scheduler.html</div><div class="line">* http://hadoop.apache.org/docs/r2.6.0/hadoop-yarn/hadoop-yarn-site/FairScheduler.html</div><div class="line"></div><div class="line">在使用hadoop 公平调度器的情况下，在oozie的执行任务中加入配置（可以是全局配置）如下：</div><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;oozie.launcher.mapred.job.queue.name&lt;/name&gt;</div><div class="line">	&lt;value&gt;oozie&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"></div><div class="line">## 这样 oozie launcher 就会在 oozie 的队列中执行，而其他类型的任务还是像以前一样指定执行队列即可。</div></pre></td></tr></table></figure>
+<h1 id="3-High-Availability-HA"><a href="#3-High-Availability-HA" class="headerlink" title="3. High Availability (HA)"></a>3. High Availability (HA)</h1><p>Oozie允许针对同一台数据库建立 许多的 <code>Oozie Servers</code>，来提供高可用的 Oozie 服务。</p>
 <blockquote>
 <p>前提：</p>
 </blockquote>
@@ -144,6 +158,7 @@
 <ul>
 <li>1、正常配个多个Oozie Servers（配置一致）。确保它们连接的同一台数据库，且 不要启动它们 。</li>
 </ul>
+<h1 id="4-三方jar"><a href="#4-三方jar" class="headerlink" title="4. 三方jar"></a>4. 三方jar</h1><p><a href="http://blog.csdn.net/bluishglc/article/details/46005269" target="_blank" rel="external">http://blog.csdn.net/bluishglc/article/details/46005269</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -173,10 +188,10 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/icemimosa/oozie/Oozie-7_Java API/" title="Oozie-7_Java API">
+ <a href="/icemimosa/hive/Hive-1_安装配置/" title="Hive-1_安装配置">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  Oozie-7_Java API</span>
+  Hive-1_安装配置</span>
 </a>
 </div>
 
@@ -204,7 +219,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oozie-8-高级配置"><span class="toc-text">Oozie-8_高级配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-时区的配置"><span class="toc-text">1. 时区的配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-High-Availability-HA"><span class="toc-text">2. High Availability (HA)</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oozie-8-高级配置"><span class="toc-text">Oozie-8_高级配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-时区的配置"><span class="toc-text">1. 时区的配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-oozie-launcher-分队列运行"><span class="toc-text">2. oozie launcher 分队列运行</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-High-Availability-HA"><span class="toc-text">3. High Availability (HA)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-三方jar"><span class="toc-text">4. 三方jar</span></a></li></ol>
   </div>
 
 <div id="asidepart">
@@ -235,11 +250,15 @@
 	<p class="asidetitle">分类</p>
 		<ul>
 		
-			<li><a href="/categories/hive/" title="hive">hive<sup>5</sup></a></li>
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>1</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>10</sup></a></li>
 		
 			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
 		
-			<li><a href="/categories/oozie/" title="oozie">oozie<sup>9</sup></a></li>
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
 		
 		</ul>
 </div>
@@ -250,13 +269,17 @@
 	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
 		
-			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>5</sup></a></li>
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>10</sup></a></li>
 		
-			<li><a href="/tags/hive/" title="hive">hive<sup>5</sup></a></li>
+			<li><a href="/tags/hive/" title="hive">hive<sup>10</sup></a></li>
 		
 			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
 		
-			<li><a href="/tags/oozie/" title="oozie">oozie<sup>9</sup></a></li>
+			<li><a href="/tags/mac/" title="mac">mac<sup>1</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
 		</ul>
 </div>
@@ -270,7 +293,7 @@
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/hadoop/" style="font-size: 15px;">hadoop</a> <a href="/tags/hive/" style="font-size: 15px;">hive</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/oozie/" style="font-size: 20px;">oozie</a>
+       <a href="/tags/hadoop/" style="font-size: 20px;">hadoop</a> <a href="/tags/hive/" style="font-size: 20px;">hive</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/mac/" style="font-size: 10px;">mac</a> <a href="/tags/oozie/" style="font-size: 20px;">oozie</a> <a href="/tags/sqoop/" style="font-size: 15px;">sqoop</a>
     </div>
   </div>
 

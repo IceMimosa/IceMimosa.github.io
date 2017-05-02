@@ -89,21 +89,17 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/icemimosa/hive/Hive-3_DML使用/" title="Hive-3_DML使用" itemprop="url">
+    <a href="/icemimosa/hive/hive解决元数据乱码/" title="hive解决元数据乱码" itemprop="url">
   
-      <time datetime="2016-09-04T07:30:16.000Z" itemprop="datePublished">2016-09-04</time>
-    <h1 itemprop="name">Hive-3_DML使用</h1>
+      <time datetime="2016-11-24T07:30:16.000Z" itemprop="datePublished">2016-11-24</time>
+    <h1 itemprop="name">hive解决元数据乱码</h1>
     
      
-           <p itemprop="description" >Hive-3_DML使用[TOC]
+           <p itemprop="description" >hive解决元数据乱码1. 修改hive表由于 Cloudera Manager 安装的hive的元数据(如在mysql中)的编码是 latin1, 所以在各种有 COMMENT 是中文的情况下各种乱码。
 
-原文参考
+注意：不要修改hive整库的编码，会有问题，报错如下：
 
-1. Loading files into tablesload 数据到hive表中是不会对数据进行转化的, 其实load的操作就是数据文件直接move/copy到hive表中。
-
-语法
-
-1LOAD DATA [LOCAL] I</p>
+12FAILE</p>
         
     
   </a>
@@ -111,19 +107,15 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/icemimosa/hive/Hive-2_DDL使用/" title="Hive-2_DDL使用" itemprop="url">
+    <a href="/icemimosa/hive/压缩hive表流程/" title="parquet压缩hive表" itemprop="url">
   
-      <time datetime="2016-09-04T07:30:16.000Z" itemprop="datePublished">2016-09-04</time>
-    <h1 itemprop="name">Hive-2_DDL使用</h1>
+      <time datetime="2016-11-24T07:30:16.000Z" itemprop="datePublished">2016-11-24</time>
+    <h1 itemprop="name">parquet压缩hive表</h1>
     
      
-           <p itemprop="description" >Hive-2_DDL使用[TOC]
-1. DDL (Hive Data Definition Language) 概述和一般的RDBMS一样，Hive也有自己的DDL语句。且不管是DDL，还是DML，感觉都和mysql很相似。
-
-Hive DDL 大致包括如下：
-
-
-CREATE</p>
+           <p itemprop="description" >[TOC]
+parquet压缩hive表1. 应用场景原表为txt格式，占用硬盘空间太大，hive支持 parquet格式，所以将原表更新为利用parquet格式，来压缩该表占用的硬盘空间。
+2. 压缩过程1. 建立新表show create table TABLE_NAME ;</p>
         
     
   </a>
@@ -131,20 +123,15 @@ CREATE</p>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/icemimosa/hive/Hive-4_Select语句/" title="Hive-4_Select语句" itemprop="url">
+    <a href="/icemimosa/hadoop/删除MacOS X文件系统的附加属性@符号/" title="删除MacOS X文件系统的附加属性@" itemprop="url">
   
-      <time datetime="2016-09-04T07:30:16.000Z" itemprop="datePublished">2016-09-04</time>
-    <h1 itemprop="name">Hive-4_Select语句</h1>
+      <time datetime="2016-10-25T07:30:16.000Z" itemprop="datePublished">2016-10-25</time>
+    <h1 itemprop="name">删除MacOS X文件系统的附加属性@</h1>
     
      
-           <p itemprop="description" >Hive-4_Select语句[TOC]
-
-参考 LanguageManual Select
-
-1. select 语句
-语法
-
-12345678910[WITH CommonTableExpression (, CommonTableExpression)*]    (Note</p>
+           <p itemprop="description" >删除MacOS X文件系统的附加属性@场景：之前手贱，一不小心删除了Hdfs的一个目录。还好之前做了备份，但是只是备份整个电脑的，所以只将里面的关于HDFS的备份拿出来。
+但是拿过来之后有个问题, 目录最后多了个@符号：
+123456&amp;gt; lldrwxr-xr-x@   4 </p>
         
     
   </a>
@@ -152,15 +139,18 @@ CREATE</p>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/icemimosa/hive/Hive-5_UDF/" title="Hive-5_UDF" itemprop="url">
+    <a href="/icemimosa/hive/hive处理增量数据/" title="hive处理增量数据" itemprop="url">
   
-      <time datetime="2016-09-04T07:30:16.000Z" itemprop="datePublished">2016-09-04</time>
-    <h1 itemprop="name">Hive-5_UDF</h1>
+      <time datetime="2016-10-25T07:30:16.000Z" itemprop="datePublished">2016-10-25</time>
+    <h1 itemprop="name">hive处理增量数据</h1>
     
      
-           <p itemprop="description" >Hive-5_UDF[TOC]
+           <p itemprop="description" >[TOC]
+hive处理增量数据1. 场景
+前提：通过 Sqoop 拉取的数据含有 主键 或者 唯一键
+场景：每天 按时间 或者 其他列值 增量拉取数据, 如下
 
-参考 UDF</p>
+123每天按照时间(如更新时间updated_at)，来增量拉取数据。然后把每天的拉取的数据，增量放入到hive表中</p>
         
     
   </a>
@@ -168,16 +158,13 @@ CREATE</p>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/icemimosa/hive/Hive-1_安装配置/" title="Hive-1_安装配置" itemprop="url">
+    <a href="/icemimosa/hive/hive导入数据的一些方式/" title="hive导入数据的一些方式" itemprop="url">
   
-      <time datetime="2016-09-03T07:30:16.000Z" itemprop="datePublished">2016-09-03</time>
-    <h1 itemprop="name">Hive-1_安装配置</h1>
+      <time datetime="2016-10-25T07:30:16.000Z" itemprop="datePublished">2016-10-25</time>
+    <h1 itemprop="name">hive导入数据的一些方式</h1>
     
      
-           <p itemprop="description" >Hive-1_安装配置[TOC]
-1. 节点Apache Hive是基于分布式存储（Hadoop HDFS）的一个数据仓库。它可以通过 SQL 很方便的读写、管理上面的庞大的数据集。用户可以通过 命令行 和 JDBC Driver 连接Hive并使用。
-2. 下载和安装
-下载地址</p>
+           <p itemprop="description" >hive导入数据的一些方式Hive 五种数据导入方式介绍</p>
         
     
   </a>
@@ -185,14 +172,17 @@ CREATE</p>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/icemimosa/oozie/Oozie-8_高级配置/" title="Oozie-8_高级配置" itemprop="url">
+    <a href="/icemimosa/hive/hive表动态分区/" title="Hive表动态分区" itemprop="url">
   
-      <time datetime="2016-07-16T07:30:16.000Z" itemprop="datePublished">2016-07-16</time>
-    <h1 itemprop="name">Oozie-8_高级配置</h1>
+      <time datetime="2016-10-24T07:30:16.000Z" itemprop="datePublished">2016-10-24</time>
+    <h1 itemprop="name">Hive表动态分区</h1>
     
      
-           <p itemprop="description" >Oozie-8_高级配置[TOC]
-1. 时区的配置由于Oozie默认使用的是 UTC 的时区，所以我们在提交 Coordinator Job的时候，会发现启动和结束等时间不对。由于中国在东八区，一种方式是可以将时间减去8h，来表示Oozie的执行时间（有点混乱，不推荐）。还有种</p>
+           <p itemprop="description" >Hive表动态分区[TOC]
+1. 动态分区应用场景
+静态分区和动态分区的区别在于导入数据时，是手动输入分区名称，还是通过数据来判断数据分区。对于大数据批量导入来说，显然采用动态分区更为简单方便。  
+
+应用场景为，若需要导入一个系统的历史数据，且这些历史数据的数据量较大，需要根</p>
         
     
   </a>
@@ -200,13 +190,14 @@ CREATE</p>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/icemimosa/oozie/Oozie搭建常见问题/" title="Oozie搭建常见问题" itemprop="url">
+    <a href="/icemimosa/sqoop/sqoop增量导出问题/" title="sqoop增量导出问题" itemprop="url">
   
-      <time datetime="2016-07-16T07:30:16.000Z" itemprop="datePublished">2016-07-16</time>
-    <h1 itemprop="name">Oozie搭建常见问题</h1>
+      <time datetime="2016-10-14T07:30:16.000Z" itemprop="datePublished">2016-10-14</time>
+    <h1 itemprop="name">sqoop增量导出问题</h1>
     
      
-           <p itemprop="description" >Oozie搭建常见问题1. Could not lookup launched hadoop Job ID 错误1234###  比如：JA017: Could not lookup launched hadoop Job ID [job_1468396821235_0004] </p>
+           <p itemprop="description" >#sqoop增量导出问题  
+##1、未分区表1、默认情况；1sqoop  export  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table dwd_test</p>
         
     
   </a>
@@ -214,16 +205,23 @@ CREATE</p>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/icemimosa/oozie/Oozie-7_Java API/" title="Oozie-7_Java API" itemprop="url">
+    <a href="/icemimosa/sqoop/Sqoop源码改造/" title="Sqoop 源码改造" itemprop="url">
   
-      <time datetime="2016-07-15T07:30:16.000Z" itemprop="datePublished">2016-07-15</time>
-    <h1 itemprop="name">Oozie-7_Java API</h1>
+      <time datetime="2016-10-13T07:30:16.000Z" itemprop="datePublished">2016-10-13</time>
+    <h1 itemprop="name">Sqoop 源码改造</h1>
     
      
-           <p itemprop="description" >Oozie-7_Java API1. 一个简单的例子
-依赖包
+           <p itemprop="description" >1. 要求
+sqoop-1.4.6-cdh5.7.1
+参见 RRADME.txt
 
-12345&amp;lt;dependency&amp;gt;	&amp;lt;groupId&amp;gt;org.apache.oozie&amp;lt;/groupId&amp;gt;	&amp;lt;artifactId&amp;gt;oozie-client&amp;lt;/a</p>
+2. 编译项目
+参见 COMPILING.txt
+
+
+ant jar : 漫长的编译过程, 打开vpn啥的试试
+编译完了会在 build 目录下生成jar
+命令测试：bin/sqoop 即可，如果</p>
         
     
   </a>
@@ -231,15 +229,14 @@ CREATE</p>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/icemimosa/oozie/Oozie-6_Web Service API/" title="Oozie-6_Web Service API" itemprop="url">
+    <a href="/icemimosa/sqoop/Sqoop命令/" title="Sqoop命令" itemprop="url">
   
-      <time datetime="2016-07-14T07:30:16.000Z" itemprop="datePublished">2016-07-14</time>
-    <h1 itemprop="name">Oozie-6_Web Service API</h1>
+      <time datetime="2016-10-12T07:30:16.000Z" itemprop="datePublished">2016-10-12</time>
+    <h1 itemprop="name">Sqoop命令</h1>
     
      
-           <p itemprop="description" >Oozie-6_Web Service API[TOC]
-1. 简介The Oozie Web Services API is a HTTP REST JSON API.All responses are in UTF-8 .
-Assuming Oozie is runing a</p>
+           <p itemprop="description" >Sqoop命令1. sqoop导入基本命令
+1sqoop  import  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table bvs_users  --fie</p>
         
     
   </a>
@@ -247,21 +244,17 @@ Assuming Oozie is runing a</p>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/icemimosa/oozie/Oozie-5_ Bundle定义/" title="Oozie-5_ Bundle定义" itemprop="url">
+    <a href="/icemimosa/oozie/Oozie-9_自定义UDF和Action节点/" title="Oozie-9_自定义UDF和Action节点" itemprop="url">
   
-      <time datetime="2016-07-13T07:30:16.000Z" itemprop="datePublished">2016-07-13</time>
-    <h1 itemprop="name">Oozie-5_ Bundle定义</h1>
+      <time datetime="2016-10-10T07:30:16.000Z" itemprop="datePublished">2016-10-10</time>
+    <h1 itemprop="name">Oozie-9_自定义UDF和Action节点</h1>
     
      
-           <p itemprop="description" >Oozie-5_ Bundle定义[TOC]
-1. 简介Bundle 是一个最高级的抽象，包含一系列的 coordinator applications。
+           <p itemprop="description" >[TOC]
+Oozie-9_自定义UDF和Action节点1. 自定义UDF有的时候oozie提供的EL函数没法满足需求，这个时候就需要对oozie的udf进行扩展。
 
-大致与 Coordinator 和 Workflow job 的关系如下
-
-
-Bundle Job的状态和生命周期
-
-Bu</p>
+新建maven工程项目，这里的pom最好使用oozie项目自身的pom(在oozie的目录下可以找到)
+然后我</p>
         
     
   </a>
@@ -269,7 +262,7 @@ Bu</p>
 
 
   <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
   </nav>
 
 </div>
@@ -303,11 +296,15 @@ Bu</p>
 	<p class="asidetitle">分类</p>
 		<ul>
 		
-			<li><a href="/categories/hive/" title="hive">hive<sup>5</sup></a></li>
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>1</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>10</sup></a></li>
 		
 			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
 		
-			<li><a href="/categories/oozie/" title="oozie">oozie<sup>9</sup></a></li>
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
 		
 		</ul>
 </div>
@@ -318,13 +315,17 @@ Bu</p>
 	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
 		
-			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>5</sup></a></li>
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>10</sup></a></li>
 		
-			<li><a href="/tags/hive/" title="hive">hive<sup>5</sup></a></li>
+			<li><a href="/tags/hive/" title="hive">hive<sup>10</sup></a></li>
 		
 			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
 		
-			<li><a href="/tags/oozie/" title="oozie">oozie<sup>9</sup></a></li>
+			<li><a href="/tags/mac/" title="mac">mac<sup>1</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
 		</ul>
 </div>
@@ -338,7 +339,7 @@ Bu</p>
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/hadoop/" style="font-size: 15px;">hadoop</a> <a href="/tags/hive/" style="font-size: 15px;">hive</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/oozie/" style="font-size: 20px;">oozie</a>
+       <a href="/tags/hadoop/" style="font-size: 20px;">hadoop</a> <a href="/tags/hive/" style="font-size: 20px;">hive</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/mac/" style="font-size: 10px;">mac</a> <a href="/tags/oozie/" style="font-size: 20px;">oozie</a> <a href="/tags/sqoop/" style="font-size: 15px;">sqoop</a>
     </div>
   </div>
 

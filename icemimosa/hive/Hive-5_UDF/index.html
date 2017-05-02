@@ -14,7 +14,13 @@
     
     <meta name="description" content="Hive-5_UDF[TOC]
 
-参考 UDF">
+参考 UDF
+
+In Beeline or the CLI, use the commands below to show the latest documentation
+
+语法:
+
+123SHOW FUNCTIONS;DESCRIBE FUNCTION &amp;lt;">
     
     
     
@@ -98,8 +104,8 @@
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-09-04T07:30:16.000Z" itemprop="datePublished">2016-09-04</time>
-    更新日期:<time datetime="2016-09-27T07:45:46.000Z" itemprop="dateModified">2016-09-27</time>
+    <time datetime="2016-09-24T07:30:16.000Z" itemprop="datePublished">2016-09-24</time>
+    更新日期:<time datetime="2016-10-14T06:08:35.000Z" itemprop="dateModified">2016-10-14</time>
     
   </p>
 </header>
@@ -108,13 +114,43 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hive-5-UDF"><span class="toc-text">Hive-5_UDF</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hive-5-UDF"><span class="toc-text">Hive-5_UDF</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-内置的操作符-Operators"><span class="toc-text">1. 内置的操作符(Operators)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-关系型操作符"><span class="toc-text">1.1 关系型操作符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-算数操作符"><span class="toc-text">1.2 算数操作符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-逻辑操作符"><span class="toc-text">1.3 逻辑操作符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-混合类型和操作"><span class="toc-text">1.4 混合类型和操作</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-内置的方法-Functions"><span class="toc-text">2. 内置的方法(Functions)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-算数方法"><span class="toc-text">2.1 算数方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-集合方法"><span class="toc-text">2.2 集合方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-类型转换"><span class="toc-text">2.3 类型转换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-时间方法"><span class="toc-text">2.4 时间方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-条件方法"><span class="toc-text">2.5 条件方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-6-String方法"><span class="toc-text">2.6 String方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-7-数据掩饰方法"><span class="toc-text">2.7 数据掩饰方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-8-其他方法"><span class="toc-text">2.8 其他方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-内置的统计方法-UDAF"><span class="toc-text">3. 内置的统计方法(UDAF)</span></a></li></ol>
 		</div>
 		
 		<h1 id="Hive-5-UDF"><a href="#Hive-5-UDF" class="headerlink" title="Hive-5_UDF"></a>Hive-5_UDF</h1><p>[TOC]</p>
 <blockquote>
 <p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF" target="_blank" rel="external">参考 UDF</a></p>
 </blockquote>
+<p>In <a href="https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients#HiveServer2Clients-Beeline–NewCommandLineShell" target="_blank" rel="external">Beeline</a> or the <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Cli" target="_blank" rel="external">CLI</a>, use the commands below to show the latest documentation</p>
+<ul>
+<li>语法:</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SHOW</span> FUNCTIONS;</div><div class="line"><span class="keyword">DESCRIBE</span> <span class="keyword">FUNCTION</span> &lt;function_name&gt;;</div><div class="line"><span class="keyword">DESCRIBE</span> <span class="keyword">FUNCTION</span> <span class="keyword">EXTENDED</span> &lt;function_name&gt;;</div></pre></td></tr></table></figure>
+<ul>
+<li>注：很多方法可能存在版本的问题，使用请参考</li>
+</ul>
+<h1 id="1-内置的操作符-Operators"><a href="#1-内置的操作符-Operators" class="headerlink" title="1. 内置的操作符(Operators)"></a>1. 内置的操作符(Operators)</h1><h2 id="1-1-关系型操作符"><a href="#1-1-关系型操作符" class="headerlink" title="1.1 关系型操作符"></a>1.1 关系型操作符</h2><p>返回 <code>TRUE</code> 和 <code>FALSE</code> 值的一些操作，比如 <code>=</code>, <code>==</code>, <code>!=</code> 等等</p>
+<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-RelationalOperators" target="_blank" rel="external">Relational Operators</a></p>
+<h2 id="1-2-算数操作符"><a href="#1-2-算数操作符" class="headerlink" title="1.2 算数操作符"></a>1.2 算数操作符</h2><p>比如 <code>-</code>, <code>+</code>, 等等</p>
+<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-ArithmeticOperators" target="_blank" rel="external">Arithmetic Operators</a></p>
+<h2 id="1-3-逻辑操作符"><a href="#1-3-逻辑操作符" class="headerlink" title="1.3 逻辑操作符"></a>1.3 逻辑操作符</h2><p>如 <code>&amp;&amp;</code>, <code>||</code>, <code>IN</code> 等等</p>
+<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-LogicalOperators" target="_blank" rel="external">Logical Operators</a></p>
+<h2 id="1-4-混合类型和操作"><a href="#1-4-混合类型和操作" class="headerlink" title="1.4 混合类型和操作"></a>1.4 混合类型和操作</h2><p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-ComplexTypeConstructors" target="_blank" rel="external">Complex Type</a></p>
+<h1 id="2-内置的方法-Functions"><a href="#2-内置的方法-Functions" class="headerlink" title="2. 内置的方法(Functions)"></a>2. 内置的方法(Functions)</h1><h2 id="2-1-算数方法"><a href="#2-1-算数方法" class="headerlink" title="2.1 算数方法"></a>2.1 算数方法</h2><p>如 <code>round方法</code>, <code>abs方法</code>等等。如果值为 null 的话，返回为 null</p>
+<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-MathematicalFunctions" target="_blank" rel="external">Mathematical Functions</a></p>
+<h2 id="2-2-集合方法"><a href="#2-2-集合方法" class="headerlink" title="2.2 集合方法"></a>2.2 集合方法</h2><p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-CollectionFunctions" target="_blank" rel="external">Collection Functions</a></p>
+<h2 id="2-3-类型转换"><a href="#2-3-类型转换" class="headerlink" title="2.3 类型转换"></a>2.3 类型转换</h2><p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-TypeConversionFunctions" target="_blank" rel="external">Type Conversion Functions</a></p>
+<h2 id="2-4-时间方法"><a href="#2-4-时间方法" class="headerlink" title="2.4 时间方法"></a>2.4 时间方法</h2><p>如 <code>current_date方法</code>, <code>date_format方法</code> 等等</p>
+<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-DateFunctions" target="_blank" rel="external">Date Functions</a></p>
+<h2 id="2-5-条件方法"><a href="#2-5-条件方法" class="headerlink" title="2.5 条件方法"></a>2.5 条件方法</h2><p>如 <code>isnull</code>, <code>CASE WHEN</code> 等等</p>
+<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-ConditionalFunctions" target="_blank" rel="external">Conditional Functions</a></p>
+<h2 id="2-6-String方法"><a href="#2-6-String方法" class="headerlink" title="2.6 String方法"></a>2.6 String方法</h2><p>如 <code>concat</code>, <code>decode</code>, <code>lower</code> 等等</p>
+<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-StringFunctions" target="_blank" rel="external">String Functions</a></p>
+<h2 id="2-7-数据掩饰方法"><a href="#2-7-数据掩饰方法" class="headerlink" title="2.7 数据掩饰方法"></a>2.7 数据掩饰方法</h2><p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-DataMaskingFunctions" target="_blank" rel="external">Data Masking Functions</a></p>
+<h2 id="2-8-其他方法"><a href="#2-8-其他方法" class="headerlink" title="2.8 其他方法"></a>2.8 其他方法</h2><p>如 <code>reflect</code>, <code>current_database</code>, <code>md5</code> 等等</p>
+<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-Misc.Functions" target="_blank" rel="external">Misc. Functions</a></p>
+<h1 id="3-内置的统计方法-UDAF"><a href="#3-内置的统计方法-UDAF" class="headerlink" title="3. 内置的统计方法(UDAF)"></a>3. 内置的统计方法(UDAF)</h1><p>如 <code>count</code>, <code>sum</code>, <code>avg</code> 等等</p>
+<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-Built-inAggregateFunctions(UDAF)" target="_blank" rel="external">Built-in Aggregate Functions</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -144,10 +180,10 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/icemimosa/hive/Hive-1_安装配置/" title="Hive-1_安装配置">
+ <a href="/icemimosa/oozie/Oozie-9_自定义UDF和Action节点/" title="Oozie-9_自定义UDF和Action节点">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  Hive-1_安装配置</span>
+  Oozie-9_自定义UDF和Action节点</span>
 </a>
 </div>
 
@@ -175,7 +211,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hive-5-UDF"><span class="toc-text">Hive-5_UDF</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hive-5-UDF"><span class="toc-text">Hive-5_UDF</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-内置的操作符-Operators"><span class="toc-text">1. 内置的操作符(Operators)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-关系型操作符"><span class="toc-text">1.1 关系型操作符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-算数操作符"><span class="toc-text">1.2 算数操作符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-逻辑操作符"><span class="toc-text">1.3 逻辑操作符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-混合类型和操作"><span class="toc-text">1.4 混合类型和操作</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-内置的方法-Functions"><span class="toc-text">2. 内置的方法(Functions)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-算数方法"><span class="toc-text">2.1 算数方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-集合方法"><span class="toc-text">2.2 集合方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-类型转换"><span class="toc-text">2.3 类型转换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-时间方法"><span class="toc-text">2.4 时间方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-条件方法"><span class="toc-text">2.5 条件方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-6-String方法"><span class="toc-text">2.6 String方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-7-数据掩饰方法"><span class="toc-text">2.7 数据掩饰方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-8-其他方法"><span class="toc-text">2.8 其他方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-内置的统计方法-UDAF"><span class="toc-text">3. 内置的统计方法(UDAF)</span></a></li></ol>
   </div>
 
 <div id="asidepart">
@@ -206,11 +242,15 @@
 	<p class="asidetitle">分类</p>
 		<ul>
 		
-			<li><a href="/categories/hive/" title="hive">hive<sup>5</sup></a></li>
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>1</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>10</sup></a></li>
 		
 			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
 		
-			<li><a href="/categories/oozie/" title="oozie">oozie<sup>9</sup></a></li>
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
 		
 		</ul>
 </div>
@@ -221,13 +261,17 @@
 	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
 		
-			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>5</sup></a></li>
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>10</sup></a></li>
 		
-			<li><a href="/tags/hive/" title="hive">hive<sup>5</sup></a></li>
+			<li><a href="/tags/hive/" title="hive">hive<sup>10</sup></a></li>
 		
 			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
 		
-			<li><a href="/tags/oozie/" title="oozie">oozie<sup>9</sup></a></li>
+			<li><a href="/tags/mac/" title="mac">mac<sup>1</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
 		</ul>
 </div>
@@ -241,7 +285,7 @@
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/hadoop/" style="font-size: 15px;">hadoop</a> <a href="/tags/hive/" style="font-size: 15px;">hive</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/oozie/" style="font-size: 20px;">oozie</a>
+       <a href="/tags/hadoop/" style="font-size: 20px;">hadoop</a> <a href="/tags/hive/" style="font-size: 20px;">hive</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/mac/" style="font-size: 10px;">mac</a> <a href="/tags/oozie/" style="font-size: 20px;">oozie</a> <a href="/tags/sqoop/" style="font-size: 15px;">sqoop</a>
     </div>
   </div>
 
