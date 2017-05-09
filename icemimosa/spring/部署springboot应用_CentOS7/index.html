@@ -7,16 +7,18 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>hive解决元数据乱码 | Ice の Mimosa</title>
+    <title>部署springboot应用_centOS7 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
-    <meta name="description" content="hive解决元数据乱码1. 修改hive表由于 Cloudera Manager 安装的hive的元数据(如在mysql中)的编码是 latin1, 所以在各种有 COMMENT 是中文的情况下各种乱码。
+    <meta name="description" content="[TOC]
+部署springboot应用_centOS7
+springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的服务
 
-注意：不要修改hive整库的编码，会有问题，报错如下：
+比如在centos7上使用systemd的方式部署应用服务。下面是一个多模块的通用脚本, 也可以直接用官网的配置脚本。
 
-12FAILED: Error i">
+已经有一">
     
     
     
@@ -93,15 +95,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/hive/hive解决元数据乱码/" title="hive解决元数据乱码" itemprop="url">hive解决元数据乱码</a>
+      <a href="/icemimosa/spring/部署springboot应用_CentOS7/" title="部署springboot应用_centOS7" itemprop="url">部署springboot应用_centOS7</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-11-24T07:30:16.000Z" itemprop="datePublished">2016-11-24</time>
-    更新日期:<time datetime="2016-11-24T08:53:13.000Z" itemprop="dateModified">2016-11-24</time>
+    <time datetime="2017-01-10T02:30:16.000Z" itemprop="datePublished">2017-01-10</time>
+    更新日期:<time datetime="2017-05-06T07:17:41.000Z" itemprop="dateModified">2017-05-06</time>
     
   </p>
 </header>
@@ -110,44 +112,56 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#hive解决元数据乱码"><span class="toc-text">hive解决元数据乱码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-修改hive表"><span class="toc-text">1. 修改hive表</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-修改hive配置"><span class="toc-text">2. 修改hive配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-重启服务"><span class="toc-text">3. 重启服务</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#部署springboot应用-centOS7"><span class="toc-text">部署springboot应用_centOS7</span></a></li></ol>
 		</div>
 		
-		<h1 id="hive解决元数据乱码"><a href="#hive解决元数据乱码" class="headerlink" title="hive解决元数据乱码"></a>hive解决元数据乱码</h1><h1 id="1-修改hive表"><a href="#1-修改hive表" class="headerlink" title="1. 修改hive表"></a>1. 修改hive表</h1><p>由于 Cloudera Manager 安装的hive的元数据(如在mysql中)的编码是 <code>latin1</code>, 所以在各种有 <code>COMMENT</code> 是中文的情况下各种乱码。</p>
-<blockquote>
-<p>注意：不要修改<code>hive</code>整库的编码，会有问题，报错如下：</p>
+		<p>[TOC]</p>
+<h1 id="部署springboot应用-centOS7"><a href="#部署springboot应用-centOS7" class="headerlink" title="部署springboot应用_centOS7"></a>部署springboot应用_centOS7</h1><blockquote>
+<p>springboot应用可以使用 <code>init.d/systemd</code> 被轻易的部署为 Unix/Linux 的服务</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">FAILED: Error in metadata: javax.jdo.JDODataStoreException: An exception was thrown while adding/validating class(es) : Specified key was too long; max key length is 767 bytes </div><div class="line">com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Specified key was too long; max key length is 767 bytes</div></pre></td></tr></table></figure>
-<blockquote>
-<p>方案：</p>
-</blockquote>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">use</span> hive;</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> COLUMNS_V2 <span class="keyword">modify</span> <span class="keyword">column</span> <span class="keyword">COMMENT</span> <span class="built_in">varchar</span>(<span class="number">256</span>) <span class="built_in">character</span> <span class="keyword">set</span> utf8;</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> TABLE_PARAMS <span class="keyword">modify</span> <span class="keyword">column</span> PARAM_VALUE <span class="built_in">varchar</span>(<span class="number">4000</span>) <span class="built_in">character</span> <span class="keyword">set</span> utf8;</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> PARTITION_PARAMS  <span class="keyword">modify</span> <span class="keyword">column</span> PARAM_VALUE <span class="built_in">varchar</span>(<span class="number">4000</span>) <span class="built_in">character</span> <span class="keyword">set</span> utf8;</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> PARTITION_KEYS  <span class="keyword">modify</span> <span class="keyword">column</span> PKEY_COMMENT <span class="built_in">varchar</span>(<span class="number">4000</span>) <span class="built_in">character</span> <span class="keyword">set</span> utf8;</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> INDEX_PARAMS  <span class="keyword">modify</span> <span class="keyword">column</span> PARAM_VALUE  <span class="built_in">varchar</span>(<span class="number">4000</span>) <span class="built_in">character</span> <span class="keyword">set</span> utf8;</div></pre></td></tr></table></figure>
-<h1 id="2-修改hive配置"><a href="#2-修改hive配置" class="headerlink" title="2. 修改hive配置"></a>2. 修改hive配置</h1><ul>
-<li>一般修改 <code>/etc/hive/conf/hive-site.xml</code>，或者<code>HIVE_HOME</code>下的。</li>
-<li>Cloudera Manager安装的就随意了，不用修改。</li>
+<p>比如在centos7上使用systemd的方式部署应用服务。<br>下面是一个多模块的通用脚本, 也可以直接用官网的配置脚本。</p>
+<ul>
+<li>已经有一个已经打包好的jar包 <code>(myapp-web-1.0-SNAPSHOT.jar)</code>，然后放置在目录 <code>/var/myapp</code> 下</li>
+<li>创建一个服务脚本，如<code>myapp@.service</code>。然后放置到目录 <code>/etc/systemd/system</code>。内容如下，下面是含有 <code>%i</code> 传入<code>myapp.jar</code> 的应用配置参数的，然后是执行脚本 <code>ExecStart中的内容</code>。（当然你的<code>EnvironmentFile</code>可以写死, 或者不存在的话不写也ok）</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">修改</div><div class="line">jdbc:mysql://YOUR_HOST/hivemeta?createDatabaseIfNotExist=true </div><div class="line">为</div><div class="line">jdbc:mysql://YOUR_HOST/hivemeta?createDatabaseIfNotExist=true&amp;amp;characterEncoding=UTF-8</div></pre></td></tr></table></figure>
-<h1 id="3-重启服务"><a href="#3-重启服务" class="headerlink" title="3. 重启服务"></a>3. 重启服务</h1><p>最后重启hive的服务即可，然后做下相关含有中文的测试。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[Unit]</div><div class="line">Description=Starts and stops web service</div><div class="line">After=syslog.target</div><div class="line"></div><div class="line">[Service]</div><div class="line">EnvironmentFile=/etc/myapp/%i</div><div class="line">User=root</div><div class="line">Group=root</div><div class="line">ExecStart=/usr/local/bin/myapp-startup %i</div><div class="line">#Type=forking</div><div class="line">SuccessExitStatus=143</div><div class="line">SyslogIdentifier=myapp-web</div><div class="line"></div><div class="line">[Install]</div><div class="line">WantedBy=multi-user.target</div></pre></td></tr></table></figure>
+<ul>
+<li><code>myapp-startup</code>脚本编写如下，记得修改成 <code>755</code> 权限：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line"></div><div class="line"># http://stackoverflow.com/a/6482403</div><div class="line">if [ $# -eq 0 ]; then</div><div class="line">    echo &quot;No module supplied&quot;</div><div class="line">    exit 1</div><div class="line">fi</div><div class="line"></div><div class="line">module=$1</div><div class="line"></div><div class="line">echo $module</div><div class="line">echo $JAVA_OPTS &gt;&gt; /var/testparam.log</div><div class="line">/var/myapp/myapp-$module-1.0-SNAPSHOT.jar</div></pre></td></tr></table></figure>
+<ul>
+<li>其次是 <code>/etc/myapp/%i</code> 的配置, 比如叫做 <code>web</code>的文件, 内容如下</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">JAVA_HOME=/usr/local/jdk</div><div class="line">PID_FOLDER=/var/run/</div><div class="line">LOG_FOLDER=/var/log/myapp</div><div class="line">JAVA_OPTS=  -Xmx512m  -Xms512m -server -XX:+AggressiveOpts -XX:+UseFastAccessorMethods      \</div><div class="line">            -Dlogging.file=/var/log/myapp/web.log \</div><div class="line">            -Ddev                                 \</div><div class="line">            -Dserver.context-path=/               \</div><div class="line">            -Dserver.port=8080                    \</div><div class="line">            -Dspring.application.name=myapp \</div><div class="line">            -Dspring.redis.database=1     \</div><div class="line">            -Dspring.redis.host=127.0.0.1      \</div><div class="line">            -Dspring.redis.port=6379       \</div><div class="line">            -Dspring.datasource.type=com.zaxxer.hikari.HikariDataSource  \</div><div class="line">            -Dspring.datasource.driver-class-name=com.mysql.jdbc.Driver       \</div><div class="line">-Dspring.datasource.url=jdbc:mysql://127.0.0.1:3306/myapp?useUnicode=true&amp;characterEncoding=UTF8&amp;autoReconnect=true       \</div><div class="line">            -Dspring.datasource.username=root       \</div><div class="line">            -Dspring.datasource.password=123456       \</div></pre></td></tr></table></figure>
+<ul>
+<li>启动服务</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl start myapp@web</div></pre></td></tr></table></figure>
+<ul>
+<li>如果想要开机启动的话，执行</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl enable myapp@.service</div></pre></td></tr></table></figure>
+<p><a href="http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#deployment-systemd-service" target="_blank" rel="external">参照官方文档</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/hadoop/">hadoop</a><a href="/tags/hive/">hive</a>
+  <span></span> <a href="/tags/spring/">spring</a><a href="/tags/springboot/">springboot</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/hive/">hive</a>
+  <a class="article-category-link" href="/categories/springboot/">springboot</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/hive/hive解决元数据乱码/" data-title="hive解决元数据乱码 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/spring/部署springboot应用_CentOS7/" data-title="部署springboot应用_centOS7 | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -156,19 +170,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/icemimosa/hive/压缩hive表流程/" title="parquet压缩hive表">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  parquet压缩hive表</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/icemimosa/hadoop/删除MacOS X文件系统的附加属性@符号/"  title="删除MacOS X文件系统的附加属性@">
+<a href="/icemimosa/spring/部署springboot应用_CentOS6/"  title="部署springboot应用_centOS6">
  <strong>NEXT:</strong><br/> 
- <span>删除MacOS X文件系统的附加属性@
+ <span>部署springboot应用_centOS6
 </span>
 </a>
 </div>
@@ -178,7 +184,7 @@
 	
 <section class="comment">
 	
-	<div class="ds-thread" data-title="hive解决元数据乱码" data-thread-key="hive/hive解决元数据乱码" data-author-key="icemimosa" data-url="http://www.patamon.me/post/hive/hive解决元数据乱码"></div>
+	<div class="ds-thread" data-title="部署springboot应用_centOS7" data-thread-key="spring/部署springboot应用_CentOS7" data-author-key="icemimosa" data-url="http://www.patamon.me/post/spring/部署springboot应用_CentOS7"></div>
 	
 </section>
 
@@ -188,7 +194,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#hive解决元数据乱码"><span class="toc-text">hive解决元数据乱码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-修改hive表"><span class="toc-text">1. 修改hive表</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-修改hive配置"><span class="toc-text">2. 修改hive配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-重启服务"><span class="toc-text">3. 重启服务</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#部署springboot应用-centOS7"><span class="toc-text">部署springboot应用_centOS7</span></a></li></ol>
   </div>
 
 <div id="asidepart">
