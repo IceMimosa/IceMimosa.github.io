@@ -96,8 +96,8 @@
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-07-16T07:30:16.000Z" itemprop="datePublished">2016-07-16</time>
-    更新日期:<time datetime="2016-10-08T05:04:53.000Z" itemprop="dateModified">2016-10-08</time>
+    <time datetime="2016-07-16T07:30:17.000Z" itemprop="datePublished">2016-07-16</time>
+    更新日期:<time datetime="2017-07-09T17:00:44.000Z" itemprop="dateModified">2017-07-10</time>
     
   </p>
 </header>
@@ -142,6 +142,7 @@
 <ul>
 <li>方案一：由于我是 <code>hadoop伪分布式</code> 的安装, 所以在default的任务queue中会出现资源争夺，从而死锁的情况。可以将任务提交到 hadoop 集群中（至少两个Nodemanager），得以解决。</li>
 <li>方案二：在 <code>hadoop伪分布式</code>，即在自己的机器上解决，方案如下：</li>
+<li>方案三：可以使用分队列运行的方式运行任务，让launcher和job在不同的队列中。详细见<a href="http://patamon.me/icemimosa/oozie/Oozie-8_%E9%AB%98%E7%BA%A7%E9%85%8D%E7%BD%AE/" target="_blank" rel="external">Oozie-8_高级配置</a></li>
 </ul>
 <p>这里可以参考：<br><a href="http://stackoverflow.com/questions/27653937/error-on-running-multiple-workflow-in-oozie-4-1-0/27855432" target="_blank" rel="external">http://stackoverflow.com/questions/27653937/error-on-running-multiple-workflow-in-oozie-4-1-0/27855432</a></p>
 <p>1、在 <code>$HADOOP_HOME/etc/hadoop</code> 配置目录下新建 <code>fair-scheduler.xml</code>, 内容如下</p>
