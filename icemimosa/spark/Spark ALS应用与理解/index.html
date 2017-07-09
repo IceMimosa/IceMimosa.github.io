@@ -96,8 +96,8 @@
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2017-07-09T07:30:16.000Z" itemprop="datePublished">2017-07-09</time>
-    更新日期:<time datetime="2017-07-09T12:08:41.000Z" itemprop="dateModified">2017-07-09</time>
+    <time datetime="2017-07-09T07:30:17.000Z" itemprop="datePublished">2017-07-09</time>
+    更新日期:<time datetime="2017-07-09T17:56:23.000Z" itemprop="dateModified">2017-07-10</time>
     
   </p>
 </header>
@@ -129,7 +129,7 @@
 <blockquote>
 <p>问题</p>
 </blockquote>
-<p>这个 <code>ALS.train(...)</code> 的过程是神特么简单，真不愧是黑盒操作。。算法的细节简直完全对使用者屏蔽。对于这种demo，其实网上也是一堆，使用起来很是简单。<br>但是在使用的过程中，你可能会对传入的<code>rank</code>，<code>lambda</code>等参数很是困惑，当然spark也很贴心的为你准备了默认值。或者你也可以结合实际数据来不停的调整它们，以达到最优的效果。那么这些参数在ALS中到底是起什么作用呢，那么就不得不去看下ALS算法的原理了。</p>
+<p>这个 <code>ALS.train(...)</code> 的过程是神特么简单，真不愧是黑盒操作。。算法的细节简直完全对使用者屏蔽。对于这种demo，其实网上也是一堆，比如<a href="https://github.com/apache/spark/blob/master/examples/src/main/scala/org/apache/spark/examples/mllib/RecommendationExample.scala" target="_blank" rel="external">RecommendationExample</a>，使用起来很是简单。<br>但是在使用的过程中，你可能会对传入的<code>rank</code>，<code>lambda</code>等参数很是困惑，当然spark也很贴心的为你准备了默认值。或者你也可以结合实际数据来不停的调整它们，以达到最优的效果。那么这些参数在ALS中到底是起什么作用呢，那么就不得不去看下ALS算法的原理了。</p>
 <h2 id="3-ALS算法"><a href="#3-ALS算法" class="headerlink" title="3. ALS算法"></a>3. ALS算法</h2><h3 id="3-1-获取损失函数"><a href="#3-1-获取损失函数" class="headerlink" title="3.1 获取损失函数"></a>3.1 获取损失函数</h3><p>我看别人博客讲ALS简直一头雾水，终于借助<a href="http://fclef.me/" target="_blank" rel="external">哥们</a>帮助下，终于能够理解了不少。那么下面我以菜鸟的眼光来讲解一下。</p>
 <p>对于上面的<code>稀疏矩阵</code>，我们假设它为 <code>A</code> 矩阵，这是一个已知矩阵。假设有 <code>i个用户</code> 和<code>j个商品</code>，那么这个矩阵就是 <code>i×j</code> 的矩阵。</p>
 <p>然后对于矩阵分解，其实任何一个矩阵 <code>A(i×j)</code> 都可以被分解成 <code>U(i×k)</code> 和 <code>V(j×k)</code>，即 <img src="http://7xsz2j.com1.z0.glb.clouddn.com/2017-07-09-095816.jpg?imageMogr2/thumbnail/!50p" alt=""> (T表示V的<code>转置矩阵</code>，且<code>k &lt;= i，j</code>)。比如一个<code>4*4</code>的矩阵，你可以将它分解成<code>4*3矩阵</code>和<code>3*4矩阵</code>相乘的结果。这里的k，你可以把它当作是一个特征参数，对应Spark ALS中就是<code>rank</code>参数。</p>
