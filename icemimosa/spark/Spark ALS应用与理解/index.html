@@ -97,7 +97,7 @@
     </p>
   <p class="article-time">
     <time datetime="2017-07-09T07:30:16.000Z" itemprop="datePublished">2017-07-09</time>
-    更新日期:<time datetime="2017-07-09T11:59:02.000Z" itemprop="dateModified">2017-07-09</time>
+    更新日期:<time datetime="2017-07-09T12:03:01.000Z" itemprop="dateModified">2017-07-09</time>
     
   </p>
 </header>
@@ -112,15 +112,15 @@
 		<h1 id="Spark-ALS"><a href="#Spark-ALS" class="headerlink" title="Spark ALS"></a>Spark ALS</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p><code>推荐的意义</code>和应用于推荐的<code>协同过滤算法</code>，这里就不说明了。这里主要讲解一下Spark对协同过滤的应用和实现。<br><a href="https://spark.apache.org/docs/1.6.2/mllib-collaborative-filtering.html" target="_blank" rel="external">官方文档</a> 说的很明确，Spark目前支持的是<code>基于模型</code>的协同过滤算法，即<code>Alternating Least Squares (ALS)</code>。中文名称是<code>交替最小二乘</code>或者<code>交替最小平方</code>。<br>由于该算法针对的是基于<code>用户-商品</code>的关联矩阵，且在实际应用中，一个用户不可能买过所有的商品，甚至也不可能对已经买过的所有商品进行评分，所以这个矩阵注定就是一个<code>稀疏矩阵</code>。假设我们已经有了<strong>用户数据</strong>，<strong>商品数据</strong>，<strong>评分数据</strong>，那么这个矩阵可能是这个样子（横轴是商品，众轴是用户，每个单元格式评分）：</p>
 <p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2017-07-09-084038.jpg?imageMogr2/thumbnail/!50p" alt=""></p>
 <p>那么如何计算（预测）剩余<code>?</code>中的空值，那么这就是ALS做的事情了。</p>
-<p>从这个算法，你也应该可以看出，它压根就不关心用户和商品本身的信息，需要的紧紧是用户对商品产生的某种行为，比如评分，浏览等等。</p>
+<p>从这个算法，你也应该可以看出，它压根就不关心用户和商品本身的信息，需要的仅仅是用户对商品产生的某种行为，比如评分，浏览等等。</p>
 <h2 id="2-Spark-ALS使用"><a href="#2-Spark-ALS使用" class="headerlink" title="2. Spark ALS使用"></a>2. Spark ALS使用</h2><p>在讲解ALS之前，我们先来看看在Spark中是如何使用的。这里采用Spark1.6.x的版本。虽然Spark ML中分为<code>ml</code>和<code>mllib</code>两个版本的API，但就对于算法本身，影响不是很大。</p>
-<p>实际应用中，应该会有<code>离线推荐</code>和<code>在线推荐</code>两个场景。但不管是哪个场景，也紧紧是如何读取<code>评分数据</code>的区别，调用ALS的API都是一致的。</p>
+<p>实际应用中，应该会有<code>离线推荐</code>和<code>在线推荐</code>两个场景。但不管是哪个场景，也仅仅是如何读取<code>评分数据</code>的区别，调用ALS的API都是一致的。</p>
 <blockquote>
 <p>离线场景</p>
 </blockquote>
 <p>对于离线场景，你可以将数据整理到<code>Hive</code>中，这个hive表中有<code>user_id, item_id, rating</code>这个三个字段。然后在spark应用程序中，你就可以通过Spark SQL来读取这些数据。然后使用<code>val model = ALS.train(...)</code>来训练这些数据，最后使用<code>model</code>就可以为用户推荐商品。然后还可以将推荐的结果数据存储在HBase数据库中以方便查询。</p>
 <ul>
-<li>注：当然还有<code>ALS.trainImplicit(...)</code>方法，这个是做<code>隐式推荐</code>的，默认是<code>显式推荐</code>。隐式的就是用户没有对商品有明确的评分行为，比如紧紧是点击或浏览。</li>
+<li>注：当然还有<code>ALS.trainImplicit(...)</code>方法，这个是做<code>隐式推荐</code>的，默认是<code>显式推荐</code>。隐式的就是用户没有对商品有明确的评分行为，比如仅仅是点击或浏览。</li>
 </ul>
 <blockquote>
 <p>在线场景</p>
