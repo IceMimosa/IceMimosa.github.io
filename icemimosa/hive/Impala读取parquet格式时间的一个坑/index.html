@@ -7,12 +7,13 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>Ice の Mimosa</title>
+    <title>Impala读取parquet格式时间的一个坑 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
-    <meta name="description" content="IceMimosa 学习 努力 代码人生">
+    <meta name="description" content="Impala读取parquet格式时间的一个坑1. 描述发现用Impala读取parquet格式表的时候，timestamp类型的字段读取的是UTC时间，并没有做本地化时间转换，即时间晚了8个小时。
+一开始以为是原始插入表的数据出了问题，但是使用hive进行查询的时候，时间却是对的。结果最后发现是I">
     
     
     
@@ -84,204 +85,93 @@
 
     </header>
     <div id="container">
-      <div id="main">
-
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/sqoop/sqoop增量导出问题/" title="sqoop增量导出问题" itemprop="url">
-  
-      <time datetime="2016-10-14T07:30:16.000Z" itemprop="datePublished">2016-10-14</time>
-    <h1 itemprop="name">sqoop增量导出问题</h1>
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
     
-     
-           <p itemprop="description" >#sqoop增量导出问题  
-##1、未分区表1、默认情况；1sqoop  export  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table dwd_test</p>
-        
+      <a href="/icemimosa/hive/Impala读取parquet格式时间的一个坑/" title="Impala读取parquet格式时间的一个坑" itemprop="url">Impala读取parquet格式时间的一个坑</a>
+  </h1>
+  <p class="article-author">By
     
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2017-10-20T07:30:16.000Z" itemprop="datePublished">2017-10-20</time>
+    更新日期:<time datetime="2017-10-20T15:06:10.305Z" itemprop="dateModified">2017-10-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Impala读取parquet格式时间的一个坑"><span class="toc-text">Impala读取parquet格式时间的一个坑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-描述"><span class="toc-text">1. 描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-解决"><span class="toc-text">2. 解决</span></a></li></ol>
+		</div>
+		
+		<h1 id="Impala读取parquet格式时间的一个坑"><a href="#Impala读取parquet格式时间的一个坑" class="headerlink" title="Impala读取parquet格式时间的一个坑"></a>Impala读取parquet格式时间的一个坑</h1><h1 id="1-描述"><a href="#1-描述" class="headerlink" title="1. 描述"></a>1. 描述</h1><p>发现用Impala读取parquet格式表的时候，<code>timestamp</code>类型的字段读取的是UTC时间，并没有做本地化时间转换，即时间晚了8个小时。</p>
+<p>一开始以为是原始插入表的数据出了问题，但是使用hive进行查询的时候，时间却是对的。结果最后发现是Impala的一个坑。<br>详情见 <a href="https://stackoverflow.com/questions/33556226/impala-timestamps-dont-match-hive-a-timezone-issue" target="_blank" rel="external">https://stackoverflow.com/questions/33556226/impala-timestamps-dont-match-hive-a-timezone-issue</a></p>
+<blockquote>
+<p>问题描述：</p>
+</blockquote>
+<p>Hive在将时间插入到Parquet格式文件的时候，存储的是UTC时间，并且hive自身去查询的时候，会将时间做本地化的转换。<br>但是Impala去读取的时候就傻了，直接读取的UTC时间，且什么也没有做，直接返回了结果。</p>
+<h1 id="2-解决"><a href="#2-解决" class="headerlink" title="2. 解决"></a>2. 解决</h1><p>参考 <a href="http://www.ericlin.me/2015/05/timestamp-stored-in-parquet-file-format-in-impala-showing-gmt-value/" target="_blank" rel="external">http://www.ericlin.me/2015/05/timestamp-stored-in-parquet-file-format-in-impala-showing-gmt-value/</a></p>
+<p>给Impala Daemon命令行参数增加一个配置告知impala读取时间的时候做下转换，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">--convert_legacy_hive_parquet_utc_timestamps=true</div></pre></td></tr></table></figure>
+<p>最后重启所有的Impala Daemons，结束。</p>
   
-    <a href="/icemimosa/sqoop/Sqoop源码改造/" title="Sqoop 源码改造" itemprop="url">
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
   
-      <time datetime="2016-10-13T07:30:16.000Z" itemprop="datePublished">2016-10-13</time>
-    <h1 itemprop="name">Sqoop 源码改造</h1>
-    
-     
-           <p itemprop="description" >1. 要求
-sqoop-1.4.6-cdh5.7.1
-参见 RRADME.txt
-
-2. 编译项目
-参见 COMPILING.txt
+  <span></span> <a href="/tags/hive/">hive</a><a href="/tags/impala/">impala</a>
+  </div>
 
 
-ant jar : 漫长的编译过程, 打开vpn啥的试试
-编译完了会在 build 目录下生成jar
-命令测试：bin/sqoop 即可，如果</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/sqoop/Sqoop命令/" title="Sqoop命令" itemprop="url">
-  
-      <time datetime="2016-10-12T07:30:16.000Z" itemprop="datePublished">2016-10-12</time>
-    <h1 itemprop="name">Sqoop命令</h1>
-    
-     
-           <p itemprop="description" >Sqoop命令1. sqoop导入基本命令
-1sqoop  import  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table bvs_users  --fie</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/oozie/Oozie-9_自定义UDF和Action节点/" title="Oozie-9_自定义UDF和Action节点" itemprop="url">
-  
-      <time datetime="2016-10-10T07:30:16.000Z" itemprop="datePublished">2016-10-10</time>
-    <h1 itemprop="name">Oozie-9_自定义UDF和Action节点</h1>
-    
-     
-           <p itemprop="description" >[TOC]
-Oozie-9_自定义UDF和Action节点1. 自定义UDF有的时候oozie提供的EL函数没法满足需求，这个时候就需要对oozie的udf进行扩展。
-
-新建maven工程项目，这里的pom最好使用oozie项目自身的pom(在oozie的目录下可以找到)
-然后我</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/hive/Hive-5_UDF/" title="Hive-5_UDF" itemprop="url">
-  
-      <time datetime="2016-09-24T07:30:16.000Z" itemprop="datePublished">2016-09-24</time>
-    <h1 itemprop="name">Hive-5_UDF</h1>
-    
-     
-           <p itemprop="description" >Hive-5_UDF[TOC]
-
-参考 UDF
-
-In Beeline or the CLI, use the commands below to show the latest documentation
-
-语法:
-
-123SHOW FUNCTIONS;DESCRIBE FUN</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/hive/Hive-4_Select语句/" title="Hive-4_Select语句" itemprop="url">
-  
-      <time datetime="2016-09-23T07:30:16.000Z" itemprop="datePublished">2016-09-23</time>
-    <h1 itemprop="name">Hive-4_Select语句</h1>
-    
-     
-           <p itemprop="description" >Hive-4_Select语句[TOC]
-
-参考 LanguageManual Select
-
-1. select 语句
-语法
-
-12345678910[WITH CommonTableExpression (, CommonTableExpression)*]    (Note</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/hive/Hive-3_DML使用/" title="Hive-3_DML使用" itemprop="url">
-  
-      <time datetime="2016-09-22T07:30:16.000Z" itemprop="datePublished">2016-09-22</time>
-    <h1 itemprop="name">Hive-3_DML使用</h1>
-    
-     
-           <p itemprop="description" >Hive-3_DML使用[TOC]
-
-原文参考
-
-1. Loading files into tablesload 数据到hive表中是不会对数据进行转化的, 其实load的操作就是数据文件直接move/copy到hive表中。
-
-语法
-
-1LOAD DATA [LOCAL] I</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/hive/Hive-2_DDL使用/" title="Hive-2_DDL使用" itemprop="url">
-  
-      <time datetime="2016-09-21T07:30:16.000Z" itemprop="datePublished">2016-09-21</time>
-    <h1 itemprop="name">Hive-2_DDL使用</h1>
-    
-     
-           <p itemprop="description" >Hive-2_DDL使用[TOC]
-1. DDL (Hive Data Definition Language) 概述和一般的RDBMS一样，Hive也有自己的DDL语句。且不管是DDL，还是DML，感觉都和mysql很相似。
-
-Hive DDL 大致包括如下：
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/hive/">hive</a>
+</div>
 
 
-CREATE</p>
-        
-    
-  </a>
-</section>
 
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/hive/Hive-1_安装配置/" title="Hive-1_安装配置" itemprop="url">
-  
-      <time datetime="2016-09-20T07:30:16.000Z" itemprop="datePublished">2016-09-20</time>
-    <h1 itemprop="name">Hive-1_安装配置</h1>
-    
-     
-           <p itemprop="description" >Hive-1_安装配置[TOC]
-1. 节点Apache Hive是基于分布式存储（Hadoop HDFS）的一个数据仓库。它可以通过 SQL 很方便的读写、管理上面的庞大的数据集。用户可以通过 命令行 和 JDBC Driver 连接Hive并使用。
-2. 下载和安装
-下载地址</p>
-        
-    
-  </a>
-</section>
+<div class="article-share" id="share">
 
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/oozie/Oozie搭建常见问题/" title="Oozie搭建常见问题" itemprop="url">
-  
-      <time datetime="2016-07-16T07:30:17.000Z" itemprop="datePublished">2016-07-16</time>
-    <h1 itemprop="name">Oozie搭建常见问题</h1>
-    
-     
-           <p itemprop="description" >Oozie搭建常见问题1. Could not lookup launched hadoop Job ID 错误1234###  比如：JA017: Could not lookup launched hadoop Job ID [job_1468396821235_0004] </p>
-        
-    
-  </a>
-</section>
-
-
-  <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
-  </nav>
+  <div data-url="http://www.patamon.me/icemimosa/hive/Impala读取parquet格式时间的一个坑/" data-title="Impala读取parquet格式时间的一个坑 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
 
 </div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/icemimosa/spark/Spark ALS应用与理解/"  title="Spark ALS应用与理解">
+ <strong>NEXT:</strong><br/> 
+ <span>Spark ALS应用与理解
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Impala读取parquet格式时间的一个坑"><span class="toc-text">Impala读取parquet格式时间的一个坑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-描述"><span class="toc-text">1. 描述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-解决"><span class="toc-text">2. 解决</span></a></li></ol>
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -373,8 +263,8 @@ CREATE</p>
 
 </aside>
 </div>
-  </div>
-  <footer><div id="footer" >
+    </div>
+    <footer><div id="footer" >
     
             <p class="copyright"> © 2017 
 		
@@ -421,6 +311,8 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
@@ -440,9 +332,119 @@ $(document).ready(function(){
 });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
 
 
 
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
 
 
 
@@ -531,5 +533,5 @@ ga('send', 'pageview');
 
 
   </body>
- </html>
+</html>
 

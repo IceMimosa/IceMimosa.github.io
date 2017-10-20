@@ -89,6 +89,21 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
+    <a href="/icemimosa/hive/Impala读取parquet格式时间的一个坑/" title="Impala读取parquet格式时间的一个坑" itemprop="url">
+  
+      <time datetime="2017-10-20T07:30:16.000Z" itemprop="datePublished">2017-10-20</time>
+    <h1 itemprop="name">Impala读取parquet格式时间的一个坑</h1>
+    
+     
+           <p itemprop="description" >Impala读取parquet格式时间的一个坑1. 描述发现用Impala读取parquet格式表的时候，timestamp类型的字段读取的是UTC时间，并没有做本地化时间转换，即时间晚了8个小时。
+一开始以为是原始插入表的数据出了问题，但是使用hive进行查询的时候，时间却是对</p>
+        
+    
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
     <a href="/icemimosa/spark/Spark ALS应用与理解/" title="Spark ALS应用与理解" itemprop="url">
   
       <time datetime="2017-07-09T07:30:17.000Z" itemprop="datePublished">2017-07-09</time>
@@ -140,22 +155,6 @@ springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/icemimosa/hive/压缩hive表流程/" title="parquet压缩hive表" itemprop="url">
-  
-      <time datetime="2016-11-24T07:30:16.000Z" itemprop="datePublished">2016-11-24</time>
-    <h1 itemprop="name">parquet压缩hive表</h1>
-    
-     
-           <p itemprop="description" >[TOC]
-parquet压缩hive表1. 应用场景原表为txt格式，占用硬盘空间太大，hive支持 parquet格式，所以将原表更新为利用parquet格式，来压缩该表占用的硬盘空间。
-2. 压缩过程1. 建立新表show create table TABLE_NAME ;</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
     <a href="/icemimosa/hive/hive解决元数据乱码/" title="hive解决元数据乱码" itemprop="url">
   
       <time datetime="2016-11-24T07:30:16.000Z" itemprop="datePublished">2016-11-24</time>
@@ -167,6 +166,22 @@ parquet压缩hive表1. 应用场景原表为txt格式，占用硬盘空间太大
 注意：不要修改hive整库的编码，会有问题，报错如下：
 
 12FAILE</p>
+        
+    
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
+    <a href="/icemimosa/hive/压缩hive表流程/" title="parquet压缩hive表" itemprop="url">
+  
+      <time datetime="2016-11-24T07:30:16.000Z" itemprop="datePublished">2016-11-24</time>
+    <h1 itemprop="name">parquet压缩hive表</h1>
+    
+     
+           <p itemprop="description" >[TOC]
+parquet压缩hive表1. 应用场景原表为txt格式，占用硬盘空间太大，hive支持 parquet格式，所以将原表更新为利用parquet格式，来压缩该表占用的硬盘空间。
+2. 压缩过程1. 建立新表show create table TABLE_NAME ;</p>
         
     
   </a>
@@ -239,21 +254,6 @@ hive处理增量数据1. 场景
   </a>
 </section>
 
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/sqoop/sqoop增量导出问题/" title="sqoop增量导出问题" itemprop="url">
-  
-      <time datetime="2016-10-14T07:30:16.000Z" itemprop="datePublished">2016-10-14</time>
-    <h1 itemprop="name">sqoop增量导出问题</h1>
-    
-     
-           <p itemprop="description" >#sqoop增量导出问题  
-##1、未分区表1、默认情况；1sqoop  export  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table dwd_test</p>
-        
-    
-  </a>
-</section>
-
 
   <nav id="page-nav" class="clearfix">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -292,7 +292,7 @@ hive处理增量数据1. 场景
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>1</sup></a></li>
 		
-			<li><a href="/categories/hive/" title="hive">hive<sup>10</sup></a></li>
+			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
 			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
 		
@@ -315,7 +315,9 @@ hive处理增量数据1. 场景
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>10</sup></a></li>
 		
-			<li><a href="/tags/hive/" title="hive">hive<sup>10</sup></a></li>
+			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/tags/impala/" title="impala">impala<sup>1</sup></a></li>
 		
 			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
 		
@@ -343,7 +345,7 @@ hive处理增量数据1. 场景
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/hadoop/" style="font-size: 20px;">hadoop</a> <a href="/tags/hive/" style="font-size: 20px;">hive</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/mac/" style="font-size: 10px;">mac</a> <a href="/tags/oozie/" style="font-size: 20px;">oozie</a> <a href="/tags/spark/" style="font-size: 10px;">spark</a> <a href="/tags/spring/" style="font-size: 13.33px;">spring</a> <a href="/tags/springboot/" style="font-size: 13.33px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 16.67px;">sqoop</a>
+       <a href="/tags/hadoop/" style="font-size: 17.5px;">hadoop</a> <a href="/tags/hive/" style="font-size: 20px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/mac/" style="font-size: 10px;">mac</a> <a href="/tags/oozie/" style="font-size: 17.5px;">oozie</a> <a href="/tags/spark/" style="font-size: 10px;">spark</a> <a href="/tags/spring/" style="font-size: 12.5px;">spring</a> <a href="/tags/springboot/" style="font-size: 12.5px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 15px;">sqoop</a>
     </div>
   </div>
 
