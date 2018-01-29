@@ -7,13 +7,14 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>Sqoop命令 | Ice の Mimosa</title>
+    <title>关于java可变参数重载 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
-    <meta name="description" content="Sqoop命令1. sqoop导入基本命令
-1sqoop  import  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table bvs_users  --fields-termin">
+    <meta name="description" content="关于java可变参数重载1. 场景分析在使用Guava的ImmutableList的类的时候， 发现里面有很多of的重载方法（类似的还有java的EnumSet的of方法）。
+如下：
+123456of(E e);of(E e1, E e2);of(E e1, E e2, E e3);of(E e1,">
     
     
     
@@ -90,15 +91,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/sqoop/Sqoop命令/" title="Sqoop命令" itemprop="url">Sqoop命令</a>
+      <a href="/icemimosa/其他/关于java可变参数重载/" title="关于java可变参数重载" itemprop="url">关于java可变参数重载</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-10-12T07:30:16.000Z" itemprop="datePublished">2016-10-12</time>
-    更新日期:<time datetime="2017-05-02T10:50:59.000Z" itemprop="dateModified">2017-05-02</time>
+    <time datetime="2017-02-28T17:22:34.000Z" itemprop="datePublished">2017-03-01</time>
+    更新日期:<time datetime="2018-01-29T11:13:50.318Z" itemprop="dateModified">2018-01-29</time>
     
   </p>
 </header>
@@ -107,67 +108,50 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Sqoop命令"><span class="toc-text">Sqoop命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-sqoop导入"><span class="toc-text">1. sqoop导入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-sqoop导出"><span class="toc-text">2. sqoop导出</span></a></li></ol></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#关于java可变参数重载"><span class="toc-text">关于java可变参数重载</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-场景分析"><span class="toc-text">1. 场景分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Google一下"><span class="toc-text">2. Google一下</span></a></li></ol>
 		</div>
 		
-		<h1 id="Sqoop命令"><a href="#Sqoop命令" class="headerlink" title="Sqoop命令"></a>Sqoop命令</h1><h2 id="1-sqoop导入"><a href="#1-sqoop导入" class="headerlink" title="1. sqoop导入"></a>1. sqoop导入</h2><p><strong>基本命令</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqoop  import  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table bvs_users  --fields-terminated-by &quot;\0001&quot;  --lines-terminated-by &apos;\n&apos;    --null-string &apos;\\N&apos;  --null-non-string  &apos;\\N&apos;  -m 1 --hive-table s_bvs_users --hive-import --hive-overwrite --delete-target-dir --hive-drop-import-delims</div></pre></td></tr></table></figure>
-<blockquote>
-<p>参数解释:</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">import:指明该模式为导入模式</div><div class="line">--connect: jdbc连接数据库的参数</div><div class="line">--table: 数据库中要导入的的表名	</div><div class="line">--fields-terminated-by &quot;\0001&quot;: 文件之间分隔符为\0001,hive默认即为\0001</div><div class="line">--lines-terminated-by &apos;\n&apos;: 行之间的分隔符为&apos;\n&apos;，hive默认为&apos;\n&apos;且sqoop只支持&apos;\n&apos;导入</div><div class="line">--null-string: 将数据库中string类型的字段中的null字段替换为接下来指定的参数</div><div class="line">--null-non-string: 将数据库中非string类型的字段中的null字段替换为接下来指定的参数</div><div class="line">-m: 指定几个mapper任务来跑，若该表有主键，则可以不需要指定--split-by参数，否则必须制定--split-by参数</div><div class="line">--hive-table: 导入到hive中的哪个表，即hive中该表的表名</div><div class="line">--hive-import: 指明需要导入到hive中</div><div class="line">--hive-overwrite: 覆盖之前表中存在的全部数据</div><div class="line">--delete-target-dir: 删除目标目录如果导入的目标目录的存在的话</div><div class="line">--hive-drop-import-delims :将导入的数据中的 \n, \r, 和 \01 分隔符删掉</div></pre></td></tr></table></figure>
-<p><strong>高级功能</strong></p>
-<ul>
-<li>字符删除或替换</li>
+		<h1 id="关于java可变参数重载"><a href="#关于java可变参数重载" class="headerlink" title="关于java可变参数重载"></a>关于java可变参数重载</h1><h1 id="1-场景分析"><a href="#1-场景分析" class="headerlink" title="1. 场景分析"></a>1. 场景分析</h1><p>在使用<a href="https://github.com/google/guava" target="_blank" rel="external">Guava</a>的<code>ImmutableList</code>的类的时候， 发现里面有很多<code>of</code>的重载方法（类似的还有<code>java的EnumSet的of方法</code>）。</p>
+<p>如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">of(E e);</div><div class="line">of(E e1, E e2);</div><div class="line">of(E e1, E e2, E e3);</div><div class="line">of(E e1, E e2, E e3, E e4);</div><div class="line">.....</div><div class="line">of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10, E e11, E e12, E... others);</div></pre></td></tr></table></figure>
+<p>疑问：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">为什么不直接使用可变参数, 而是在参数很少的时候使用了很多重载。</div></pre></td></tr></table></figure>
+<h1 id="2-Google一下"><a href="#2-Google一下" class="headerlink" title="2. Google一下"></a>2. Google一下</h1><ul>
+<li><a href="https://stackoverflow.com/questions/3737882/why-does-guavas-immutablelist-have-so-many-overloaded-of-methods" target="_blank" rel="external">https://stackoverflow.com/questions/3737882/why-does-guavas-immutablelist-have-so-many-overloaded-of-methods</a></li>
+<li><a href="https://stackoverflow.com/questions/31924249/why-does-enumset-have-many-overloaded-of-methods?noredirect=1&amp;lq=1" target="_blank" rel="external">https://stackoverflow.com/questions/31924249/why-does-enumset-have-many-overloaded-of-methods?noredirect=1&amp;lq=1</a></li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">--hive-delims-replacement: 将导入的数据中的 \n, \r, 和 \01 分隔符替换为自己指定的符号</div></pre></td></tr></table></figure>
-<ul>
-<li>指定分区键</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">--hive-partition-key: 指定分区键</div><div class="line">--hive-partition-value: 与分区键对应的该分区键的值</div></pre></td></tr></table></figure>
-<ul>
-<li>增量导入</li>
-</ul>
-<p>sqoop支持用 <code>--incremental lastmodified</code> 设置进行增量导入，比如</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">--incremental lastmodified </div><div class="line">--check-column created </div><div class="line">--last-value &apos;2012-02-01 11:0:00&apos;: 就是只导入created比&apos;2012-02-01 11:0:00&apos;更大的数据。</div><div class="line">--check-column: 根据此列进行判断</div><div class="line">--last-value: 判断大于此值的进行导入</div></pre></td></tr></table></figure>
-<h2 id="2-sqoop导出"><a href="#2-sqoop导出" class="headerlink" title="2. sqoop导出"></a>2. sqoop导出</h2><p><strong>基本命令</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqoop  export  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table bvs_users --export-dir hdfs://127.0.0.1:9000/user/hive/warehouse/s_bvs_users --input-fields-terminated-by &quot;\0001&quot;  --input-lines-terminated-by &apos;\n&apos;   --input-null-string &apos;\\N&apos;  --input-null-non-string &apos;\\N&apos;</div></pre></td></tr></table></figure>
 <blockquote>
-<p>参数解释：</p>
+<p>EnumSet的解释</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">--export-dir: 需要指定导出的表所在的在hdfs中的目录；</div><div class="line">--input-fields-terminated-by &quot;\0001&quot;: 指定以\0001为分隔符</div><div class="line">--input-lines-terminated-by &apos;\n&apos;: 指定以\n为列分隔符</div><div class="line">--input-null-string: 字符类型等于该参数指定的值的，则转换为NULL</div><div class="line">--input-null-non-string &apos;\\N&apos;: 非字符类型等于该参数指定的值的，则转换为NULL</div></pre></td></tr></table></figure>
-<p><strong>高级功能</strong></p>
-<ul>
-<li>增量导出</li>
-</ul>
-<p>增加参数：<code>--update-mode allowinsert --update-key id</code><br>–update-mode allowinsert： 设置模式为allowinsert模式<br>–update-key id： 设置更新列为id，意味着以id这列的值进行匹配，匹配到的更新，匹配不到的插入（在allowinsert模式下）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Creates an enum set initially containing the specified elements.</div><div class="line">This factory, whose parameter list uses the varargs feature, </div><div class="line">may be used to create an enum set initially containing an arbitrary number of elements, </div><div class="line">but it is likely to run slower than the overloadings that do not use varargs.</div></pre></td></tr></table></figure>
+<p>按照上面的解释，有人说是varargs的方法会定义个数组传入，所以在性能上会比不使用varargs的方法慢。</p>
 <blockquote>
-<p>PS:</p>
+<p>ImmutableList中注释</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1.若删除以前数据，则不支持增量导出的删除。它以指定列进行匹配时，会翻译为以下语句：</div><div class="line">匹配到的：update ** set where id = xxx；匹配不到的：insert into values()</div><div class="line">2.增量导出时若分区表需要用户指定分区目录</div></pre></td></tr></table></figure>
-<blockquote>
-<p>参考文档： <a href="https://sqoop.apache.org/docs/1.4.6/SqoopUserGuide.html#_create_oracle_tables" target="_blank" rel="external">官方的使用者手册</a>  </p>
-</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">These go up to eleven. After that, you just get the varargs form, and</div><div class="line">whatever warnings might come along with it. :(</div><div class="line"></div><div class="line"># up to eleven参考: https://en.wikipedia.org/wiki/Up_to_eleven</div></pre></td></tr></table></figure>
+<p>也有人说是避免java的warning（由于泛型和varargs配合不是很好），然后java的做法是使用<code>@SafeVarargs</code>来避免。说是提升性能的，但是ImmutableList内部依旧使用了的是<code>construct(Object... elements)</code>方法，也比较奇怪吧。</p>
+<p>总之姑且认为是避免构建一个数组而提升性能，java自己也说的是<code>likely</code>，23333。</p>
+<p>还有一些乱七八糟的解释和猜测只能围观stackoverflow里面其他人的解释了。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/sqoop/">sqoop</a>
+  <span></span> <a href="/tags/java/">java</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/sqoop/">sqoop</a>
+  <a class="article-category-link" href="/categories/java/">java</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/sqoop/Sqoop命令/" data-title="Sqoop命令 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/其他/关于java可变参数重载/" data-title="关于java可变参数重载 | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -177,18 +161,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/icemimosa/sqoop/Sqoop源码改造/" title="Sqoop 源码改造">
+ <a href="/icemimosa/spark/Spark ALS应用与理解/" title="Spark ALS应用与理解">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  Sqoop 源码改造</span>
+  Spark ALS应用与理解</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/icemimosa/oozie/Oozie-9_自定义UDF和Action节点/"  title="Oozie-9_自定义UDF和Action节点">
+<a href="/icemimosa/spring/部署springboot应用_CentOS7/"  title="部署springboot应用_centOS7">
  <strong>NEXT:</strong><br/> 
- <span>Oozie-9_自定义UDF和Action节点
+ <span>部署springboot应用_centOS7
 </span>
 </a>
 </div>
@@ -206,7 +190,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Sqoop命令"><span class="toc-text">Sqoop命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-sqoop导入"><span class="toc-text">1. sqoop导入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-sqoop导出"><span class="toc-text">2. sqoop导出</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#关于java可变参数重载"><span class="toc-text">关于java可变参数重载</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-场景分析"><span class="toc-text">1. 场景分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Google一下"><span class="toc-text">2. Google一下</span></a></li></ol>
   </div>
 
 <div id="asidepart">

@@ -118,18 +118,15 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/icemimosa/spring/部署springboot应用_CentOS6/" title="部署springboot应用_centOS6" itemprop="url">
+    <a href="/icemimosa/其他/关于java可变参数重载/" title="关于java可变参数重载" itemprop="url">
   
-      <time datetime="2017-01-10T02:30:16.000Z" itemprop="datePublished">2017-01-10</time>
-    <h1 itemprop="name">部署springboot应用_centOS6</h1>
+      <time datetime="2017-02-28T17:22:34.000Z" itemprop="datePublished">2017-03-01</time>
+    <h1 itemprop="name">关于java可变参数重载</h1>
     
      
-           <p itemprop="description" >[TOC]
-部署springboot应用_centOS6
-springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的服务
-
-注意：在centOS6上只能使用init.d的方式
-按照官方文档，在centOS6上不需要其他任何配置就能部署</p>
+           <p itemprop="description" >关于java可变参数重载1. 场景分析在使用Guava的ImmutableList的类的时候， 发现里面有很多of的重载方法（类似的还有java的EnumSet的of方法）。
+如下：
+123456of(E e);of(E e1, E e2);of(E e1, E e2, E e3</p>
         
     
   </a>
@@ -155,17 +152,18 @@ springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/icemimosa/hive/hive解决元数据乱码/" title="hive解决元数据乱码" itemprop="url">
+    <a href="/icemimosa/spring/部署springboot应用_CentOS6/" title="部署springboot应用_centOS6" itemprop="url">
   
-      <time datetime="2016-11-24T07:30:16.000Z" itemprop="datePublished">2016-11-24</time>
-    <h1 itemprop="name">hive解决元数据乱码</h1>
+      <time datetime="2017-01-10T02:30:16.000Z" itemprop="datePublished">2017-01-10</time>
+    <h1 itemprop="name">部署springboot应用_centOS6</h1>
     
      
-           <p itemprop="description" >hive解决元数据乱码1. 修改hive表由于 Cloudera Manager 安装的hive的元数据(如在mysql中)的编码是 latin1, 所以在各种有 COMMENT 是中文的情况下各种乱码。
+           <p itemprop="description" >[TOC]
+部署springboot应用_centOS6
+springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的服务
 
-注意：不要修改hive整库的编码，会有问题，报错如下：
-
-12FAILE</p>
+注意：在centOS6上只能使用init.d的方式
+按照官方文档，在centOS6上不需要其他任何配置就能部署</p>
         
     
   </a>
@@ -189,15 +187,17 @@ parquet压缩hive表1. 应用场景原表为txt格式，占用硬盘空间太大
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/icemimosa/hadoop/删除MacOS X文件系统的附加属性@符号/" title="删除MacOS X文件系统的附加属性@" itemprop="url">
+    <a href="/icemimosa/hive/hive解决元数据乱码/" title="hive解决元数据乱码" itemprop="url">
   
-      <time datetime="2016-10-25T07:30:16.000Z" itemprop="datePublished">2016-10-25</time>
-    <h1 itemprop="name">删除MacOS X文件系统的附加属性@</h1>
+      <time datetime="2016-11-24T07:30:16.000Z" itemprop="datePublished">2016-11-24</time>
+    <h1 itemprop="name">hive解决元数据乱码</h1>
     
      
-           <p itemprop="description" >删除MacOS X文件系统的附加属性@场景：之前手贱，一不小心删除了Hdfs的一个目录。还好之前做了备份，但是只是备份整个电脑的，所以只将里面的关于HDFS的备份拿出来。
-但是拿过来之后有个问题, 目录最后多了个@符号：
-123456&amp;gt; lldrwxr-xr-x@   4 </p>
+           <p itemprop="description" >hive解决元数据乱码1. 修改hive表由于 Cloudera Manager 安装的hive的元数据(如在mysql中)的编码是 latin1, 所以在各种有 COMMENT 是中文的情况下各种乱码。
+
+注意：不要修改hive整库的编码，会有问题，报错如下：
+
+12FAILE</p>
         
     
   </a>
@@ -238,17 +238,15 @@ hive处理增量数据1. 场景
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/icemimosa/hive/hive表动态分区/" title="Hive表动态分区" itemprop="url">
+    <a href="/icemimosa/hadoop/删除MacOS X文件系统的附加属性@符号/" title="删除MacOS X文件系统的附加属性@" itemprop="url">
   
-      <time datetime="2016-10-24T07:30:16.000Z" itemprop="datePublished">2016-10-24</time>
-    <h1 itemprop="name">Hive表动态分区</h1>
+      <time datetime="2016-10-25T07:30:16.000Z" itemprop="datePublished">2016-10-25</time>
+    <h1 itemprop="name">删除MacOS X文件系统的附加属性@</h1>
     
      
-           <p itemprop="description" >Hive表动态分区[TOC]
-1. 动态分区应用场景
-静态分区和动态分区的区别在于导入数据时，是手动输入分区名称，还是通过数据来判断数据分区。对于大数据批量导入来说，显然采用动态分区更为简单方便。  
-
-应用场景为，若需要导入一个系统的历史数据，且这些历史数据的数据量较大，需要根</p>
+           <p itemprop="description" >删除MacOS X文件系统的附加属性@场景：之前手贱，一不小心删除了Hdfs的一个目录。还好之前做了备份，但是只是备份整个电脑的，所以只将里面的关于HDFS的备份拿出来。
+但是拿过来之后有个问题, 目录最后多了个@符号：
+123456&amp;gt; lldrwxr-xr-x@   4 </p>
         
     
   </a>
@@ -294,6 +292,8 @@ hive处理增量数据1. 场景
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
+			<li><a href="/categories/java/" title="java">java<sup>1</sup></a></li>
+		
 			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
 		
 			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
@@ -318,6 +318,8 @@ hive处理增量数据1. 场景
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
 			<li><a href="/tags/impala/" title="impala">impala<sup>1</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>1</sup></a></li>
 		
 			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
 		
@@ -345,7 +347,7 @@ hive处理增量数据1. 场景
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/hadoop/" style="font-size: 17.5px;">hadoop</a> <a href="/tags/hive/" style="font-size: 20px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/mac/" style="font-size: 10px;">mac</a> <a href="/tags/oozie/" style="font-size: 17.5px;">oozie</a> <a href="/tags/spark/" style="font-size: 10px;">spark</a> <a href="/tags/spring/" style="font-size: 12.5px;">spring</a> <a href="/tags/springboot/" style="font-size: 12.5px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 15px;">sqoop</a>
+       <a href="/tags/hadoop/" style="font-size: 17.5px;">hadoop</a> <a href="/tags/hive/" style="font-size: 20px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/mac/" style="font-size: 10px;">mac</a> <a href="/tags/oozie/" style="font-size: 17.5px;">oozie</a> <a href="/tags/spark/" style="font-size: 10px;">spark</a> <a href="/tags/spring/" style="font-size: 12.5px;">spring</a> <a href="/tags/springboot/" style="font-size: 12.5px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 15px;">sqoop</a>
     </div>
   </div>
 
@@ -355,7 +357,7 @@ hive处理增量数据1. 场景
   </div>
   <footer><div id="footer" >
     
-            <p class="copyright"> © 2017 
+            <p class="copyright"> © 2018 
 		
 		<a href="http://www.patamon.me" target="_blank" title="IceMimosa">IceMimosa</a>
 		
