@@ -7,17 +7,15 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>hive处理增量数据 | Ice の Mimosa</title>
+    <title>【Lombok原理1】自定义注解处理器 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
     <meta name="description" content="[TOC]
-hive处理增量数据1. 场景
-前提：通过 Sqoop 拉取的数据含有 主键 或者 唯一键
-场景：每天 按时间 或者 其他列值 增量拉取数据, 如下
+1. java编译过程在搞清楚Lombok的原理之前, 首先看下java编译的基本过程。如图是OpenJDK提供的过程图, 大致分为三个步骤:
 
-123每天按照时间(如更新时间updated_at)，来增量拉取数据。然后把每天的拉取的数据，增量放入到hive表中的一个时间分区中。问">
+Parse and Enter 编译器会将java文件解析成Abstract Syntax Tree (AST)，即抽象语法树，这个过程会校验">
     
     
     
@@ -94,15 +92,15 @@ hive处理增量数据1. 场景
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/hive/hive处理增量数据/" title="hive处理增量数据" itemprop="url">hive处理增量数据</a>
+      <a href="/icemimosa/其他/[Lombok原理1]自定义注解处理器/" title="【Lombok原理1】自定义注解处理器" itemprop="url">【Lombok原理1】自定义注解处理器</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-10-25T07:30:16.000Z" itemprop="datePublished">2016-10-25</time>
-    更新日期:<time datetime="2016-12-14T09:12:20.000Z" itemprop="dateModified">2016-12-14</time>
+    <time datetime="2017-03-02T19:00:34.000Z" itemprop="datePublished">2017-03-03</time>
+    更新日期:<time datetime="2018-02-04T15:18:20.979Z" itemprop="dateModified">2018-02-04</time>
     
   </p>
 </header>
@@ -111,150 +109,63 @@ hive处理增量数据1. 场景
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#hive处理增量数据"><span class="toc-text">hive处理增量数据</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-场景"><span class="toc-text">1. 场景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-增量处理"><span class="toc-text">2. 增量处理</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-java编译过程"><span class="toc-text">1. java编译过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-自定义HelloWorld注解处理器"><span class="toc-text">2. 自定义HelloWorld注解处理器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-定义一个注解"><span class="toc-text">2.1 定义一个注解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-定义一个处理器"><span class="toc-text">2.2 定义一个处理器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-注册处理器服务"><span class="toc-text">2.3 注册处理器服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-测试注解"><span class="toc-text">2.4 测试注解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-查看效果"><span class="toc-text">2.5 查看效果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-参考"><span class="toc-text">3. 参考</span></a></li></ol>
 		</div>
 		
 		<p>[TOC]</p>
-<h1 id="hive处理增量数据"><a href="#hive处理增量数据" class="headerlink" title="hive处理增量数据"></a>hive处理增量数据</h1><h1 id="1-场景"><a href="#1-场景" class="headerlink" title="1. 场景"></a>1. 场景</h1><ul>
-<li>前提：通过 <code>Sqoop</code> 拉取的数据含有 <code>主键</code> 或者 <code>唯一键</code></li>
-<li>场景：每天 <code>按时间</code> 或者 <code>其他列值</code> 增量拉取数据, 如下</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">每天按照时间(如更新时间updated_at)，来增量拉取数据。然后把每天的拉取的数据，增量放入到hive表中的一个时间分区中。</div><div class="line"></div><div class="line">问题：由于按照更新时间来增量拉取，hive表肯定会存在重复数据。</div></pre></td></tr></table></figure>
-<blockquote>
-<p>例子：</p>
-</blockquote>
-<ul>
-<li>源表 <code>user</code> 的数据，id是主键，更新时间省去</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th>name</th>
-<th>age</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>张三</td>
-<td>23</td>
-</tr>
-<tr>
-<td>2</td>
-<td>李四</td>
-<td>24</td>
-</tr>
-<tr>
-<td>3</td>
-<td>王五</td>
-<td>25</td>
-</tr>
-<tr>
-<td>4</td>
-<td>赵六</td>
-<td>26</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li><p>第一天拉取数据到hive的一张表中如：<code>s_user</code>，<code>分区 pt</code>为：<code>2016-10-10</code></p>
-</li>
-<li><p>第二天，由于源表的信息发生变化, 数据如下。然后将数据放入到 <code>s_user</code> 的分区 <code>2016-10-11</code>中。</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th>name</th>
-<th>age</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>张三</td>
-<td>23</td>
-</tr>
-<tr>
-<td>2</td>
-<td>李四</td>
-<td>24</td>
-</tr>
-<tr>
-<td>3</td>
-<td>王五</td>
-<td>255</td>
-</tr>
-<tr>
-<td>4</td>
-<td>赵六</td>
-<td>266</td>
-</tr>
-<tr>
-<td>5</td>
-<td>贱人</td>
-<td>11</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li><p>这样 <code>s_user</code> 表中的数据就会存在重复。</p>
-</li>
-<li><p>这个时候最正常的解决办法就是，将 <code>s_user</code> 的数据每天计算，根据<code>id</code>进行分组，然后相同id的去最新<code>pt</code>的那一条记录，最后将数据插入到一张明细表中 <code>dwd_user</code>(结构与 <code>s_user</code>一致)。(这里面省去的数据的清洗)</p>
-</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 语句</span></div><div class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> dwd_user</div><div class="line"><span class="keyword">SELECT</span> t.id, t.name, t.age <span class="keyword">FROM</span> (</div><div class="line">	<span class="keyword">SELECT</span> <span class="keyword">id</span>, <span class="keyword">name</span>, age, ROW_NUMBER() <span class="keyword">OVER</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">id</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> pt <span class="keyword">DESC</span>) <span class="keyword">as</span> <span class="keyword">num</span></div><div class="line">	<span class="keyword">FROM</span> s_user </div><div class="line">) t</div><div class="line"><span class="keyword">WHERE</span> t.num = <span class="number">1</span></div><div class="line"></div><div class="line">## ROW_NUMBER() <span class="keyword">OVER</span>() 参考 <span class="keyword">http</span>://blog.csdn.net/lsxy117/article/details/<span class="number">50387395</span></div></pre></td></tr></table></figure>
-<ul>
-<li><p>这样 <code>dwd_user</code> 中的数据就能保证最新了。</p>
-</li>
-<li><p>问题：由于<code>dwd_user</code>是每天都覆盖的，那么每天都要把 <code>s_user</code> 表所有数据统计一遍，这样肯定不行。我们的做法是 <code>dwd_user</code> 也有分区<code>pt</code>，然后每天将最新统计完的数据放入到 <code>dwd_user</code>的最新分区中(弊端：<code>dwd_user</code> 表会越来越大。优点：可以回溯每天的历史数据)。</p>
-</li>
-</ul>
-<h1 id="2-增量处理"><a href="#2-增量处理" class="headerlink" title="2. 增量处理"></a>2. 增量处理</h1><p>基于上述 <code>dwd_user</code> 存在分区的情况之下，这样就可以将原先的处理逻辑进行优化。</p>
-<ul>
-<li>第一天的数据情况</li>
-</ul>
-<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2016-12-14-085204.jpg" alt=""></p>
-<ul>
-<li>第二天的数据情况</li>
-</ul>
-<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2016-12-14-085427.jpg" alt=""></p>
-<blockquote>
-<p>处理流程</p>
-</blockquote>
-<p>1、为了将最新的数据处理到 <code>dwd_user</code> 的新分区中 <code>2016-10-11</code>。<br>2、这个时候你只要关心 <code>s_user</code> 的 <code>2016-10-11</code> 分区以及 <code>dwd_user</code> 的 <code>2016-10-10</code>分区。<br>3、这样你就能避免重复去算 <code>s_user</code> 的旧数据。<br>4、步骤如下：将 <code>s_user(2016-10-11)</code> 数据和 <code>dwd_user(2016-10-10)</code>数据合并，然后按<code>id</code>分组，取最新 <code>pt</code> 的数据，最后插入到 <code>dwd_user</code>的 <code>2016-10-11</code> 分区。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> dwd_user <span class="keyword">partition</span>(pt=<span class="string">'2016-10-11'</span>)</div><div class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>, <span class="keyword">name</span>, age <span class="keyword">FROM</span> (</div><div class="line">	<span class="keyword">SELECT</span> <span class="keyword">id</span>, <span class="keyword">name</span>, age, ROW_NUMBER() <span class="keyword">OVER</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">id</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> pt <span class="keyword">DESC</span>) <span class="keyword">as</span> <span class="keyword">num</span></div><div class="line">	<span class="keyword">FROM</span> (</div><div class="line">		<span class="keyword">SELECT</span> <span class="keyword">id</span>, <span class="keyword">name</span>, age, pt</div><div class="line">		<span class="keyword">FROM</span> dwd_user</div><div class="line">		<span class="keyword">WHERE</span> pt=<span class="string">'2016-10-10'</span></div><div class="line">		<span class="keyword">UNION</span> ALL</div><div class="line">		<span class="keyword">SELECT</span> <span class="keyword">id</span>, <span class="keyword">name</span>, age, pt</div><div class="line">		<span class="keyword">FROM</span> s_user</div><div class="line">		<span class="keyword">WHERE</span> pt=<span class="string">'2016-10-11'</span></div><div class="line">	)</div><div class="line">) t</div><div class="line"><span class="keyword">WHERE</span> t.num = <span class="number">1</span></div></pre></td></tr></table></figure>
-<p>5、这样就能很好的处理每天增量的数据。</p>
-<p>参考：</p>
+<h2 id="1-java编译过程"><a href="#1-java编译过程" class="headerlink" title="1. java编译过程"></a>1. java编译过程</h2><p>在搞清楚<a href="https://projectlombok.org/" target="_blank" rel="external">Lombok</a>的原理之前, 首先看下java编译的基本过程。如图是<a href="http://openjdk.java.net/groups/compiler/doc/compilation-overview/index.html" target="_blank" rel="external">OpenJDK</a>提供的过程图, 大致分为三个步骤:</p>
 <ol>
-<li><a href="http://blog.csdn.net/qq_20641565/article/details/52763663" target="_blank" rel="external">http://blog.csdn.net/qq_20641565/article/details/52763663</a></li>
+<li><p><strong>Parse and Enter</strong><br> 编译器会将java文件解析成Abstract Syntax Tree (AST)，即<code>抽象语法树</code>，这个过程会校验语法的正确性等等。</p>
+</li>
+<li><p><strong>Annotation Processing</strong><br> 在这个过程中自定义的注解处理器将会被调用，在这个过程中你可以对语法树进行校验（如<a href="https://github.com/checkstyle/checkstyle" target="_blank" rel="external">checkstyle</a>所做的），你也可以生成新的java文件等等。</p>
+</li>
+<li><p><strong>Analyse and Generate</strong><br> 最后一步编译器就会根据抽象语法树生成对应的字节码(class文件)。</p>
+</li>
 </ol>
-<p>没有主键的方案参考：</p>
-<ol>
-<li><a href="http://blog.csdn.net/qq_20641565/article/details/52852168" target="_blank" rel="external">http://blog.csdn.net/qq_20641565/article/details/52852168</a></li>
-</ol>
+<p><img src="http://openjdk.java.net/groups/compiler/doc/compilation-overview/javac-flow.png" alt=""></p>
+<h2 id="2-自定义HelloWorld注解处理器"><a href="#2-自定义HelloWorld注解处理器" class="headerlink" title="2. 自定义HelloWorld注解处理器"></a>2. 自定义HelloWorld注解处理器</h2><p>这样看来我们要想实现类似lombok的功能，看起来就好像很简单，那就是在完成上述的<code>第二部操作</code>。</p>
+<p>所有代码可以参考：<a href="https://github.com/IceMimosa/pigutu-ui" target="_blank" rel="external">https://github.com/IceMimosa/pigutu-ui</a></p>
+<h3 id="2-1-定义一个注解"><a href="#2-1-定义一个注解" class="headerlink" title="2.1 定义一个注解"></a>2.1 定义一个注解</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Target</span>(ElementType.TYPE)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.SOURCE)</div><div class="line"><span class="meta">@Documented</span></div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> TestAnnotation &#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 测试名称</div><div class="line">     */</div><div class="line">    <span class="function">String <span class="title">name</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-2-定义一个处理器"><a href="#2-2-定义一个处理器" class="headerlink" title="2.2 定义一个处理器"></a>2.2 定义一个处理器</h3><p>定义一个处理器, 继承<code>AbstractProcessor</code>类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">@SupportedAnnotationTypes(&#123;&quot;io.patamon.apt.annotation.TestAnnotation&quot;&#125;)</div><div class="line">@SupportedSourceVersion(SourceVersion.RELEASE_8)</div><div class="line">public class TestProcessor extends AbstractProcessor &#123;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public boolean process(Set&lt;? extends TypeElement&gt; annotations, RoundEnvironment roundEnv) &#123;</div><div class="line">        for (TypeElement element : annotations) &#123;</div><div class="line">            this.processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, &quot;HelloWorld, &quot; + element.getSimpleName());</div><div class="line">            System.out.println(&quot;HelloWorld, &quot; + element.getSimpleName());</div><div class="line">        &#125;</div><div class="line">        return false;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-3-注册处理器服务"><a href="#2-3-注册处理器服务" class="headerlink" title="2.3 注册处理器服务"></a>2.3 注册处理器服务</h3><p>在resources目录下新建目录<code>META-INF/services</code>，新建文件<code>javax.annotation.processing.Processor</code>，内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">io.patamon.apt.processor.TestProcessor</div></pre></td></tr></table></figure>
+<h3 id="2-4-测试注解"><a href="#2-4-测试注解" class="headerlink" title="2.4 测试注解"></a>2.4 测试注解</h3><p>注意：测试的类不要和注解处理在同一个模块（或jar包），不然编译的时候会报类找不到的错误。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@TestAnnotation(name = &quot;TestAnnotationName&quot;)</div><div class="line">public class TestAnnotationDemo &#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-5-查看效果"><a href="#2-5-查看效果" class="headerlink" title="2.5 查看效果"></a>2.5 查看效果</h3><p>1、 如果是在IDEA中测试，需要打开<code>注解编译</code>，位置: <code>Preferences &gt; Build, Execition, Deployment &gt; compiler &gt; Annotation Processors</code></p>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-02-04-131656.png" alt=""></p>
+<p>或者pom.xml中添加build配置，IDEA会自动打开和关闭，详细可以参考代码。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"> <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">compilerArgument</span>&gt;</span>-proc:none<span class="tag">&lt;/<span class="name">compilerArgument</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>此时我们点击<code>build &gt; Rebuild Project</code>，会在IDEA的<code>message控制台</code>看到如下信息：</p>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-02-04-131751.png" alt=""></p>
+<p>2、 在控制台执行<code>mvn clean package -DskipTests</code></p>
+<p>需要在pom的build中添加<code>tools.jar</code>的配置</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.6.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">compilerArguments</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">bootclasspath</span>&gt;</span>$&#123;JAVA_HOME&#125;/jre/lib/rt.jar:$&#123;JAVA_HOME&#125;/jre/lib/jce.jar:$&#123;JAVA_HOME&#125;/lib/tools.jar<span class="tag">&lt;/<span class="name">bootclasspath</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">compilerArguments</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div></pre></td></tr></table></figure>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-02-04-132039.png" alt=""></p>
+<h2 id="3-参考"><a href="#3-参考" class="headerlink" title="3. 参考"></a>3. 参考</h2><ul>
+<li><a href="http://notatube.blogspot.be/2010/11/project-lombok-trick-explained.html" target="_blank" rel="external">Lombok解释</a></li>
+<li><a href="http://notatube.blogspot.com/2010/12/project-lombok-creating-custom.html" target="_blank" rel="external">Project Lombok: Creating Custom Transformations</a></li>
+</ul>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/hive/">hive</a><a href="/tags/sqoop/">sqoop</a>
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/lombok/">lombok</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/hive/">hive</a>
+  <a class="article-category-link" href="/categories/java/">java</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/hive/hive处理增量数据/" data-title="hive处理增量数据 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/其他/[Lombok原理1]自定义注解处理器/" data-title="【Lombok原理1】自定义注解处理器 | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -264,18 +175,18 @@ hive处理增量数据1. 场景
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/icemimosa/hadoop/删除MacOS X文件系统的附加属性@符号/" title="删除MacOS X文件系统的附加属性@">
+ <a href="/icemimosa/其他/[Lombok原理2]生成java代码/" title="【Lombok原理2】生成java代码">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  删除MacOS X文件系统的附加属性@</span>
+  【Lombok原理2】生成java代码</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/icemimosa/hive/hive表动态分区/"  title="Hive表动态分区">
+<a href="/icemimosa/其他/[转]Https前世今生/"  title="【转】Https前世今生">
  <strong>NEXT:</strong><br/> 
- <span>Hive表动态分区
+ <span>【转】Https前世今生
 </span>
 </a>
 </div>
@@ -293,7 +204,7 @@ hive处理增量数据1. 场景
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#hive处理增量数据"><span class="toc-text">hive处理增量数据</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-场景"><span class="toc-text">1. 场景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-增量处理"><span class="toc-text">2. 增量处理</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-java编译过程"><span class="toc-text">1. java编译过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-自定义HelloWorld注解处理器"><span class="toc-text">2. 自定义HelloWorld注解处理器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-定义一个注解"><span class="toc-text">2.1 定义一个注解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-定义一个处理器"><span class="toc-text">2.2 定义一个处理器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-注册处理器服务"><span class="toc-text">2.3 注册处理器服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-测试注解"><span class="toc-text">2.4 测试注解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-查看效果"><span class="toc-text">2.5 查看效果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-参考"><span class="toc-text">3. 参考</span></a></li></ol>
   </div>
 
 <div id="asidepart">

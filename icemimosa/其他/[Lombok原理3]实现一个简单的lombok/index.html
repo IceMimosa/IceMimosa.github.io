@@ -7,17 +7,14 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>hive处理增量数据 | Ice の Mimosa</title>
+    <title>【Lombok原理3】实现一个简单的lombok | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
     <meta name="description" content="[TOC]
-hive处理增量数据1. 场景
-前提：通过 Sqoop 拉取的数据含有 主键 或者 唯一键
-场景：每天 按时间 或者 其他列值 增量拉取数据, 如下
-
-123每天按照时间(如更新时间updated_at)，来增量拉取数据。然后把每天的拉取的数据，增量放入到hive表中的一个时间分区中。问">
+1. 前言本节将实现一个的Getter/Setter方法作为示例。
+之前说了，通过APT(Annotation Processor Tool)我们可以获取一些基本信息，生成java代码等等（查看JSR269）。那么如果我们想要对抽象语法树进行遍历方法，那么还需要JSR199Java Co">
     
     
     
@@ -94,15 +91,15 @@ hive处理增量数据1. 场景
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/hive/hive处理增量数据/" title="hive处理增量数据" itemprop="url">hive处理增量数据</a>
+      <a href="/icemimosa/其他/[Lombok原理3]实现一个简单的lombok/" title="【Lombok原理3】实现一个简单的lombok" itemprop="url">【Lombok原理3】实现一个简单的lombok</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-10-25T07:30:16.000Z" itemprop="datePublished">2016-10-25</time>
-    更新日期:<time datetime="2016-12-14T09:12:20.000Z" itemprop="dateModified">2016-12-14</time>
+    <time datetime="2017-03-05T13:00:34.000Z" itemprop="datePublished">2017-03-05</time>
+    更新日期:<time datetime="2018-02-04T15:18:31.260Z" itemprop="dateModified">2018-02-04</time>
     
   </p>
 </header>
@@ -111,150 +108,57 @@ hive处理增量数据1. 场景
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#hive处理增量数据"><span class="toc-text">hive处理增量数据</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-场景"><span class="toc-text">1. 场景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-增量处理"><span class="toc-text">2. 增量处理</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-前言"><span class="toc-text">1. 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-实现生成Getter-Setter方法"><span class="toc-text">2 实现生成Getter/Setter方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-定义注解"><span class="toc-text">2.1 定义注解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-定义LombokProcessor"><span class="toc-text">2.2 定义LombokProcessor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-测试代码"><span class="toc-text">2.3 测试代码</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-告一段落"><span class="toc-text">3. 告一段落</span></a>
 		</div>
 		
 		<p>[TOC]</p>
-<h1 id="hive处理增量数据"><a href="#hive处理增量数据" class="headerlink" title="hive处理增量数据"></a>hive处理增量数据</h1><h1 id="1-场景"><a href="#1-场景" class="headerlink" title="1. 场景"></a>1. 场景</h1><ul>
-<li>前提：通过 <code>Sqoop</code> 拉取的数据含有 <code>主键</code> 或者 <code>唯一键</code></li>
-<li>场景：每天 <code>按时间</code> 或者 <code>其他列值</code> 增量拉取数据, 如下</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">每天按照时间(如更新时间updated_at)，来增量拉取数据。然后把每天的拉取的数据，增量放入到hive表中的一个时间分区中。</div><div class="line"></div><div class="line">问题：由于按照更新时间来增量拉取，hive表肯定会存在重复数据。</div></pre></td></tr></table></figure>
+<h2 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h2><p>本节将实现一个的<code>Getter/Setter</code>方法作为示例。</p>
+<p>之前说了，通过<code>APT(Annotation Processor Tool)</code>我们可以获取一些基本信息，生成java代码等等（查看<a href="https://jcp.org/en/jsr/detail?id=269" target="_blank" rel="external">JSR269</a>）。那么如果我们想要对抽象语法树进行遍历方法，那么还需要<a href="https://jcp.org/en/jsr/detail?id=199" target="_blank" rel="external">JSR199</a><code>Java Compiler API</code>的支持。</p>
+<p>涉及到API包括<code>com.sun.source.util.Trees</code>，<code>com.sun.source.tree.TreeVisitor</code>，<code>com.sun.source.util.TreePathScanner</code>等等。</p>
+<p>在<code>Visitor API</code>中，你可以校验代码是否使用了<code>Assert</code>，<code>goto</code>，<code>while(true)</code>等等，然后基于报错提示。</p>
+<p>详细可以参考：<a href="http://pfmiles.github.io/blog/dynamic-java/" target="_blank" rel="external">http://pfmiles.github.io/blog/dynamic-java/</a></p>
 <blockquote>
-<p>例子：</p>
+<p>疑问</p>
 </blockquote>
+<p>那么既然可以实现<code>AST</code>的遍历访问，那么在遍历的时候可不可以改变<code>AST</code>的结构呢，这样我们就能像修改字节码一样，增加我们想要的东西，如果<code>Getter/Setter</code>方法。</p>
+<p>严格来说按照API规范来讲是不行了，当然不严格的可以通过一个bug可以做到，这个<a href="http://scg.unibe.ch/archive/projects/Erni08b.pdf" target="_blank" rel="external">bug</a>让我们违背了<code>JSR269</code>。lombok就是利用了这点而实现的。</p>
+<h2 id="2-实现生成Getter-Setter方法"><a href="#2-实现生成Getter-Setter方法" class="headerlink" title="2 实现生成Getter/Setter方法"></a>2 实现生成Getter/Setter方法</h2><h3 id="2-1-定义注解"><a href="#2-1-定义注解" class="headerlink" title="2.1 定义注解"></a>2.1 定义注解</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Target</span>(ElementType.FIELD)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.SOURCE)</div><div class="line"><span class="meta">@Documented</span></div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Getter &#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Target</span>(ElementType.FIELD)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.SOURCE)</div><div class="line"><span class="meta">@Documented</span></div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Setter &#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-2-定义LombokProcessor"><a href="#2-2-定义LombokProcessor" class="headerlink" title="2.2 定义LombokProcessor"></a>2.2 定义LombokProcessor</h3><p>这里使用谷歌的<a href="https://github.com/google/auto" target="_blank" rel="external"><code>auto-service</code></a>进行服务的注册，其实它本身也是一个<code>注解处理器</code>，在类上用如下注解修饰:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@AutoService</span>(Processor.class)</div></pre></td></tr></table></figure>
 <ul>
-<li>源表 <code>user</code> 的数据，id是主键，更新时间省去</li>
+<li>processor的主要代码如下:</li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th>name</th>
-<th>age</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>张三</td>
-<td>23</td>
-</tr>
-<tr>
-<td>2</td>
-<td>李四</td>
-<td>24</td>
-</tr>
-<tr>
-<td>3</td>
-<td>王五</td>
-<td>25</td>
-</tr>
-<tr>
-<td>4</td>
-<td>赵六</td>
-<td>26</td>
-</tr>
-</tbody>
-</table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (!roundEnv.processingOver()) &#123;</div><div class="line">    <span class="keyword">for</span> (Element element : roundEnv.getRootElements()) &#123;</div><div class="line">        <span class="keyword">if</span> (element.getKind().isClass()) &#123;</div><div class="line">            <span class="comment">// 获取语法树</span></div><div class="line">            JCTree tree = (JCTree) trees.getTree(element);</div><div class="line">            <span class="comment">// 使用TreeTranslator遍历</span></div><div class="line">            tree.accept(<span class="keyword">new</span> LombokTreeTranslator(treeMaker, names));</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <ul>
-<li><p>第一天拉取数据到hive的一张表中如：<code>s_user</code>，<code>分区 pt</code>为：<code>2016-10-10</code></p>
-</li>
-<li><p>第二天，由于源表的信息发生变化, 数据如下。然后将数据放入到 <code>s_user</code> 的分区 <code>2016-10-11</code>中。</p>
-</li>
+<li>LombokTreeTranslator主要代码如下</li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th>name</th>
-<th>age</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>张三</td>
-<td>23</td>
-</tr>
-<tr>
-<td>2</td>
-<td>李四</td>
-<td>24</td>
-</tr>
-<tr>
-<td>3</td>
-<td>王五</td>
-<td>255</td>
-</tr>
-<tr>
-<td>4</td>
-<td>赵六</td>
-<td>266</td>
-</tr>
-<tr>
-<td>5</td>
-<td>贱人</td>
-<td>11</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li><p>这样 <code>s_user</code> 表中的数据就会存在重复。</p>
-</li>
-<li><p>这个时候最正常的解决办法就是，将 <code>s_user</code> 的数据每天计算，根据<code>id</code>进行分组，然后相同id的去最新<code>pt</code>的那一条记录，最后将数据插入到一张明细表中 <code>dwd_user</code>(结构与 <code>s_user</code>一致)。(这里面省去的数据的清洗)</p>
-</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 语句</span></div><div class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> dwd_user</div><div class="line"><span class="keyword">SELECT</span> t.id, t.name, t.age <span class="keyword">FROM</span> (</div><div class="line">	<span class="keyword">SELECT</span> <span class="keyword">id</span>, <span class="keyword">name</span>, age, ROW_NUMBER() <span class="keyword">OVER</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">id</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> pt <span class="keyword">DESC</span>) <span class="keyword">as</span> <span class="keyword">num</span></div><div class="line">	<span class="keyword">FROM</span> s_user </div><div class="line">) t</div><div class="line"><span class="keyword">WHERE</span> t.num = <span class="number">1</span></div><div class="line"></div><div class="line">## ROW_NUMBER() <span class="keyword">OVER</span>() 参考 <span class="keyword">http</span>://blog.csdn.net/lsxy117/article/details/<span class="number">50387395</span></div></pre></td></tr></table></figure>
-<ul>
-<li><p>这样 <code>dwd_user</code> 中的数据就能保证最新了。</p>
-</li>
-<li><p>问题：由于<code>dwd_user</code>是每天都覆盖的，那么每天都要把 <code>s_user</code> 表所有数据统计一遍，这样肯定不行。我们的做法是 <code>dwd_user</code> 也有分区<code>pt</code>，然后每天将最新统计完的数据放入到 <code>dwd_user</code>的最新分区中(弊端：<code>dwd_user</code> 表会越来越大。优点：可以回溯每天的历史数据)。</p>
-</li>
-</ul>
-<h1 id="2-增量处理"><a href="#2-增量处理" class="headerlink" title="2. 增量处理"></a>2. 增量处理</h1><p>基于上述 <code>dwd_user</code> 存在分区的情况之下，这样就可以将原先的处理逻辑进行优化。</p>
-<ul>
-<li>第一天的数据情况</li>
-</ul>
-<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2016-12-14-085204.jpg" alt=""></p>
-<ul>
-<li>第二天的数据情况</li>
-</ul>
-<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2016-12-14-085427.jpg" alt=""></p>
-<blockquote>
-<p>处理流程</p>
-</blockquote>
-<p>1、为了将最新的数据处理到 <code>dwd_user</code> 的新分区中 <code>2016-10-11</code>。<br>2、这个时候你只要关心 <code>s_user</code> 的 <code>2016-10-11</code> 分区以及 <code>dwd_user</code> 的 <code>2016-10-10</code>分区。<br>3、这样你就能避免重复去算 <code>s_user</code> 的旧数据。<br>4、步骤如下：将 <code>s_user(2016-10-11)</code> 数据和 <code>dwd_user(2016-10-10)</code>数据合并，然后按<code>id</code>分组，取最新 <code>pt</code> 的数据，最后插入到 <code>dwd_user</code>的 <code>2016-10-11</code> 分区。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> dwd_user <span class="keyword">partition</span>(pt=<span class="string">'2016-10-11'</span>)</div><div class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>, <span class="keyword">name</span>, age <span class="keyword">FROM</span> (</div><div class="line">	<span class="keyword">SELECT</span> <span class="keyword">id</span>, <span class="keyword">name</span>, age, ROW_NUMBER() <span class="keyword">OVER</span>(<span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">id</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> pt <span class="keyword">DESC</span>) <span class="keyword">as</span> <span class="keyword">num</span></div><div class="line">	<span class="keyword">FROM</span> (</div><div class="line">		<span class="keyword">SELECT</span> <span class="keyword">id</span>, <span class="keyword">name</span>, age, pt</div><div class="line">		<span class="keyword">FROM</span> dwd_user</div><div class="line">		<span class="keyword">WHERE</span> pt=<span class="string">'2016-10-10'</span></div><div class="line">		<span class="keyword">UNION</span> ALL</div><div class="line">		<span class="keyword">SELECT</span> <span class="keyword">id</span>, <span class="keyword">name</span>, age, pt</div><div class="line">		<span class="keyword">FROM</span> s_user</div><div class="line">		<span class="keyword">WHERE</span> pt=<span class="string">'2016-10-11'</span></div><div class="line">	)</div><div class="line">) t</div><div class="line"><span class="keyword">WHERE</span> t.num = <span class="number">1</span></div></pre></td></tr></table></figure>
-<p>5、这样就能很好的处理每天增量的数据。</p>
-<p>参考：</p>
-<ol>
-<li><a href="http://blog.csdn.net/qq_20641565/article/details/52763663" target="_blank" rel="external">http://blog.csdn.net/qq_20641565/article/details/52763663</a></li>
-</ol>
-<p>没有主键的方案参考：</p>
-<ol>
-<li><a href="http://blog.csdn.net/qq_20641565/article/details/52852168" target="_blank" rel="external">http://blog.csdn.net/qq_20641565/article/details/52852168</a></li>
-</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visitClassDef</span><span class="params">(JCClassDecl jcClassDecl)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.visitClassDef(jcClassDecl);</div><div class="line">    <span class="comment">// 插入getter方法</span></div><div class="line">    <span class="keyword">if</span> (!getters.isEmpty()) &#123;</div><div class="line">        jcClassDecl.defs = jcClassDecl.defs.appendList(<span class="keyword">this</span>.getters);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 插入setter方法</span></div><div class="line">    <span class="keyword">if</span> (!setters.isEmpty()) &#123;</div><div class="line">        jcClassDecl.defs = jcClassDecl.defs.appendList(<span class="keyword">this</span>.setters);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">this</span>.result = jcClassDecl;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">visitVarDef</span><span class="params">(JCVariableDecl jcVariableDecl)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.visitVarDef(jcVariableDecl);</div><div class="line">    JCModifiers modifiers = jcVariableDecl.getModifiers();</div><div class="line">    List&lt;JCAnnotation&gt; annotations = modifiers.getAnnotations();</div><div class="line">    <span class="keyword">if</span> (annotations == <span class="keyword">null</span> || annotations.size() &lt;= <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 下面只是简单处理, 不考虑是否存在等等</span></div><div class="line">    <span class="keyword">for</span> (JCAnnotation annotation : annotations) &#123;</div><div class="line">        <span class="keyword">if</span> (Getter.class.getName().equals(annotation.type.toString())) &#123;</div><div class="line">            <span class="comment">// 生成getter方法</span></div><div class="line">            JCMethodDecl getterMethod = createGetterMethod(jcVariableDecl);</div><div class="line">            <span class="keyword">this</span>.getters = <span class="keyword">this</span>.getters.append(getterMethod);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (Setter.class.getName().equals(annotation.type.toString())) &#123;</div><div class="line">            <span class="comment">// 生成getter方法</span></div><div class="line">            JCMethodDecl setterMethod = createSetterMethod(jcVariableDecl);</div><div class="line">            <span class="keyword">this</span>.setters = <span class="keyword">this</span>.setters.append(setterMethod);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-3-测试代码"><a href="#2-3-测试代码" class="headerlink" title="2.3 测试代码"></a>2.3 测试代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class TestLombokDemo &#123;</div><div class="line"></div><div class="line">    @Getter</div><div class="line">    @Setter</div><div class="line">    private String name;</div><div class="line"></div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        TestLombokDemo d = new TestLombokDemo();</div><div class="line">        d.setName(&quot;aaa&quot;);</div><div class="line">        System.out.println(d.getName());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>执行<code>Build &gt; Rebuild Project</code>。</p>
+<p>这里会出现IDEA会报<code>set/get</code>方法找不到的错误，但是执行该main方法是可以执行的。lombok的解决方案应该是提供的IDEA插件的支持，我在网上在搜了半天没解决，修改AST不同于生成java代码的方式。</p>
+<p>我也在Stack Overflow问了把，详情见<a href="https://stackoverflow.com/questions/48605327/intellij-cannot-recognize-classes-modified-by-annotation-processor-in-target-cla。" target="_blank" rel="external">https://stackoverflow.com/questions/48605327/intellij-cannot-recognize-classes-modified-by-annotation-processor-in-target-cla。</a></p>
+<h1 id="3-告一段落"><a href="#3-告一段落" class="headerlink" title="3. 告一段落"></a>3. 告一段落</h1><p>完整代码见 <a href="https://github.com/IceMimosa/apt" target="_blank" rel="external">https://github.com/IceMimosa/apt</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/hive/">hive</a><a href="/tags/sqoop/">sqoop</a>
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/lombok/">lombok</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/hive/">hive</a>
+  <a class="article-category-link" href="/categories/java/">java</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/hive/hive处理增量数据/" data-title="hive处理增量数据 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/其他/[Lombok原理3]实现一个简单的lombok/" data-title="【Lombok原理3】实现一个简单的lombok | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -264,18 +168,18 @@ hive处理增量数据1. 场景
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/icemimosa/hadoop/删除MacOS X文件系统的附加属性@符号/" title="删除MacOS X文件系统的附加属性@">
+ <a href="/icemimosa/spark/Spark ALS应用与理解/" title="Spark ALS应用与理解">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  删除MacOS X文件系统的附加属性@</span>
+  Spark ALS应用与理解</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/icemimosa/hive/hive表动态分区/"  title="Hive表动态分区">
+<a href="/icemimosa/其他/[Lombok原理2]生成java代码/"  title="【Lombok原理2】生成java代码">
  <strong>NEXT:</strong><br/> 
- <span>Hive表动态分区
+ <span>【Lombok原理2】生成java代码
 </span>
 </a>
 </div>
@@ -293,7 +197,7 @@ hive处理增量数据1. 场景
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#hive处理增量数据"><span class="toc-text">hive处理增量数据</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-场景"><span class="toc-text">1. 场景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-增量处理"><span class="toc-text">2. 增量处理</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-前言"><span class="toc-text">1. 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-实现生成Getter-Setter方法"><span class="toc-text">2 实现生成Getter/Setter方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-定义注解"><span class="toc-text">2.1 定义注解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-定义LombokProcessor"><span class="toc-text">2.2 定义LombokProcessor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-测试代码"><span class="toc-text">2.3 测试代码</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-告一段落"><span class="toc-text">3. 告一段落</span></a>
   </div>
 
 <div id="asidepart">
