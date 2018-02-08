@@ -7,22 +7,13 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>Sqoop 源码改造 | Ice の Mimosa</title>
+    <title>01_Redis初识 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
-    <meta name="description" content="1. 要求
-sqoop-1.4.6-cdh5.7.1
-参见 RRADME.txt
-
-2. 编译项目
-参见 COMPILING.txt
-
-
-ant jar : 漫长的编译过程, 打开vpn啥的试试
-编译完了会在 build 目录下生成jar
-命令测试：bin/sqoop 即可，如果缺少三方jar，将j">
+    <meta name="description" content="[TOC]
+Redis初识1. 简介1.1 特性Redis是一种基于键值对(key-value)的NoSQL数据库，与很多键值对数据库不同的是，Redis中的值可以是string(字符串)、hash(哈希)、list(列表)、set(集合)、zset(有序集合)、Bitmaps(位图)、HyperL">
     
     
     
@@ -99,15 +90,15 @@ ant jar : 漫长的编译过程, 打开vpn啥的试试
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/sqoop/Sqoop源码改造/" title="Sqoop 源码改造" itemprop="url">Sqoop 源码改造</a>
+      <a href="/icemimosa/redis/01_Redis初始/" title="01_Redis初识" itemprop="url">01_Redis初识</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-10-13T07:30:16.000Z" itemprop="datePublished">2016-10-13</time>
-    更新日期:<time datetime="2017-05-02T10:14:40.000Z" itemprop="dateModified">2017-05-02</time>
+    <time datetime="2017-05-01T07:30:16.000Z" itemprop="datePublished">2017-05-01</time>
+    更新日期:<time datetime="2018-02-08T09:19:55.068Z" itemprop="dateModified">2018-02-08</time>
     
   </p>
 </header>
@@ -116,56 +107,80 @@ ant jar : 漫长的编译过程, 打开vpn啥的试试
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-要求"><span class="toc-text">1. 要求</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-编译项目"><span class="toc-text">2. 编译项目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-支持oozie"><span class="toc-text">3. 支持oozie</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Change-Log"><span class="toc-text">Change Log</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis初识"><span class="toc-text">Redis初识</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-特性"><span class="toc-text">1.1 特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-使用场景"><span class="toc-text">1.2 使用场景</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-安装"><span class="toc-text">2. 安装</span></a></li></ol>
 		</div>
 		
-		<h1 id="1-要求"><a href="#1-要求" class="headerlink" title="1. 要求"></a>1. 要求</h1><blockquote>
-<p><a href="https://github.com/cloudera/sqoop/tree/cdh5-1.4.6_5.7.1" target="_blank" rel="external">sqoop-1.4.6-cdh5.7.1</a></p>
-<p>参见 <code>RRADME.txt</code></p>
-</blockquote>
-<h1 id="2-编译项目"><a href="#2-编译项目" class="headerlink" title="2. 编译项目"></a>2. 编译项目</h1><blockquote>
-<p>参见 <code>COMPILING.txt</code></p>
+		<p>[TOC]</p>
+<h1 id="Redis初识"><a href="#Redis初识" class="headerlink" title="Redis初识"></a>Redis初识</h1><h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><h2 id="1-1-特性"><a href="#1-1-特性" class="headerlink" title="1.1 特性"></a>1.1 特性</h2><p><a href="http://www.redis.io" target="_blank" rel="external">Redis</a>是一种基于<code>键值对(key-value)</code>的NoSQL数据库，与很多键值对数据库不同的是，Redis中的值可以是<code>string(字符串)</code>、<code>hash(哈希)</code>、<code>list(列表)</code>、<code>set(集合)</code>、<code>zset(有序集合)</code>、<code>Bitmaps(位图)</code>、<code>HyperLogLog</code>、<code>GEO(地理信息定位)</code>等多种数据结构和算法组成。</p>
+<blockquote>
+<p>redis的主要特性</p>
 </blockquote>
 <ul>
-<li><code>ant jar</code> : 漫长的编译过程, 打开vpn啥的试试</li>
-<li>编译完了会在 <code>build</code> 目录下生成jar</li>
-<li>命令测试：<code>bin/sqoop</code> 即可，如果缺少三方jar，将jar放入到 <code>lib</code> 中，比如数据库的连接驱动</li>
-<li>单元测试代码例子： <code>src/test/com/cloudera/sqoop/terminus/TestImport.java</code>, 即可断点调试</li>
+<li>简单稳定</li>
 </ul>
-<h1 id="3-支持oozie"><a href="#3-支持oozie" class="headerlink" title="3. 支持oozie"></a>3. 支持oozie</h1><p>将编译完的jar <code>build/sqoop-1.4.6-cdh5.7.1.jar</code> 替换掉 <code>oozie share中 的 sqoop</code> 目录中的jar, 然后重启oozie服务</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">比如路径为：/user/oozie/share/lib/lib_20161124175836/sqoop 下的 sqoop-1.4.6-cdh5.7.1.jar 或者 sqoop.jar 替换掉</div></pre></td></tr></table></figure>
-<h1 id="Change-Log"><a href="#Change-Log" class="headerlink" title="Change Log"></a>Change Log</h1><ul>
-<li>2016-12-05<ul>
-<li><a href="https://issues.apache.org/jira/browse/SQOOP-951" target="_blank" rel="external">SQOOP-951</a> 基础上新增 <code>--recursive-export</code> 支持子目录递归 (hive分区表全量导出) </li>
+<p>源码少，单线程模型，虽然简单但是很稳定。</p>
+<ul>
+<li>功能丰富</li>
 </ul>
+<p>支持以上<code>5种数据结构</code>，键过期功能（缓存），发布订阅（消息），Lua脚本，简单的事务功能，流水线批处理命令（Pipeline）等等。</p>
+<ul>
+<li>基于键值对</li>
+</ul>
+<p>key-value类型的结构，当然值的类型支持很多种数据结构。</p>
+<ul>
+<li>速度快</li>
+</ul>
+<p>读写速度快（10w/s），主要由于基于内存，C语言编写，单线程模型。</p>
+<ul>
+<li>支持多客户端语言</li>
+</ul>
+<p>Java、Python、Node等等，详细见 <a href="https://redis.io/clients" target="_blank" rel="external">https://redis.io/clients</a></p>
+<ul>
+<li>持久化</li>
+</ul>
+<p><code>RDB</code>和<code>AOF</code>两种持久化方式</p>
+<ul>
+<li><p>主从复制</p>
 </li>
-<li>2016-12-21<ul>
-<li>新增 <code>导入</code> 参数 <code>--encoding</code>  解决oracle库(ISO8859-1)导入乱码问题</li>
-<li>解决hive parquet格式导出不依赖于 <code>.metadata</code> (Kite SDK) 目录的问题, see also <a href="https://issues.apache.org/jira/browse/SQOOP-2907" target="_blank" rel="external">SQOOP-2907</a></li>
-<li>新增 <code>导出</code> 参数 <code>--ignore-transaction</code> 导出数据到数据库时是否开启事务</li>
-</ul>
+<li><p>高可用和分布式</p>
 </li>
 </ul>
+<p>Redis2.8支持<code>Sentinel</code>的功能，从3.0开始正式支持分布式的功能<code>Redis Cluster</code>。</p>
+<h2 id="1-2-使用场景"><a href="#1-2-使用场景" class="headerlink" title="1.2 使用场景"></a>1.2 使用场景</h2><p>缓存，计数器，消息队列。<br>不适合做<code>数据规模很大的存储</code>，以及<code>冷数据的存储</code>。</p>
+<h1 id="2-安装"><a href="#2-安装" class="headerlink" title="2. 安装"></a>2. 安装</h1><p>redis的安装十分简单，参考：<a href="https://redis.io/download" target="_blank" rel="external">https://redis.io/download</a></p>
+<ul>
+<li>第一步</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ wget http://download.redis.io/releases/redis-4.0.8.tar.gz</div><div class="line">$ tar xzf redis-4.0.8.tar.gz</div><div class="line">$ <span class="built_in">cd</span> redis-4.0.8</div><div class="line">$ make</div></pre></td></tr></table></figure>
+<ul>
+<li>第二步</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">src/redis-server</div></pre></td></tr></table></figure>
+<ul>
+<li>第三部</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ src/redis-cli</div><div class="line">redis&gt; <span class="built_in">set</span> foo bar</div><div class="line">OK</div><div class="line">redis&gt; get foo</div><div class="line"><span class="string">"bar"</span></div><div class="line"></div><div class="line"><span class="comment">## 最后</span></div><div class="line">$ src/redis-cli shutdown</div></pre></td></tr></table></figure>
+<p>注意：Redis的优雅关闭方式是断开与客户端的连接，然后生成持久化文件。可以通过showdown和kill进程号的方式关闭，切勿粗暴使用<code>kill -9</code>，这样redis不会做持久化操作，极端情况会造成数据丢失。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/sqoop/">sqoop</a>
+  <span></span> <a href="/tags/redis/">redis</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/sqoop/">sqoop</a>
+  <a class="article-category-link" href="/categories/redis/">redis</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/sqoop/Sqoop源码改造/" data-title="Sqoop 源码改造 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/redis/01_Redis初始/" data-title="01_Redis初识 | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -175,18 +190,18 @@ ant jar : 漫长的编译过程, 打开vpn啥的试试
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/icemimosa/sqoop/sqoop增量导出问题/" title="sqoop增量导出问题">
+ <a href="/icemimosa/spark/Spark ALS应用与理解/" title="Spark ALS应用与理解">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  sqoop增量导出问题</span>
+  Spark ALS应用与理解</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/icemimosa/sqoop/Sqoop命令/"  title="Sqoop命令">
+<a href="/icemimosa/其他/[Lombok原理3]实现一个简单的lombok/"  title="【Lombok原理3】实现一个简单的lombok">
  <strong>NEXT:</strong><br/> 
- <span>Sqoop命令
+ <span>【Lombok原理3】实现一个简单的lombok
 </span>
 </a>
 </div>
@@ -204,7 +219,7 @@ ant jar : 漫长的编译过程, 打开vpn啥的试试
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-要求"><span class="toc-text">1. 要求</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-编译项目"><span class="toc-text">2. 编译项目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-支持oozie"><span class="toc-text">3. 支持oozie</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Change-Log"><span class="toc-text">Change Log</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis初识"><span class="toc-text">Redis初识</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-特性"><span class="toc-text">1.1 特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-使用场景"><span class="toc-text">1.2 使用场景</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-安装"><span class="toc-text">2. 安装</span></a></li></ol>
   </div>
 
 <div id="asidepart">
