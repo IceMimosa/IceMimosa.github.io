@@ -7,20 +7,19 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>Hive-3_DML使用 | Ice の Mimosa</title>
+    <title>01_Redis基本命令的使用-字符串 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
-    <meta name="description" content="Hive-3_DML使用[TOC]
+    <meta name="description" content="[TOC]
+Redis基本命令的使用-字符串1. 简介字符串是Redis最基础的数据结构，且其他几种数据结构都是在字符串的基础上构建的。字符串可以包括简单的字符串、复杂的字符串(json, xml等)、数字、甚至是二进制等。但是值的大小不能超过512M。
+2. 命令2.1 常用命令
 
-原文参考
+设置值
 
-1. Loading files into tablesload 数据到hive表中是不会对数据进行转化的, 其实load的操作就是数据文件直接move/copy到hive表中。
 
-语法
-
-1LOAD DATA [LOCAL] INPATH &#39;fil">
+1">
     
     
     
@@ -97,15 +96,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/hive/Hive-3_DML使用/" title="Hive-3_DML使用" itemprop="url">Hive-3_DML使用</a>
+      <a href="/icemimosa/redis/02_Redis基本命令的使用-字符串/" title="01_Redis基本命令的使用-字符串" itemprop="url">01_Redis基本命令的使用-字符串</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-09-22T07:30:16.000Z" itemprop="datePublished">2016-09-22</time>
-    更新日期:<time datetime="2016-10-08T09:05:20.000Z" itemprop="dateModified">2016-10-08</time>
+    <time datetime="2017-05-03T11:30:16.000Z" itemprop="datePublished">2017-05-03</time>
+    更新日期:<time datetime="2018-02-26T17:08:02.308Z" itemprop="dateModified">2018-02-27</time>
     
   </p>
 </header>
@@ -114,115 +113,109 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hive-3-DML使用"><span class="toc-text">Hive-3_DML使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Loading-files-into-tables"><span class="toc-text">1. Loading files into tables</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Inserting-data-into-Hive-Tables-from-queries"><span class="toc-text">2. Inserting data into Hive Tables from queries</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-Writing-data-into-the-filesystem-from-queries"><span class="toc-text">3. Writing data into the filesystem from queries</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-Inserting-values-into-tables-from-SQL"><span class="toc-text">4. Inserting values into tables from SQL</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-Update"><span class="toc-text">5. Update</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-Delete"><span class="toc-text">6. Delete</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis基本命令的使用-字符串"><span class="toc-text">Redis基本命令的使用-字符串</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-命令"><span class="toc-text">2. 命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-常用命令"><span class="toc-text">2.1 常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-不常用命令"><span class="toc-text">2.2 不常用命令</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-内部编码"><span class="toc-text">3. 内部编码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-使用场景"><span class="toc-text">4. 使用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-缓存"><span class="toc-text">4.1 缓存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-计数功能"><span class="toc-text">4.2 计数功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-共享session"><span class="toc-text">4.3 共享session</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-限制访问次数"><span class="toc-text">4.4 限制访问次数</span></a></li></ol></li></ol>
 		</div>
 		
-		<h1 id="Hive-3-DML使用"><a href="#Hive-3-DML使用" class="headerlink" title="Hive-3_DML使用"></a>Hive-3_DML使用</h1><p>[TOC]</p>
-<blockquote>
-<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DML" target="_blank" rel="external">原文参考</a></p>
-</blockquote>
-<h1 id="1-Loading-files-into-tables"><a href="#1-Loading-files-into-tables" class="headerlink" title="1. Loading files into tables"></a>1. Loading files into tables</h1><p><code>load</code> 数据到hive表中是不会对数据进行转化的, 其实load的操作就是数据文件直接move/copy到hive表中。</p>
-<blockquote>
-<p>语法</p>
-</blockquote>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">LOAD</span> <span class="keyword">DATA</span> [<span class="keyword">LOCAL</span>] INPATH <span class="string">'filepath'</span> [OVERWRITE] <span class="keyword">INTO</span> <span class="keyword">TABLE</span> tablename [<span class="keyword">PARTITION</span> (partcol1=val1, partcol2=val2 ...)]</div></pre></td></tr></table></figure>
-<blockquote>
-<p>说明</p>
-</blockquote>
+		<p>[TOC]</p>
+<h1 id="Redis基本命令的使用-字符串"><a href="#Redis基本命令的使用-字符串" class="headerlink" title="Redis基本命令的使用-字符串"></a>Redis基本命令的使用-字符串</h1><h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>字符串是Redis最基础的数据结构，且其他几种数据结构都是在字符串的基础上构建的。字符串可以包括<code>简单的字符串</code>、<code>复杂的字符串(json, xml等)</code>、<code>数字</code>、甚至是二进制等。但是值的大小不能超过<code>512M</code>。</p>
+<h1 id="2-命令"><a href="#2-命令" class="headerlink" title="2. 命令"></a>2. 命令</h1><h2 id="2-1-常用命令"><a href="#2-1-常用命令" class="headerlink" title="2.1 常用命令"></a>2.1 常用命令</h2><blockquote>
 <ul>
-<li><code>filepath</code> 可以是<ul>
-<li>一个相对路径, 如 <code>project/data1</code></li>
-<li>绝对路径, 比如 <code>/user/hive/project/data1</code></li>
-<li>一个完整的uri路径, 比如 <code>hdfs://namenode:9000/user/hive/project/data1</code></li>
+<li><strong>设置值</strong></li>
 </ul>
-</li>
-<li>加载数据的目标可以是一个表或分区。如果<code>表是分区表</code>, 那么必须指定需要导入的分区。比如：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">load data local inpath &apos;/Users/icemimosa/orders.txt&apos; into table orders partition (pt=&quot;2016-01-02&quot;);</div></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ set key value [EX seconds] [PX milliseconds] [NX|XX]</div></pre></td></tr></table></figure>
 <ul>
-<li><code>filepath</code> 可以是一个文件, 也可以是一个目录(会加载目录下所有的文件)。</li>
-<li>如果指定 <code>LOCAL</code> 关键字<ul>
-<li>如果是相对路径, 那么是相对于当前hive的工作目录。也可以是一个绝对路径。也可以是一个完整uri的路径，如 <code>file:///user/hive/project/data1</code></li>
+<li>EX seconds：设置<code>秒级过期时间</code></li>
+<li>PX milliseconds：设置<code>毫秒级过期时间</code></li>
+<li>NX：键必须不存在，才能设置成功，用于添加</li>
+<li>XX：键必须存在，才能设置成功，用于更新</li>
 </ul>
-</li>
-<li>如果没有指定 <code>LOCAL</code>, hive会去使用完整的uri<ul>
-<li>如果uri协议未指定, 那么会去找hadoop的配置 <code>fs.default.name (fs.defaultFS)</code> 的值</li>
-<li>如果路径不是绝对的，那么hive就会将路径相对于 <code>/user/&lt;username&gt;</code></li>
-</ul>
-</li>
-<li>如果指定了 <code>OVERWRITE</code> 关键字，那么目标table(partition)将会先清空数据，然后在加载数据<ul>
-<li>如果目标已经含有了一个 <code>文件名称</code> 与 <code>filepath</code> 中相同的文件，那么已存在的文件将会被新文件替换。</li>
-</ul>
-</li>
-</ul>
+<p><strong>其他相同命令</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ setex key seconds value</div><div class="line">$ setnx key value</div></pre></td></tr></table></figure>
+<p>注： <code>NX</code>和<code>XX</code>的特性可作为<a href="https://redis.io/topics/distlock" target="_blank" rel="external">分布式锁的实现方式</a></p>
 <blockquote>
-<p>注意</p>
-</blockquote>
 <ul>
-<li><code>filepath</code> 不能包含子目录</li>
-<li>如果没有指定 <code>LOCAL</code>，<code>filepath</code>必须和hive的table(partition)在同一个文件系统</li>
-<li>如果数据是被压缩的, 参照 <a href="https://cwiki.apache.org/confluence/display/Hive/CompressedStorage" target="_blank" rel="external">CompressedStorage</a></li>
+<li><strong>获取值</strong></li>
 </ul>
-<h1 id="2-Inserting-data-into-Hive-Tables-from-queries"><a href="#2-Inserting-data-into-Hive-Tables-from-queries" class="headerlink" title="2. Inserting data into Hive Tables from queries"></a>2. Inserting data into Hive Tables from queries</h1><p>查询的结果可以通过 <code>insert</code> 插入到指定表中</p>
-<blockquote>
-<p>语法</p>
 </blockquote>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">## 标准的语法</div><div class="line">INSERT OVERWRITE TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...) [IF NOT EXISTS]] select_statement1 FROM from_statement;</div><div class="line">INSERT INTO TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...)] select_statement1 FROM from_statement;</div><div class="line">INSERT INTO TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...)] (z,y) select_statement1 FROM from_statement;</div><div class="line"> </div><div class="line">## Hive extension (multiple inserts):</div><div class="line">FROM from_statement</div><div class="line">INSERT OVERWRITE TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...) [IF NOT EXISTS]] select_statement1</div><div class="line">[INSERT OVERWRITE TABLE tablename2 [PARTITION ... [IF NOT EXISTS]] select_statement2]</div><div class="line">[INSERT INTO TABLE tablename2 [PARTITION ...] select_statement2] ...;</div><div class="line">FROM from_statement</div><div class="line">INSERT INTO TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...)] select_statement1</div><div class="line">[INSERT INTO TABLE tablename2 [PARTITION ...] select_statement2]</div><div class="line">[INSERT OVERWRITE TABLE tablename2 [PARTITION ... [IF NOT EXISTS]] select_statement2] ...;</div><div class="line"> </div><div class="line">## Hive extension (dynamic partition inserts):</div><div class="line">INSERT OVERWRITE TABLE tablename PARTITION (partcol1[=val1], partcol2[=val2] ...) select_statement FROM from_statement;</div><div class="line">INSERT INTO TABLE tablename PARTITION (partcol1[=val1], partcol2[=val2] ...) select_statement FROM from_statement;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ get key</div><div class="line"></div><div class="line"># 如果键不存在，返回nil(空)</div></pre></td></tr></table></figure>
 <blockquote>
-<p>说明</p>
-</blockquote>
 <ul>
-<li><code>INSERT OVERWRITE</code> 将会覆盖所有已存在的数据(除非指定 <code>IF NOT EXISTS</code>)</li>
-<li>如果目标是分区表，那么在insert的时候必须指定partition参数</li>
-<li>As of Hive 1.1.0 the TABLE keyword is optional.</li>
-<li>As of Hive 1.2.0 each INSERT INTO T can take a column list like INSERT INTO T (z, x, c1)</li>
+<li><strong>批量设置值</strong></li>
 </ul>
-<blockquote>
-<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DML#LanguageManualDML-DynamicPartitionInserts" target="_blank" rel="external">Dynamic Partition Inserts 参考</a></p>
 </blockquote>
-<h1 id="3-Writing-data-into-the-filesystem-from-queries"><a href="#3-Writing-data-into-the-filesystem-from-queries" class="headerlink" title="3. Writing data into the filesystem from queries"></a>3. Writing data into the filesystem from queries</h1><p>查询的结果可以写入到文件系统中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ mset key value [key value ...]</div></pre></td></tr></table></figure>
 <blockquote>
-<p>语法</p>
-</blockquote>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">## Standard syntax:</div><div class="line">INSERT OVERWRITE [LOCAL] DIRECTORY directory1</div><div class="line">  [ROW FORMAT row_format] [STORED AS file_format] (Note: Only available starting with Hive 0.11.0)</div><div class="line">  SELECT ... FROM ...</div><div class="line"> </div><div class="line">## Hive extension (multiple inserts):</div><div class="line">FROM from_statement</div><div class="line">INSERT OVERWRITE [LOCAL] DIRECTORY directory1 select_statement1</div><div class="line">[INSERT OVERWRITE [LOCAL] DIRECTORY directory2 select_statement2] ...</div><div class="line"> </div><div class="line"> </div><div class="line">row_format</div><div class="line">  : DELIMITED [FIELDS TERMINATED BY char [ESCAPED BY char]] [COLLECTION ITEMS TERMINATED BY char]</div><div class="line">        [MAP KEYS TERMINATED BY char] [LINES TERMINATED BY char]</div><div class="line">        [NULL DEFINED AS char] (Note: Only available starting with Hive 0.13)</div></pre></td></tr></table></figure>
-<blockquote>
-<p>说明</p>
-</blockquote>
 <ul>
-<li>目录可以是一个完整的uri，如果没有指定uri协议, 那么hive会去找hadoop的配置 <code>fs.default.name (fs.defaultFS)</code> 的值</li>
-<li>如果使用了 <code>LOCAL</code>，那么数据会写入到本地文件系统</li>
+<li><strong>批量获取值</strong></li>
 </ul>
-<h1 id="4-Inserting-values-into-tables-from-SQL"><a href="#4-Inserting-values-into-tables-from-SQL" class="headerlink" title="4. Inserting values into tables from SQL"></a>4. Inserting values into tables from SQL</h1><p>使用 <code>INSERT...VALUES</code> 将数据插入到表中</p>
-<blockquote>
-<p>语法</p>
 </blockquote>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">## Standard Syntax:</div><div class="line">INSERT INTO TABLE tablename [PARTITION (partcol1[=val1], partcol2[=val2] ...)] VALUES values_row [, values_row ...]</div><div class="line"> </div><div class="line">## Where values_row is:</div><div class="line">( value [, value ...] )</div><div class="line">## where a value is either null or any valid SQL literal</div></pre></td></tr></table></figure>
-<h1 id="5-Update"><a href="#5-Update" class="headerlink" title="5. Update"></a>5. Update</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">UPDATE</span> tablename <span class="keyword">SET</span> <span class="keyword">column</span> = <span class="keyword">value</span> [, <span class="keyword">column</span> = <span class="keyword">value</span> ...] [<span class="keyword">WHERE</span> expression]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ mget key [key ...]</div><div class="line"></div><div class="line"># 如果键不存在，返回nil(空)</div></pre></td></tr></table></figure>
+<p>批量操作命令可以有效的提高开发效率，减少网络所带来的时间开销。</p>
+<blockquote>
 <ul>
-<li>partition的column不能被更新</li>
-<li>Bucketing columns 也不能被更新</li>
+<li><strong>计数</strong></li>
 </ul>
-<h1 id="6-Delete"><a href="#6-Delete" class="headerlink" title="6. Delete"></a>6. Delete</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> tablename [<span class="keyword">WHERE</span> expression]</div></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ incr key</div><div class="line"></div><div class="line"># 返回结果如下</div><div class="line">  * 值不是整数，返回错误</div><div class="line">  * 值是整数，返回自增后的结果</div><div class="line">  * 键不存在，按照值为0自增，返回1</div></pre></td></tr></table></figure>
+<p><strong>其他相同命令</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">## 自减</div><div class="line">$ decr key</div><div class="line"></div><div class="line">## 自增指定数字</div><div class="line">$ incrby key increment</div><div class="line"></div><div class="line">## 自增浮点数</div><div class="line">$ incrbyfloat key increment</div></pre></td></tr></table></figure>
+<p>很多存储系统和编程语言内部使用CAS机制实现计数功能，会有一定的CPU开销。但是Redis是单线程模型，完全不存在这个问题。</p>
+<h2 id="2-2-不常用命令"><a href="#2-2-不常用命令" class="headerlink" title="2.2 不常用命令"></a>2.2 不常用命令</h2><ul>
+<li>追加值</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ append key value</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line"></div><div class="line">127.0.0.1:6379&gt; get key1</div><div class="line">&quot;value1&quot;</div><div class="line">127.0.0.1:6379&gt; append key1 aa</div><div class="line">(integer) 8</div><div class="line">127.0.0.1:6379&gt; get key1</div><div class="line">&quot;value1aa&quot;</div></pre></td></tr></table></figure>
+<ul>
+<li>字符串长度</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ strlen key</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; strlen key</div><div class="line">(integer) 0</div><div class="line">127.0.0.1:6379&gt; strlen key1</div><div class="line">(integer) 8</div></pre></td></tr></table></figure>
+<p>注意中文是每个字占<code>3个字节</code>。</p>
+<ul>
+<li>设置并返回原值</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ getset key value</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; getset key1 value1</div><div class="line">(nil)</div><div class="line">127.0.0.1:6379&gt; getset key1 value2</div><div class="line">&quot;value1&quot;</div></pre></td></tr></table></figure>
+<ul>
+<li>设置指定位置的字符</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ setrange key offset value</div><div class="line"></div><div class="line"># 下标从0开始</div></pre></td></tr></table></figure>
+<ul>
+<li>获取部分字符串</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ getrange key start end</div><div class="line"></div><div class="line"># 下标从0开始，包括start和end</div></pre></td></tr></table></figure>
+<h1 id="3-内部编码"><a href="#3-内部编码" class="headerlink" title="3. 内部编码"></a>3. 内部编码</h1><p>字符串类型的内部编码有3中：</p>
+<ul>
+<li>int：8个字节的长整型</li>
+<li>embstr：小于等于39个字节的字符串</li>
+<li>raw：大于39个字节的字符串</li>
+</ul>
+<p>Redis会根据当前值的类型和长度决定使用哪种编码实现。</p>
+<h1 id="4-使用场景"><a href="#4-使用场景" class="headerlink" title="4. 使用场景"></a>4. 使用场景</h1><h2 id="4-1-缓存"><a href="#4-1-缓存" class="headerlink" title="4.1 缓存"></a>4.1 缓存</h2><p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-02-26-165723.png?imageMogr2/thumbnail/!40p" alt="" title="缓存"></p>
+<p>注：与MySQl等关系型数据库不同的是，Redis没有名称空间，没有对键的名称有强制要求。所以设置合理的键名有利于防止键冲突和项目的可维护性。</p>
+<p>推荐：<code>业务名:对象名:id:[属性]</code></p>
+<h2 id="4-2-计数功能"><a href="#4-2-计数功能" class="headerlink" title="4.2 计数功能"></a>4.2 计数功能</h2><p>使用<code>incr</code>命令。</p>
+<p>注：实际计数系统可能需要考虑的问题较多，如防作弊、不同维度计数以及持久化到底层数据库等。</p>
+<h2 id="4-3-共享session"><a href="#4-3-共享session" class="headerlink" title="4.3 共享session"></a>4.3 共享session</h2><p>用于解决分布式web服务存储session的问题。</p>
+<h2 id="4-4-限制访问次数"><a href="#4-4-限制访问次数" class="headerlink" title="4.4 限制访问次数"></a>4.4 限制访问次数</h2><p>使用<code>set EX NX</code>和<code>incr</code>命令实现。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/hive/">hive</a><a href="/tags/hadoop/">hadoop</a>
+  <span></span> <a href="/tags/redis/">redis</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/hive/">hive</a>
+  <a class="article-category-link" href="/categories/redis/">redis</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/hive/Hive-3_DML使用/" data-title="Hive-3_DML使用 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/redis/02_Redis基本命令的使用-字符串/" data-title="01_Redis基本命令的使用-字符串 | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -232,18 +225,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/icemimosa/hive/Hive-4_Select语句/" title="Hive-4_Select语句">
+ <a href="/icemimosa/spark/Spark ALS应用与理解/" title="Spark ALS应用与理解">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  Hive-4_Select语句</span>
+  Spark ALS应用与理解</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/icemimosa/hive/Hive-2_DDL使用/"  title="Hive-2_DDL使用">
+<a href="/icemimosa/redis/02_Redis基本命令的使用-预备/"  title="01_Redis基本命令的使用-预备">
  <strong>NEXT:</strong><br/> 
- <span>Hive-2_DDL使用
+ <span>01_Redis基本命令的使用-预备
 </span>
 </a>
 </div>
@@ -261,7 +254,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hive-3-DML使用"><span class="toc-text">Hive-3_DML使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Loading-files-into-tables"><span class="toc-text">1. Loading files into tables</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Inserting-data-into-Hive-Tables-from-queries"><span class="toc-text">2. Inserting data into Hive Tables from queries</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-Writing-data-into-the-filesystem-from-queries"><span class="toc-text">3. Writing data into the filesystem from queries</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-Inserting-values-into-tables-from-SQL"><span class="toc-text">4. Inserting values into tables from SQL</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-Update"><span class="toc-text">5. Update</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-Delete"><span class="toc-text">6. Delete</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis基本命令的使用-字符串"><span class="toc-text">Redis基本命令的使用-字符串</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-命令"><span class="toc-text">2. 命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-常用命令"><span class="toc-text">2.1 常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-不常用命令"><span class="toc-text">2.2 不常用命令</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-内部编码"><span class="toc-text">3. 内部编码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-使用场景"><span class="toc-text">4. 使用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-缓存"><span class="toc-text">4.1 缓存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-计数功能"><span class="toc-text">4.2 计数功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-共享session"><span class="toc-text">4.3 共享session</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-限制访问次数"><span class="toc-text">4.4 限制访问次数</span></a></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
