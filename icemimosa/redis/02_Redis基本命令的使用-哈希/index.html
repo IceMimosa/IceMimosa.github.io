@@ -7,18 +7,20 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>部署springboot应用_centOS7 | Ice の Mimosa</title>
+    <title>01_Redis基本命令的使用-哈希 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
     <meta name="description" content="[TOC]
-部署springboot应用_centOS7
-springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的服务
+Redis基本命令的使用-哈希1. 简介Redis中的哈希是指键值本身又是一个键值对的结构。
+具体结构如下图：
+2. 命令
 
-比如在centos7上使用systemd的方式部署应用服务。下面是一个多模块的通用脚本, 也可以直接用官网的配置脚本。
+设置值
 
-已经有一">
+
+12345$ hset key field value&amp;gt; 示例127.0.0.1:6379&amp;gt; hset user:1 name tom(i">
     
     
     
@@ -95,15 +97,15 @@ springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/spring/部署springboot应用_CentOS7/" title="部署springboot应用_centOS7" itemprop="url">部署springboot应用_centOS7</a>
+      <a href="/icemimosa/redis/02_Redis基本命令的使用-哈希/" title="01_Redis基本命令的使用-哈希" itemprop="url">01_Redis基本命令的使用-哈希</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2017-01-10T02:30:16.000Z" itemprop="datePublished">2017-01-10</time>
-    更新日期:<time datetime="2017-05-06T07:17:41.000Z" itemprop="dateModified">2017-05-06</time>
+    <time datetime="2017-05-05T08:30:16.000Z" itemprop="datePublished">2017-05-05</time>
+    更新日期:<time datetime="2018-03-04T15:07:23.900Z" itemprop="dateModified">2018-03-04</time>
     
   </p>
 </header>
@@ -112,56 +114,104 @@ springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#部署springboot应用-centOS7"><span class="toc-text">部署springboot应用_centOS7</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis基本命令的使用-哈希"><span class="toc-text">Redis基本命令的使用-哈希</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-命令"><span class="toc-text">2. 命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-内部编码"><span class="toc-text">3. 内部编码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-ziplist-压缩列表"><span class="toc-text">3.1 ziplist(压缩列表)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-hashtable-哈希表"><span class="toc-text">3.2 hashtable(哈希表)</span></a></li></ol></li></ol>
 		</div>
 		
 		<p>[TOC]</p>
-<h1 id="部署springboot应用-centOS7"><a href="#部署springboot应用-centOS7" class="headerlink" title="部署springboot应用_centOS7"></a>部署springboot应用_centOS7</h1><blockquote>
-<p>springboot应用可以使用 <code>init.d/systemd</code> 被轻易的部署为 Unix/Linux 的服务</p>
+<h1 id="Redis基本命令的使用-哈希"><a href="#Redis基本命令的使用-哈希" class="headerlink" title="Redis基本命令的使用-哈希"></a>Redis基本命令的使用-哈希</h1><h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>Redis中的哈希是指<code>键值</code>本身又是一个<code>键值对</code>的结构。</p>
+<p>具体结构如下图：<br><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-03-04-110104.png?imageMogr2/thumbnail/!30p" alt=""></p>
+<h1 id="2-命令"><a href="#2-命令" class="headerlink" title="2. 命令"></a>2. 命令</h1><blockquote>
+<ul>
+<li><strong>设置值</strong></li>
+</ul>
 </blockquote>
-<p>比如在centos7上使用systemd的方式部署应用服务。<br>下面是一个多模块的通用脚本, 也可以直接用官网的配置脚本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ hset key field value</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; hset user:1 name tom</div><div class="line">(integer) 1</div></pre></td></tr></table></figure>
+<p><strong>其他相同命令</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ hsetnx key field value</div><div class="line"></div><div class="line"># 作用类似于setnx, 只不过作用域变成了field</div></pre></td></tr></table></figure>
+<blockquote>
 <ul>
-<li>已经有一个已经打包好的jar包 <code>(myapp-web-1.0-SNAPSHOT.jar)</code>，然后放置在目录 <code>/var/myapp</code> 下</li>
-<li>创建一个服务脚本，如<code>myapp@.service</code>。然后放置到目录 <code>/etc/systemd/system</code>。内容如下，下面是含有 <code>%i</code> 传入<code>myapp.jar</code> 的应用配置参数的，然后是执行脚本 <code>ExecStart中的内容</code>。（当然你的<code>EnvironmentFile</code>可以写死, 或者不存在的话不写也ok）</li>
+<li><strong>获取值</strong></li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[Unit]</div><div class="line">Description=Starts and stops web service</div><div class="line">After=syslog.target</div><div class="line"></div><div class="line">[Service]</div><div class="line">EnvironmentFile=/etc/myapp/%i</div><div class="line">User=root</div><div class="line">Group=root</div><div class="line">ExecStart=/usr/local/bin/myapp-startup %i</div><div class="line">#Type=forking</div><div class="line">SuccessExitStatus=143</div><div class="line">SyslogIdentifier=myapp-web</div><div class="line"></div><div class="line">[Install]</div><div class="line">WantedBy=multi-user.target</div></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ hget key field</div><div class="line"></div><div class="line"># 如果键或field不存在，返回nil</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; hget user:1 name</div><div class="line">&quot;tom&quot;</div></pre></td></tr></table></figure>
+<blockquote>
 <ul>
-<li><code>myapp-startup</code>脚本编写如下，记得修改成 <code>755</code> 权限：</li>
+<li><strong>删除field</strong></li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line"></div><div class="line"># http://stackoverflow.com/a/6482403</div><div class="line">if [ $# -eq 0 ]; then</div><div class="line">    echo &quot;No module supplied&quot;</div><div class="line">    exit 1</div><div class="line">fi</div><div class="line"></div><div class="line">module=$1</div><div class="line"></div><div class="line">echo $module</div><div class="line">echo $JAVA_OPTS &gt;&gt; /var/testparam.log</div><div class="line">/var/myapp/myapp-$module-1.0-SNAPSHOT.jar</div></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ hdel key field [field ...]</div><div class="line"></div><div class="line"># 返回成功删除field的个数</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; hdel user:1 name</div><div class="line">(integer) 1</div><div class="line">127.0.0.1:6379&gt; hdel user:1 age</div><div class="line">(integer) 0</div></pre></td></tr></table></figure>
+<blockquote>
 <ul>
-<li>其次是 <code>/etc/myapp/%i</code> 的配置, 比如叫做 <code>web</code>的文件, 内容如下</li>
+<li><strong>计数field数量</strong></li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">JAVA_HOME=/usr/local/jdk</div><div class="line">PID_FOLDER=/var/run/</div><div class="line">LOG_FOLDER=/var/log/myapp</div><div class="line">JAVA_OPTS=  -Xmx512m  -Xms512m -server -XX:+AggressiveOpts -XX:+UseFastAccessorMethods      \</div><div class="line">            -Dlogging.file=/var/log/myapp/web.log \</div><div class="line">            -Ddev                                 \</div><div class="line">            -Dserver.context-path=/               \</div><div class="line">            -Dserver.port=8080                    \</div><div class="line">            -Dspring.application.name=myapp \</div><div class="line">            -Dspring.redis.database=1     \</div><div class="line">            -Dspring.redis.host=127.0.0.1      \</div><div class="line">            -Dspring.redis.port=6379       \</div><div class="line">            -Dspring.datasource.type=com.zaxxer.hikari.HikariDataSource  \</div><div class="line">            -Dspring.datasource.driver-class-name=com.mysql.jdbc.Driver       \</div><div class="line">-Dspring.datasource.url=jdbc:mysql://127.0.0.1:3306/myapp?useUnicode=true&amp;characterEncoding=UTF8&amp;autoReconnect=true       \</div><div class="line">            -Dspring.datasource.username=root       \</div><div class="line">            -Dspring.datasource.password=123456       \</div></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ hlen key</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; hlen user:1</div><div class="line">(integer) 0</div><div class="line">127.0.0.1:6379&gt; hset user:1 name tom</div><div class="line">(integer) 1</div><div class="line">127.0.0.1:6379&gt; hset user:1 age 20</div><div class="line">(integer) 1</div><div class="line">127.0.0.1:6379&gt; hlen user:1</div><div class="line">(integer) 2</div></pre></td></tr></table></figure>
+<blockquote>
 <ul>
-<li>启动服务</li>
+<li><strong>批量设置/获取field-value</strong></li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl start myapp@web</div></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hmset key field value [field value ...]</div><div class="line">$ hmget key field [field ...]</div></pre></td></tr></table></figure>
+<blockquote>
 <ul>
-<li>如果想要开机启动的话，执行</li>
+<li><strong>判断field是否存在</strong></li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl enable myapp@.service</div></pre></td></tr></table></figure>
-<p><a href="http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#deployment-systemd-service" target="_blank" rel="external">参照官方文档</a></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ hexists key field</div><div class="line"></div><div class="line"># 存在返回1，否则返回0</div></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li><strong>获取所有的field</strong></li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ hkeys key</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; hkeys user:1</div><div class="line">1) &quot;name&quot;</div><div class="line">2) &quot;age&quot;</div></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li><strong>获取所有的value</strong></li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ hvals key</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; hvals user:1</div><div class="line">1) &quot;tom&quot;</div><div class="line">2) &quot;20&quot;</div></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li><strong>获取所有的field-value</strong></li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ hgetall key</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; hgetall user:1</div><div class="line">1) &quot;name&quot;</div><div class="line">2) &quot;tom&quot;</div><div class="line">3) &quot;age&quot;</div><div class="line">4) &quot;20&quot;</div></pre></td></tr></table></figure>
+<p><strong>注意</strong>：使用hgetall时，如果哈希元素很多，会有阻塞redis的可能。如果只是获取部分field，可以使用hmget。当然，如果一定要获取全部，可以使用<code>hscan</code>，后续会解释。</p>
+<blockquote>
+<ul>
+<li><strong>incrby相关</strong></li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ hincrby key field increment</div><div class="line">$ hincrbyfloat key field increment</div><div class="line"></div><div class="line"># 与incrby和incrbyfloat类似，只是作用域是field</div></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li><strong>计算value字符串长度(&gt;=reids3.2)</strong></li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ hstrlen key field</div><div class="line"></div><div class="line"># 与strlen类似</div></pre></td></tr></table></figure>
+<h1 id="3-内部编码"><a href="#3-内部编码" class="headerlink" title="3. 内部编码"></a>3. 内部编码</h1><h2 id="3-1-ziplist-压缩列表"><a href="#3-1-ziplist-压缩列表" class="headerlink" title="3.1 ziplist(压缩列表)"></a>3.1 ziplist(压缩列表)</h2><p>当哈希类型的<code>元素个数</code>小于<code>hash-max-ziplist-entries(默认512个)</code>，并且<code>所有的值</code>都小于<code>hash-max-ziplist-value(默认64字节)</code>时，Redis会使用ziplist作为哈希的内部实现，使用更加紧凑的结构实现，在节省内存上比<code>hashtable</code>更加优秀。</p>
+<h2 id="3-2-hashtable-哈希表"><a href="#3-2-hashtable-哈希表" class="headerlink" title="3.2 hashtable(哈希表)"></a>3.2 hashtable(哈希表)</h2><p>当无法满足ziplist条件时，Redis会使用hashtable的方式。因为此时<code>ziplist的读写效率会下降</code>，而hashtable的读写时间复杂度为O(1)。</p>
+<p><strong>Tips</strong>：关于ziplist和hashtable的具体结构，可以自行查询，可能后面也会做分析。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/spring/">spring</a><a href="/tags/springboot/">springboot</a>
+  <span></span> <a href="/tags/redis/">redis</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/springboot/">springboot</a>
+  <a class="article-category-link" href="/categories/redis/">redis</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/spring/部署springboot应用_CentOS7/" data-title="部署springboot应用_centOS7 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/redis/02_Redis基本命令的使用-哈希/" data-title="01_Redis基本命令的使用-哈希 | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -171,18 +221,18 @@ springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/icemimosa/其他/关于java可变参数重载/" title="关于java可变参数重载">
+ <a href="/icemimosa/spark/Spark ALS应用与理解/" title="Spark ALS应用与理解">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  关于java可变参数重载</span>
+  Spark ALS应用与理解</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/icemimosa/spring/部署springboot应用_CentOS6/"  title="部署springboot应用_centOS6">
+<a href="/icemimosa/redis/02_Redis基本命令的使用-字符串/"  title="01_Redis基本命令的使用-字符串">
  <strong>NEXT:</strong><br/> 
- <span>部署springboot应用_centOS6
+ <span>01_Redis基本命令的使用-字符串
 </span>
 </a>
 </div>
@@ -200,7 +250,7 @@ springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#部署springboot应用-centOS7"><span class="toc-text">部署springboot应用_centOS7</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis基本命令的使用-哈希"><span class="toc-text">Redis基本命令的使用-哈希</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-命令"><span class="toc-text">2. 命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-内部编码"><span class="toc-text">3. 内部编码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-ziplist-压缩列表"><span class="toc-text">3.1 ziplist(压缩列表)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-hashtable-哈希表"><span class="toc-text">3.2 hashtable(哈希表)</span></a></li></ol></li></ol>
   </div>
 
 <div id="asidepart">

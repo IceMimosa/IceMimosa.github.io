@@ -89,18 +89,15 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/icemimosa/spring/部署springboot应用_CentOS6/" title="部署springboot应用_centOS6" itemprop="url">
+    <a href="/icemimosa/其他/关于java可变参数重载/" title="关于java可变参数重载" itemprop="url">
   
-      <time datetime="2017-01-10T02:30:16.000Z" itemprop="datePublished">2017-01-10</time>
-    <h1 itemprop="name">部署springboot应用_centOS6</h1>
+      <time datetime="2017-02-28T17:22:34.000Z" itemprop="datePublished">2017-03-01</time>
+    <h1 itemprop="name">关于java可变参数重载</h1>
     
      
-           <p itemprop="description" >[TOC]
-部署springboot应用_centOS6
-springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的服务
-
-注意：在centOS6上只能使用init.d的方式
-按照官方文档，在centOS6上不需要其他任何配置就能部署</p>
+           <p itemprop="description" >关于java可变参数重载1. 场景分析在使用Guava的ImmutableList的类的时候， 发现里面有很多of的重载方法（类似的还有java的EnumSet的of方法）。
+如下：
+123456of(E e);of(E e1, E e2);of(E e1, E e2, E e3</p>
         
     
   </a>
@@ -119,6 +116,25 @@ springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的
 springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的服务
 
 比如在centos7上使用systemd的方式部署应用服务。下面是一个多模块的通用脚本, 也可以直接用官网的配</p>
+        
+    
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
+    <a href="/icemimosa/spring/部署springboot应用_CentOS6/" title="部署springboot应用_centOS6" itemprop="url">
+  
+      <time datetime="2017-01-10T02:30:16.000Z" itemprop="datePublished">2017-01-10</time>
+    <h1 itemprop="name">部署springboot应用_centOS6</h1>
+    
+     
+           <p itemprop="description" >[TOC]
+部署springboot应用_centOS6
+springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的服务
+
+注意：在centOS6上只能使用init.d的方式
+按照官方文档，在centOS6上不需要其他任何配置就能部署</p>
         
     
   </a>
@@ -153,6 +169,20 @@ springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的
            <p itemprop="description" >[TOC]
 parquet压缩hive表1. 应用场景原表为txt格式，占用硬盘空间太大，hive支持 parquet格式，所以将原表更新为利用parquet格式，来压缩该表占用的硬盘空间。
 2. 压缩过程1. 建立新表show create table TABLE_NAME ;</p>
+        
+    
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
+    <a href="/icemimosa/hive/hive导入数据的一些方式/" title="hive导入数据的一些方式" itemprop="url">
+  
+      <time datetime="2016-10-25T07:30:16.000Z" itemprop="datePublished">2016-10-25</time>
+    <h1 itemprop="name">hive导入数据的一些方式</h1>
+    
+     
+           <p itemprop="description" >hive导入数据的一些方式Hive 五种数据导入方式介绍</p>
         
     
   </a>
@@ -195,20 +225,6 @@ hive处理增量数据1. 场景
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/icemimosa/hive/hive导入数据的一些方式/" title="hive导入数据的一些方式" itemprop="url">
-  
-      <time datetime="2016-10-25T07:30:16.000Z" itemprop="datePublished">2016-10-25</time>
-    <h1 itemprop="name">hive导入数据的一些方式</h1>
-    
-     
-           <p itemprop="description" >hive导入数据的一些方式Hive 五种数据导入方式介绍</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
     <a href="/icemimosa/hive/hive表动态分区/" title="Hive表动态分区" itemprop="url">
   
       <time datetime="2016-10-24T07:30:16.000Z" itemprop="datePublished">2016-10-24</time>
@@ -235,30 +251,6 @@ hive处理增量数据1. 场景
      
            <p itemprop="description" >#sqoop增量导出问题  
 ##1、未分区表1、默认情况；1sqoop  export  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table dwd_test</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/sqoop/Sqoop源码改造/" title="Sqoop 源码改造" itemprop="url">
-  
-      <time datetime="2016-10-13T07:30:16.000Z" itemprop="datePublished">2016-10-13</time>
-    <h1 itemprop="name">Sqoop 源码改造</h1>
-    
-     
-           <p itemprop="description" >1. 要求
-sqoop-1.4.6-cdh5.7.1
-参见 RRADME.txt
-
-2. 编译项目
-参见 COMPILING.txt
-
-
-ant jar : 漫长的编译过程, 打开vpn啥的试试
-编译完了会在 build 目录下生成jar
-命令测试：bin/sqoop 即可，如果</p>
         
     
   </a>
@@ -310,7 +302,7 @@ ant jar : 漫长的编译过程, 打开vpn啥的试试
 		
 			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
 		
-			<li><a href="/categories/redis/" title="redis">redis<sup>3</sup></a></li>
+			<li><a href="/categories/redis/" title="redis">redis<sup>4</sup></a></li>
 		
 			<li><a href="/categories/spark/" title="spark">spark<sup>1</sup></a></li>
 		
@@ -343,7 +335,7 @@ ant jar : 漫长的编译过程, 打开vpn啥的试试
 		
 			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
 		
-			<li><a href="/tags/redis/" title="redis">redis<sup>3</sup></a></li>
+			<li><a href="/tags/redis/" title="redis">redis<sup>4</sup></a></li>
 		
 			<li><a href="/tags/spark/" title="spark">spark<sup>1</sup></a></li>
 		
@@ -365,7 +357,7 @@ ant jar : 漫长的编译过程, 打开vpn啥的试试
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/hadoop/" style="font-size: 18.33px;">hadoop</a> <a href="/tags/hive/" style="font-size: 20px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 16.67px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 13.33px;">lombok</a> <a href="/tags/mac/" style="font-size: 10px;">mac</a> <a href="/tags/oozie/" style="font-size: 18.33px;">oozie</a> <a href="/tags/redis/" style="font-size: 13.33px;">redis</a> <a href="/tags/spark/" style="font-size: 10px;">spark</a> <a href="/tags/spring/" style="font-size: 11.67px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.67px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 15px;">sqoop</a>
+       <a href="/tags/hadoop/" style="font-size: 18.33px;">hadoop</a> <a href="/tags/hive/" style="font-size: 20px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 16.67px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 13.33px;">lombok</a> <a href="/tags/mac/" style="font-size: 10px;">mac</a> <a href="/tags/oozie/" style="font-size: 18.33px;">oozie</a> <a href="/tags/redis/" style="font-size: 15px;">redis</a> <a href="/tags/spark/" style="font-size: 10px;">spark</a> <a href="/tags/spring/" style="font-size: 11.67px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.67px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 15px;">sqoop</a>
     </div>
   </div>
 
