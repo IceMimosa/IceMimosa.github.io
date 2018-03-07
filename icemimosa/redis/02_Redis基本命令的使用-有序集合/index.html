@@ -7,18 +7,20 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>部署springboot应用_centOS7 | Ice の Mimosa</title>
+    <title>01_Redis基本命令的使用-有序集合 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
     <meta name="description" content="[TOC]
-部署springboot应用_centOS7
-springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的服务
+Redis基本命令的使用-有序集合1. 简介与集合不同的是，有序集合中的元素可以排序，排序的依据是给每个元素设置一个分数(score)。
+比如对一个班级的学生进行分数排名。
+2. 命令2.1 集合操作
 
-比如在centos7上使用systemd的方式部署应用服务。下面是一个多模块的通用脚本, 也可以直接用官网的配置脚本。
+添加成员
 
-已经有一">
+
+1234567$ zadd key [NX|XX] [CH] [INC">
     
     
     
@@ -95,15 +97,15 @@ springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/spring/部署springboot应用_CentOS7/" title="部署springboot应用_centOS7" itemprop="url">部署springboot应用_centOS7</a>
+      <a href="/icemimosa/redis/02_Redis基本命令的使用-有序集合/" title="01_Redis基本命令的使用-有序集合" itemprop="url">01_Redis基本命令的使用-有序集合</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2017-01-10T02:30:16.000Z" itemprop="datePublished">2017-01-10</time>
-    更新日期:<time datetime="2017-05-06T07:17:41.000Z" itemprop="dateModified">2017-05-06</time>
+    <time datetime="2017-05-13T04:30:16.000Z" itemprop="datePublished">2017-05-13</time>
+    更新日期:<time datetime="2018-03-07T16:45:55.151Z" itemprop="dateModified">2018-03-08</time>
     
   </p>
 </header>
@@ -112,56 +114,131 @@ springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#部署springboot应用-centOS7"><span class="toc-text">部署springboot应用_centOS7</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis基本命令的使用-有序集合"><span class="toc-text">Redis基本命令的使用-有序集合</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-命令"><span class="toc-text">2. 命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-集合操作"><span class="toc-text">2.1 集合操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-集合间操作"><span class="toc-text">2.2 集合间操作</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-内部编码"><span class="toc-text">3. 内部编码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-ziplist-压缩列表"><span class="toc-text">3.1 ziplist(压缩列表)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-skiplist-跳跃表"><span class="toc-text">3.2 skiplist(跳跃表)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-使用场景"><span class="toc-text">4. 使用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-排行榜"><span class="toc-text">4.1 排行榜</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-历史搜索记录"><span class="toc-text">4.2 历史搜索记录</span></a></li></ol></li></ol>
 		</div>
 		
 		<p>[TOC]</p>
-<h1 id="部署springboot应用-centOS7"><a href="#部署springboot应用-centOS7" class="headerlink" title="部署springboot应用_centOS7"></a>部署springboot应用_centOS7</h1><blockquote>
-<p>springboot应用可以使用 <code>init.d/systemd</code> 被轻易的部署为 Unix/Linux 的服务</p>
+<h1 id="Redis基本命令的使用-有序集合"><a href="#Redis基本命令的使用-有序集合" class="headerlink" title="Redis基本命令的使用-有序集合"></a>Redis基本命令的使用-有序集合</h1><h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>与集合不同的是，有序集合中的元素可以排序，排序的依据是给每个元素设置一个<code>分数(score)</code>。</p>
+<p>比如对一个班级的学生进行分数排名。</p>
+<h1 id="2-命令"><a href="#2-命令" class="headerlink" title="2. 命令"></a>2. 命令</h1><h2 id="2-1-集合操作"><a href="#2-1-集合操作" class="headerlink" title="2.1 集合操作"></a>2.1 集合操作</h2><blockquote>
+<ul>
+<li><strong>添加成员</strong></li>
+</ul>
 </blockquote>
-<p>比如在centos7上使用systemd的方式部署应用服务。<br>下面是一个多模块的通用脚本, 也可以直接用官网的配置脚本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ zadd key [NX|XX] [CH] [INCR] score member [score member ...]</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; zadd user:rank 1 a 10 b 5 c</div><div class="line">(integer) 3</div><div class="line"></div><div class="line"># 返回添加成功的个数</div></pre></td></tr></table></figure>
+<p>Redis3.2为zadd添加了四个选项：</p>
 <ul>
-<li>已经有一个已经打包好的jar包 <code>(myapp-web-1.0-SNAPSHOT.jar)</code>，然后放置在目录 <code>/var/myapp</code> 下</li>
-<li>创建一个服务脚本，如<code>myapp@.service</code>。然后放置到目录 <code>/etc/systemd/system</code>。内容如下，下面是含有 <code>%i</code> 传入<code>myapp.jar</code> 的应用配置参数的，然后是执行脚本 <code>ExecStart中的内容</code>。（当然你的<code>EnvironmentFile</code>可以写死, 或者不存在的话不写也ok）</li>
+<li>NX：元素必须不存在，才能设置成功，用于添加</li>
+<li>XX：元素必须存在，才能设置，用于更新</li>
+<li>CH：返回此次操作后，元素和分数发生变化的个数</li>
+<li>INCR：对score做增加，相当于命令<code>zincrby</code></li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[Unit]</div><div class="line">Description=Starts and stops web service</div><div class="line">After=syslog.target</div><div class="line"></div><div class="line">[Service]</div><div class="line">EnvironmentFile=/etc/myapp/%i</div><div class="line">User=root</div><div class="line">Group=root</div><div class="line">ExecStart=/usr/local/bin/myapp-startup %i</div><div class="line">#Type=forking</div><div class="line">SuccessExitStatus=143</div><div class="line">SyslogIdentifier=myapp-web</div><div class="line"></div><div class="line">[Install]</div><div class="line">WantedBy=multi-user.target</div></pre></td></tr></table></figure>
+<p>由于有序集合存在排序，所以zadd时间复杂度是O(log(n))，sadd是O(1)。</p>
+<blockquote>
 <ul>
-<li><code>myapp-startup</code>脚本编写如下，记得修改成 <code>755</code> 权限：</li>
+<li><strong>计算成员个数</strong></li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line"></div><div class="line"># http://stackoverflow.com/a/6482403</div><div class="line">if [ $# -eq 0 ]; then</div><div class="line">    echo &quot;No module supplied&quot;</div><div class="line">    exit 1</div><div class="line">fi</div><div class="line"></div><div class="line">module=$1</div><div class="line"></div><div class="line">echo $module</div><div class="line">echo $JAVA_OPTS &gt;&gt; /var/testparam.log</div><div class="line">/var/myapp/myapp-$module-1.0-SNAPSHOT.jar</div></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ zcard key</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; zcard user:rank</div><div class="line">(integer) 3</div><div class="line"></div><div class="line"># 类似scard</div></pre></td></tr></table></figure>
+<blockquote>
 <ul>
-<li>其次是 <code>/etc/myapp/%i</code> 的配置, 比如叫做 <code>web</code>的文件, 内容如下</li>
+<li><strong>计算某个成员分数</strong></li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">JAVA_HOME=/usr/local/jdk</div><div class="line">PID_FOLDER=/var/run/</div><div class="line">LOG_FOLDER=/var/log/myapp</div><div class="line">JAVA_OPTS=  -Xmx512m  -Xms512m -server -XX:+AggressiveOpts -XX:+UseFastAccessorMethods      \</div><div class="line">            -Dlogging.file=/var/log/myapp/web.log \</div><div class="line">            -Ddev                                 \</div><div class="line">            -Dserver.context-path=/               \</div><div class="line">            -Dserver.port=8080                    \</div><div class="line">            -Dspring.application.name=myapp \</div><div class="line">            -Dspring.redis.database=1     \</div><div class="line">            -Dspring.redis.host=127.0.0.1      \</div><div class="line">            -Dspring.redis.port=6379       \</div><div class="line">            -Dspring.datasource.type=com.zaxxer.hikari.HikariDataSource  \</div><div class="line">            -Dspring.datasource.driver-class-name=com.mysql.jdbc.Driver       \</div><div class="line">-Dspring.datasource.url=jdbc:mysql://127.0.0.1:3306/myapp?useUnicode=true&amp;characterEncoding=UTF8&amp;autoReconnect=true       \</div><div class="line">            -Dspring.datasource.username=root       \</div><div class="line">            -Dspring.datasource.password=123456       \</div></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ zscore key member</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; zscore user:rank b</div><div class="line">&quot;10&quot;</div><div class="line"></div><div class="line"># 如果成员不存在，返回nil</div></pre></td></tr></table></figure>
+<blockquote>
 <ul>
-<li>启动服务</li>
+<li><strong>计算成员排名</strong></li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl start myapp@web</div></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ zrank key member</div><div class="line">$ zrevrank key member</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; zrank user:rank c</div><div class="line">(integer) 1</div><div class="line">127.0.0.1:6379&gt; zrevrank user:rank a</div><div class="line">(integer) 2</div><div class="line"></div><div class="line"># zrank从分数低到高排名，zrevrank反之</div><div class="line"># 排名下标从0开始</div></pre></td></tr></table></figure>
+<blockquote>
 <ul>
-<li>如果想要开机启动的话，执行</li>
+<li><strong>删除成员</strong></li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl enable myapp@.service</div></pre></td></tr></table></figure>
-<p><a href="http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#deployment-systemd-service" target="_blank" rel="external">参照官方文档</a></p>
-  
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ zrem key member [member ...]</div><div class="line"></div><div class="line"># count默认为1</div></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li><strong>增加成员分数</strong></li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ zincrby key increment member</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; zincrby user:rank 1 a</div><div class="line">&quot;2&quot;</div></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li><strong>返回指定排名范围的成员</strong></li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">$ zrange key start stop [WITHSCORES]</div><div class="line">$ zrevrange key start stop [WITHSCORES]</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; zrange user:rank 0 1</div><div class="line">1) &quot;a&quot;</div><div class="line">2) &quot;c&quot;</div><div class="line">127.0.0.1:6379&gt; zrevrange user:rank 0 1 WITHSCORES</div><div class="line">1) &quot;b&quot;</div><div class="line">2) &quot;10&quot;</div><div class="line">3) &quot;c&quot;</div><div class="line">4) &quot;5&quot;</div></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li><strong>返回指定分数范围的成员</strong></li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ zrangebyscore key min max [WITHSCORES] [LIMIT offset count]</div><div class="line">$ zrevrangebyscore key max min [WITHSCORES] [LIMIT offset count]</div><div class="line"></div><div class="line"></div><div class="line"># zrangebyscore按照分数从低到高，zrevrangebyscore反之。</div><div class="line"># min和max支持开区间和闭区间，以及无限小(-inf)和无限大(+inf)。</div></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li><strong>返回指定分数范围的成员数量</strong></li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ zcount key min max</div></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li><strong>删除指定排名范围的升序成员</strong></li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ zremrangebyrank key start stop</div></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li><strong>删除指定分数范围的升序成员</strong></li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ zremrangebyscore key min max</div></pre></td></tr></table></figure>
+<h2 id="2-2-集合间操作"><a href="#2-2-集合间操作" class="headerlink" title="2.2 集合间操作"></a>2.2 集合间操作</h2><blockquote>
+<ul>
+<li><strong>交集</strong></li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ zinterstore destination numkeys key [key ...] [WEIGHTS weight] [AGGREGATE SUM|MIN|MAX]</div></pre></td></tr></table></figure>
+<ul>
+<li>numkeys：做交集计算键的个数。</li>
+<li>[WEIGHTS weight]：每个键的权重，在做交集时，每个键的每个成员会将自己的分数乘以这个权重，默认权重为1</li>
+<li>[AGGREGATE SUM|MIN|MAX]：计算成员交集，分数按照<code>和</code>、<code>最小值</code>、<code>最大值</code>做汇总，默认是<code>SUM</code></li>
+</ul>
+<blockquote>
+<ul>
+<li><strong>并集</strong></li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ zunionstore destination numkeys key [key ...] [WEIGHTS weight] [AGGREGATE SUM|MIN|MAX]</div></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li><strong>差集</strong></li>
+</ul>
+</blockquote>
+<p>没有差集</p>
+<h1 id="3-内部编码"><a href="#3-内部编码" class="headerlink" title="3. 内部编码"></a>3. 内部编码</h1><h2 id="3-1-ziplist-压缩列表"><a href="#3-1-ziplist-压缩列表" class="headerlink" title="3.1 ziplist(压缩列表)"></a>3.1 ziplist(压缩列表)</h2><p>当有序集合的<code>元素个数</code>小于<code>zset-max-ziplist-entries(默认128个)</code>，同时每个元素的值都小于<code>zset-max-ziplist-value(默认64字节)</code>，Redis会使用ziplist作为列表的内部实现，减少内存使用。</p>
+<h2 id="3-2-skiplist-跳跃表"><a href="#3-2-skiplist-跳跃表" class="headerlink" title="3.2 skiplist(跳跃表)"></a>3.2 skiplist(跳跃表)</h2><p>当无法满足ziplist条件时，Redis会使用skiplist的方式以增加读写效率。</p>
+<h1 id="4-使用场景"><a href="#4-使用场景" class="headerlink" title="4. 使用场景"></a>4. 使用场景</h1><h2 id="4-1-排行榜"><a href="#4-1-排行榜" class="headerlink" title="4.1 排行榜"></a>4.1 排行榜</h2><h2 id="4-2-历史搜索记录"><a href="#4-2-历史搜索记录" class="headerlink" title="4.2 历史搜索记录"></a>4.2 历史搜索记录</h2>  
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/spring/">spring</a><a href="/tags/springboot/">springboot</a>
+  <span></span> <a href="/tags/redis/">redis</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/springboot/">springboot</a>
+  <a class="article-category-link" href="/categories/redis/">redis</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/spring/部署springboot应用_CentOS7/" data-title="部署springboot应用_centOS7 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/redis/02_Redis基本命令的使用-有序集合/" data-title="01_Redis基本命令的使用-有序集合 | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -171,18 +248,18 @@ springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/icemimosa/spring/部署springboot应用_CentOS6/" title="部署springboot应用_centOS6">
+ <a href="/icemimosa/spark/Spark ALS应用与理解/" title="Spark ALS应用与理解">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  部署springboot应用_centOS6</span>
+  Spark ALS应用与理解</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/icemimosa/hive/压缩hive表流程/"  title="parquet压缩hive表">
+<a href="/icemimosa/redis/02_Redis基本命令的使用-集合/"  title="01_Redis基本命令的使用-集合">
  <strong>NEXT:</strong><br/> 
- <span>parquet压缩hive表
+ <span>01_Redis基本命令的使用-集合
 </span>
 </a>
 </div>
@@ -200,7 +277,7 @@ springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#部署springboot应用-centOS7"><span class="toc-text">部署springboot应用_centOS7</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis基本命令的使用-有序集合"><span class="toc-text">Redis基本命令的使用-有序集合</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-命令"><span class="toc-text">2. 命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-集合操作"><span class="toc-text">2.1 集合操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-集合间操作"><span class="toc-text">2.2 集合间操作</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-内部编码"><span class="toc-text">3. 内部编码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-ziplist-压缩列表"><span class="toc-text">3.1 ziplist(压缩列表)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-skiplist-跳跃表"><span class="toc-text">3.2 skiplist(跳跃表)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-使用场景"><span class="toc-text">4. 使用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-排行榜"><span class="toc-text">4.1 排行榜</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-历史搜索记录"><span class="toc-text">4.2 历史搜索记录</span></a></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
