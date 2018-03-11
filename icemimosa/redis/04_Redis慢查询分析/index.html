@@ -7,20 +7,14 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>02_Redis基本命令的使用-哈希 | Ice の Mimosa</title>
+    <title>04_Redis慢查询分析 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
     <meta name="description" content="[TOC]
-Redis基本命令的使用-哈希1. 简介Redis中的哈希是指键值本身又是一个键值对的结构。
-具体结构如下图：
-2. 命令
-
-设置值
-
-
-12345$ hset key field value&amp;gt; 示例127.0.0.1:6379&amp;gt; hset user:1 name tom(i">
+04_Redis慢查询分析1. 简介许多存储系统（如MySQL）提供慢查询日志帮助开发和运维定位系统存在的问题。所谓慢查询，就是系统在命令执行前后计算每条命令的执行时间，当超过预设阀值，就将命令相关信息（发生时间、耗时、详细信息等）记录下来。
+2. 配置参数Redis提供两个参数用来控制">
     
     
     
@@ -97,15 +91,15 @@ Redis基本命令的使用-哈希1. 简介Redis中的哈希是指键值本身又
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/redis/02_Redis基本命令的使用-哈希/" title="02_Redis基本命令的使用-哈希" itemprop="url">02_Redis基本命令的使用-哈希</a>
+      <a href="/icemimosa/redis/04_Redis慢查询分析/" title="04_Redis慢查询分析" itemprop="url">04_Redis慢查询分析</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2017-05-05T08:30:16.000Z" itemprop="datePublished">2017-05-05</time>
-    更新日期:<time datetime="2018-03-07T16:51:40.997Z" itemprop="dateModified">2018-03-08</time>
+    <time datetime="2017-05-17T04:30:16.000Z" itemprop="datePublished">2017-05-17</time>
+    更新日期:<time datetime="2018-03-11T11:31:58.525Z" itemprop="dateModified">2018-03-11</time>
     
   </p>
 </header>
@@ -114,84 +108,30 @@ Redis基本命令的使用-哈希1. 简介Redis中的哈希是指键值本身又
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis基本命令的使用-哈希"><span class="toc-text">Redis基本命令的使用-哈希</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-命令"><span class="toc-text">2. 命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-内部编码"><span class="toc-text">3. 内部编码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-ziplist-压缩列表"><span class="toc-text">3.1 ziplist(压缩列表)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-hashtable-哈希表"><span class="toc-text">3.2 hashtable(哈希表)</span></a></li></ol></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#04-Redis慢查询分析"><span class="toc-text">04_Redis慢查询分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-配置参数"><span class="toc-text">2. 配置参数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-慢日志查询"><span class="toc-text">3. 慢日志查询</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-获取慢日志"><span class="toc-text">3.1 获取慢日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-获取慢查询列表长度"><span class="toc-text">3.2 获取慢查询列表长度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-慢查询重置"><span class="toc-text">3.3 慢查询重置</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-最佳实战"><span class="toc-text">4. 最佳实战</span></a></li></ol>
 		</div>
 		
 		<p>[TOC]</p>
-<h1 id="Redis基本命令的使用-哈希"><a href="#Redis基本命令的使用-哈希" class="headerlink" title="Redis基本命令的使用-哈希"></a>Redis基本命令的使用-哈希</h1><h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>Redis中的哈希是指<code>键值</code>本身又是一个<code>键值对</code>的结构。</p>
-<p>具体结构如下图：<br><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-03-04-110104.png?imageMogr2/thumbnail/!30p" alt=""></p>
-<h1 id="2-命令"><a href="#2-命令" class="headerlink" title="2. 命令"></a>2. 命令</h1><blockquote>
+<h1 id="04-Redis慢查询分析"><a href="#04-Redis慢查询分析" class="headerlink" title="04_Redis慢查询分析"></a>04_Redis慢查询分析</h1><h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>许多存储系统（如MySQL）提供慢查询日志帮助开发和运维定位系统存在的问题。所谓慢查询，就是系统在命令执行前后计算每条命令的执行时间，当超过预设阀值，就将命令相关信息（<code>发生时间、耗时、详细信息等</code>）记录下来。</p>
+<h1 id="2-配置参数"><a href="#2-配置参数" class="headerlink" title="2. 配置参数"></a>2. 配置参数</h1><p>Redis提供两个参数用来控制慢查询：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 单位微秒，默认10毫秒。</div><div class="line"># 0表示记录所有，小于0表示不记录</div><div class="line">slowlog-log-slower-than 10000</div><div class="line"></div><div class="line"># 默认记录最多128个命令</div><div class="line">slowlog-max-len 128</div></pre></td></tr></table></figure>
+<p>Redis内部使用一个列表用来存储慢查询日志，可以<code>通过命令</code>或者<code>修改配置文件</code>来修改配置参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">config set slowlog-log-slower-than 20000</div><div class="line">config set slowlog-max-len 1000</div><div class="line">config rewrite</div><div class="line"></div><div class="line"># config rewrite表示持久化到配置文件中</div></pre></td></tr></table></figure>
+<h1 id="3-慢日志查询"><a href="#3-慢日志查询" class="headerlink" title="3. 慢日志查询"></a>3. 慢日志查询</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ slowlog subcommand [argument]</div></pre></td></tr></table></figure>
+<h2 id="3-1-获取慢日志"><a href="#3-1-获取慢日志" class="headerlink" title="3.1 获取慢日志"></a>3.1 获取慢日志</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ slowlog get [n]</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; slowlog get</div><div class="line">1) 1) (integer) 666</div><div class="line">   2) (integer) 1520767396</div><div class="line">   3) (integer) 11666</div><div class="line">   4) 1) &quot;SETEX&quot;</div><div class="line">      2) &quot;video_info_1&quot;</div><div class="line">      3) &quot;300&quot;</div><div class="line">      4) &quot;2&quot;</div><div class="line">......</div><div class="line">......</div></pre></td></tr></table></figure>
+<p>慢日志包含四个部分：</p>
 <ul>
-<li><strong>设置值</strong></li>
+<li>标识ID</li>
+<li>发生时间戳</li>
+<li>命令耗时</li>
+<li>执行的命令和参数</li>
 </ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ hset key field value</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; hset user:1 name tom</div><div class="line">(integer) 1</div></pre></td></tr></table></figure>
-<p><strong>其他相同命令</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ hsetnx key field value</div><div class="line"></div><div class="line"># 作用类似于setnx, 只不过作用域变成了field</div></pre></td></tr></table></figure>
-<blockquote>
-<ul>
-<li><strong>获取值</strong></li>
-</ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ hget key field</div><div class="line"></div><div class="line"># 如果键或field不存在，返回nil</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; hget user:1 name</div><div class="line">&quot;tom&quot;</div></pre></td></tr></table></figure>
-<blockquote>
-<ul>
-<li><strong>删除field</strong></li>
-</ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ hdel key field [field ...]</div><div class="line"></div><div class="line"># 返回成功删除field的个数</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; hdel user:1 name</div><div class="line">(integer) 1</div><div class="line">127.0.0.1:6379&gt; hdel user:1 age</div><div class="line">(integer) 0</div></pre></td></tr></table></figure>
-<blockquote>
-<ul>
-<li><strong>计数field数量</strong></li>
-</ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ hlen key</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; hlen user:1</div><div class="line">(integer) 0</div><div class="line">127.0.0.1:6379&gt; hset user:1 name tom</div><div class="line">(integer) 1</div><div class="line">127.0.0.1:6379&gt; hset user:1 age 20</div><div class="line">(integer) 1</div><div class="line">127.0.0.1:6379&gt; hlen user:1</div><div class="line">(integer) 2</div></pre></td></tr></table></figure>
-<blockquote>
-<ul>
-<li><strong>批量设置/获取field-value</strong></li>
-</ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hmset key field value [field value ...]</div><div class="line">$ hmget key field [field ...]</div></pre></td></tr></table></figure>
-<blockquote>
-<ul>
-<li><strong>判断field是否存在</strong></li>
-</ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ hexists key field</div><div class="line"></div><div class="line"># 存在返回1，否则返回0</div></pre></td></tr></table></figure>
-<blockquote>
-<ul>
-<li><strong>获取所有的field</strong></li>
-</ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ hkeys key</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; hkeys user:1</div><div class="line">1) &quot;name&quot;</div><div class="line">2) &quot;age&quot;</div></pre></td></tr></table></figure>
-<blockquote>
-<ul>
-<li><strong>获取所有的value</strong></li>
-</ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ hvals key</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; hvals user:1</div><div class="line">1) &quot;tom&quot;</div><div class="line">2) &quot;20&quot;</div></pre></td></tr></table></figure>
-<blockquote>
-<ul>
-<li><strong>获取所有的field-value</strong></li>
-</ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ hgetall key</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; hgetall user:1</div><div class="line">1) &quot;name&quot;</div><div class="line">2) &quot;tom&quot;</div><div class="line">3) &quot;age&quot;</div><div class="line">4) &quot;20&quot;</div></pre></td></tr></table></figure>
-<p><strong>注意</strong>：使用hgetall时，如果哈希元素很多，会有阻塞redis的可能。如果只是获取部分field，可以使用hmget。当然，如果一定要获取全部，可以使用<code>hscan</code>，后续会解释。</p>
-<blockquote>
-<ul>
-<li><strong>incrby相关</strong></li>
-</ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ hincrby key field increment</div><div class="line">$ hincrbyfloat key field increment</div><div class="line"></div><div class="line"># 与incrby和incrbyfloat类似，只是作用域是field</div></pre></td></tr></table></figure>
-<blockquote>
-<ul>
-<li><strong>计算value字符串长度(&gt;=reids3.2)</strong></li>
-</ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ hstrlen key field</div><div class="line"></div><div class="line"># 与strlen类似</div></pre></td></tr></table></figure>
-<h1 id="3-内部编码"><a href="#3-内部编码" class="headerlink" title="3. 内部编码"></a>3. 内部编码</h1><h2 id="3-1-ziplist-压缩列表"><a href="#3-1-ziplist-压缩列表" class="headerlink" title="3.1 ziplist(压缩列表)"></a>3.1 ziplist(压缩列表)</h2><p>当哈希类型的<code>元素个数</code>小于<code>hash-max-ziplist-entries(默认512个)</code>，并且<code>所有的值</code>都小于<code>hash-max-ziplist-value(默认64字节)</code>时，Redis会使用ziplist作为哈希的内部实现，使用更加紧凑的结构实现，在节省内存上比<code>hashtable</code>更加优秀。</p>
-<h2 id="3-2-hashtable-哈希表"><a href="#3-2-hashtable-哈希表" class="headerlink" title="3.2 hashtable(哈希表)"></a>3.2 hashtable(哈希表)</h2><p>当无法满足ziplist条件时，Redis会使用hashtable的方式。因为此时<code>ziplist的读写效率会下降</code>，而hashtable的读写时间复杂度为O(1)。</p>
-<p><strong>Tips</strong>：关于ziplist和hashtable的具体结构，可以自行查询，可能后面也会做分析。</p>
+<h2 id="3-2-获取慢查询列表长度"><a href="#3-2-获取慢查询列表长度" class="headerlink" title="3.2 获取慢查询列表长度"></a>3.2 获取慢查询列表长度</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ slowlog len</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; slowlog len</div><div class="line">(integer) 40</div></pre></td></tr></table></figure>
+<h2 id="3-3-慢查询重置"><a href="#3-3-慢查询重置" class="headerlink" title="3.3 慢查询重置"></a>3.3 慢查询重置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ slowlog reset</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; slowlog len</div><div class="line">(integer) 40</div><div class="line">127.0.0.1:6379&gt; slowlog reset</div><div class="line">OK</div><div class="line">127.0.0.1:6379&gt; slowlog len</div><div class="line">(integer) 0</div></pre></td></tr></table></figure>
+<h1 id="4-最佳实战"><a href="#4-最佳实战" class="headerlink" title="4. 最佳实战"></a>4. 最佳实战</h1><p>使用过程中建议<code>调大slowlog-max-len</code>，并不会占用大量内存。增加慢日志列表长度可以减缓慢日志被剔除的可能。如设置1000以上。</p>
+<p><code>slowlog-log-slower-than</code>默认是10毫秒。需要根据redis的并发量调整该值。如果是高OPS场景可以设置为1毫秒。</p>
+<p>慢日志记录的执行时间，并不包括命令排队和网络传输的时间。因此当客户端出现请求超时时，需要检查该时间点是否有对应慢查询。</p>
+<p>由于<code>slowlog-max-len</code>的限制，可能会丢失部分慢查询日志，所以建议定期<code>slowlog get</code>将慢查询日志进行持久化，如存在MySQL中。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -211,7 +151,7 @@ Redis基本命令的使用-哈希1. 简介Redis中的哈希是指键值本身又
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/redis/02_Redis基本命令的使用-哈希/" data-title="02_Redis基本命令的使用-哈希 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/redis/04_Redis慢查询分析/" data-title="04_Redis慢查询分析 | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -221,18 +161,18 @@ Redis基本命令的使用-哈希1. 简介Redis中的哈希是指键值本身又
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/icemimosa/redis/02_Redis基本命令的使用-列表/" title="02_Redis基本命令的使用-列表">
+ <a href="/icemimosa/spark/Spark ALS应用与理解/" title="Spark ALS应用与理解">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  02_Redis基本命令的使用-列表</span>
+  Spark ALS应用与理解</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/icemimosa/redis/02_Redis基本命令的使用-字符串/"  title="02_Redis基本命令的使用-字符串">
+<a href="/icemimosa/redis/03_Redis基本键的管理/"  title="03_Redis基本键的管理">
  <strong>NEXT:</strong><br/> 
- <span>02_Redis基本命令的使用-字符串
+ <span>03_Redis基本键的管理
 </span>
 </a>
 </div>
@@ -250,7 +190,7 @@ Redis基本命令的使用-哈希1. 简介Redis中的哈希是指键值本身又
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis基本命令的使用-哈希"><span class="toc-text">Redis基本命令的使用-哈希</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-命令"><span class="toc-text">2. 命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-内部编码"><span class="toc-text">3. 内部编码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-ziplist-压缩列表"><span class="toc-text">3.1 ziplist(压缩列表)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-hashtable-哈希表"><span class="toc-text">3.2 hashtable(哈希表)</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#04-Redis慢查询分析"><span class="toc-text">04_Redis慢查询分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-配置参数"><span class="toc-text">2. 配置参数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-慢日志查询"><span class="toc-text">3. 慢日志查询</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-获取慢日志"><span class="toc-text">3.1 获取慢日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-获取慢查询列表长度"><span class="toc-text">3.2 获取慢查询列表长度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-慢查询重置"><span class="toc-text">3.3 慢查询重置</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-最佳实战"><span class="toc-text">4. 最佳实战</span></a></li></ol>
   </div>
 
 <div id="asidepart">
