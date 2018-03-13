@@ -7,19 +7,19 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>02_Redis基本命令的使用-字符串 | Ice の Mimosa</title>
+    <title>04_Redis之Shell | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
     <meta name="description" content="[TOC]
-Redis基本命令的使用-字符串1. 简介字符串是Redis最基础的数据结构，且其他几种数据结构都是在字符串的基础上构建的。字符串可以包括简单的字符串、复杂的字符串(json, xml等)、数字、甚至是二进制等。但是值的大小不能超过512M。
-2. 命令2.1 常用命令
+04_Redis之Shell可以使用redis-cli --help查看帮助
+1Usage: redis-cli [OPTIONS] [cmd [arg [arg ...]]]
+OPTIONS如下：
+1. redis-cli
+--help，--version
 
-设置值
-
-
-1">
+-p port，-h ho">
     
     
     
@@ -96,15 +96,15 @@ Redis基本命令的使用-字符串1. 简介字符串是Redis最基础的数据
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/redis/02_Redis基本命令的使用-字符串/" title="02_Redis基本命令的使用-字符串" itemprop="url">02_Redis基本命令的使用-字符串</a>
+      <a href="/icemimosa/redis/04_Redis之Shell/" title="04_Redis之Shell" itemprop="url">04_Redis之Shell</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2017-05-03T11:30:16.000Z" itemprop="datePublished">2017-05-03</time>
-    更新日期:<time datetime="2018-03-07T16:51:53.391Z" itemprop="dateModified">2018-03-08</time>
+    <time datetime="2017-05-19T07:30:16.000Z" itemprop="datePublished">2017-05-19</time>
+    更新日期:<time datetime="2018-03-13T14:54:37.250Z" itemprop="dateModified">2018-03-13</time>
     
   </p>
 </header>
@@ -113,89 +113,107 @@ Redis基本命令的使用-字符串1. 简介字符串是Redis最基础的数据
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis基本命令的使用-字符串"><span class="toc-text">Redis基本命令的使用-字符串</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-命令"><span class="toc-text">2. 命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-常用命令"><span class="toc-text">2.1 常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-不常用命令"><span class="toc-text">2.2 不常用命令</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-内部编码"><span class="toc-text">3. 内部编码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-使用场景"><span class="toc-text">4. 使用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-缓存"><span class="toc-text">4.1 缓存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-计数功能"><span class="toc-text">4.2 计数功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-共享session"><span class="toc-text">4.3 共享session</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-限制访问次数"><span class="toc-text">4.4 限制访问次数</span></a></li></ol></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#04-Redis之Shell"><span class="toc-text">04_Redis之Shell</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-redis-cli"><span class="toc-text">1. redis-cli</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-redis-server"><span class="toc-text">2. redis-server</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-redis-benchmark"><span class="toc-text">3. redis-benchmark</span></a></li></ol>
 		</div>
 		
 		<p>[TOC]</p>
-<h1 id="Redis基本命令的使用-字符串"><a href="#Redis基本命令的使用-字符串" class="headerlink" title="Redis基本命令的使用-字符串"></a>Redis基本命令的使用-字符串</h1><h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>字符串是Redis最基础的数据结构，且其他几种数据结构都是在字符串的基础上构建的。字符串可以包括<code>简单的字符串</code>、<code>复杂的字符串(json, xml等)</code>、<code>数字</code>、甚至是二进制等。但是值的大小不能超过<code>512M</code>。</p>
-<h1 id="2-命令"><a href="#2-命令" class="headerlink" title="2. 命令"></a>2. 命令</h1><h2 id="2-1-常用命令"><a href="#2-1-常用命令" class="headerlink" title="2.1 常用命令"></a>2.1 常用命令</h2><blockquote>
+<h1 id="04-Redis之Shell"><a href="#04-Redis之Shell" class="headerlink" title="04_Redis之Shell"></a>04_Redis之Shell</h1><p>可以使用<code>redis-cli --help</code>查看帮助</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Usage: redis-cli [OPTIONS] [cmd [arg [arg ...]]]</div></pre></td></tr></table></figure>
+<p>OPTIONS如下：</p>
+<h1 id="1-redis-cli"><a href="#1-redis-cli" class="headerlink" title="1. redis-cli"></a>1. redis-cli</h1><ul>
+<li><p><code>--help</code>，<code>--version</code></p>
+</li>
+<li><p><code>-p port</code>，<code>-h hostname</code>，<code>-a password</code>，<code>-n db</code></p>
+</li>
+</ul>
+<p>指定端口，主机，密码，目标库</p>
 <ul>
-<li><strong>设置值</strong></li>
+<li><code>-r repeat</code>，<code>-i interval</code></li>
 </ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ set key value [EX seconds] [PX milliseconds] [NX|XX]</div></pre></td></tr></table></figure>
+<p>执行命令的次数，每隔多少秒（可以用小数指定为毫秒）执行一次</p>
 <ul>
-<li>EX seconds：设置<code>秒级过期时间</code></li>
-<li>PX milliseconds：设置<code>毫秒级过期时间</code></li>
-<li>NX：键必须不存在，才能设置成功，用于添加</li>
-<li>XX：键必须存在，才能设置成功，用于更新</li>
+<li><code>-x</code></li>
 </ul>
-<p><strong>其他相同命令</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ setex key seconds value</div><div class="line">$ setnx key value</div></pre></td></tr></table></figure>
-<p>注： <code>NX</code>和<code>XX</code>的特性可作为<a href="https://redis.io/topics/distlock" target="_blank" rel="external">分布式锁的实现方式</a></p>
-<blockquote>
+<p>从标准输入中读取，作为redis-cli的最后一个参数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ echo &quot;world&quot; | redis-cli -x set hello</div></pre></td></tr></table></figure>
 <ul>
-<li><strong>获取值</strong></li>
+<li><code>-c</code></li>
 </ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ get key</div><div class="line"></div><div class="line"># 如果键不存在，返回nil(空)</div></pre></td></tr></table></figure>
-<blockquote>
+<p>使用集群模式</p>
 <ul>
-<li><strong>批量设置值</strong></li>
+<li><code>--scan</code>，<code>--pattern pat</code></li>
 </ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ mset key value [key value ...]</div></pre></td></tr></table></figure>
-<blockquote>
+<p>相当于scan命令</p>
 <ul>
-<li><strong>批量获取值</strong></li>
+<li><code>--rdb filename</code></li>
 </ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ mget key [key ...]</div><div class="line"></div><div class="line"># 如果键不存在，返回nil(空)</div></pre></td></tr></table></figure>
-<p>批量操作命令可以有效的提高开发效率，减少网络所带来的时间开销。</p>
-<blockquote>
+<p>生成RDB持久化文件</p>
 <ul>
-<li><strong>计数</strong></li>
+<li><code>--pipe</code></li>
 </ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ incr key</div><div class="line"></div><div class="line"># 返回结果如下</div><div class="line">  * 值不是整数，返回错误</div><div class="line">  * 值是整数，返回自增后的结果</div><div class="line">  * 键不存在，按照值为0自增，返回1</div></pre></td></tr></table></figure>
-<p><strong>其他相同命令</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">## 自减</div><div class="line">$ decr key</div><div class="line"></div><div class="line">## 自增指定数字</div><div class="line">$ incrby key increment</div><div class="line"></div><div class="line">## 自增浮点数</div><div class="line">$ incrbyfloat key increment</div></pre></td></tr></table></figure>
-<p>很多存储系统和编程语言内部使用CAS机制实现计数功能，会有一定的CPU开销。但是Redis是单线程模型，完全不存在这个问题。</p>
-<h2 id="2-2-不常用命令"><a href="#2-2-不常用命令" class="headerlink" title="2.2 不常用命令"></a>2.2 不常用命令</h2><ul>
-<li>追加值</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ append key value</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line"></div><div class="line">127.0.0.1:6379&gt; get key1</div><div class="line">&quot;value1&quot;</div><div class="line">127.0.0.1:6379&gt; append key1 aa</div><div class="line">(integer) 8</div><div class="line">127.0.0.1:6379&gt; get key1</div><div class="line">&quot;value1aa&quot;</div></pre></td></tr></table></figure>
+<p>从标准输入中读取，发送redis通讯协议的数据，批量让redis server执行</p>
 <ul>
-<li>字符串长度</li>
+<li><code>--bigkeys</code>，<code>--hotkeys</code></li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ strlen key</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; strlen key</div><div class="line">(integer) 0</div><div class="line">127.0.0.1:6379&gt; strlen key1</div><div class="line">(integer) 8</div></pre></td></tr></table></figure>
-<p>注意中文是每个字占<code>3个字节</code>。</p>
+<p>使用scan进行采样，列出占用内存较大的key，和使用较多的key</p>
 <ul>
-<li>设置并返回原值</li>
+<li><code>--eval file</code></li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ getset key value</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; getset key1 value1</div><div class="line">(nil)</div><div class="line">127.0.0.1:6379&gt; getset key1 value2</div><div class="line">&quot;value1&quot;</div></pre></td></tr></table></figure>
+<p>执行Lua脚本</p>
 <ul>
-<li>设置指定位置的字符</li>
+<li><code>--latency</code>，<code>--latency-history</code>，<code>--latency-dist</code></li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ setrange key offset value</div><div class="line"></div><div class="line"># 下标从0开始</div></pre></td></tr></table></figure>
+<p>检测客户端到目标redis的网络延迟，以上命令分别展示<code>一行</code>，<code>多行</code>，<code>统计图表</code></p>
 <ul>
-<li>获取部分字符串</li>
+<li><code>--stat</code></li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ getrange key start end</div><div class="line"></div><div class="line"># 下标从0开始，包括start和end</div></pre></td></tr></table></figure>
-<h1 id="3-内部编码"><a href="#3-内部编码" class="headerlink" title="3. 内部编码"></a>3. 内部编码</h1><p>字符串类型的内部编码有3中：</p>
+<p>实时获取redis的重要信息，如内存，客户端等。</p>
 <ul>
-<li>int：8个字节的长整型</li>
-<li>embstr：小于等于39个字节的字符串</li>
-<li>raw：大于39个字节的字符串</li>
+<li><code>--raw</code>，<code>--no-raw</code></li>
 </ul>
-<p>Redis会根据当前值的类型和长度决定使用哪种编码实现。</p>
-<h1 id="4-使用场景"><a href="#4-使用场景" class="headerlink" title="4. 使用场景"></a>4. 使用场景</h1><h2 id="4-1-缓存"><a href="#4-1-缓存" class="headerlink" title="4.1 缓存"></a>4.1 缓存</h2><p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-02-26-165723.png?imageMogr2/thumbnail/!40p" alt="" title="缓存"></p>
-<p>注：与MySQl等关系型数据库不同的是，Redis没有名称空间，没有对键的名称有强制要求。所以设置合理的键名有利于防止键冲突和项目的可维护性。</p>
-<p>推荐：<code>业务名:对象名:id:[属性]</code></p>
-<h2 id="4-2-计数功能"><a href="#4-2-计数功能" class="headerlink" title="4.2 计数功能"></a>4.2 计数功能</h2><p>使用<code>incr</code>命令。</p>
-<p>注：实际计数系统可能需要考虑的问题较多，如防作弊、不同维度计数以及持久化到底层数据库等。</p>
-<h2 id="4-3-共享session"><a href="#4-3-共享session" class="headerlink" title="4.3 共享session"></a>4.3 共享session</h2><p>用于解决分布式web服务存储session的问题。</p>
-<h2 id="4-4-限制访问次数"><a href="#4-4-限制访问次数" class="headerlink" title="4.4 限制访问次数"></a>4.4 限制访问次数</h2><p>使用<code>set EX NX</code>和<code>incr</code>命令实现。</p>
+<p><code>no-raw</code>返回结果的原始格式，<code>raw</code>返回格式化之后的结果</p>
+<ul>
+<li><code>--csv</code></li>
+</ul>
+<p>以<code>csv</code>格式输出结果</p>
+<h1 id="2-redis-server"><a href="#2-redis-server" class="headerlink" title="2. redis-server"></a>2. redis-server</h1><p>除了启动redis服务外，还有<code>--test-memory</code>的选项。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">src/redis-server --test-memory 1024</div></pre></td></tr></table></figure>
+<p>结果:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Please keep the test running several minutes per GB of memory.</div><div class="line">Also check http://www.memtest86.com/ and http://pyropus.ca/software/memtester/</div><div class="line">Addressing test [4]</div><div class="line">.................</div><div class="line">.................</div><div class="line">.................</div><div class="line">.................</div><div class="line">以下一堆</div></pre></td></tr></table></figure>
+<h1 id="3-redis-benchmark"><a href="#3-redis-benchmark" class="headerlink" title="3. redis-benchmark"></a>3. redis-benchmark</h1><p><code>redis-benchmark</code>可以作为redis的性能基准测试。</p>
+<ul>
+<li><code>-c</code> (clients)</li>
+</ul>
+<p>客户端并发数量，默认50</p>
+<ul>
+<li><code>-n</code> (requests)</li>
+</ul>
+<p>客户端请求总量，默认100000</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">$ src/redis-benchmark -c 50 -n 20000</div><div class="line">====== PING_INLINE ======</div><div class="line">  20000 requests completed in 0.47 seconds</div><div class="line">  50 parallel clients</div><div class="line">  3 bytes payload</div><div class="line">  keep alive: 1</div><div class="line"></div><div class="line">93.14% &lt;= 1 milliseconds</div><div class="line">98.50% &lt;= 2 milliseconds</div><div class="line">99.50% &lt;= 3 milliseconds</div><div class="line">99.75% &lt;= 4 milliseconds</div><div class="line">99.78% &lt;= 5 milliseconds</div><div class="line">99.86% &lt;= 6 milliseconds</div><div class="line">99.94% &lt;= 7 milliseconds</div><div class="line">100.00% &lt;= 7 milliseconds</div><div class="line">42918.46 requests per second</div><div class="line"></div><div class="line">.............</div><div class="line">.............</div></pre></td></tr></table></figure>
+<ul>
+<li><code>-q</code></li>
+</ul>
+<p>仅仅显示<code>requests per second</code></p>
+<ul>
+<li><code>-r</code></li>
+</ul>
+<p>测试的时候随机插入键，会在测试的key名称后加上12位的后缀。</p>
+<ul>
+<li><code>-P</code></li>
+</ul>
+<p>每个请求pipeline的数量，默认为1</p>
+<ul>
+<li><code>-k</code></li>
+</ul>
+<p>是否keepalive，1为使用，0不使用。默认1</p>
+<ul>
+<li><code>-t</code></li>
+</ul>
+<p>使用指定命令做基准测试，如<code>-t set,get</code></p>
+<ul>
+<li><code>-csv</code></li>
+</ul>
+<p>用csv的格式输出</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -215,7 +233,7 @@ Redis基本命令的使用-字符串1. 简介字符串是Redis最基础的数据
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/redis/02_Redis基本命令的使用-字符串/" data-title="02_Redis基本命令的使用-字符串 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/redis/04_Redis之Shell/" data-title="04_Redis之Shell | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -225,18 +243,18 @@ Redis基本命令的使用-字符串1. 简介字符串是Redis最基础的数据
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/icemimosa/redis/02_Redis基本命令的使用-哈希/" title="02_Redis基本命令的使用-哈希">
+ <a href="/icemimosa/redis/04_Redis之Pipeline/" title="04_Redis之Pipeline">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  02_Redis基本命令的使用-哈希</span>
+  04_Redis之Pipeline</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/icemimosa/redis/02_Redis基本命令的使用-预备/"  title="02_Redis基本命令的使用-预备">
+<a href="/icemimosa/redis/04_Redis慢查询分析/"  title="04_Redis慢查询分析">
  <strong>NEXT:</strong><br/> 
- <span>02_Redis基本命令的使用-预备
+ <span>04_Redis慢查询分析
 </span>
 </a>
 </div>
@@ -254,7 +272,7 @@ Redis基本命令的使用-字符串1. 简介字符串是Redis最基础的数据
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis基本命令的使用-字符串"><span class="toc-text">Redis基本命令的使用-字符串</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-命令"><span class="toc-text">2. 命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-常用命令"><span class="toc-text">2.1 常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-不常用命令"><span class="toc-text">2.2 不常用命令</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-内部编码"><span class="toc-text">3. 内部编码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-使用场景"><span class="toc-text">4. 使用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-缓存"><span class="toc-text">4.1 缓存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-计数功能"><span class="toc-text">4.2 计数功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-共享session"><span class="toc-text">4.3 共享session</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-限制访问次数"><span class="toc-text">4.4 限制访问次数</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#04-Redis之Shell"><span class="toc-text">04_Redis之Shell</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-redis-cli"><span class="toc-text">1. redis-cli</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-redis-server"><span class="toc-text">2. redis-server</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-redis-benchmark"><span class="toc-text">3. redis-benchmark</span></a></li></ol>
   </div>
 
 <div id="asidepart">

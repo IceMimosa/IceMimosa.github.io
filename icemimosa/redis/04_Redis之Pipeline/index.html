@@ -7,12 +7,22 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>Ice の Mimosa</title>
+    <title>04_Redis之Pipeline | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
-    <meta name="description" content="IceMimosa 学习 努力 代码人生">
+    <meta name="description" content="[TOC]
+04_Redis之Pipeline1. 简介Redis执行的命令的过程如下：
+
+发送命令
+命令排队
+命令执行
+返回结果
+
+其中1和4成为Round Trip Time(RTT 往返时间)
+Redis提供了mget，mset等来有效解决RTT时间。但大部分命令是不支持批量操作的。
+Pipe">
     
     
     
@@ -84,212 +94,112 @@
 
     </header>
     <div id="container">
-      <div id="main">
-
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/hive/Impala读取parquet格式时间的一个坑/" title="Impala读取parquet格式时间的一个坑" itemprop="url">
-  
-      <time datetime="2017-10-20T07:30:16.000Z" itemprop="datePublished">2017-10-20</time>
-    <h1 itemprop="name">Impala读取parquet格式时间的一个坑</h1>
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
     
-     
-           <p itemprop="description" >Impala读取parquet格式时间的一个坑1. 描述发现用Impala读取parquet格式表的时候，timestamp类型的字段读取的是UTC时间，并没有做本地化时间转换，即时间晚了8个小时。
-一开始以为是原始插入表的数据出了问题，但是使用hive进行查询的时候，时间却是对</p>
-        
+      <a href="/icemimosa/redis/04_Redis之Pipeline/" title="04_Redis之Pipeline" itemprop="url">04_Redis之Pipeline</a>
+  </h1>
+  <p class="article-author">By
     
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2017-05-20T04:30:16.000Z" itemprop="datePublished">2017-05-20</time>
+    更新日期:<time datetime="2018-03-13T14:54:41.614Z" itemprop="dateModified">2018-03-13</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#04-Redis之Pipeline"><span class="toc-text">04_Redis之Pipeline</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-使用"><span class="toc-text">2. 使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-注意"><span class="toc-text">3. 注意</span></a></li></ol>
+		</div>
+		
+		<p>[TOC]</p>
+<h1 id="04-Redis之Pipeline"><a href="#04-Redis之Pipeline" class="headerlink" title="04_Redis之Pipeline"></a>04_Redis之Pipeline</h1><h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>Redis执行的命令的过程如下：</p>
+<ul>
+<li><code>发送命令</code></li>
+<li><code>命令排队</code></li>
+<li><code>命令执行</code></li>
+<li><code>返回结果</code></li>
+</ul>
+<p>其中1和4成为<code>Round Trip Time(RTT 往返时间)</code></p>
+<p>Redis提供了<code>mget，mset等</code>来有效解决RTT时间。但大部分命令是不支持批量操作的。</p>
+<p>Pipeline（流水线）能改善上面的问题。它将一组命令进行组装，通过一次RTT传输给Redis，在将这组Redis命令的执行结果按顺序返回。</p>
+<h1 id="2-使用"><a href="#2-使用" class="headerlink" title="2. 使用"></a>2. 使用</h1><p>可以使用<code>redis-cli --pipe</code>来执行。</p>
+<p>大多数还是使用高级语言客户端中的Pipeline，如java中的<code>Jedis</code>。</p>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-03-13-144614.png?imageMogr2/thumbnail/!30p" alt=""></p>
+<h1 id="3-注意"><a href="#3-注意" class="headerlink" title="3. 注意"></a>3. 注意</h1><p><code>Pipeline</code>和<code>原生批量命令</code>(如mget)的区别：</p>
+<ul>
+<li>原生批量命令是原子的，<code>Pipeline不是原子的</code></li>
+<li>原生批量命令是一个命令多个key，Pipeline不是</li>
+<li>原生批量命令是Redis服务端支持的，Pipeline需要服务端和客户端共同实现</li>
+</ul>
+<p>Pipeline虽然好用，但是每次组装的命令个数不能没有节制，否则会是数据量过大，以及增加客户端等待时间，同时有可能会造成网络阻塞。建议拆成<code>多个小的pipeline</code>执行。</p>
   
-    <a href="/icemimosa/spark/Spark ALS应用与理解/" title="Spark ALS应用与理解" itemprop="url">
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
   
-      <time datetime="2017-07-09T07:30:17.000Z" itemprop="datePublished">2017-07-09</time>
-    <h1 itemprop="name">Spark ALS应用与理解</h1>
-    
-     
-           <p itemprop="description" >Spark ALS1. 简介推荐的意义和应用于推荐的协同过滤算法，这里就不说明了。这里主要讲解一下Spark对协同过滤的应用和实现。官方文档 说的很明确，Spark目前支持的是基于模型的协同过滤算法，即Alternating Least Squares (ALS)。中文名称是交替</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/redis/04_Redis之Pipeline/" title="04_Redis之Pipeline" itemprop="url">
-  
-      <time datetime="2017-05-20T04:30:16.000Z" itemprop="datePublished">2017-05-20</time>
-    <h1 itemprop="name">04_Redis之Pipeline</h1>
-    
-     
-           <p itemprop="description" >[TOC]
-04_Redis之Pipeline1. 简介Redis执行的命令的过程如下：
-
-发送命令
-命令排队
-命令执行
-返回结果
-
-其中1和4成为Round Trip Time(RTT 往返时间)
-Redis提供了mget，mset等来有效解决RTT时间。但大部分命令是不支持批</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/redis/04_Redis之Shell/" title="04_Redis之Shell" itemprop="url">
-  
-      <time datetime="2017-05-19T07:30:16.000Z" itemprop="datePublished">2017-05-19</time>
-    <h1 itemprop="name">04_Redis之Shell</h1>
-    
-     
-           <p itemprop="description" >[TOC]
-04_Redis之Shell可以使用redis-cli --help查看帮助
-1Usage: redis-cli [OPTIONS] [cmd [arg [arg ...]]]
-OPTIONS如下：
-1. redis-cli
---help，--version
-
--p </p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/redis/04_Redis慢查询分析/" title="04_Redis慢查询分析" itemprop="url">
-  
-      <time datetime="2017-05-17T04:30:16.000Z" itemprop="datePublished">2017-05-17</time>
-    <h1 itemprop="name">04_Redis慢查询分析</h1>
-    
-     
-           <p itemprop="description" >[TOC]
-04_Redis慢查询分析1. 简介许多存储系统（如MySQL）提供慢查询日志帮助开发和运维定位系统存在的问题。所谓慢查询，就是系统在命令执行前后计算每条命令的执行时间，当超过预设阀值，就将命令相关信息（发生时间、耗时、详细信息等）记录下来。
-2. 配置参数Redis</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/redis/03_Redis基本键的管理/" title="03_Redis基本键的管理" itemprop="url">
-  
-      <time datetime="2017-05-15T04:30:16.000Z" itemprop="datePublished">2017-05-15</time>
-    <h1 itemprop="name">03_Redis基本键的管理</h1>
-    
-     
-           <p itemprop="description" >[TOC]
-03_Redis基本键的管理1. 简介针对键的管理，如type，del，object，exists，expire等，下面介绍几个重要的。
-2. 单个键的命令2.1 键重命名123456789101112131415$ rename key newkey&amp;gt; 示例1</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/redis/02_Redis基本命令的使用-有序集合/" title="02_Redis基本命令的使用-有序集合" itemprop="url">
-  
-      <time datetime="2017-05-13T04:30:16.000Z" itemprop="datePublished">2017-05-13</time>
-    <h1 itemprop="name">02_Redis基本命令的使用-有序集合</h1>
-    
-     
-           <p itemprop="description" >[TOC]
-Redis基本命令的使用-有序集合1. 简介与集合不同的是，有序集合中的元素可以排序，排序的依据是给每个元素设置一个分数(score)。
-比如对一个班级的学生进行分数排名。
-2. 命令2.1 集合操作
-
-添加成员
+  <span></span> <a href="/tags/redis/">redis</a>
+  </div>
 
 
-1234567$ zadd key [NX|XX]</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/redis/02_Redis基本命令的使用-集合/" title="02_Redis基本命令的使用-集合" itemprop="url">
-  
-      <time datetime="2017-05-10T08:30:16.000Z" itemprop="datePublished">2017-05-10</time>
-    <h1 itemprop="name">02_Redis基本命令的使用-集合</h1>
-    
-     
-           <p itemprop="description" >[TOC]
-Redis基本命令的使用-集合1. 简介集合也是用来保存多个字符串元素，但和列表不一样的是集合不允许有重复元素，并且集合中的元素是无序的。
-Redis除了提供集合的增删改查之外，还支持多个集合的取交集、并集和差集。
-2. 命令2.1 集合操作
-
-添加元素
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/redis/">redis</a>
+</div>
 
 
-1234</p>
-        
-    
-  </a>
-</section>
 
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/redis/02_Redis基本命令的使用-列表/" title="02_Redis基本命令的使用-列表" itemprop="url">
-  
-      <time datetime="2017-05-09T08:30:16.000Z" itemprop="datePublished">2017-05-09</time>
-    <h1 itemprop="name">02_Redis基本命令的使用-列表</h1>
-    
-     
-           <p itemprop="description" >[TOC]
-Redis基本命令的使用-列表1. 简介列表(List)类型用来存储多个有序字符串，列表中每个字符串被称为元素。一个列表最多可以存储2^32-1个元素。有如下特点：
+<div class="article-share" id="share">
 
-有序
-元素可重复
-
-2. 命令2.1 添加
-
-从右插入元素
-
-
-12345678910# 从右插入元</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/redis/02_Redis基本命令的使用-哈希/" title="02_Redis基本命令的使用-哈希" itemprop="url">
-  
-      <time datetime="2017-05-05T08:30:16.000Z" itemprop="datePublished">2017-05-05</time>
-    <h1 itemprop="name">02_Redis基本命令的使用-哈希</h1>
-    
-     
-           <p itemprop="description" >[TOC]
-Redis基本命令的使用-哈希1. 简介Redis中的哈希是指键值本身又是一个键值对的结构。
-具体结构如下图：
-2. 命令
-
-设置值
-
-
-12345$ hset key field value&amp;gt; 示例127.0.0.1:6379&amp;gt; hset user:1 </p>
-        
-    
-  </a>
-</section>
-
-
-  <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
-  </nav>
+  <div data-url="http://www.patamon.me/icemimosa/redis/04_Redis之Pipeline/" data-title="04_Redis之Pipeline | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
 
 </div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/icemimosa/spark/Spark ALS应用与理解/" title="Spark ALS应用与理解">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Spark ALS应用与理解</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/icemimosa/redis/04_Redis之Shell/"  title="04_Redis之Shell">
+ <strong>NEXT:</strong><br/> 
+ <span>04_Redis之Shell
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#04-Redis之Pipeline"><span class="toc-text">04_Redis之Pipeline</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-使用"><span class="toc-text">2. 使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-注意"><span class="toc-text">3. 注意</span></a></li></ol>
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -391,8 +301,8 @@ Redis基本命令的使用-哈希1. 简介Redis中的哈希是指键值本身又
 
 </aside>
 </div>
-  </div>
-  <footer><div id="footer" >
+    </div>
+    <footer><div id="footer" >
     
             <p class="copyright"> © 2018 
 		
@@ -439,6 +349,8 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
@@ -458,9 +370,119 @@ $(document).ready(function(){
 });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
 
 
 
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
 
 
 
@@ -549,5 +571,5 @@ ga('send', 'pageview');
 
 
   </body>
- </html>
+</html>
 
