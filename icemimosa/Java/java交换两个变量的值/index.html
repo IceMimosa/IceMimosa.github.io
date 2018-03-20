@@ -7,12 +7,15 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>Ice の Mimosa</title>
+    <title>java交换两个变量的值 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
-    <meta name="description" content="IceMimosa 学习 努力 代码人生">
+    <meta name="description" content="[TOC]
+java交换两个变量的值// 1. 临时变量(推荐使用，简单直接)                 
+123temp = a;                  a = b;                      b = temp;
+// 2. 异或(只支持整形,float等不支持)">
     
     
     
@@ -84,195 +87,102 @@
 
     </header>
     <div id="container">
-      <div id="main">
-
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/hive/hive解决元数据乱码/" title="hive解决元数据乱码" itemprop="url">
-  
-      <time datetime="2016-11-24T07:30:16.000Z" itemprop="datePublished">2016-11-24</time>
-    <h1 itemprop="name">hive解决元数据乱码</h1>
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
     
-     
-           <p itemprop="description" >hive解决元数据乱码1. 修改hive表由于 Cloudera Manager 安装的hive的元数据(如在mysql中)的编码是 latin1, 所以在各种有 COMMENT 是中文的情况下各种乱码。
-
-注意：不要修改hive整库的编码，会有问题，报错如下：
-
-12FAILE</p>
-        
+      <a href="/icemimosa/Java/java交换两个变量的值/" title="java交换两个变量的值" itemprop="url">java交换两个变量的值</a>
+  </h1>
+  <p class="article-author">By
     
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2017-03-28T11:00:34.000Z" itemprop="datePublished">2017-03-28</time>
+    更新日期:<time datetime="2018-03-20T16:19:05.277Z" itemprop="dateModified">2018-03-21</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#java交换两个变量的值"><span class="toc-text">java交换两个变量的值</span></a></li></ol>
+		</div>
+		
+		<p>[TOC]</p>
+<h1 id="java交换两个变量的值"><a href="#java交换两个变量的值" class="headerlink" title="java交换两个变量的值"></a>java交换两个变量的值</h1><p>// 1. 临时变量(推荐使用，简单直接)                 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">temp = a;                  </div><div class="line">a = b;                      </div><div class="line">b = temp;</div></pre></td></tr></table></figure>
+<p>// 2. 异或(只支持整形,float等不支持)                    </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">a = a ^ b;                  </div><div class="line">b = a ^ b;                  </div><div class="line">a = a ^ b;</div></pre></td></tr></table></figure>
+<p>// 3. 加减法(float类型可能会导致浮点的溢出, 如a = 1.1,b = 2.2时)                    </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">a = a + b;                    </div><div class="line">b = a - b;                    </div><div class="line">a = a - b;</div></pre></td></tr></table></figure>
+<p>// 4. 临时数组(借鉴js的一种写法  —&gt;  <code>a = [b,b=a][0];</code>)<br>// 也可以是其他类型的数组              </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">a = new int[]&#123;b ,b = a&#125;[0];</div></pre></td></tr></table></figure>
+<p>// 5. 这个貌似也不错                      </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">a = b + (b=a)*0;</div></pre></td></tr></table></figure>
   
-    <a href="/icemimosa/hive/hive导入数据的一些方式/" title="hive导入数据的一些方式" itemprop="url">
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
   
-      <time datetime="2016-10-25T07:30:16.000Z" itemprop="datePublished">2016-10-25</time>
-    <h1 itemprop="name">hive导入数据的一些方式</h1>
-    
-     
-           <p itemprop="description" >hive导入数据的一些方式Hive 五种数据导入方式介绍</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/hadoop/删除MacOS X文件系统的附加属性@符号/" title="删除MacOS X文件系统的附加属性@" itemprop="url">
-  
-      <time datetime="2016-10-25T07:30:16.000Z" itemprop="datePublished">2016-10-25</time>
-    <h1 itemprop="name">删除MacOS X文件系统的附加属性@</h1>
-    
-     
-           <p itemprop="description" >删除MacOS X文件系统的附加属性@场景：之前手贱，一不小心删除了Hdfs的一个目录。还好之前做了备份，但是只是备份整个电脑的，所以只将里面的关于HDFS的备份拿出来。
-但是拿过来之后有个问题, 目录最后多了个@符号：
-123456&amp;gt; lldrwxr-xr-x@   4 </p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/hive/hive处理增量数据/" title="hive处理增量数据" itemprop="url">
-  
-      <time datetime="2016-10-25T07:30:16.000Z" itemprop="datePublished">2016-10-25</time>
-    <h1 itemprop="name">hive处理增量数据</h1>
-    
-     
-           <p itemprop="description" >[TOC]
-hive处理增量数据1. 场景
-前提：通过 Sqoop 拉取的数据含有 主键 或者 唯一键
-场景：每天 按时间 或者 其他列值 增量拉取数据, 如下
-
-123每天按照时间(如更新时间updated_at)，来增量拉取数据。然后把每天的拉取的数据，增量放入到hive表中</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/hive/hive表动态分区/" title="Hive表动态分区" itemprop="url">
-  
-      <time datetime="2016-10-24T07:30:16.000Z" itemprop="datePublished">2016-10-24</time>
-    <h1 itemprop="name">Hive表动态分区</h1>
-    
-     
-           <p itemprop="description" >Hive表动态分区[TOC]
-1. 动态分区应用场景
-静态分区和动态分区的区别在于导入数据时，是手动输入分区名称，还是通过数据来判断数据分区。对于大数据批量导入来说，显然采用动态分区更为简单方便。  
-
-应用场景为，若需要导入一个系统的历史数据，且这些历史数据的数据量较大，需要根</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/sqoop/sqoop增量导出问题/" title="sqoop增量导出问题" itemprop="url">
-  
-      <time datetime="2016-10-14T07:30:16.000Z" itemprop="datePublished">2016-10-14</time>
-    <h1 itemprop="name">sqoop增量导出问题</h1>
-    
-     
-           <p itemprop="description" >#sqoop增量导出问题  
-##1、未分区表1、默认情况；1sqoop  export  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table dwd_test</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/sqoop/Sqoop源码改造/" title="Sqoop 源码改造" itemprop="url">
-  
-      <time datetime="2016-10-13T07:30:16.000Z" itemprop="datePublished">2016-10-13</time>
-    <h1 itemprop="name">Sqoop 源码改造</h1>
-    
-     
-           <p itemprop="description" >1. 要求
-sqoop-1.4.6-cdh5.7.1
-参见 RRADME.txt
-
-2. 编译项目
-参见 COMPILING.txt
+  <span></span> <a href="/tags/java/">java</a>
+  </div>
 
 
-ant jar : 漫长的编译过程, 打开vpn啥的试试
-编译完了会在 build 目录下生成jar
-命令测试：bin/sqoop 即可，如果</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/sqoop/Sqoop命令/" title="Sqoop命令" itemprop="url">
-  
-      <time datetime="2016-10-12T07:30:16.000Z" itemprop="datePublished">2016-10-12</time>
-    <h1 itemprop="name">Sqoop命令</h1>
-    
-     
-           <p itemprop="description" >Sqoop命令1. sqoop导入基本命令
-1sqoop  import  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table bvs_users  --fie</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/oozie/Oozie-9_自定义UDF和Action节点/" title="Oozie-9_自定义UDF和Action节点" itemprop="url">
-  
-      <time datetime="2016-10-10T07:30:16.000Z" itemprop="datePublished">2016-10-10</time>
-    <h1 itemprop="name">Oozie-9_自定义UDF和Action节点</h1>
-    
-     
-           <p itemprop="description" >[TOC]
-Oozie-9_自定义UDF和Action节点1. 自定义UDF有的时候oozie提供的EL函数没法满足需求，这个时候就需要对oozie的udf进行扩展。
-
-新建maven工程项目，这里的pom最好使用oozie项目自身的pom(在oozie的目录下可以找到)
-然后我</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/hive/Hive-5_UDF/" title="Hive-5_UDF" itemprop="url">
-  
-      <time datetime="2016-09-24T07:30:16.000Z" itemprop="datePublished">2016-09-24</time>
-    <h1 itemprop="name">Hive-5_UDF</h1>
-    
-     
-           <p itemprop="description" >Hive-5_UDF[TOC]
-
-参考 UDF
-
-In Beeline or the CLI, use the commands below to show the latest documentation
-
-语法:
-
-123SHOW FUNCTIONS;DESCRIBE FUN</p>
-        
-    
-  </a>
-</section>
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/java/">java</a>
+</div>
 
 
-  <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/">Next &raquo;</a>
-  </nav>
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.patamon.me/icemimosa/Java/java交换两个变量的值/" data-title="java交换两个变量的值 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
 
 </div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/icemimosa/redis/01_Redis初始/" title="01_Redis初识">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  01_Redis初识</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/icemimosa/Java/JVM学习05-字节码执行过程和JVM指令集/"  title="JVM学习05-字节码执行过程和JVM指令集">
+ <strong>NEXT:</strong><br/> 
+ <span>JVM学习05-字节码执行过程和JVM指令集
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#java交换两个变量的值"><span class="toc-text">java交换两个变量的值</span></a></li></ol>
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -376,8 +286,8 @@ In Beeline or the CLI, use the commands below to show the latest documentation
 
 </aside>
 </div>
-  </div>
-  <footer><div id="footer" >
+    </div>
+    <footer><div id="footer" >
     
             <p class="copyright"> © 2018 
 		
@@ -424,6 +334,8 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
@@ -443,9 +355,119 @@ $(document).ready(function(){
 });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
 
 
 
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
 
 
 
@@ -534,5 +556,5 @@ ga('send', 'pageview');
 
 
   </body>
- </html>
+</html>
 
