@@ -1,0 +1,650 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  
+    <title>Mysql性能优化 | Ice の Mimosa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="IceMimosa">
+    
+    <meta name="description" content="[TOC]
+Mysql性能优化1. 优化的目的
+避免页面出现5xx访问错误
+
+1231. 数据库连接可能timeout了2. 慢查询导致页面无法加载3. 事物阻塞造成数据无法提交
+
+增加数据库稳定性
+
+1很多时候的问题都是由于低效的sql查询引起的
+
+优化用户体验
+
+121. 提升页面访问速度2. ">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="Ice の Mimosa" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon_mine.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/jquery-icemi-scroll2top.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='1cb536fd996cddc96154515a1ed1d72d';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+
+			<div id="erer" class="erer" style="">
+				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
+				<img id="i22" src="http://7xsz2j.com1.z0.glb.clouddn.com/patamon-22.png" width=200 height=230></img>
+			</div>
+
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Ice の Mimosa">Ice の Mimosa</a></h1>
+				<a class="blog-motto">没有未来的未来不是我想要的未来</a>
+			</div>
+
+			<div id="sansan" class="sansan" style="">
+				<!-- <img src="/img/33.png" width=200 height=230></img> -->
+				<img src="http://7xsz2j.com1.z0.glb.clouddn.com/patamon-33.png" width=200 height=230></img>
+			</div> 
+
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+					<li>
+					
+                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+					
+					</li>
+				</ul>
+                            </nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/icemimosa/Java/Mysql优化/" title="Mysql性能优化" itemprop="url">Mysql性能优化</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2017-07-01T11:00:34.000Z" itemprop="datePublished">2017-07-01</time>
+    更新日期:<time datetime="2018-03-26T18:11:25.658Z" itemprop="dateModified">2018-03-27</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Mysql性能优化"><span class="toc-text">Mysql性能优化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-优化的目的"><span class="toc-text">1. 优化的目的</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-优化的思路"><span class="toc-text">2. 优化的思路</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-SQL语句优化"><span class="toc-text">2.1 SQL语句优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-1-慢查询日志配置"><span class="toc-text">2.1.1 慢查询日志配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-2-慢查询日志组成"><span class="toc-text">2.1.2 慢查询日志组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-3-慢查询日志分析工具"><span class="toc-text">2.1.3 慢查询日志分析工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-4-explain语句"><span class="toc-text">2.1.4 explain语句</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-索引优化"><span class="toc-text">2.2 索引优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-数据库表结构的优化"><span class="toc-text">2.3 数据库表结构的优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-系统配置的优化"><span class="toc-text">2.4 系统配置的优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-服务器硬件优化"><span class="toc-text">2.5 服务器硬件优化</span></a></li></ol></li></ol>
+		</div>
+		
+		<p>[TOC]</p>
+<h1 id="Mysql性能优化"><a href="#Mysql性能优化" class="headerlink" title="Mysql性能优化"></a>Mysql性能优化</h1><h1 id="1-优化的目的"><a href="#1-优化的目的" class="headerlink" title="1. 优化的目的"></a>1. 优化的目的</h1><ul>
+<li>避免页面出现5xx访问错误</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1. 数据库连接可能timeout了</div><div class="line">2. 慢查询导致页面无法加载</div><div class="line">3. 事物阻塞造成数据无法提交</div></pre></td></tr></table></figure>
+<ul>
+<li>增加数据库稳定性</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">很多时候的问题都是由于低效的sql查询引起的</div></pre></td></tr></table></figure>
+<ul>
+<li>优化用户体验</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">1. 提升页面访问速度</div><div class="line">2. 提升网站功能体验</div></pre></td></tr></table></figure>
+<h1 id="2-优化的思路"><a href="#2-优化的思路" class="headerlink" title="2. 优化的思路"></a>2. 优化的思路</h1><p>我们可以从<code>SQL及索引</code>，<code>数据库表结构</code>，<code>系统配置</code>，<code>硬件</code>的思路进行数据库优化。这个思路在<code>金钱成本上是越来越高的</code>，但是在<code>优化效果上是越来越差的</code>。</p>
+<h2 id="2-1-SQL语句优化"><a href="#2-1-SQL语句优化" class="headerlink" title="2.1 SQL语句优化"></a>2.1 SQL语句优化</h2><h3 id="2-1-1-慢查询日志配置"><a href="#2-1-1-慢查询日志配置" class="headerlink" title="2.1.1 慢查询日志配置"></a>2.1.1 慢查询日志配置</h3><p>查看是否开启慢查询，并打开</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 是否打开慢查询日志</span></div><div class="line"><span class="keyword">show</span> <span class="keyword">variables</span> <span class="keyword">like</span> <span class="string">'slow_query_log'</span>;</div><div class="line"><span class="keyword">show</span> <span class="keyword">variables</span> <span class="keyword">like</span> <span class="string">'slow_query_log_file'</span>;</div><div class="line"><span class="comment">-- 记录慢查询的sql执行时间，单位为秒，默认10s</span></div><div class="line"><span class="keyword">show</span> <span class="keyword">variables</span> <span class="keyword">like</span> <span class="string">'long_query_time'</span>; </div><div class="line"><span class="comment">-- 是否记录没有索引的查询</span></div><div class="line"><span class="keyword">show</span> <span class="keyword">variables</span> <span class="keyword">like</span> <span class="string">'log_queries_not_using_indexes'</span>;</div><div class="line"></div><div class="line"><span class="comment">-- 打开相应设置</span></div><div class="line"><span class="keyword">set</span> <span class="keyword">global</span> slow_query_log=<span class="keyword">on</span>;</div><div class="line"><span class="keyword">set</span> <span class="keyword">global</span> log_queries_not_using_indexes=<span class="keyword">on</span>;</div><div class="line"><span class="keyword">set</span> long_query_time=<span class="number">0</span>; <span class="comment">-- 0表示都记录，这里仅用于测试</span></div></pre></td></tr></table></figure>
+<h3 id="2-1-2-慢查询日志组成"><a href="#2-1-2-慢查询日志组成" class="headerlink" title="2.1.2 慢查询日志组成"></a>2.1.2 慢查询日志组成</h3><p>查看<code>slow_query_log_file</code>配置对应的文件，比如如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># Time: 2018-03-26T15:19:37.449160Z</div><div class="line"># User@Host: root[root] @ localhost [127.0.0.1]  Id:    58</div><div class="line"># Query_time: 0.003934  Lock_time: 0.000384 Rows_sent: 1  Rows_examined: 1020</div><div class="line">SET timestamp=1522077577;</div><div class="line">show variables like &apos;long_query_time&apos;;</div></pre></td></tr></table></figure>
+<p>对应的字段分别是：</p>
+<ul>
+<li>执行时间点</li>
+<li>sql执行的主机信息</li>
+<li>sql执行信息（时间，锁等待时间等）</li>
+<li><code>执行时间点</code>和<code>执行的sql语句</code></li>
+</ul>
+<h3 id="2-1-3-慢查询日志分析工具"><a href="#2-1-3-慢查询日志分析工具" class="headerlink" title="2.1.3 慢查询日志分析工具"></a>2.1.3 慢查询日志分析工具</h3><p>当慢查询日志文件日积月累变得很大的时候，就需要分析工具来帮助我们进行慢查询的分析。</p>
+<ul>
+<li><code>mysqldumpslow</code>工具</li>
+</ul>
+<p>mysqldumpslow是mysql官方提供的分析工具，详细可参考帮助文档<code>mysqldumpslow -h</code>。如执行<code>mysqldumpslow -t 3 IceMimosa-slow.log</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Reading mysql slow query log from IceMimosa-slow.log</div><div class="line">Count: 4  Time=0.00s (0s)  Lock=0.00s (0s)  Rows=1.0 (4), root[root]@localhost</div><div class="line">  show variables like &apos;S&apos;</div><div class="line"></div><div class="line">Count: 2  Time=0.00s (0s)  Lock=0.00s (0s)  Rows=1.0 (2), root[root]@localhost</div><div class="line">  show variables like &apos;S&apos;</div><div class="line"></div><div class="line">Count: 1  Time=0.00s (0s)  Lock=0.00s (0s)  Rows=0.0 (0), root[root]@localhost</div><div class="line">  set global log_queries_not_using_indexes=on</div></pre></td></tr></table></figure>
+<ul>
+<li><code>pt-query-digest</code>工具</li>
+</ul>
+<p>安装：可以在mysql/bin目录中执行如下命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl -o pt-query-digest https://www.percona.com/get/pt-query-digest</div></pre></td></tr></table></figure>
+<p>可以查询<code>pt-query-digest --help</code>进行使用。如使用命令<code>pt-query-digest -t 3 IceMimosa-slow.log</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"># 250ms user time, 50ms system time, 27.19M rss, 4.10G vsz</div><div class="line"># Current date: Mon Mar 26 23:52:44 2018</div><div class="line"># Hostname: IceMimosa.local</div><div class="line"># Files: IceMimosa-slow.log</div><div class="line"># Overall: 10 total, 4 unique, 0.12 QPS, 0.00x concurrency _______________</div><div class="line"># Time range: 2018-03-26T15:19:35 to 2018-03-26T15:20:56</div><div class="line"># Attribute          total     min     max     avg     95%  stddev  median</div><div class="line"># ============     ======= ======= ======= ======= ======= ======= =======</div><div class="line"># Exec time           14ms    27us     4ms     1ms     2ms     1ms     2ms</div><div class="line"># Lock time            1ms       0   384us   111us   194us   112us   108us</div><div class="line"># Rows sent              6       0       1    0.60    0.99    0.49    0.99</div><div class="line"># Rows examine       5.98k       0    1020     612 1012.63  496.09 1012.63</div><div class="line"># Query size           650      21      89      65   88.31   29.00   84.10</div><div class="line"></div><div class="line"># Profile</div><div class="line"># Rank Query ID           Response time Calls R/Call V/M   Item</div><div class="line"># ==== ================== ============= ===== ====== ===== ==============</div><div class="line">#    1 0x7DD5F6760F2D2EBB  0.0136 98.3%     6 0.0023  0.00 SHOW VARIABLES</div><div class="line"># MISC 0xMISC              0.0002  1.7%     4 0.0001   0.0 &lt;3 ITEMS&gt;</div><div class="line"></div><div class="line"># Query 1: 0.38 QPS, 0.00x concurrency, ID 0x7DD5F6760F2D2EBB at byte 1264</div><div class="line"># This item is included in the report because it matches --limit.</div><div class="line"># Scores: V/M = 0.00</div><div class="line"># Time range: 2018-03-26T15:19:36 to 2018-03-26T15:19:52</div><div class="line"># Attribute    pct   total     min     max     avg     95%  stddev  median</div><div class="line"># ============ === ======= ======= ======= ======= ======= ======= =======</div><div class="line"># Count         60       6</div><div class="line"># Exec time     98    14ms     2ms     4ms     2ms     4ms   758us     2ms</div><div class="line"># Lock time    100     1ms    97us   384us   186us   366us    90us   185us</div><div class="line"># Rows sent    100       6       1       1       1       1       0       1</div><div class="line"># Rows examine 100   5.98k    1020    1020    1020    1020       0    1020</div><div class="line"># Query size    81     532      88      89   88.67   88.31    0.50   88.31</div><div class="line"># String:</div><div class="line"># Hosts        localhost</div><div class="line"># Users        root</div><div class="line"># Query_time distribution</div><div class="line">#   1us</div><div class="line">#  10us</div><div class="line"># 100us</div><div class="line">#   1ms  ################################################################</div><div class="line">#  10ms</div><div class="line"># 100ms</div><div class="line">#    1s</div><div class="line">#  10s+</div><div class="line">show variables like &apos;long_query_time&apos;\G</div></pre></td></tr></table></figure>
+<p>我们需要重点关注<code>SQL执行次数多</code>，<code>SQL执行时间长</code>，<code>未命中索引的SQL</code>等。</p>
+<h3 id="2-1-4-explain语句"><a href="#2-1-4-explain语句" class="headerlink" title="2.1.4 explain语句"></a>2.1.4 explain语句</h3><p>使用<code>explain语句</code>可以列出sql语句的执行计划，如语句如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">explain select id, name from parana_items where id=1;</div></pre></td></tr></table></figure>
+<ul>
+<li>输出</li>
+</ul>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-03-26-160304.png" alt=""></p>
+<p>字段的意义：</p>
+<ul>
+<li>table：执行的表</li>
+<li>type：连接使用的类型。最好到最差的连接类型为：const，eq_reg，ref，range，index和ALL。</li>
+<li>possible_keys：显示可能应用在这张表的索引，NULL表示没有可能的索引</li>
+<li>key：实际使用的索引，NULL表示没有使用索引</li>
+<li>ref：显示索引的哪一列被用了，可能是一个常数</li>
+<li>rows：Mysql认为必须检查的用来返回请求数据的行数</li>
+<li>extra：注意<code>Using filesort</code>和<code>Using temporary</code>，此时sql可能需要优化</li>
+</ul>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">explain select max(pay_date) from payments;</div><div class="line"></div><div class="line">* 如果pay_date没有索引的话，那么需要全表扫描</div><div class="line">* 如果pay_date有索引的话，那么直接索引定位就能找出</div></pre></td></tr></table></figure>
+<h2 id="2-2-索引优化"><a href="#2-2-索引优化" class="headerlink" title="2.2 索引优化"></a>2.2 索引优化</h2><p>选择合适的列建立索引：</p>
+<ul>
+<li>在<code>where</code>从句，<code>group by</code>从句，<code>order by</code>从句，<code>on</code>从句中出现的列</li>
+<li>索引字段越小越好</li>
+<li><code>离散度大</code>的列放到<code>联合索引</code>的前面</li>
+</ul>
+<p>避免重复或冗余的索引，比如不用给主键ID，又加上了唯一索引。可以使用<a href="https://www.percona.com/doc/percona-toolkit/LATEST/pt-duplicate-key-checker.html" target="_blank" rel="external">pt-duplicate-key-checker</a>来校验是否存在重复索引。</p>
+<h2 id="2-3-数据库表结构的优化"><a href="#2-3-数据库表结构的优化" class="headerlink" title="2.3 数据库表结构的优化"></a>2.3 数据库表结构的优化</h2><p>1、 选择合适的数据类型</p>
+<ul>
+<li>使用可以存下你的数据的<code>最小的数据类型</code></li>
+<li>使用<code>简单的数据类型</code>，如Int比Varchar在处理上更简单</li>
+<li>尽可能使用<code>not null</code>定义字段</li>
+<li>尽量少使用text类型，非用不可时最好考虑分表。</li>
+</ul>
+<p>2、考虑数据库表的<code>范式化</code>和<code>反范式化</code>。</p>
+<p>3、表的垂直拆分（将原来一个有很多列的表拆分成多个表）：</p>
+<ul>
+<li>把不常用的字段单独存放到一个表中。</li>
+<li>把大字段独立存放到一个表中。</li>
+<li>把经常一起使用的字段放在一起。</li>
+</ul>
+<p>4、表的水平拆分（解决单表数据量过大的问题 ）</p>
+<h2 id="2-4-系统配置的优化"><a href="#2-4-系统配置的优化" class="headerlink" title="2.4 系统配置的优化"></a>2.4 系统配置的优化</h2><p>1、操作系统的配置优化</p>
+<p>比如增加TCP支持的队列数、增加<code>/etc/security/limits.conf</code>的打开文件数限制、关闭防火墙等。</p>
+<p>2、Mysql配置优化</p>
+<ul>
+<li>查找配置文件的顺序</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">mysqld --verbose --help | grep -A 1 &apos;Default options&apos;</div><div class="line"></div><div class="line"># 输出</div><div class="line">/etc/my.cnf /etc/mysql/my.cnf /usr/local/etc/my.cnf ~/.my.cnf</div></pre></td></tr></table></figure>
+<p>可以借助 <a href="http://tools.percona.com/wizard" target="_blank" rel="external">http://tools.percona.com/wizard</a> (需要登录)进行详细的配置和参考。</p>
+<h2 id="2-5-服务器硬件优化"><a href="#2-5-服务器硬件优化" class="headerlink" title="2.5 服务器硬件优化"></a>2.5 服务器硬件优化</h2><p>可以从cpu，内存，磁盘，网络IO等方面考虑。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/mysql/">mysql</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/java/">java</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.patamon.me/icemimosa/Java/Mysql优化/" data-title="Mysql性能优化 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/icemimosa/spark/Spark ALS应用与理解/" title="Spark ALS应用与理解">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Spark ALS应用与理解</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/icemimosa/redis/04_Redis之事务与Lua/"  title="04_Redis之事务与Lua">
+ <strong>NEXT:</strong><br/> 
+ <span>04_Redis之事务与Lua
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Mysql性能优化"><span class="toc-text">Mysql性能优化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-优化的目的"><span class="toc-text">1. 优化的目的</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-优化的思路"><span class="toc-text">2. 优化的思路</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-SQL语句优化"><span class="toc-text">2.1 SQL语句优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-1-慢查询日志配置"><span class="toc-text">2.1.1 慢查询日志配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-2-慢查询日志组成"><span class="toc-text">2.1.2 慢查询日志组成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-3-慢查询日志分析工具"><span class="toc-text">2.1.3 慢查询日志分析工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-4-explain语句"><span class="toc-text">2.1.4 explain语句</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-索引优化"><span class="toc-text">2.2 索引优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-数据库表结构的优化"><span class="toc-text">2.3 数据库表结构的优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-系统配置的优化"><span class="toc-text">2.4 系统配置的优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-服务器硬件优化"><span class="toc-text">2.5 服务器硬件优化</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list" class="clearfix">
+		
+		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/IceMimosa" target="_blank" title="github"></a>
+		
+		
+		
+		
+		<a href="mailto:514793425@qq.com" target="_blank" title="email"></a>
+		
+	</div>
+</div>
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>1</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/categories/java/" title="java">java<sup>21</sup></a></li>
+		
+			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/redis/" title="redis">redis<sup>12</sup></a></li>
+		
+			<li><a href="/categories/spark/" title="spark">spark<sup>1</sup></a></li>
+		
+			<li><a href="/categories/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>10</sup></a></li>
+		
+			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/tags/impala/" title="impala">impala<sup>1</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>21</sup></a></li>
+		
+			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/tags/lombok/" title="lombok">lombok<sup>3</sup></a></li>
+		
+			<li><a href="/tags/mac/" title="mac">mac<sup>1</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>1</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>12</sup></a></li>
+		
+			<li><a href="/tags/spark/" title="spark">spark<sup>1</sup></a></li>
+		
+			<li><a href="/tags/spring/" title="spring">spring<sup>2</sup></a></li>
+		
+			<li><a href="/tags/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
+		
+			<li><a href="/tags/源码/" title="源码">源码<sup>6</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hive/" style="font-size: 17.5px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 10px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 16.25px;">oozie</a> <a href="/tags/redis/" style="font-size: 18.75px;">redis</a> <a href="/tags/spark/" style="font-size: 10px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 15px;">源码</a>
+    </div>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+    
+            <p class="copyright"> © 2018 
+		
+		<a href="http://www.patamon.me" target="_blank" title="IceMimosa">IceMimosa</a>
+		
+            <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
+            ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
+            </div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="/js/jquery-icemi-scroll2top.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  
+  // 回到顶部
+  $(document.body).scroll2Top({
+    background:"#66ccff",
+    shape:"circle",
+    bottom:40,
+    right:250
+  });
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    // m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,332-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
+
+
+
+
+
+
+<script>
+    
+        var _bdImg = '4';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>
+
