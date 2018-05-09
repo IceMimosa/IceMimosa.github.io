@@ -7,22 +7,14 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>Sqoop 源码改造 | Ice の Mimosa</title>
+    <title>Java BitSet基本学习 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
-    <meta name="description" content="1. 要求
-sqoop-1.4.6-cdh5.7.1
-参见 RRADME.txt
-
-2. 编译项目
-参见 COMPILING.txt
-
-
-ant jar : 漫长的编译过程, 打开vpn啥的试试
-编译完了会在 build 目录下生成jar
-命令测试：bin/sqoop 即可，如果缺少三方jar，将j">
+    <meta name="description" content="[TOC]
+Java BitSet基本学习1. 基本思想Java的BitSet即BitMap。Java中，对于一个整型数字int a = 1，则 a占用4个字节，即32位。对于某些场景而言，这属于巨大的浪费，因为我们可以用 32bit来表示 0~31个十进制数字，而这就是Bitmap的基本思想。
+B">
     
     
     
@@ -99,15 +91,15 @@ ant jar : 漫长的编译过程, 打开vpn啥的试试
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/sqoop/Sqoop源码改造/" title="Sqoop 源码改造" itemprop="url">Sqoop 源码改造</a>
+      <a href="/icemimosa/Java/BitSet基本学习/" title="Java BitSet基本学习" itemprop="url">Java BitSet基本学习</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-10-13T07:30:16.000Z" itemprop="datePublished">2016-10-13</time>
-    更新日期:<time datetime="2017-05-02T10:14:40.000Z" itemprop="dateModified">2017-05-02</time>
+    <time datetime="2018-05-08T08:35:00.000Z" itemprop="datePublished">2018-05-08</time>
+    更新日期:<time datetime="2018-05-09T02:54:15.584Z" itemprop="dateModified">2018-05-09</time>
     
   </p>
 </header>
@@ -116,56 +108,63 @@ ant jar : 漫长的编译过程, 打开vpn啥的试试
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-要求"><span class="toc-text">1. 要求</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-编译项目"><span class="toc-text">2. 编译项目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-支持oozie"><span class="toc-text">3. 支持oozie</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Change-Log"><span class="toc-text">Change Log</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java-BitSet基本学习"><span class="toc-text">Java BitSet基本学习</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-基本思想"><span class="toc-text">1. 基本思想</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-场景"><span class="toc-text">2. 场景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-排序（无重复数据）"><span class="toc-text">2.1 排序（无重复数据）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-人群过滤"><span class="toc-text">2.2 人群过滤</span></a></li></ol></li></ol>
 		</div>
 		
-		<h1 id="1-要求"><a href="#1-要求" class="headerlink" title="1. 要求"></a>1. 要求</h1><blockquote>
-<p><a href="https://github.com/cloudera/sqoop/tree/cdh5-1.4.6_5.7.1" target="_blank" rel="external">sqoop-1.4.6-cdh5.7.1</a></p>
-<p>参见 <code>RRADME.txt</code></p>
-</blockquote>
-<h1 id="2-编译项目"><a href="#2-编译项目" class="headerlink" title="2. 编译项目"></a>2. 编译项目</h1><blockquote>
-<p>参见 <code>COMPILING.txt</code></p>
-</blockquote>
+		<p>[TOC]</p>
+<h1 id="Java-BitSet基本学习"><a href="#Java-BitSet基本学习" class="headerlink" title="Java BitSet基本学习"></a>Java BitSet基本学习</h1><h1 id="1-基本思想"><a href="#1-基本思想" class="headerlink" title="1. 基本思想"></a>1. 基本思想</h1><p>Java的BitSet即BitMap。Java中，对于一个整型数字<code>int a = 1</code>，则 <code>a</code>占用4个字节，即32位。对于某些场景而言，这属于巨大的浪费，因为我们可以用 <code>32bit</code>来表示 <code>0~31</code>个十进制数字，而这就是Bitmap的基本思想。</p>
+<p>Bitmap可以用来处理大量（海量）数据的排序，查询以及去重。且在做如<code>用户群</code>的交集和并集运算时，也有极大的便利。</p>
+<h1 id="2-场景"><a href="#2-场景" class="headerlink" title="2. 场景"></a>2. 场景</h1><h2 id="2-1-排序（无重复数据）"><a href="#2-1-排序（无重复数据）" class="headerlink" title="2.1 排序（无重复数据）"></a>2.1 排序（无重复数据）</h2><p>假设有整型数据如 <code>[4, 10, 2, 18, 24, 11, 8, 1]</code>。如果我们把数据都放到内存中，一个整型需要4个字节，那么总共需要<code>8 * 4 = 32 Byte</code>。那如果我们按如下方式存放：</p>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-08-104832.png" alt=""></p>
+<p>此时你可以发现只需要<code>4个字节</code>就可以搞定了。那如果有上亿的整数呢，结果可想而知。<br>看完图你就会发现，数据就已经达到了排序的目的（当然也达到了 <code>去重的目的</code>）。</p>
 <ul>
-<li><code>ant jar</code> : 漫长的编译过程, 打开vpn啥的试试</li>
-<li>编译完了会在 <code>build</code> 目录下生成jar</li>
-<li>命令测试：<code>bin/sqoop</code> 即可，如果缺少三方jar，将jar放入到 <code>lib</code> 中，比如数据库的连接驱动</li>
-<li>单元测试代码例子： <code>src/test/com/cloudera/sqoop/terminus/TestImport.java</code>, 即可断点调试</li>
-</ul>
-<h1 id="3-支持oozie"><a href="#3-支持oozie" class="headerlink" title="3. 支持oozie"></a>3. 支持oozie</h1><p>将编译完的jar <code>build/sqoop-1.4.6-cdh5.7.1.jar</code> 替换掉 <code>oozie share中 的 sqoop</code> 目录中的jar, 然后重启oozie服务</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">比如路径为：/user/oozie/share/lib/lib_20161124175836/sqoop 下的 sqoop-1.4.6-cdh5.7.1.jar 或者 sqoop.jar 替换掉</div></pre></td></tr></table></figure>
-<h1 id="Change-Log"><a href="#Change-Log" class="headerlink" title="Change Log"></a>Change Log</h1><ul>
-<li>2016-12-05<ul>
-<li><a href="https://issues.apache.org/jira/browse/SQOOP-951" target="_blank" rel="external">SQOOP-951</a> 基础上新增 <code>--recursive-export</code> 支持子目录递归 (hive分区表全量导出) </li>
+<li>优点<ul>
+<li>运算效率高</li>
+<li>占用内存少</li>
 </ul>
 </li>
-<li>2016-12-21<ul>
-<li>新增 <code>导入</code> 参数 <code>--encoding</code>  解决oracle库(ISO8859-1)导入乱码问题</li>
-<li>解决hive parquet格式导出不依赖于 <code>.metadata</code> (Kite SDK) 目录的问题, see also <a href="https://issues.apache.org/jira/browse/SQOOP-2907" target="_blank" rel="external">SQOOP-2907</a></li>
-<li>新增 <code>导出</code> 参数 <code>--ignore-transaction</code> 导出数据到数据库时是否开启事务</li>
+<li>缺点<ul>
+<li>数据不能重复</li>
 </ul>
 </li>
 </ul>
+<h2 id="2-2-人群过滤"><a href="#2-2-人群过滤" class="headerlink" title="2.2 人群过滤"></a>2.2 人群过滤</h2><p>假设有<code>会员用户</code>和<code>活跃用户</code>两个用户群，比如数据如下（都是用户ID）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">会员用户：[1,2,3,4,5,6,7,8,9,10]</div><div class="line">活跃用户：[1,3,7,10]</div></pre></td></tr></table></figure>
+<p>现在需求如下：</p>
+<ul>
+<li>取出<code>既是会员又是活跃</code>的用户</li>
+<li>取出两部分的用户，保证不重复。</li>
+<li>取出不活跃的会员。</li>
+</ul>
+<blockquote>
+<p>方案一：</p>
+</blockquote>
+<p>拿着两组数据直接循环遍历，硬着干。😂要是两组数据都是千万级别，那就很蛋疼了。</p>
+<blockquote>
+<p>方案二：</p>
+</blockquote>
+<p>借助Java的<code>BitSet类</code>。代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 会员</span></div><div class="line"><span class="keyword">private</span> BitSet users1 = <span class="keyword">new</span> BitSet();</div><div class="line"><span class="comment">// 活跃用户</span></div><div class="line"><span class="keyword">private</span> BitSet users2 = <span class="keyword">new</span> BitSet();</div><div class="line"></div><div class="line"><span class="meta">@Before</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="comment">// 构建会员和活跃用户</span></div><div class="line">    Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>).forEach(users1::set);</div><div class="line">    Arrays.asList(<span class="number">1</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">10</span>, <span class="number">12</span>, <span class="number">20</span>).forEach(users2::set);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 1. 取出既是会员又是活跃的用户</span></div><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test1</span><span class="params">()</span> </span>&#123;</div><div class="line">    users1.and(users2);</div><div class="line">    System.out.println(users1);</div><div class="line">    <span class="comment">//&gt; &#123;1, 3, 7, 10&#125;</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 2. 取出两部分的用户，保证不重复。</span></div><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test2</span><span class="params">()</span> </span>&#123;</div><div class="line">    users1.or(users2);</div><div class="line">    System.out.println(users1);</div><div class="line">    <span class="comment">//&gt; &#123;1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 20&#125;</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 3. 取出不活跃的会员。</span></div><div class="line"><span class="comment">// 也可以直接用users1.andNot(users2);</span></div><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test3</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="comment">// 取出活跃的会员</span></div><div class="line">    users2.and(users1);</div><div class="line">    <span class="comment">// 取出活跃会员不在会员中的用户</span></div><div class="line">    users1.xor(users2);</div><div class="line">    System.out.println(users1);</div><div class="line">    <span class="comment">//&gt; &#123;2, 4, 5, 6, 8, 9&#125;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/sqoop/">sqoop</a>
+  <span></span> <a href="/tags/java/">java</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/sqoop/">sqoop</a>
+  <a class="article-category-link" href="/categories/java/">java</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/sqoop/Sqoop源码改造/" data-title="Sqoop 源码改造 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/Java/BitSet基本学习/" data-title="Java BitSet基本学习 | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -175,18 +174,18 @@ ant jar : 漫长的编译过程, 打开vpn啥的试试
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/icemimosa/sqoop/sqoop增量导出问题/" title="sqoop增量导出问题">
+ <a href="/icemimosa/Java/BitSet源码分析/" title="Java BitSet源码分析">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  sqoop增量导出问题</span>
+  Java BitSet源码分析</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/icemimosa/sqoop/Sqoop命令/"  title="Sqoop命令">
+<a href="/icemimosa/Java/Java一些序列化框架的基本使用/"  title="Java一些序列化框架的基本使用">
  <strong>NEXT:</strong><br/> 
- <span>Sqoop命令
+ <span>Java一些序列化框架的基本使用
 </span>
 </a>
 </div>
@@ -204,7 +203,7 @@ ant jar : 漫长的编译过程, 打开vpn啥的试试
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-要求"><span class="toc-text">1. 要求</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-编译项目"><span class="toc-text">2. 编译项目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-支持oozie"><span class="toc-text">3. 支持oozie</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Change-Log"><span class="toc-text">Change Log</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java-BitSet基本学习"><span class="toc-text">Java BitSet基本学习</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-基本思想"><span class="toc-text">1. 基本思想</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-场景"><span class="toc-text">2. 场景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-排序（无重复数据）"><span class="toc-text">2.1 排序（无重复数据）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-人群过滤"><span class="toc-text">2.2 人群过滤</span></a></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
