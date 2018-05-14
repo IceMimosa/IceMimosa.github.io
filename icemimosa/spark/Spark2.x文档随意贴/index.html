@@ -7,20 +7,28 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>Oozie-5_ Bundle定义 | Ice の Mimosa</title>
+    <title>Spark2.x文档随意贴 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
-    <meta name="description" content="Oozie-5_ Bundle定义[TOC]
-1. 简介Bundle 是一个最高级的抽象，包含一系列的 coordinator applications。
+    <meta name="description" content="[TOC]
+Spark2.x文档随意贴1. Quick Start
+使用 Caching
 
-大致与 Coordinator 和 Workflow job 的关系如下
 
 
-Bundle Job的状态和生命周期
+Spark-submit
 
-Bundle 的 状态 ">
+可以直接提交jar、py以及R文件。
+2. RDD Programming Guide
+Overview
+
+
+
+Spark2.x Wordcount HelloWorkd
+
+1">
     
     
     
@@ -97,15 +105,15 @@ Bundle 的 状态 ">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/oozie/Oozie-5_ Bundle定义/" title="Oozie-5_ Bundle定义" itemprop="url">Oozie-5_ Bundle定义</a>
+      <a href="/icemimosa/spark/Spark2.x文档随意贴/" title="Spark2.x文档随意贴" itemprop="url">Spark2.x文档随意贴</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-07-13T07:30:16.000Z" itemprop="datePublished">2016-07-13</time>
-    更新日期:<time datetime="2016-10-08T05:04:21.000Z" itemprop="dateModified">2016-10-08</time>
+    <time datetime="2018-05-14T07:30:16.000Z" itemprop="datePublished">2018-05-14</time>
+    更新日期:<time datetime="2018-05-14T12:46:09.027Z" itemprop="dateModified">2018-05-14</time>
     
   </p>
 </header>
@@ -114,67 +122,59 @@ Bundle 的 状态 ">
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oozie-5-Bundle定义"><span class="toc-text">Oozie-5_ Bundle定义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Bundle-Job-Submission"><span class="toc-text">2. Bundle Job Submission</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-一些说明"><span class="toc-text">3. 一些说明</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spark2-x文档随意贴"><span class="toc-text">Spark2.x文档随意贴</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Quick-Start"><span class="toc-text">1. Quick Start</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-RDD-Programming-Guide"><span class="toc-text">2. RDD Programming Guide</span></a></li></ol></li></ol>
 		</div>
 		
-		<h1 id="Oozie-5-Bundle定义"><a href="#Oozie-5-Bundle定义" class="headerlink" title="Oozie-5_ Bundle定义"></a>Oozie-5_ Bundle定义</h1><p>[TOC]</p>
-<h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>Bundle 是一个最高级的抽象，包含一系列的 coordinator applications。</p>
-<ul>
-<li>大致与 Coordinator 和 Workflow job 的关系如下<br><img src="http://7xsz2j.com1.z0.glb.clouddn.com/Oozie-Bundle.png" alt="" title="Bundle relative"></li>
+		<p>[TOC]</p>
+<h1 id="Spark2-x文档随意贴"><a href="#Spark2-x文档随意贴" class="headerlink" title="Spark2.x文档随意贴"></a>Spark2.x文档随意贴</h1><h2 id="1-Quick-Start"><a href="#1-Quick-Start" class="headerlink" title="1. Quick Start"></a>1. Quick Start</h2><ul>
+<li>使用 <code>Caching</code></li>
 </ul>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-14-074038.png" alt="Caching"></p>
 <ul>
-<li><p><a href="https://oozie.apache.org/docs/4.1.0/BundleFunctionalSpec.html#a4._Bundle_Job" title="生命周期" target="_blank" rel="external">Bundle Job的状态和生命周期</a></p>
-</li>
-<li><p>Bundle 的 状态 迁移<br><img src="http://7xsz2j.com1.z0.glb.clouddn.com/Oozie_bundle-state.png" alt="" title="Bundle state"></p>
-</li>
+<li>Spark-submit</li>
 </ul>
-<blockquote>
-<p>语法：</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bundle-app</span> <span class="attr">name</span>=<span class="string">"[NAME]"</span>  <span class="attr">xmlns</span>=<span class="string">"uri:oozie:bundle:0.1"</span>&gt;</span> </div><div class="line">  <span class="tag">&lt;<span class="name">controls</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">kick-off-time</span>&gt;</span>[DATETIME]<span class="tag">&lt;/<span class="name">kick-off-time</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">controls</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">coordinator</span> <span class="attr">name</span>=<span class="string">"[NAME]"</span> &gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">app-path</span>&gt;</span>[COORD-APPLICATION-PATH]<span class="tag">&lt;/<span class="name">app-path</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">name</span>&gt;</span>[PROPERTY-NAME]<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">value</span>&gt;</span>[PROPERTY-VALUE]<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">            ...</div><div class="line">         <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">coordinator</span>&gt;</span></div><div class="line">   ...</div><div class="line"><span class="tag">&lt;/<span class="name">bundle-app</span>&gt;</span>  </div><div class="line"></div><div class="line"># kick-off-time：开始和提交 coordinator applications 的时间，默认是 NOW</div></pre></td></tr></table></figure>
-<blockquote>
-<p>例子：</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bundle-app</span> <span class="attr">name</span>=<span class="string">'APPNAME'</span> <span class="attr">xmlns:xsi</span>=<span class="string">'http://www.w3.org/2001/XMLSchema-instance'</span> <span class="attr">xmlns</span>=<span class="string">'uri:oozie:bundle:0.1'</span>&gt;</span> </div><div class="line">  <span class="tag">&lt;<span class="name">controls</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">kick-off-time</span>&gt;</span>$&#123;kickOffTime&#125;<span class="tag">&lt;/<span class="name">kick-off-time</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">controls</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">coordinator</span> <span class="attr">name</span>=<span class="string">'coordJobFromBundle1'</span> &gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">app-path</span>&gt;</span>$&#123;appPath&#125;<span class="tag">&lt;/<span class="name">app-path</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">         <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">name</span>&gt;</span>startTime1<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">value</span>&gt;</span>$&#123;START_TIME&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">         <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">name</span>&gt;</span>endTime1<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">value</span>&gt;</span>$&#123;END_TIME&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">coordinator</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">coordinator</span> <span class="attr">name</span>=<span class="string">'coordJobFromBundle2'</span> &gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">app-path</span>&gt;</span>$&#123;appPath2&#125;<span class="tag">&lt;/<span class="name">app-path</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">         <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">name</span>&gt;</span>startTime2<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">value</span>&gt;</span>$&#123;START_TIME2&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">         <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">name</span>&gt;</span>endTime2<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">value</span>&gt;</span>$&#123;END_TIME2&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">coordinator</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">bundle-app</span>&gt;</span></div></pre></td></tr></table></figure>
-<h1 id="2-Bundle-Job-Submission"><a href="#2-Bundle-Job-Submission" class="headerlink" title="2. Bundle Job Submission"></a>2. Bundle Job Submission</h1><p>同样需要指定 <code>oozie.bundle.application.path</code> 的路径。</p>
-<h1 id="3-一些说明"><a href="#3-一些说明" class="headerlink" title="3. 一些说明"></a>3. 一些说明</h1><p>按照文档来看，官方也考虑到Bundle的实用性价值。在一些具体的案例中，Bundles 就会显得比较便利。以下是书籍中的一个案例：</p>
-<blockquote>
-<p>案例：</p>
-</blockquote>
+<p>可以直接提交<code>jar</code>、<code>py</code>以及<code>R</code>文件。</p>
+<h2 id="2-RDD-Programming-Guide"><a href="#2-RDD-Programming-Guide" class="headerlink" title="2. RDD Programming Guide"></a>2. RDD Programming Guide</h2><ul>
+<li>Overview</li>
+</ul>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-14-075755.png" alt=""></p>
 <ul>
-<li>有一个 Revenue Workflow(WF) 去计算一个 ad(广告) 的点击量获得刊登的费用和税收, 并且与上周的的同一天做一些比较。这个任务每15分钟执行一次。</li>
-<li>还有一个 Targeting WF 获取点击广告的用户，然后做一些行为分析。这个任务也是每15分钟执行一次。</li>
-<li>还有一个 AD-UI WF 用没15分钟去处理 Revenue Workflow 生成的数据，然后生成到数据库中，提供一个用户接口以供查询。</li>
-<li>还有一个 Reporting WF 去每天早上统计以前的数据，然后为公司高管们生成日报。</li>
-<li>最后一个 Billing WF 用来计算每月的广告账单，最后给刊登广告的形成账单统计。</li>
+<li>Spark2.x Wordcount HelloWorkd</li>
 </ul>
-<blockquote>
-<p>大致图就是这样</p>
-</blockquote>
-<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/Oozie-bundle-example.png" alt="" title="Bundle example"></p>
-<blockquote>
-<p>从例子可以看出来，对于同一类的数据分析，形成一个任务pipeline。当一个任务出现故障，那么这个Bundle在进行处理，暂停，恢复等操作的时候，会变得非常简单。</p>
-</blockquote>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> sc =</div><div class="line">  <span class="type">SparkSession</span>.builder()</div><div class="line">  .appName(<span class="string">""</span>)</div><div class="line">  .master(<span class="string">"local[*]"</span>)</div><div class="line">  .getOrCreate()</div><div class="line"><span class="keyword">import</span> sc.implicits._</div><div class="line"></div><div class="line"><span class="keyword">val</span> collect = sc.read.textFile(<span class="string">"hdfs://127.0.0.1:9000/mimosa/input/hello.txt"</span>)</div><div class="line">  .flatMap(_.split(<span class="string">" "</span>))</div><div class="line">  .groupByKey(_.toLowerCase)</div><div class="line">  .count()</div><div class="line">collect.show()</div><div class="line"></div><div class="line">sc.stop()</div></pre></td></tr></table></figure>
+<ul>
+<li>Parallelized Collections</li>
+</ul>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-14-093024.png" alt=""></p>
+<ul>
+<li>External Datasets</li>
+</ul>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-14-093540.png" alt=""></p>
+<ul>
+<li>RDD Operations</li>
+</ul>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-14-095307.png" alt=""></p>
+<p>继续中。。。。。。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/oozie/">oozie</a>
+  <span></span> <a href="/tags/spark/">spark</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/oozie/">oozie</a>
+  <a class="article-category-link" href="/categories/spark/">spark</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/oozie/Oozie-5_ Bundle定义/" data-title="Oozie-5_ Bundle定义 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/spark/Spark2.x文档随意贴/" data-title="Spark2.x文档随意贴 | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -183,19 +183,11 @@ Bundle 的 状态 ">
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/icemimosa/oozie/Oozie-6_Web Service API/" title="Oozie-6_Web Service API">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  Oozie-6_Web Service API</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/icemimosa/oozie/Oozie-4_Coordinator定义/"  title="Oozie-4_Coordinator定义">
+<a href="/icemimosa/Java/BitSet源码分析/"  title="Java BitSet源码分析">
  <strong>NEXT:</strong><br/> 
- <span>Oozie-4_Coordinator定义
+ <span>Java BitSet源码分析
 </span>
 </a>
 </div>
@@ -213,7 +205,7 @@ Bundle 的 状态 ">
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oozie-5-Bundle定义"><span class="toc-text">Oozie-5_ Bundle定义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Bundle-Job-Submission"><span class="toc-text">2. Bundle Job Submission</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-一些说明"><span class="toc-text">3. 一些说明</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spark2-x文档随意贴"><span class="toc-text">Spark2.x文档随意贴</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Quick-Start"><span class="toc-text">1. Quick Start</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-RDD-Programming-Guide"><span class="toc-text">2. RDD Programming Guide</span></a></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
