@@ -7,19 +7,17 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>04_Redis之Shell | Ice の Mimosa</title>
+    <title>Spark2.x常用算子 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
     <meta name="description" content="[TOC]
-04_Redis之Shell可以使用redis-cli --help查看帮助
-1Usage: redis-cli [OPTIONS] [cmd [arg [arg ...]]]
-OPTIONS如下：
-1. redis-cli
---help，--version
+Spark2.x常用算子下面是2.x文档中的内容，但是有些api还需要调用SparkContext进行操作。
+1. Transformations
+map(func)
 
--p port，-h ho">
+Return a new distributed dataset formed by passing each ele">
     
     
     
@@ -96,15 +94,15 @@ OPTIONS如下：
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/redis/04_Redis之Shell/" title="04_Redis之Shell" itemprop="url">04_Redis之Shell</a>
+      <a href="/icemimosa/spark/Spark2.x常用算子/" title="Spark2.x常用算子" itemprop="url">Spark2.x常用算子</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2017-05-19T07:30:16.000Z" itemprop="datePublished">2017-05-19</time>
-    更新日期:<time datetime="2018-03-13T14:54:37.000Z" itemprop="dateModified">2018-03-13</time>
+    <time datetime="2018-05-15T03:30:16.000Z" itemprop="datePublished">2018-05-15</time>
+    更新日期:<time datetime="2018-05-15T04:49:17.665Z" itemprop="dateModified">2018-05-15</time>
     
   </p>
 </header>
@@ -113,127 +111,179 @@ OPTIONS如下：
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#04-Redis之Shell"><span class="toc-text">04_Redis之Shell</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-redis-cli"><span class="toc-text">1. redis-cli</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-redis-server"><span class="toc-text">2. redis-server</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-redis-benchmark"><span class="toc-text">3. redis-benchmark</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spark2-x常用算子"><span class="toc-text">Spark2.x常用算子</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Transformations"><span class="toc-text">1. Transformations</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Actions"><span class="toc-text">2. Actions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Shuffle-operations"><span class="toc-text">3. Shuffle operations</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-Background"><span class="toc-text">3.1 Background</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-Performance-Impact"><span class="toc-text">3.2 Performance Impact</span></a></li></ol></li></ol></li></ol>
 		</div>
 		
 		<p>[TOC]</p>
-<h1 id="04-Redis之Shell"><a href="#04-Redis之Shell" class="headerlink" title="04_Redis之Shell"></a>04_Redis之Shell</h1><p>可以使用<code>redis-cli --help</code>查看帮助</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Usage: redis-cli [OPTIONS] [cmd [arg [arg ...]]]</div></pre></td></tr></table></figure>
-<p>OPTIONS如下：</p>
-<h1 id="1-redis-cli"><a href="#1-redis-cli" class="headerlink" title="1. redis-cli"></a>1. redis-cli</h1><ul>
-<li><p><code>--help</code>，<code>--version</code></p>
-</li>
-<li><p><code>-p port</code>，<code>-h hostname</code>，<code>-a password</code>，<code>-n db</code></p>
-</li>
+<h1 id="Spark2-x常用算子"><a href="#Spark2-x常用算子" class="headerlink" title="Spark2.x常用算子"></a>Spark2.x常用算子</h1><p>下面是2.x文档中的内容，但是有些api还需要调用SparkContext进行操作。</p>
+<h2 id="1-Transformations"><a href="#1-Transformations" class="headerlink" title="1. Transformations"></a>1. Transformations</h2><ul>
+<li><strong>map(func)</strong></li>
 </ul>
-<p>指定端口，主机，密码，目标库</p>
+<p>Return a new distributed dataset formed by passing each element of the source through a function func.</p>
 <ul>
-<li><code>-r repeat</code>，<code>-i interval</code></li>
+<li><strong>filter(func)</strong></li>
 </ul>
-<p>执行命令的次数，每隔多少秒（可以用小数指定为毫秒）执行一次</p>
+<p>Return a new dataset formed by selecting those elements of the source on which func returns true.</p>
 <ul>
-<li><code>-x</code></li>
+<li><strong>flatMap(func)</strong></li>
 </ul>
-<p>从标准输入中读取，作为redis-cli的最后一个参数。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ echo &quot;world&quot; | redis-cli -x set hello</div></pre></td></tr></table></figure>
+<p>Similar to map, but each input item can be mapped to 0 or more output items (so func should <code>return a Seq</code> rather than a single item).</p>
 <ul>
-<li><code>-c</code></li>
+<li><strong>mapPartitions(func)</strong></li>
 </ul>
-<p>使用集群模式</p>
+<p>Similar to map, but runs separately on each partition (block) of the RDD, so func must be of type <code>Iterator&lt;T&gt; =&gt; Iterator&lt;U&gt;</code> when running on an RDD of type T. </p>
 <ul>
-<li><code>--scan</code>，<code>--pattern pat</code></li>
+<li><strong>mapPartitionsWithIndex(func)</strong></li>
 </ul>
-<p>相当于scan命令</p>
+<p>Similar to mapPartitions, but also provides func with an integer value representing the <code>index of the partition</code>, so func must be of type<code>(Int, Iterator&lt;T&gt;) =&gt; Iterator&lt;U&gt;</code> when running on an RDD of type T.</p>
 <ul>
-<li><code>--rdb filename</code></li>
+<li><strong>sample(withReplacement, fraction, seed)</strong></li>
 </ul>
-<p>生成RDB持久化文件</p>
+<p>Sample a fraction fraction of the data, with or without replacement, using a given random number generator seed.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">* withReplacement: 元素是否可以被多次抽样</div><div class="line">* fraction: </div><div class="line">	withReplacement=false，抽取元素的概率，分数必须在[0,1]</div><div class="line">	withReplacement=true，抽取每个元素希望的次数，分数必须大于0</div><div class="line">* seed: 随机数生成器的种子</div></pre></td></tr></table></figure>
 <ul>
-<li><code>--pipe</code></li>
+<li><strong>union(otherDataset)</strong></li>
 </ul>
-<p>从标准输入中读取，发送redis通讯协议的数据，批量让redis server执行</p>
+<p>Return a new dataset that contains the union of the elements in the source dataset and the argument.</p>
 <ul>
-<li><code>--bigkeys</code>，<code>--hotkeys</code></li>
+<li><strong>intersection(otherDataset)</strong></li>
 </ul>
-<p>使用scan进行采样，列出占用内存较大的key，和使用较多的key</p>
+<p>交集。Return a new RDD that contains the intersection of elements in the source dataset and the argument.</p>
 <ul>
-<li><code>--eval file</code></li>
+<li><strong>distinct([numPartitions]))</strong></li>
 </ul>
-<p>执行Lua脚本</p>
+<p>Return a new dataset that contains the distinct elements of the source dataset.</p>
 <ul>
-<li><code>--latency</code>，<code>--latency-history</code>，<code>--latency-dist</code></li>
+<li><strong>groupByKey([numPartitions])</strong></li>
 </ul>
-<p>检测客户端到目标redis的网络延迟，以上命令分别展示<code>一行</code>，<code>多行</code>，<code>统计图表</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">When called on a dataset of (K, V) pairs, returns a dataset of (K, Iterable&lt;V&gt;) pairs. </div><div class="line">* Note: If you are grouping in order to perform an aggregation (such as a sum or average) over each key, </div><div class="line">using reduceByKey or aggregateByKey will yield much better performance. </div><div class="line">* Note: By default, the level of parallelism in the output depends on the number of partitions of the </div><div class="line">parent RDD. You can pass an optional numPartitions argument to set a different number of tasks.</div></pre></td></tr></table></figure>
 <ul>
-<li><code>--stat</code></li>
+<li><strong>reduceByKey(func, [numPartitions])</strong></li>
 </ul>
-<p>实时获取redis的重要信息，如内存，客户端等。</p>
+<p>When called on a dataset of (K, V) pairs, returns a dataset of (K, V) pairs where the values for each key are aggregated using the given reduce function func, which must be of type (V,V) =&gt; V. Like in groupByKey, the number of reduce tasks is configurable through an optional second argument.</p>
 <ul>
-<li><code>--raw</code>，<code>--no-raw</code></li>
+<li><strong>aggregateByKey(zeroValue)(seqOp, combOp, [numPartitions])</strong></li>
 </ul>
-<p><code>no-raw</code>返回结果的原始格式，<code>raw</code>返回格式化之后的结果</p>
+<p>When called on a dataset of (K, V) pairs, returns a dataset of (K, U) pairs where the values for each key are aggregated using the given combine functions and a neutral “zero” value. Allows an aggregated value type that is different than the input value type, while avoiding unnecessary allocations. Like in groupByKey, the number of reduce tasks is configurable through an optional second argument.</p>
 <ul>
-<li><code>--csv</code></li>
+<li><strong>sortByKey([ascending], [numPartitions])</strong></li>
 </ul>
-<p>以<code>csv</code>格式输出结果</p>
-<h1 id="2-redis-server"><a href="#2-redis-server" class="headerlink" title="2. redis-server"></a>2. redis-server</h1><p>除了启动redis服务外，还有<code>--test-memory</code>的选项。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">src/redis-server --test-memory 1024</div></pre></td></tr></table></figure>
-<p>结果:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Please keep the test running several minutes per GB of memory.</div><div class="line">Also check http://www.memtest86.com/ and http://pyropus.ca/software/memtester/</div><div class="line">Addressing test [4]</div><div class="line">.................</div><div class="line">.................</div><div class="line">.................</div><div class="line">.................</div><div class="line">以下一堆</div></pre></td></tr></table></figure>
-<h1 id="3-redis-benchmark"><a href="#3-redis-benchmark" class="headerlink" title="3. redis-benchmark"></a>3. redis-benchmark</h1><p><code>redis-benchmark</code>可以作为redis的性能基准测试。</p>
+<p>When called on a dataset of (K, V) pairs where K implements Ordered, returns a dataset of (K, V) pairs sorted by keys in ascending or descending order, as specified in the boolean ascending argument.</p>
 <ul>
-<li><code>-c</code> (clients)</li>
+<li><strong>join(otherDataset, [numPartitions])</strong></li>
 </ul>
-<p>客户端并发数量，默认50</p>
+<p>When called on datasets of type (K, V) and (K, W), returns a dataset of (K, (V, W)) pairs with all pairs of elements for each key. Outer joins are supported through leftOuterJoin, rightOuterJoin, and fullOuterJoin.</p>
 <ul>
-<li><code>-n</code> (requests)</li>
+<li><strong>cogroup(otherDataset, [numPartitions])</strong></li>
 </ul>
-<p>客户端请求总量，默认100000</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">$ src/redis-benchmark -c 50 -n 20000</div><div class="line">====== PING_INLINE ======</div><div class="line">  20000 requests completed in 0.47 seconds</div><div class="line">  50 parallel clients</div><div class="line">  3 bytes payload</div><div class="line">  keep alive: 1</div><div class="line"></div><div class="line">93.14% &lt;= 1 milliseconds</div><div class="line">98.50% &lt;= 2 milliseconds</div><div class="line">99.50% &lt;= 3 milliseconds</div><div class="line">99.75% &lt;= 4 milliseconds</div><div class="line">99.78% &lt;= 5 milliseconds</div><div class="line">99.86% &lt;= 6 milliseconds</div><div class="line">99.94% &lt;= 7 milliseconds</div><div class="line">100.00% &lt;= 7 milliseconds</div><div class="line">42918.46 requests per second</div><div class="line"></div><div class="line">.............</div><div class="line">.............</div></pre></td></tr></table></figure>
+<p>When called on datasets of type (K, V) and (K, W), returns a dataset of (K, (Iterable<v>, Iterable<w>)) tuples. This operation is also called groupWith.</w></v></p>
 <ul>
-<li><code>-q</code></li>
+<li><strong>cartesian(otherDataset)</strong></li>
 </ul>
-<p>仅仅显示<code>requests per second</code></p>
+<p>笛卡尔积。When called on datasets of types T and U, returns a dataset of (T, U) pairs (all pairs of elements).</p>
 <ul>
-<li><code>-r</code></li>
+<li><strong>pipe(command, [envVars])</strong></li>
 </ul>
-<p>测试的时候随机插入键，会在测试的key名称后加上12位的后缀。</p>
+<p>Pipe each partition of the RDD through a shell command, e.g. a Perl or bash script. RDD elements are written to the process’s stdin and lines output to its stdout are returned as an RDD of strings.</p>
 <ul>
-<li><code>-P</code></li>
+<li><strong>coalesce(numPartitions)</strong></li>
 </ul>
-<p>每个请求pipeline的数量，默认为1</p>
+<p>合并partition。Decrease the number of partitions in the RDD to numPartitions. Useful for running operations more efficiently after filtering down a large dataset.</p>
 <ul>
-<li><code>-k</code></li>
+<li><strong>repartition(numPartitions)</strong></li>
 </ul>
-<p>是否keepalive，1为使用，0不使用。默认1</p>
+<p>Reshuffle the data in the RDD randomly to create either more or fewer partitions and balance it across them. This always shuffles all data over the network.</p>
 <ul>
-<li><code>-t</code></li>
+<li><strong>repartitionAndSortWithinPartitions(partitioner)</strong></li>
 </ul>
-<p>使用指定命令做基准测试，如<code>-t set,get</code></p>
+<p>Repartition the RDD according to the given partitioner and, within each resulting partition, sort records by their keys. This is more efficient than calling repartition and then sorting within each partition because it can push the sorting down into the shuffle machinery.</p>
+<h2 id="2-Actions"><a href="#2-Actions" class="headerlink" title="2. Actions"></a>2. Actions</h2><ul>
+<li><strong>reduce(func)</strong></li>
+</ul>
+<p>Aggregate the elements of the dataset using a function func (which takes two arguments and returns one). The function should be commutative and associative so that it can be computed correctly in parallel.</p>
 <ul>
-<li><code>-csv</code></li>
+<li><strong>collect()</strong></li>
 </ul>
-<p>用csv的格式输出</p>
+<p>Return all the elements of the dataset as an array at the driver program. This is usually useful after a filter or other operation that returns a sufficiently small subset of the data.</p>
+<ul>
+<li><strong>count()</strong></li>
+</ul>
+<p>Return the number of elements in the dataset.</p>
+<ul>
+<li><strong>first()</strong></li>
+</ul>
+<p>Return the first element of the dataset (similar to take(1)).</p>
+<ul>
+<li><strong>take(n)</strong></li>
+</ul>
+<p>Return an array with the first n elements of the dataset.</p>
+<ul>
+<li><strong>takeSample(withReplacement, num, [seed])</strong></li>
+</ul>
+<p>Return an array with a random sample of num elements of the dataset, with or without replacement, optionally pre-specifying a random number generator seed.</p>
+<ul>
+<li><strong>takeOrdered(n, [ordering])</strong></li>
+</ul>
+<p>Return the first n elements of the RDD using either their natural order or a custom comparator.</p>
+<ul>
+<li><strong>saveAsTextFile(path)</strong></li>
+</ul>
+<p>Write the elements of the dataset as a text file (or set of text files) in a given directory in the local filesystem, HDFS or any other Hadoop-supported file system. Spark will call toString on each element to convert it to a line of text in the file.</p>
+<ul>
+<li><strong>saveAsSequenceFile(path)</strong></li>
+</ul>
+<p>(Java and Scala)</p>
+<p>Write the elements of the dataset as a Hadoop SequenceFile in a given path in the local filesystem, HDFS or any other Hadoop-supported file system. This is available on RDDs of key-value pairs that implement Hadoop’s Writable interface. In Scala, it is also available on types that are implicitly convertible to Writable (Spark includes conversions for basic types like Int, Double, String, etc).</p>
+<ul>
+<li><strong>saveAsObjectFile(path)</strong></li>
+</ul>
+<p>(Java and Scala)</p>
+<p>Write the elements of the dataset in a simple format using Java serialization, which can then be loaded using SparkContext.objectFile().</p>
+<ul>
+<li><strong>countByKey()</strong></li>
+</ul>
+<p>Only available on RDDs of type (K, V). Returns a hashmap of (K, Int) pairs with the count of each key.</p>
+<ul>
+<li><strong>foreach(func)</strong></li>
+</ul>
+<p>Run a function func on each element of the dataset. This is usually done for side effects such as updating an Accumulator or interacting with external storage systems.<br>Note: modifying variables other than Accumulators outside of the foreach() may result in undefined behavior. See Understanding closures for more details.</p>
+<h2 id="3-Shuffle-operations"><a href="#3-Shuffle-operations" class="headerlink" title="3. Shuffle operations"></a>3. Shuffle operations</h2><p>Certain operations within Spark trigger an event known as the shuffle. The shuffle is Spark’s mechanism for re-distributing data so that it’s grouped differently across partitions. This typically involves copying data across executors and machines, making the shuffle a complex and costly operation.</p>
+<h3 id="3-1-Background"><a href="#3-1-Background" class="headerlink" title="3.1 Background"></a>3.1 Background</h3><ul>
+<li>概念</li>
+</ul>
+<p>In Spark, data is generally not distributed across partitions to be in the necessary place for a specific operation. During computations, a single task will operate on a single partition - thus, to organize all the data for a single reduceByKey reduce task to execute, Spark needs to perform an all-to-all operation. It must read from all partitions to find all the values for all keys, and then bring together values across partitions to compute the final result for each key - this is called the <strong>shuffle</strong>.</p>
+<p>Although the set of elements in each partition of newly shuffled data will be deterministic, and so is the ordering of partitions themselves, the ordering of these elements is not. If one desires predictably ordered data following shuffle then it’s possible to use:</p>
+<ul>
+<li>mapPartitions to sort each partition using, for example, .sorted</li>
+<li>repartitionAndSortWithinPartitions to efficiently sort partitions while simultaneously repartitioning</li>
+<li>sortBy to make a globally ordered RDD</li>
+</ul>
+<p>Operations which can cause a shuffle include <strong>repartition</strong> operations like <code>repartition</code> and <code>coalesce</code>, <code>‘ByKey</code> operations (except for counting) like <code>groupByKey</code> and <code>reduceByKey</code>, and join operations like <code>cogroup</code> and <code>join</code>.</p>
+<h3 id="3-2-Performance-Impact"><a href="#3-2-Performance-Impact" class="headerlink" title="3.2 Performance Impact"></a>3.2 Performance Impact</h3><p>The <strong>Shuffle</strong> is an expensive operation since it involves disk I/O, data serialization, and network I/O.To organize data for the shuffle, Spark generates sets of tasks - map tasks to organize the data, and a set of reduce tasks to aggregate it. This nomenclature comes from MapReduce and does not directly relate to Spark’s map and reduce operations.</p>
+<p>Internally, results from individual map tasks are kept in memory until they can’t fit. Then, these are sorted based on the target partition and written to a single file. On the reduce side, tasks read the relevant sorted blocks.</p>
+<p>Certain shuffle operations can consume significant amounts of heap memory since they employ in-memory data structures to organize records before or after transferring them. <code>Specifically, reduceByKey and aggregateByKey create these structures on the map side, and &#39;ByKey operations generate these on the reduce side.</code> When data does not fit in memory Spark will <code>spill these tables to disk</code>, incurring the additional overhead of disk I/O and increased garbage collection.</p>
+<p><code>Shuffle also generates a large number of intermediate files on disk.</code> As of Spark 1.3, these files are preserved until the corresponding RDDs are no longer used and are garbage collected. This is done so the shuffle files don’t need to be re-created if the lineage is re-computed. Garbage collection may happen only after a long period of time, if the application retains references to these RDDs or if GC does not kick in frequently. This means that long-running Spark jobs may consume a large amount of disk space. The temporary storage directory is specified by the spark.local.dir configuration parameter when configuring the Spark context.</p>
+<p>Shuffle behavior can be tuned by adjusting a variety of configuration parameters. See the ‘Shuffle Behavior’ section within the <a href="http://spark.apache.org/docs/latest/configuration.html" target="_blank" rel="external">Spark Configuration Guide</a>.</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/redis/">redis</a>
+  <span></span> <a href="/tags/spark/">spark</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/redis/">redis</a>
+  <a class="article-category-link" href="/categories/spark/">spark</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/redis/04_Redis之Shell/" data-title="04_Redis之Shell | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/spark/Spark2.x常用算子/" data-title="Spark2.x常用算子 | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -242,19 +292,11 @@ OPTIONS如下：
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/icemimosa/redis/04_Redis之Pipeline/" title="04_Redis之Pipeline">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  04_Redis之Pipeline</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/icemimosa/redis/04_Redis慢查询分析/"  title="04_Redis慢查询分析">
+<a href="/icemimosa/spark/Spark2.x文档随意贴/"  title="Spark2.x文档随意贴">
  <strong>NEXT:</strong><br/> 
- <span>04_Redis慢查询分析
+ <span>Spark2.x文档随意贴
 </span>
 </a>
 </div>
@@ -272,7 +314,7 @@ OPTIONS如下：
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#04-Redis之Shell"><span class="toc-text">04_Redis之Shell</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-redis-cli"><span class="toc-text">1. redis-cli</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-redis-server"><span class="toc-text">2. redis-server</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-redis-benchmark"><span class="toc-text">3. redis-benchmark</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spark2-x常用算子"><span class="toc-text">Spark2.x常用算子</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Transformations"><span class="toc-text">1. Transformations</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Actions"><span class="toc-text">2. Actions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Shuffle-operations"><span class="toc-text">3. Shuffle operations</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-Background"><span class="toc-text">3.1 Background</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-Performance-Impact"><span class="toc-text">3.2 Performance Impact</span></a></li></ol></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
