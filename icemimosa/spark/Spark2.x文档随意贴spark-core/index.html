@@ -7,18 +7,26 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>java变量的初始化顺序 | Ice の Mimosa</title>
+    <title>Spark2.x文档随意贴spark-core | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
     <meta name="description" content="[TOC]
-java变量的初始化顺序假设子类B继承了父类A,当执行语句new B()或者new B(…)语句之后
-1. 类的装载 (多次实例化只装载一次)
+Spark2.x文档随意贴spark-core1. Quick Start
+使用 Caching
 
-(1). 首先要进行类A和B的装载(类只有在使用New调用创建的时候才会被      java类装载器装入),先装载父类A，再装载子类B
 
-2">
+
+Spark-submit
+
+可以直接提交jar、py以及R文件。
+2. RDD Programming Guide
+Overview
+
+
+
+Spark2.x Wordcount Hel">
     
     
     
@@ -95,15 +103,15 @@ java变量的初始化顺序假设子类B继承了父类A,当执行语句new B()
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/Java/java变量的初始化顺序/" title="java变量的初始化顺序" itemprop="url">java变量的初始化顺序</a>
+      <a href="/icemimosa/spark/Spark2.x文档随意贴spark-core/" title="Spark2.x文档随意贴spark-core" itemprop="url">Spark2.x文档随意贴spark-core</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-01-15T05:00:34.000Z" itemprop="datePublished">2016-01-15</time>
-    更新日期:<time datetime="2018-03-20T16:17:31.000Z" itemprop="dateModified">2018-03-21</time>
+    <time datetime="2018-05-14T07:30:16.000Z" itemprop="datePublished">2018-05-14</time>
+    更新日期:<time datetime="2018-05-15T06:08:06.870Z" itemprop="dateModified">2018-05-15</time>
     
   </p>
 </header>
@@ -112,51 +120,75 @@ java变量的初始化顺序假设子类B继承了父类A,当执行语句new B()
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#java变量的初始化顺序"><span class="toc-text">java变量的初始化顺序</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spark2-x文档随意贴spark-core"><span class="toc-text">Spark2.x文档随意贴spark-core</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Quick-Start"><span class="toc-text">1. Quick Start</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-RDD-Programming-Guide"><span class="toc-text">2. RDD Programming Guide</span></a></li></ol></li></ol>
 		</div>
 		
 		<p>[TOC]</p>
-<h1 id="java变量的初始化顺序"><a href="#java变量的初始化顺序" class="headerlink" title="java变量的初始化顺序"></a>java变量的初始化顺序</h1><p>假设子类B继承了父类A,当执行语句new B()或者new B(…)语句之后</p>
-<p><strong>1. 类的装载 (多次实例化只装载一次)</strong></p>
+<h1 id="Spark2-x文档随意贴spark-core"><a href="#Spark2-x文档随意贴spark-core" class="headerlink" title="Spark2.x文档随意贴spark-core"></a>Spark2.x文档随意贴spark-core</h1><h2 id="1-Quick-Start"><a href="#1-Quick-Start" class="headerlink" title="1. Quick Start"></a>1. Quick Start</h2><ul>
+<li>使用 <code>Caching</code></li>
+</ul>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-14-074038.png" alt="Caching"></p>
+<ul>
+<li>Spark-submit</li>
+</ul>
+<p>可以直接提交<code>jar</code>、<code>py</code>以及<code>R</code>文件。</p>
+<h2 id="2-RDD-Programming-Guide"><a href="#2-RDD-Programming-Guide" class="headerlink" title="2. RDD Programming Guide"></a>2. RDD Programming Guide</h2><ul>
+<li>Overview</li>
+</ul>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-14-075755.png" alt=""></p>
+<ul>
+<li>Spark2.x Wordcount HelloWorkd</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> sc =</div><div class="line">  <span class="type">SparkSession</span>.builder()</div><div class="line">  .appName(<span class="string">""</span>)</div><div class="line">  .master(<span class="string">"local[*]"</span>)</div><div class="line">  .getOrCreate()</div><div class="line"><span class="keyword">import</span> sc.implicits._</div><div class="line"></div><div class="line"><span class="keyword">val</span> collect = sc.read.textFile(<span class="string">"hdfs://127.0.0.1:9000/mimosa/input/hello.txt"</span>)</div><div class="line">  .flatMap(_.split(<span class="string">" "</span>))</div><div class="line">  .groupByKey(_.toLowerCase)</div><div class="line">  .count()</div><div class="line">collect.show()</div><div class="line"></div><div class="line">sc.stop()</div></pre></td></tr></table></figure>
+<ul>
+<li>Parallelized Collections</li>
+</ul>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-14-093024.png" alt=""></p>
+<ul>
+<li>External Datasets</li>
+</ul>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-14-093540.png" alt=""></p>
+<ul>
+<li>RDD Operations</li>
+</ul>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-14-095307.png" alt=""></p>
+<ul>
+<li>Understanding closures</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> counter = <span class="number">0</span></div><div class="line"><span class="keyword">var</span> rdd = sc.parallelize(data)</div><div class="line"></div><div class="line"><span class="comment">// Wrong: Don't do this!!</span></div><div class="line">rdd.foreach(x =&gt; counter += x)</div><div class="line"></div><div class="line">println(<span class="string">"Counter value: "</span> + counter)</div></pre></td></tr></table></figure>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-15-030302.png" alt=""></p>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-15-030417.png" alt=""></p>
 <blockquote>
-<p>(1). 首先要进行类A和B的装载(类只有在使用New调用创建的时候才会被      java类装载器装入),先装载父类A，再装载子类B</p>
+<p>常用算子参考：<a href="http://patamon.me/icemimosa/spark/Spark2.x%E5%B8%B8%E7%94%A8%E7%AE%97%E5%AD%90/" target="_blank" rel="external">http://patamon.me/icemimosa/spark/Spark2.x%E5%B8%B8%E7%94%A8%E7%AE%97%E5%AD%90/</a></p>
 </blockquote>
-<p><strong>2. 静态初始化 (多次实例化只初始化一次)</strong></p>
-<blockquote>
-<p>(1). 装载父类A后,完成静态动作(包括静态代码块和变量,它们的级别是相同的,按代码中出现的顺序初始化), 这里需要注意的是装载静态代码的时候,首先为静态变量分配内存空间,赋上默认值,但不把 = 后面的值赋给它(如果存在=后面的值),然后再按出现的顺序依次执行(包括static变量赋值和static代码块).<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// 比如这种情况也是ok的</div><div class="line">static&#123;</div><div class="line">	i = 10;</div><div class="line">&#125;	</div><div class="line">public static int i = 20;</div></pre></td></tr></table></figure></p>
-</blockquote>
-<p>  <code>(2). 装载子类B后,同样完成静态动作,同父类A装载.</code></p>
-<p><strong>3. 实例化 (每次实例化都初始化)</strong></p>
-<blockquote>
-<p>(1). 在实例化子类B之前,先要实例化父类A(包括非静态代码块和变量,它们的级别是相同的,按代码中出现的顺序初始化),这里同样需要注意的是在执行代码之前,首先为成员变量分配内存空间,赋上默认值,但不把 = 后面的值赋给它(如果存在=后面的值),然后再按出现的顺序依次执行(包括实例变量赋值和实例代码块),与static初始化类似.</p>
-<p>(2). 执行父类A的构造方法,这里如果子类B不指定,则执行父类A的默认构造方法,若父类没有默认的构造方法,则需要子类指定需要执行父类A的某个构造方法,否则编译不通过.</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">public B() &#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line">/** 如果父类有默认构造super()就等同于如下代码 */</div><div class="line">public B() &#123;</div><div class="line">	super();</div><div class="line">	/** 如果父类没有默认构造super(), 则这里需要指定, 如super(...) */</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>   <code>(3). 子类B的成员实例化,与父类A实例化类似.</code></p>
-<p>   <code>(4). 最后执行子类B的构造方法.</code></p>
-<p>补充：<br>    后来遇到一种情况, 存在子类方法覆盖方法的情况.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">public class B extends A &#123;</div><div class="line">	public int i = 10;</div><div class="line">	</div><div class="line">	public B() &#123;</div><div class="line">		System.out.println(&quot;B draw&quot;);</div><div class="line">	&#125;</div><div class="line">	public void draw() &#123;</div><div class="line">		System.out.println(&quot;B draw &quot; + i);</div><div class="line">	&#125;</div><div class="line">	public static void main(String[] args) &#123;</div><div class="line">		B b = new B();</div><div class="line">		b.draw();</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">class A &#123;</div><div class="line">	public void draw() &#123;</div><div class="line">		System.out.println(&quot;A draw&quot;);</div><div class="line">	&#125;</div><div class="line">	public A() &#123;</div><div class="line">		System.out.println(&quot;begin&quot;);</div><div class="line">		draw();</div><div class="line">		System.out.println(&quot;end&quot;);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"> </div><div class="line">/* 输出是</div><div class="line">    begin</div><div class="line">    B draw 0</div><div class="line">    end</div><div class="line">    B draw</div><div class="line">    B draw 10</div><div class="line">*/</div></pre></td></tr></table></figure>
-<p>  这里父类的构造方法调用了draw()方法, 但实际调用的是子类中的方法, 方法中访问了变量 i, 结果为0. 所以java在实例化的时候, 都已经将类(父类和子类)中的变量和方法都已经分配好了内存空间,并且变量赋值为默认值, 然后再按照上述的规则进行初始化.</p>
+<ul>
+<li>RDD Persistence</li>
+</ul>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-15-050342.png" alt=""></p>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-15-051148.png" alt=""></p>
+<ul>
+<li>Broadcast Variables 和 Accumulators</li>
+</ul>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/java/">java</a>
+  <span></span> <a href="/tags/spark/">spark</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/java/">java</a>
+  <a class="article-category-link" href="/categories/spark/">spark</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/Java/java变量的初始化顺序/" data-title="java变量的初始化顺序 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/spark/Spark2.x文档随意贴spark-core/" data-title="Spark2.x文档随意贴spark-core | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -166,18 +198,18 @@ java变量的初始化顺序假设子类B继承了父类A,当执行语句new B()
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/icemimosa/kotlin/Kotlin Learn/" title="Kotlin Learn">
+ <a href="/icemimosa/spark/Spark2.x常用算子/" title="Spark2.x常用算子">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  Kotlin Learn</span>
+  Spark2.x常用算子</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/icemimosa/Java/ConcurrentHashMap源码分析/"  title="ConcurrentHashMap源码分析">
+<a href="/icemimosa/Java/BitSet源码分析/"  title="Java BitSet源码分析">
  <strong>NEXT:</strong><br/> 
- <span>ConcurrentHashMap源码分析
+ <span>Java BitSet源码分析
 </span>
 </a>
 </div>
@@ -195,7 +227,7 @@ java变量的初始化顺序假设子类B继承了父类A,当执行语句new B()
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#java变量的初始化顺序"><span class="toc-text">java变量的初始化顺序</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spark2-x文档随意贴spark-core"><span class="toc-text">Spark2.x文档随意贴spark-core</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Quick-Start"><span class="toc-text">1. Quick Start</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-RDD-Programming-Guide"><span class="toc-text">2. RDD Programming Guide</span></a></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
