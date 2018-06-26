@@ -7,20 +7,14 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>Hive-3_DML使用 | Ice の Mimosa</title>
+    <title>HBase_Quickstart | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
-    <meta name="description" content="Hive-3_DML使用[TOC]
-
-原文参考
-
-1. Loading files into tablesload 数据到hive表中是不会对数据进行转化的, 其实load的操作就是数据文件直接move/copy到hive表中。
-
-语法
-
-1LOAD DATA [LOCAL] INPATH &#39;fil">
+    <meta name="description" content="[TOC]
+HBase初识👉 官方最新文档👉 笔记基于版本 1.2.6
+1. 简介HBase是一个基于Hadoop，分布式、可伸缩、存储大数据量(billions of rows X millions of columns)的数据库。它能提供大数据的随机、实时的读写。（灵感来自于谷歌的BigTa">
     
     
     
@@ -97,15 +91,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/hive/Hive-3_DML使用/" title="Hive-3_DML使用" itemprop="url">Hive-3_DML使用</a>
+      <a href="/icemimosa/HBase/Hbase_Quickstart/" title="HBase_Quickstart" itemprop="url">HBase_Quickstart</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-09-22T07:30:16.000Z" itemprop="datePublished">2016-09-22</time>
-    更新日期:<time datetime="2016-10-08T09:05:20.000Z" itemprop="dateModified">2016-10-08</time>
+    <time datetime="2017-06-01T05:22:16.000Z" itemprop="datePublished">2017-06-01</time>
+    更新日期:<time datetime="2018-06-26T07:01:52.073Z" itemprop="dateModified">2018-06-26</time>
     
   </p>
 </header>
@@ -114,115 +108,86 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hive-3-DML使用"><span class="toc-text">Hive-3_DML使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Loading-files-into-tables"><span class="toc-text">1. Loading files into tables</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Inserting-data-into-Hive-Tables-from-queries"><span class="toc-text">2. Inserting data into Hive Tables from queries</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-Writing-data-into-the-filesystem-from-queries"><span class="toc-text">3. Writing data into the filesystem from queries</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-Inserting-values-into-tables-from-SQL"><span class="toc-text">4. Inserting values into tables from SQL</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-Update"><span class="toc-text">5. Update</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-Delete"><span class="toc-text">6. Delete</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#HBase初识"><span class="toc-text">HBase初识</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-安装使用"><span class="toc-text">2. 安装使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-启动-停止服务"><span class="toc-text">2.1 启动/停止服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-基本示例"><span class="toc-text">2.2 基本示例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-数据模型"><span class="toc-text">3. 数据模型</span></a></li></ol>
 		</div>
 		
-		<h1 id="Hive-3-DML使用"><a href="#Hive-3-DML使用" class="headerlink" title="Hive-3_DML使用"></a>Hive-3_DML使用</h1><p>[TOC]</p>
-<blockquote>
-<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DML" target="_blank" rel="external">原文参考</a></p>
-</blockquote>
-<h1 id="1-Loading-files-into-tables"><a href="#1-Loading-files-into-tables" class="headerlink" title="1. Loading files into tables"></a>1. Loading files into tables</h1><p><code>load</code> 数据到hive表中是不会对数据进行转化的, 其实load的操作就是数据文件直接move/copy到hive表中。</p>
-<blockquote>
-<p>语法</p>
-</blockquote>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">LOAD</span> <span class="keyword">DATA</span> [<span class="keyword">LOCAL</span>] INPATH <span class="string">'filepath'</span> [OVERWRITE] <span class="keyword">INTO</span> <span class="keyword">TABLE</span> tablename [<span class="keyword">PARTITION</span> (partcol1=val1, partcol2=val2 ...)]</div></pre></td></tr></table></figure>
-<blockquote>
-<p>说明</p>
-</blockquote>
+		<p>[TOC]</p>
+<h1 id="HBase初识"><a href="#HBase初识" class="headerlink" title="HBase初识"></a>HBase初识</h1><p>👉 <a href="https://hbase.apache.org/book.html" target="_blank" rel="external">官方最新文档</a><br>👉 笔记基于版本 <a href="https://hbase.apache.org/1.2/book.html" target="_blank" rel="external">1.2.6</a></p>
+<h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p><a href="http://hbase.apache.org/" target="_blank" rel="external">HBase</a>是一个基于Hadoop，分布式、可伸缩、存储大数据量(billions of rows X millions of columns)的数据库。它能提供大数据的随机、实时的读写。（灵感来自于谷歌的BigTable）</p>
+<h1 id="2-安装使用"><a href="#2-安装使用" class="headerlink" title="2. 安装使用"></a>2. 安装使用</h1><p>HBase提供Standalone模式、伪分布式模式、完全分布式模式的安装，具体安装参考文档的<a href="https://hbase.apache.org/1.2/book.html#quickstart" target="_blank" rel="external">Quick Start</a>。</p>
+<h2 id="2-1-启动-停止服务"><a href="#2-1-启动-停止服务" class="headerlink" title="2.1 启动/停止服务"></a>2.1 启动/停止服务</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 启动</span></div><div class="line">$ ./start-hbase.sh</div><div class="line">$ jps</div><div class="line"></div><div class="line"><span class="comment"># 停止服务</span></div><div class="line">$ ./stop-hbase.sh</div></pre></td></tr></table></figure>
+<h2 id="2-2-基本示例"><a href="#2-2-基本示例" class="headerlink" title="2.2 基本示例"></a>2.2 基本示例</h2><ul>
+<li>连接HBase</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hbase shell</div></pre></td></tr></table></figure>
 <ul>
-<li><code>filepath</code> 可以是<ul>
-<li>一个相对路径, 如 <code>project/data1</code></li>
-<li>绝对路径, 比如 <code>/user/hive/project/data1</code></li>
-<li>一个完整的uri路径, 比如 <code>hdfs://namenode:9000/user/hive/project/data1</code></li>
-</ul>
+<li><p>使用 <code>help</code> 查看帮助</p>
 </li>
-<li>加载数据的目标可以是一个表或分区。如果<code>表是分区表</code>, 那么必须指定需要导入的分区。比如：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">load data local inpath &apos;/Users/icemimosa/orders.txt&apos; into table orders partition (pt=&quot;2016-01-02&quot;);</div></pre></td></tr></table></figure>
-<ul>
-<li><code>filepath</code> 可以是一个文件, 也可以是一个目录(会加载目录下所有的文件)。</li>
-<li>如果指定 <code>LOCAL</code> 关键字<ul>
-<li>如果是相对路径, 那么是相对于当前hive的工作目录。也可以是一个绝对路径。也可以是一个完整uri的路径，如 <code>file:///user/hive/project/data1</code></li>
-</ul>
-</li>
-<li>如果没有指定 <code>LOCAL</code>, hive会去使用完整的uri<ul>
-<li>如果uri协议未指定, 那么会去找hadoop的配置 <code>fs.default.name (fs.defaultFS)</code> 的值</li>
-<li>如果路径不是绝对的，那么hive就会将路径相对于 <code>/user/&lt;username&gt;</code></li>
-</ul>
-</li>
-<li>如果指定了 <code>OVERWRITE</code> 关键字，那么目标table(partition)将会先清空数据，然后在加载数据<ul>
-<li>如果目标已经含有了一个 <code>文件名称</code> 与 <code>filepath</code> 中相同的文件，那么已存在的文件将会被新文件替换。</li>
-</ul>
+<li><p>建表</p>
 </li>
 </ul>
-<blockquote>
-<p>注意</p>
-</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">1.8.7-p357 :002 &gt; create <span class="string">'test'</span>, <span class="string">'cf'</span></div><div class="line">0 row(s) <span class="keyword">in</span> 1.6060 seconds</div><div class="line"></div><div class="line"> =&gt; Hbase::Table - <span class="built_in">test</span></div></pre></td></tr></table></figure>
 <ul>
-<li><code>filepath</code> 不能包含子目录</li>
-<li>如果没有指定 <code>LOCAL</code>，<code>filepath</code>必须和hive的table(partition)在同一个文件系统</li>
-<li>如果数据是被压缩的, 参照 <a href="https://cwiki.apache.org/confluence/display/Hive/CompressedStorage" target="_blank" rel="external">CompressedStorage</a></li>
+<li>查看表列表</li>
 </ul>
-<h1 id="2-Inserting-data-into-Hive-Tables-from-queries"><a href="#2-Inserting-data-into-Hive-Tables-from-queries" class="headerlink" title="2. Inserting data into Hive Tables from queries"></a>2. Inserting data into Hive Tables from queries</h1><p>查询的结果可以通过 <code>insert</code> 插入到指定表中</p>
-<blockquote>
-<p>语法</p>
-</blockquote>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">## 标准的语法</div><div class="line">INSERT OVERWRITE TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...) [IF NOT EXISTS]] select_statement1 FROM from_statement;</div><div class="line">INSERT INTO TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...)] select_statement1 FROM from_statement;</div><div class="line">INSERT INTO TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...)] (z,y) select_statement1 FROM from_statement;</div><div class="line"> </div><div class="line">## Hive extension (multiple inserts):</div><div class="line">FROM from_statement</div><div class="line">INSERT OVERWRITE TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...) [IF NOT EXISTS]] select_statement1</div><div class="line">[INSERT OVERWRITE TABLE tablename2 [PARTITION ... [IF NOT EXISTS]] select_statement2]</div><div class="line">[INSERT INTO TABLE tablename2 [PARTITION ...] select_statement2] ...;</div><div class="line">FROM from_statement</div><div class="line">INSERT INTO TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...)] select_statement1</div><div class="line">[INSERT INTO TABLE tablename2 [PARTITION ...] select_statement2]</div><div class="line">[INSERT OVERWRITE TABLE tablename2 [PARTITION ... [IF NOT EXISTS]] select_statement2] ...;</div><div class="line"> </div><div class="line">## Hive extension (dynamic partition inserts):</div><div class="line">INSERT OVERWRITE TABLE tablename PARTITION (partcol1[=val1], partcol2[=val2] ...) select_statement FROM from_statement;</div><div class="line">INSERT INTO TABLE tablename PARTITION (partcol1[=val1], partcol2[=val2] ...) select_statement FROM from_statement;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>说明</p>
-</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">1.8.7-p357 :005 &gt; list <span class="string">'test'</span></div><div class="line">TABLE</div><div class="line"><span class="built_in">test</span></div><div class="line">1 row(s) <span class="keyword">in</span> 0.0020 seconds</div><div class="line"></div><div class="line"> =&gt; [<span class="string">"test"</span>]</div></pre></td></tr></table></figure>
 <ul>
-<li><code>INSERT OVERWRITE</code> 将会覆盖所有已存在的数据(除非指定 <code>IF NOT EXISTS</code>)</li>
-<li>如果目标是分区表，那么在insert的时候必须指定partition参数</li>
-<li>As of Hive 1.1.0 the TABLE keyword is optional.</li>
-<li>As of Hive 1.2.0 each INSERT INTO T can take a column list like INSERT INTO T (z, x, c1)</li>
+<li>插入数据</li>
 </ul>
-<blockquote>
-<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DML#LanguageManualDML-DynamicPartitionInserts" target="_blank" rel="external">Dynamic Partition Inserts 参考</a></p>
-</blockquote>
-<h1 id="3-Writing-data-into-the-filesystem-from-queries"><a href="#3-Writing-data-into-the-filesystem-from-queries" class="headerlink" title="3. Writing data into the filesystem from queries"></a>3. Writing data into the filesystem from queries</h1><p>查询的结果可以写入到文件系统中</p>
-<blockquote>
-<p>语法</p>
-</blockquote>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">## Standard syntax:</div><div class="line">INSERT OVERWRITE [LOCAL] DIRECTORY directory1</div><div class="line">  [ROW FORMAT row_format] [STORED AS file_format] (Note: Only available starting with Hive 0.11.0)</div><div class="line">  SELECT ... FROM ...</div><div class="line"> </div><div class="line">## Hive extension (multiple inserts):</div><div class="line">FROM from_statement</div><div class="line">INSERT OVERWRITE [LOCAL] DIRECTORY directory1 select_statement1</div><div class="line">[INSERT OVERWRITE [LOCAL] DIRECTORY directory2 select_statement2] ...</div><div class="line"> </div><div class="line"> </div><div class="line">row_format</div><div class="line">  : DELIMITED [FIELDS TERMINATED BY char [ESCAPED BY char]] [COLLECTION ITEMS TERMINATED BY char]</div><div class="line">        [MAP KEYS TERMINATED BY char] [LINES TERMINATED BY char]</div><div class="line">        [NULL DEFINED AS char] (Note: Only available starting with Hive 0.13)</div></pre></td></tr></table></figure>
-<blockquote>
-<p>说明</p>
-</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">1.8.7-p357 :006 &gt; put <span class="string">'test'</span>, <span class="string">'row1'</span>, <span class="string">'cf:a'</span>, <span class="string">'value1'</span></div><div class="line">0 row(s) <span class="keyword">in</span> 0.3840 seconds</div><div class="line"></div><div class="line">1.8.7-p357 :007 &gt; put <span class="string">'test'</span>, <span class="string">'row2'</span>, <span class="string">'cf:b'</span>, <span class="string">'value2'</span></div><div class="line">0 row(s) <span class="keyword">in</span> 0.0120 seconds</div><div class="line"></div><div class="line">1.8.7-p357 :008 &gt; put <span class="string">'test'</span>, <span class="string">'row3'</span>, <span class="string">'cf:c'</span>, <span class="string">'value3'</span></div><div class="line">0 row(s) <span class="keyword">in</span> 0.0130 seconds</div></pre></td></tr></table></figure>
 <ul>
-<li>目录可以是一个完整的uri，如果没有指定uri协议, 那么hive会去找hadoop的配置 <code>fs.default.name (fs.defaultFS)</code> 的值</li>
-<li>如果使用了 <code>LOCAL</code>，那么数据会写入到本地文件系统</li>
+<li>查看数据</li>
 </ul>
-<h1 id="4-Inserting-values-into-tables-from-SQL"><a href="#4-Inserting-values-into-tables-from-SQL" class="headerlink" title="4. Inserting values into tables from SQL"></a>4. Inserting values into tables from SQL</h1><p>使用 <code>INSERT...VALUES</code> 将数据插入到表中</p>
-<blockquote>
-<p>语法</p>
-</blockquote>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">## Standard Syntax:</div><div class="line">INSERT INTO TABLE tablename [PARTITION (partcol1[=val1], partcol2[=val2] ...)] VALUES values_row [, values_row ...]</div><div class="line"> </div><div class="line">## Where values_row is:</div><div class="line">( value [, value ...] )</div><div class="line">## where a value is either null or any valid SQL literal</div></pre></td></tr></table></figure>
-<h1 id="5-Update"><a href="#5-Update" class="headerlink" title="5. Update"></a>5. Update</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">UPDATE</span> tablename <span class="keyword">SET</span> <span class="keyword">column</span> = <span class="keyword">value</span> [, <span class="keyword">column</span> = <span class="keyword">value</span> ...] [<span class="keyword">WHERE</span> expression]</div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">1.8.7-p357 :009 &gt; scan <span class="string">'test'</span></div><div class="line">ROW                                     COLUMN+CELL</div><div class="line"> row1                                   column=cf:a, timestamp=1529991722420, value=value1</div><div class="line"> row2                                   column=cf:b, timestamp=1529991725721, value=value2</div><div class="line"> row3                                   column=cf:c, timestamp=1529991729647, value=value3</div><div class="line">3 row(s) <span class="keyword">in</span> 0.0280 seconds</div></pre></td></tr></table></figure>
+<h1 id="3-数据模型"><a href="#3-数据模型" class="headerlink" title="3. 数据模型"></a>3. 数据模型</h1><p>在HBase中，数据是存在<code>Tables(表)</code>中，表由<code>Rows(行)</code>和<code>Columns(列)</code>组成。这个和传统的RDBMS类似。</p>
 <ul>
-<li>partition的column不能被更新</li>
-<li>Bucketing columns 也不能被更新</li>
+<li>Table</li>
 </ul>
-<h1 id="6-Delete"><a href="#6-Delete" class="headerlink" title="6. Delete"></a>6. Delete</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> tablename [<span class="keyword">WHERE</span> expression]</div></pre></td></tr></table></figure>
+<p><code>表</code>，包含若干<code>行</code></p>
+<ul>
+<li>Row</li>
+</ul>
+<p><code>行</code>，一个行包含一个<code>Row Key(行健)</code>和若干带有值的<code>列</code>。RowKey是按照字母顺序进行排列的，所以<code>设计行健是非常重要的</code>，这样存储的目的是将<code>相关的行</code>存储在一起。</p>
+<ul>
+<li>Column</li>
+</ul>
+<p><code>列</code>，一个列含有<code>Column Family(列族)</code>和<code>Column Qualifier(列名标识)</code>，用冒号<code>:</code>分隔。</p>
+<ul>
+<li>Column Family</li>
+</ul>
+<p><code>列族</code>，在物理存储上包含<code>若干列和值</code>。每个列族还有一堆属性，比如<code>是否需要缓存值</code>、<code>压缩数据的方式</code>等等。每一行数据拥有<code>一样的列族</code>，即使这个列族没有存储任何数据。</p>
+<ul>
+<li>Column Qualifier</li>
+</ul>
+<p><code>列名标识</code>, 存储在列族之中，用来定位一个列中的数据。<code>列族</code>在建表的时候就需要指定，<code>列标识</code>是可以动态添加的。</p>
+<ul>
+<li>Cell</li>
+</ul>
+<p><code>数据单元</code>, 一个Cell可以由<code>列，列族，列标识</code>进行定位，Cell中包含一个<code>值</code>和<code>时间戳</code>，时间戳用来标识数据的版本。</p>
+<ul>
+<li>Timestamp</li>
+</ul>
+<p><code>时间戳</code>，时间戳会在写入数据的自动生成，标识着一个数据值的版本。当然，你也可以在写数据的时候自定义Timestamp的值。物理存储上，多个版本的值是按照时间戳是降序存放的，所以在取值的时候，取的是第一个查询到的。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/hadoop/">hadoop</a><a href="/tags/hive/">hive</a>
+  <span></span> <a href="/tags/hbase/">hbase</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/hive/">hive</a>
+  <a class="article-category-link" href="/categories/hbase/">hbase</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/hive/Hive-3_DML使用/" data-title="Hive-3_DML使用 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/HBase/Hbase_Quickstart/" data-title="HBase_Quickstart | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -232,18 +197,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/icemimosa/hive/Hive-4_Select语句/" title="Hive-4_Select语句">
+ <a href="/icemimosa/redis/04_Redis之事务与Lua/" title="04_Redis之事务与Lua">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  Hive-4_Select语句</span>
+  04_Redis之事务与Lua</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/icemimosa/hive/Hive-2_DDL使用/"  title="Hive-2_DDL使用">
+<a href="/icemimosa/redis/04_Redis之Pipeline/"  title="04_Redis之Pipeline">
  <strong>NEXT:</strong><br/> 
- <span>Hive-2_DDL使用
+ <span>04_Redis之Pipeline
 </span>
 </a>
 </div>
@@ -261,7 +226,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hive-3-DML使用"><span class="toc-text">Hive-3_DML使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Loading-files-into-tables"><span class="toc-text">1. Loading files into tables</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Inserting-data-into-Hive-Tables-from-queries"><span class="toc-text">2. Inserting data into Hive Tables from queries</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-Writing-data-into-the-filesystem-from-queries"><span class="toc-text">3. Writing data into the filesystem from queries</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-Inserting-values-into-tables-from-SQL"><span class="toc-text">4. Inserting values into tables from SQL</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-Update"><span class="toc-text">5. Update</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-Delete"><span class="toc-text">6. Delete</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#HBase初识"><span class="toc-text">HBase初识</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-安装使用"><span class="toc-text">2. 安装使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-启动-停止服务"><span class="toc-text">2.1 启动/停止服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-基本示例"><span class="toc-text">2.2 基本示例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-数据模型"><span class="toc-text">3. 数据模型</span></a></li></ol>
   </div>
 
 <div id="asidepart">
