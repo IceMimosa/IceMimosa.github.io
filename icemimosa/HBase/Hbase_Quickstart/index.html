@@ -99,7 +99,7 @@ HBase初识👉 官方最新文档👉 笔记基于版本 1.2.6
     </p>
   <p class="article-time">
     <time datetime="2018-06-01T05:22:16.000Z" itemprop="datePublished">2018-06-01</time>
-    更新日期:<time datetime="2018-06-26T07:06:28.803Z" itemprop="dateModified">2018-06-26</time>
+    更新日期:<time datetime="2018-06-26T07:34:31.213Z" itemprop="dateModified">2018-06-26</time>
     
   </p>
 </header>
@@ -156,6 +156,7 @@ HBase初识👉 官方最新文档👉 笔记基于版本 1.2.6
 <li>Column Family</li>
 </ul>
 <p><code>列族</code>，在物理存储上包含<code>若干列和值</code>。每个列族还有一堆属性，比如<code>是否需要缓存值</code>、<code>压缩数据的方式</code>等等。每一行数据拥有<code>一样的列族</code>，即使这个列族没有存储任何数据。</p>
+<p>物理上，所有列族的成员都被存储在了一起，数据的调节和存储都是列族级别的。</p>
 <ul>
 <li>Column Qualifier</li>
 </ul>
@@ -168,6 +169,7 @@ HBase初识👉 官方最新文档👉 笔记基于版本 1.2.6
 <li>Timestamp</li>
 </ul>
 <p><code>时间戳</code>，时间戳会在写入数据的自动生成，标识着一个数据值的版本。当然，你也可以在写数据的时候自定义Timestamp的值。物理存储上，多个版本的值是按照时间戳是降序存放的，所以在取值的时候，取的是第一个查询到的。</p>
+<p>具体物理上的存储，后续在做讨论。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
