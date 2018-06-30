@@ -99,7 +99,7 @@
     </p>
   <p class="article-time">
     <time datetime="2016-10-14T07:30:16.000Z" itemprop="datePublished">2016-10-14</time>
-    更新日期:<time datetime="2018-06-30T16:05:10.255Z" itemprop="dateModified">2018-07-01</time>
+    更新日期:<time datetime="2018-06-30T16:08:40.954Z" itemprop="dateModified">2018-07-01</time>
     
   </p>
 </header>
@@ -124,14 +124,23 @@
 <p>以上为sqoop命令。若为分区表，则导出时不能只指定到该表所在的目录，必须要指定到分区所在的目录。否则会报错：<code>java.io.FileNotFoundException: Path is not a file: /user/hive/warehouse/dwd_partition/pt=20161110</code><br>两种模式情况与未分区表相同。</p>
 <p>个人认为增量导出<strong>解决方案</strong>：<br>1、若根据日期分期，则每天导出最新的分区中的数据。若根据其他信息分区，则每天递增分区信息进行导出。<br>2.每个分区同未分区表，使用–update-mode allowinsert –update-key id</p>
 <blockquote>
-<p>PS:1、导出时mysql中的表必须提前建立好，否则无法导出；<br>2、对于–update-mode参数设置的两种模式： updateonly 和 allowinsert，理解暂时有些混乱，需要再理一下。</p>
-<p>部分官方原文：</p>
-<blockquote>
-<p><code>--update-key &lt;col-name&gt;   Anchor column to use for updates. Use a comma separated list of columns if there are more than one column.</code></p>
-<p><code>--update-mode &lt;mode&gt;  Specify how updates are performed when new rows are found with non-matching keys in database.Legal values for mode include updateonly (default) and allowinsert.</code></p>
-<p><code>By default, sqoop-export appends new rows to a table; each input record is transformed into an INSERT statement that adds a row to the target database table. If your table has constraints (e.g., a primary key column whose values must be unique) and already contains data, you must take care to avoid inserting records that violate these constraints. The export process will fail if an INSERT statement fails. This mode is primarily intended for exporting records to a new, empty table intended to receive these results.
-If you specify the --update-key argument, Sqoop will instead modify an existing dataset in the database. Each input record is treated as an UPDATEstatement that modifies an existing row. The row a statement modifies is determined by the column name(s) specified with --update-key</code></p>
+<p>PS:</p>
 </blockquote>
+<ul>
+<li>1、导出时mysql中的表必须提前建立好，否则无法导出；</li>
+<li>2、对于–update-mode参数设置的两种模式： updateonly 和 allowinsert，理解暂时有些混乱，需要再理一下。</li>
+</ul>
+<blockquote>
+<p>部分官方原文：</p>
+</blockquote>
+<ul>
+<li><p>–update-key <col-name>   Anchor column to use for updates. Use a comma separated list of columns if there are more than one column.</col-name></p>
+</li>
+<li><p>–update-mode <mode>  Specify how updates are performed when new rows are found with non-matching keys in database.Legal values for mode include updateonly (default) and allowinsert.</mode></p>
+</li>
+</ul>
+<p>By default, sqoop-export appends new rows to a table; each input record is transformed into an INSERT statement that adds a row to the target database table. If your table has constraints (e.g., a primary key column whose values must be unique) and already contains data, you must take care to avoid inserting records that violate these constraints. The export process will fail if an INSERT statement fails. This mode is primarily intended for exporting records to a new, empty table intended to receive these results.<br>If you specify the –update-key argument, Sqoop will instead modify an existing dataset in the database. Each input record is treated as an UPDATEstatement that modifies an existing row. The row a statement modifies is determined by the column name(s) specified with –update-key</p>
+<blockquote>
 <p>参考文档： <a href="https://sqoop.apache.org/docs/1.4.6/SqoopUserGuide.html#_create_oracle_tables" target="_blank" rel="external">官方的使用者手册</a>  </p>
 </blockquote>
   
