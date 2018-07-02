@@ -7,26 +7,16 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>Spark2.x文档随意贴spark-core | Ice の Mimosa</title>
+    <title>HBase源码01_创建连接 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
     <meta name="description" content="[TOC]
-Spark2.x文档随意贴spark-core1. Quick Start
-使用 Caching
-
-
-
-Spark-submit
-
-可以直接提交jar、py以及R文件。
-2. RDD Programming Guide
-Overview
-
-
-
-Spark2.x Wordcount Hel">
+HBase源码01_创建连接👉 Github源码地址
+源码基于分支 branch-1.2（v1.2.7），HBase的源码希望能坚持搞下去吧 😂
+1. 代码示例 (kotlin)代码从 client 端连接开始。
+12345678// 查看 hbase 表是否存在@Testfun t">
     
     
     
@@ -103,15 +93,15 @@ Spark2.x Wordcount Hel">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/spark/Spark2.x文档随意贴spark-core/" title="Spark2.x文档随意贴spark-core" itemprop="url">Spark2.x文档随意贴spark-core</a>
+      <a href="/icemimosa/HBase/Hbase源码01_创建连接/" title="HBase源码01_创建连接" itemprop="url">HBase源码01_创建连接</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2018-05-14T07:30:16.000Z" itemprop="datePublished">2018-05-14</time>
-    更新日期:<time datetime="2018-05-15T06:09:32.343Z" itemprop="dateModified">2018-05-15</time>
+    <time datetime="2018-06-04T07:47:16.000Z" itemprop="datePublished">2018-06-04</time>
+    更新日期:<time datetime="2018-07-02T06:48:36.503Z" itemprop="dateModified">2018-07-02</time>
     
   </p>
 </header>
@@ -120,75 +110,77 @@ Spark2.x Wordcount Hel">
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spark2-x文档随意贴spark-core"><span class="toc-text">Spark2.x文档随意贴spark-core</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Quick-Start"><span class="toc-text">1. Quick Start</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-RDD-Programming-Guide"><span class="toc-text">2. RDD Programming Guide</span></a></li></ol></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#HBase源码01-创建连接"><span class="toc-text">HBase源码01_创建连接</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-代码示例-kotlin"><span class="toc-text">1. 代码示例 (kotlin)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-解析"><span class="toc-text">2. 解析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-创建-conf"><span class="toc-text">2.1 创建 conf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-user"><span class="toc-text">2.2 user</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-pool"><span class="toc-text">2.3 pool</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-建立连接"><span class="toc-text">2.4 建立连接</span></a></li></ol></li></ol>
 		</div>
 		
 		<p>[TOC]</p>
-<h1 id="Spark2-x文档随意贴spark-core"><a href="#Spark2-x文档随意贴spark-core" class="headerlink" title="Spark2.x文档随意贴spark-core"></a>Spark2.x文档随意贴spark-core</h1><h2 id="1-Quick-Start"><a href="#1-Quick-Start" class="headerlink" title="1. Quick Start"></a>1. Quick Start</h2><ul>
-<li>使用 <code>Caching</code></li>
-</ul>
-<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-14-074038.png" alt="Caching"></p>
+<h1 id="HBase源码01-创建连接"><a href="#HBase源码01-创建连接" class="headerlink" title="HBase源码01_创建连接"></a>HBase源码01_创建连接</h1><p>👉 <a href="https://github.com/apache/hbase" target="_blank" rel="external">Github源码地址</a></p>
+<p>源码基于分支 <code>branch-1.2（v1.2.7）</code>，HBase的源码希望能坚持搞下去吧 😂</p>
+<h1 id="1-代码示例-kotlin"><a href="#1-代码示例-kotlin" class="headerlink" title="1. 代码示例 (kotlin)"></a>1. 代码示例 (kotlin)</h1><p>代码从 <code>client 端</code>连接开始。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 查看 hbase 表是否存在</span></div><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">fun</span> <span class="title">testConnection</span><span class="params">()</span></span> &#123;</div><div class="line">    <span class="keyword">val</span> connection = ConnectionFactory.createConnection()</div><div class="line">    println(connection.admin.tableExists(TableName.valueOf(<span class="string">"test"</span>)))</div><div class="line"></div><div class="line">    connection.close()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="2-解析"><a href="#2-解析" class="headerlink" title="2. 解析"></a>2. 解析</h1><p><code>创建连接的方法</code>最多可以接收的参数如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Connection <span class="title">createConnection</span><span class="params">(Configuration conf, ExecutorService pool, User user)</span></span></div></pre></td></tr></table></figure>
+<h2 id="2-1-创建-conf"><a href="#2-1-创建-conf" class="headerlink" title="2.1 创建 conf"></a>2.1 创建 conf</h2><p><code>conf</code> 默认为 <code>HBaseConfiguration.create()</code>，<code>HBaseConfiguration</code> 本身继承 Hadoop 的 <code>Configuration</code>，所以本身不是特别复杂。主要步骤如下：</p>
 <ul>
-<li>Spark-submit</li>
+<li>加载 <code>hbase-default.xml</code> 和 <code>hbase-site.xml</code></li>
+<li><p>校验版本号，检查不通过会抛异常，涉及到的配置如下：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// 是否忽略检查, 默认false</div><div class="line">hbase.defaults.for.version.skip</div><div class="line">// 版本号, 默认为 hbase-default.xml 中的配置</div><div class="line">hbase.defaults.for.version</div></pre></td></tr></table></figure>
+</li>
+<li><p>校验 <code>(1 - 配置的[memstore/BlockCache]内存百分比)</code> 是否大于 20%</p>
+</li>
 </ul>
-<p>可以直接提交<code>jar</code>、<code>py</code>以及<code>R</code>文件。</p>
-<h2 id="2-RDD-Programming-Guide"><a href="#2-RDD-Programming-Guide" class="headerlink" title="2. RDD Programming Guide"></a>2. RDD Programming Guide</h2><ul>
-<li>Overview</li>
-</ul>
-<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-14-075755.png" alt=""></p>
-<ul>
-<li>Spark2.x Wordcount HelloWorkd</li>
-</ul>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> sc =</div><div class="line">  <span class="type">SparkSession</span>.builder()</div><div class="line">  .appName(<span class="string">""</span>)</div><div class="line">  .master(<span class="string">"local[*]"</span>)</div><div class="line">  .getOrCreate()</div><div class="line"><span class="keyword">import</span> sc.implicits._</div><div class="line"></div><div class="line"><span class="keyword">val</span> collect = sc.read.textFile(<span class="string">"hdfs://127.0.0.1:9000/mimosa/input/hello.txt"</span>)</div><div class="line">  .flatMap(_.split(<span class="string">" "</span>))</div><div class="line">  .groupByKey(_.toLowerCase)</div><div class="line">  .count()</div><div class="line">collect.show()</div><div class="line"></div><div class="line">sc.stop()</div></pre></td></tr></table></figure>
-<ul>
-<li>Parallelized Collections</li>
-</ul>
-<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-14-093024.png" alt=""></p>
-<ul>
-<li>External Datasets</li>
-</ul>
-<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-14-093540.png" alt=""></p>
-<ul>
-<li>RDD Operations</li>
-</ul>
-<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-14-095307.png" alt=""></p>
-<ul>
-<li>Understanding closures</li>
-</ul>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> counter = <span class="number">0</span></div><div class="line"><span class="keyword">var</span> rdd = sc.parallelize(data)</div><div class="line"></div><div class="line"><span class="comment">// Wrong: Don't do this!!</span></div><div class="line">rdd.foreach(x =&gt; counter += x)</div><div class="line"></div><div class="line">println(<span class="string">"Counter value: "</span> + counter)</div></pre></td></tr></table></figure>
-<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-15-030302.png" alt=""></p>
-<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-15-030417.png" alt=""></p>
 <blockquote>
-<p>常用算子参考：<a href="http://patamon.me/icemimosa/spark/Spark2.x%E5%B8%B8%E7%94%A8%E7%AE%97%E5%AD%90/" target="_blank" rel="external">http://patamon.me/icemimosa/spark/Spark2.x%E5%B8%B8%E7%94%A8%E7%AE%97%E5%AD%90/</a></p>
+<p>核心代码如下：</p>
 </blockquote>
-<ul>
-<li>RDD Persistence</li>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">conf.addResource(<span class="string">"hbase-default.xml"</span>);</div><div class="line">conf.addResource(<span class="string">"hbase-site.xml"</span>);</div><div class="line"></div><div class="line">checkDefaultsVersion(conf);</div><div class="line">HeapMemorySizeUtil.checkForClusterFreeMemoryLimit(conf);</div><div class="line"><span class="keyword">return</span> conf;</div></pre></td></tr></table></figure>
+<h2 id="2-2-user"><a href="#2-2-user" class="headerlink" title="2.2 user"></a>2.2 user</h2><p>可忽略, 返回 Hadoop 的 User, 用于做权限控制</p>
+<blockquote>
+<p>核心代码如下：</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (user == <span class="keyword">null</span>) &#123;</div><div class="line">  UserProvider provider = UserProvider.instantiate(conf);</div><div class="line">  user = provider.getCurrent();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="2-3-pool"><a href="#2-3-pool" class="headerlink" title="2.3 pool"></a>2.3 pool</h2><p>可忽略, 做 <code>批处理</code> 的线程池</p>
+<h2 id="2-4-建立连接"><a href="#2-4-建立连接" class="headerlink" title="2.4 建立连接"></a>2.4 建立连接</h2><ul>
+<li>1、 获取连接实现类，通过反射初始化实现</li>
 </ul>
-<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-15-050342.png" alt=""></p>
-<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-15-051148.png" alt=""></p>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-07-02-050725.png" alt=""></p>
 <ul>
-<li>Broadcast Variables 和 Accumulators</li>
+<li><p>2、下面主要分析 <strong><code>ConnectionManager.HConnectionImplementation</code></strong></p>
+</li>
+<li><p>2.1、初始化一堆 <code>hbase.client.*</code> 相关的配置</p>
+</li>
+<li><p>2.2、初始化 <code>zookeeper</code> 连接</p>
+</li>
 </ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1. RegistryFactory.getRegistry 获取 ZooKeeperRegistry 实例</div><div class="line">2. 执行 retrieveClusterId() 建立 zookeeper 连接（代码比较深）</div><div class="line">3. 返回 clusterId</div></pre></td></tr></table></figure>
+<ul>
+<li>2.3 创建 <code>RpcClient</code>，主要负责 <code>RPC调用</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">// 入口代码</div><div class="line">this.rpcClient = RpcClientFactory.createClient(this.conf, this.clusterId, this.metrics);</div><div class="line"></div><div class="line">// 最终执行的代码</div><div class="line">public static RpcClient createClient(Configuration conf, String clusterId,</div><div class="line">      SocketAddress localAddr, MetricsConnection metrics) &#123;</div><div class="line">    // 常量: hbase.rpc.client.impl</div><div class="line">    String rpcClientClass = conf.get(CUSTOM_RPC_CLIENT_IMPL_CONF_KEY, RpcClientImpl.class.getName());</div><div class="line">    return ReflectionUtils.instantiateWithCustomCtor(</div><div class="line">        rpcClientClass,</div><div class="line">        new Class[] &#123; Configuration.class, String.class, SocketAddress.class,</div><div class="line">            MetricsConnection.class &#125;,</div><div class="line">        new Object[] &#123; conf, clusterId, localAddr, metrics &#125;</div><div class="line">    );</div><div class="line">&#125;</div><div class="line"></div><div class="line">// !!! 可以看出 HBase 特别喜欢将重要的实现类提取出配置, 然后通过反射的方式去实例化</div></pre></td></tr></table></figure>
+<ul>
+<li>2.4、其他一些初始化</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">// 创建改connect所相关region的监控信息, 由参数 hbase.client.backpressure.enabled 决定, 默认false</div><div class="line">stats = ServerStatisticTracker.create(conf);</div><div class="line">// client id 随机生成器</div><div class="line">ConnectionManager.nonceGenerator = new PerClientRandomNonceGenerator();</div><div class="line">// 异步的处理类, 带有线程池, 负责连续的请求, 比如用于批处理</div><div class="line">this.asyncProcess = createAsyncProcess(this.conf);</div><div class="line">// 远程调用的时候, 出现异常的处理机制</div><div class="line">this.interceptor = (new RetryingCallerInterceptorFactory(conf)).build();</div><div class="line">// RpcRetryingCaller 的创建工厂, 配合 RetryingCallable 使用</div><div class="line">this.rpcCallerFactory = RpcRetryingCallerFactory.instantiate(conf, interceptor, this.stats);</div></pre></td></tr></table></figure>
+<p>到这基本结束了, 一个connection主要生成 <code>rpcClient</code> 和 <code>rpcCallerFactory</code>。<code>rpcClient</code> 会结合 <code>RpcRetryingCaller</code> 进行 <code>RPC 调用</code>。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/spark/">spark</a>
+  <span></span> <a href="/tags/hbase/">hbase</a><a href="/tags/源码/">源码</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/spark/">spark</a>
+  <a class="article-category-link" href="/categories/hbase/">hbase</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/spark/Spark2.x文档随意贴spark-core/" data-title="Spark2.x文档随意贴spark-core | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/HBase/Hbase源码01_创建连接/" data-title="HBase源码01_创建连接 | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -197,19 +189,11 @@ Spark2.x Wordcount Hel">
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/icemimosa/spark/Spark2.x常用算子/" title="Spark2.x常用算子">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  Spark2.x常用算子</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/icemimosa/Java/BitSet源码分析/"  title="Java BitSet源码分析">
+<a href="/icemimosa/HBase/Hbase_Quickstart/"  title="HBase_Quickstart">
  <strong>NEXT:</strong><br/> 
- <span>Java BitSet源码分析
+ <span>HBase_Quickstart
 </span>
 </a>
 </div>
@@ -227,7 +211,7 @@ Spark2.x Wordcount Hel">
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spark2-x文档随意贴spark-core"><span class="toc-text">Spark2.x文档随意贴spark-core</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Quick-Start"><span class="toc-text">1. Quick Start</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-RDD-Programming-Guide"><span class="toc-text">2. RDD Programming Guide</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#HBase源码01-创建连接"><span class="toc-text">HBase源码01_创建连接</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-代码示例-kotlin"><span class="toc-text">1. 代码示例 (kotlin)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-解析"><span class="toc-text">2. 解析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-创建-conf"><span class="toc-text">2.1 创建 conf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-user"><span class="toc-text">2.2 user</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-pool"><span class="toc-text">2.3 pool</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-建立连接"><span class="toc-text">2.4 建立连接</span></a></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
