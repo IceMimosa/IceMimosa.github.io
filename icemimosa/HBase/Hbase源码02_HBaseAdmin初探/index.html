@@ -99,7 +99,7 @@ HBase源码02_HBaseAdmin初探1. 代码示例 (kotlin)上节我们知道 connect
     </p>
   <p class="article-time">
     <time datetime="2018-06-06T07:24:16.000Z" itemprop="datePublished">2018-06-06</time>
-    更新日期:<time datetime="2018-07-03T07:38:10.800Z" itemprop="dateModified">2018-07-03</time>
+    更新日期:<time datetime="2018-07-03T07:45:02.153Z" itemprop="dateModified">2018-07-03</time>
     
   </p>
 </header>
@@ -130,8 +130,9 @@ HBase源码02_HBaseAdmin初探1. 代码示例 (kotlin)上节我们知道 connect
 </ul>
 </li>
 </ul>
-<pre><code>* ![](http://7xsz2j.com1.z0.glb.clouddn.com/2018-07-03-071541.png)
-* 关于 `stub`，`channel`，`rpcClient` 的关系和联系，可以参考 [`Protobuf的RPC使用`](https://blog.csdn.net/u011693064/article/details/73308833)。后续的各种表操作，都是基于这个 `stub` 完成的
+<pre><code>![](http://7xsz2j.com1.z0.glb.clouddn.com/2018-07-03-071541.png)
+
+* `stub` 是 `protobuf` 生成的代码。关于 `stub`，`channel`，`rpcClient` 的关系和联系，可以参考 [`Protobuf的RPC使用`](https://blog.csdn.net/u011693064/article/details/73308833)。后续的各种表操作，都是基于这个 `stub` 完成的
 </code></pre><ul>
 <li><p>2、<code>master</code> 初始化完毕后, 继续执行 <code>call</code> 里面的代码, 主要方法就是 <code>master.listNamespaceDescriptors(...)</code></p>
 <ul>
