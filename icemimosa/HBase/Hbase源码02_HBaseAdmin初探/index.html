@@ -7,20 +7,14 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>Oozie-5_ Bundle定义 | Ice の Mimosa</title>
+    <title>HBase源码02_HBaseAdmin初探 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
-    <meta name="description" content="Oozie-5_ Bundle定义[TOC]
-1. 简介Bundle 是一个最高级的抽象，包含一系列的 coordinator applications。
-
-大致与 Coordinator 和 Workflow job 的关系如下
-
-
-Bundle Job的状态和生命周期
-
-Bundle 的 状态 ">
+    <meta name="description" content="[TOC]
+HBase源码02_HBaseAdmin初探1. 代码示例 (kotlin)上节我们知道 connection 返回的是 HConnectionImplementation。这节以最基本的 listNamespaceDescriptors 解析。
+123456789// 查看 hbase">
     
     
     
@@ -97,15 +91,15 @@ Bundle 的 状态 ">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/oozie/Oozie-5_ Bundle定义/" title="Oozie-5_ Bundle定义" itemprop="url">Oozie-5_ Bundle定义</a>
+      <a href="/icemimosa/HBase/Hbase源码02_HBaseAdmin初探/" title="HBase源码02_HBaseAdmin初探" itemprop="url">HBase源码02_HBaseAdmin初探</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-07-13T07:30:16.000Z" itemprop="datePublished">2016-07-13</time>
-    更新日期:<time datetime="2016-10-08T05:04:21.000Z" itemprop="dateModified">2016-10-08</time>
+    <time datetime="2018-06-06T07:24:16.000Z" itemprop="datePublished">2018-06-06</time>
+    更新日期:<time datetime="2018-07-03T07:38:10.800Z" itemprop="dateModified">2018-07-03</time>
     
   </p>
 </header>
@@ -114,67 +108,66 @@ Bundle 的 状态 ">
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oozie-5-Bundle定义"><span class="toc-text">Oozie-5_ Bundle定义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Bundle-Job-Submission"><span class="toc-text">2. Bundle Job Submission</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-一些说明"><span class="toc-text">3. 一些说明</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#HBase源码02-HBaseAdmin初探"><span class="toc-text">HBase源码02_HBaseAdmin初探</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-代码示例-kotlin"><span class="toc-text">1. 代码示例 (kotlin)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-解析"><span class="toc-text">2. 解析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-获取Admin实例"><span class="toc-text">2.1 获取Admin实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-listNamespaceDescriptors-方法"><span class="toc-text">2.2 listNamespaceDescriptors 方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-总结"><span class="toc-text">3. 总结</span></a></li></ol>
 		</div>
 		
-		<h1 id="Oozie-5-Bundle定义"><a href="#Oozie-5-Bundle定义" class="headerlink" title="Oozie-5_ Bundle定义"></a>Oozie-5_ Bundle定义</h1><p>[TOC]</p>
-<h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>Bundle 是一个最高级的抽象，包含一系列的 coordinator applications。</p>
-<ul>
-<li>大致与 Coordinator 和 Workflow job 的关系如下<br><img src="http://7xsz2j.com1.z0.glb.clouddn.com/Oozie-Bundle.png" alt="" title="Bundle relative"></li>
+		<p>[TOC]</p>
+<h1 id="HBase源码02-HBaseAdmin初探"><a href="#HBase源码02-HBaseAdmin初探" class="headerlink" title="HBase源码02_HBaseAdmin初探"></a>HBase源码02_HBaseAdmin初探</h1><h1 id="1-代码示例-kotlin"><a href="#1-代码示例-kotlin" class="headerlink" title="1. 代码示例 (kotlin)"></a>1. 代码示例 (kotlin)</h1><p>上节我们知道 <code>connection</code> 返回的是 <code>HConnectionImplementation</code>。这节以最基本的 <code>listNamespaceDescriptors</code> 解析。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 查看 hbase 所有的 namespaces</span></div><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">fun</span> <span class="title">testConnection</span><span class="params">()</span></span> &#123;</div><div class="line">    <span class="keyword">val</span> connection = ConnectionFactory.createConnection()</div><div class="line">    <span class="comment">// 获取 admin 操作</span></div><div class="line">    println(connection.admin.listNamespaceDescriptors())</div><div class="line"></div><div class="line">    connection.close()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="2-解析"><a href="#2-解析" class="headerlink" title="2. 解析"></a>2. 解析</h1><h2 id="2-1-获取Admin实例"><a href="#2-1-获取Admin实例" class="headerlink" title="2.1 获取Admin实例"></a>2.1 获取Admin实例</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 可以看出来返回的 HBaseAdmin 对象</span></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> Admin <span class="title">getAdmin</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">  <span class="keyword">if</span> (managed) &#123;</div><div class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> NeedUnmanagedConnectionException();</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> <span class="keyword">new</span> HBaseAdmin(<span class="keyword">this</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>HBaseAdmin</code> 提供基本的DDL等操作，如 <code>创建NameSpace</code>, <code>创建表</code>, <code>判断表是否存在</code>, <code>查看表列表</code>, <code>删除表</code> 等等。</p>
+<p>构造方法里面获取<code>connection</code>初始化的信息，如<code>rpcCallerFactory</code>，<code>rpcControllerFactory</code>等。</p>
+<h2 id="2-2-listNamespaceDescriptors-方法"><a href="#2-2-listNamespaceDescriptors-方法" class="headerlink" title="2.2 listNamespaceDescriptors 方法"></a>2.2 listNamespaceDescriptors 方法</h2><ul>
+<li>实际调用，下面一步步分析</li>
 </ul>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-07-03-070007.png" alt=""></p>
 <ul>
-<li><p><a href="https://oozie.apache.org/docs/4.1.0/BundleFunctionalSpec.html#a4._Bundle_Job" title="生命周期" target="_blank" rel="external">Bundle Job的状态和生命周期</a></p>
+<li><p>1、创建一个 <code>MasterCallable</code>, 返回 <code>NamespaceDescriptor[] 类型</code></p>
+<ul>
+<li><p>MasterCallable 构造方法中，获取 <code>MasterService</code>。方法位于 <code>ConnectionManager#getKeepAliveMasterService()</code>，这里面最重要就是初始化 <code>stub</code> 对象。 代码如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">this.masterServiceState.stub = stubMaker.makeStub();</div><div class="line"></div><div class="line">&gt;&gt; 上面代码最终进入到 ConnectionManager#makeStubNoRetries() 方法中</div></pre></td></tr></table></figure>
 </li>
-<li><p>Bundle 的 状态 迁移<br><img src="http://7xsz2j.com1.z0.glb.clouddn.com/Oozie_bundle-state.png" alt="" title="Bundle state"></p>
+</ul>
 </li>
 </ul>
-<blockquote>
-<p>语法：</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bundle-app</span> <span class="attr">name</span>=<span class="string">"[NAME]"</span>  <span class="attr">xmlns</span>=<span class="string">"uri:oozie:bundle:0.1"</span>&gt;</span> </div><div class="line">  <span class="tag">&lt;<span class="name">controls</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">kick-off-time</span>&gt;</span>[DATETIME]<span class="tag">&lt;/<span class="name">kick-off-time</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">controls</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">coordinator</span> <span class="attr">name</span>=<span class="string">"[NAME]"</span> &gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">app-path</span>&gt;</span>[COORD-APPLICATION-PATH]<span class="tag">&lt;/<span class="name">app-path</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">name</span>&gt;</span>[PROPERTY-NAME]<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">value</span>&gt;</span>[PROPERTY-VALUE]<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">            ...</div><div class="line">         <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">coordinator</span>&gt;</span></div><div class="line">   ...</div><div class="line"><span class="tag">&lt;/<span class="name">bundle-app</span>&gt;</span>  </div><div class="line"></div><div class="line"># kick-off-time：开始和提交 coordinator applications 的时间，默认是 NOW</div></pre></td></tr></table></figure>
-<blockquote>
-<p>例子：</p>
-</blockquote>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bundle-app</span> <span class="attr">name</span>=<span class="string">'APPNAME'</span> <span class="attr">xmlns:xsi</span>=<span class="string">'http://www.w3.org/2001/XMLSchema-instance'</span> <span class="attr">xmlns</span>=<span class="string">'uri:oozie:bundle:0.1'</span>&gt;</span> </div><div class="line">  <span class="tag">&lt;<span class="name">controls</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">kick-off-time</span>&gt;</span>$&#123;kickOffTime&#125;<span class="tag">&lt;/<span class="name">kick-off-time</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">controls</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">coordinator</span> <span class="attr">name</span>=<span class="string">'coordJobFromBundle1'</span> &gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">app-path</span>&gt;</span>$&#123;appPath&#125;<span class="tag">&lt;/<span class="name">app-path</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">         <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">name</span>&gt;</span>startTime1<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">value</span>&gt;</span>$&#123;START_TIME&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">         <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">name</span>&gt;</span>endTime1<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">value</span>&gt;</span>$&#123;END_TIME&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">coordinator</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">coordinator</span> <span class="attr">name</span>=<span class="string">'coordJobFromBundle2'</span> &gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">app-path</span>&gt;</span>$&#123;appPath2&#125;<span class="tag">&lt;/<span class="name">app-path</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">         <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">name</span>&gt;</span>startTime2<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">value</span>&gt;</span>$&#123;START_TIME2&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">         <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">name</span>&gt;</span>endTime2<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">              <span class="tag">&lt;<span class="name">value</span>&gt;</span>$&#123;END_TIME2&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">coordinator</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">bundle-app</span>&gt;</span></div></pre></td></tr></table></figure>
-<h1 id="2-Bundle-Job-Submission"><a href="#2-Bundle-Job-Submission" class="headerlink" title="2. Bundle Job Submission"></a>2. Bundle Job Submission</h1><p>同样需要指定 <code>oozie.bundle.application.path</code> 的路径。</p>
-<h1 id="3-一些说明"><a href="#3-一些说明" class="headerlink" title="3. 一些说明"></a>3. 一些说明</h1><p>按照文档来看，官方也考虑到Bundle的实用性价值。在一些具体的案例中，Bundles 就会显得比较便利。以下是书籍中的一个案例：</p>
-<blockquote>
-<p>案例：</p>
-</blockquote>
+<pre><code>* ![](http://7xsz2j.com1.z0.glb.clouddn.com/2018-07-03-071541.png)
+* 关于 `stub`，`channel`，`rpcClient` 的关系和联系，可以参考 [`Protobuf的RPC使用`](https://blog.csdn.net/u011693064/article/details/73308833)。后续的各种表操作，都是基于这个 `stub` 完成的
+</code></pre><ul>
+<li><p>2、<code>master</code> 初始化完毕后, 继续执行 <code>call</code> 里面的代码, 主要方法就是 <code>master.listNamespaceDescriptors(...)</code></p>
 <ul>
-<li>有一个 Revenue Workflow(WF) 去计算一个 ad(广告) 的点击量获得刊登的费用和税收, 并且与上周的的同一天做一些比较。这个任务每15分钟执行一次。</li>
-<li>还有一个 Targeting WF 获取点击广告的用户，然后做一些行为分析。这个任务也是每15分钟执行一次。</li>
-<li>还有一个 AD-UI WF 用没15分钟去处理 Revenue Workflow 生成的数据，然后生成到数据库中，提供一个用户接口以供查询。</li>
-<li>还有一个 Reporting WF 去每天早上统计以前的数据，然后为公司高管们生成日报。</li>
-<li>最后一个 Billing WF 用来计算每月的广告账单，最后给刊登广告的形成账单统计。</li>
+<li>点进去，实际调用 <code>stub</code> 的 <code>listNamespaceDescriptors方法</code></li>
+<li>继续点进去, 就是 <code>channel</code> 的 <code>callBlockingMethod</code>。<code>channel</code> 的实现是 <code>BlockingRpcChannelImplementation</code>。</li>
+<li>最后就是 <code>rpcClient</code> 的 <code>callBlockingMethod</code> 方法。这个过程其实是将<code>RPC调用</code>需要的<strong><code>方法名</code>, <code>参数</code>, <code>返回类型</code>, <code>Master地址</code></strong>等进行传输。最终调用的就是 <code>RpcClientImpl</code> 里面的 NIO 相关的代码（用的hadoop封装的代码）。</li>
 </ul>
-<blockquote>
-<p>大致图就是这样</p>
-</blockquote>
-<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/Oozie-bundle-example.png" alt="" title="Bundle example"></p>
-<blockquote>
-<p>从例子可以看出来，对于同一类的数据分析，形成一个任务pipeline。当一个任务出现故障，那么这个Bundle在进行处理，暂停，恢复等操作的时候，会变得非常简单。</p>
-</blockquote>
+</li>
+<li><p>3、最终调用远程 <code>HBase Master</code> 的方法, 即 <code>MasterRpcServices#listNamespaceDescriptors</code> 方法。</p>
+<ul>
+<li>点进去，调用 <code>HMaster#listNamespaceDescriptors()</code> 方法</li>
+</ul>
+</li>
+</ul>
+<p>最后执行的代码就是去获取(scan) <code>hbase:namespace</code> 表中的数据，类似<code>hbase-shell</code>命令行敲入：<code>$ scan &#39;hbase:namespace&#39;</code>。<code>scan</code>，<code>get</code>等过程，这个后面再说。</p>
+<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><p>这一节，主要是走通 <code>client</code> 和 <code>master</code> 之间的通信过程。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/oozie/">oozie</a>
+  <span></span> <a href="/tags/hbase/">hbase</a><a href="/tags/源码/">源码</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/oozie/">oozie</a>
+  <a class="article-category-link" href="/categories/hbase/">hbase</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/oozie/Oozie-5_ Bundle定义/" data-title="Oozie-5_ Bundle定义 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/HBase/Hbase源码02_HBaseAdmin初探/" data-title="HBase源码02_HBaseAdmin初探 | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -183,19 +176,11 @@ Bundle 的 状态 ">
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/icemimosa/oozie/Oozie-6_Web Service API/" title="Oozie-6_Web Service API">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  Oozie-6_Web Service API</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/icemimosa/oozie/Oozie-4_Coordinator定义/"  title="Oozie-4_Coordinator定义">
+<a href="/icemimosa/HBase/Hbase源码01_创建连接/"  title="HBase源码01_创建连接">
  <strong>NEXT:</strong><br/> 
- <span>Oozie-4_Coordinator定义
+ <span>HBase源码01_创建连接
 </span>
 </a>
 </div>
@@ -213,7 +198,7 @@ Bundle 的 状态 ">
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oozie-5-Bundle定义"><span class="toc-text">Oozie-5_ Bundle定义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Bundle-Job-Submission"><span class="toc-text">2. Bundle Job Submission</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-一些说明"><span class="toc-text">3. 一些说明</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#HBase源码02-HBaseAdmin初探"><span class="toc-text">HBase源码02_HBaseAdmin初探</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-代码示例-kotlin"><span class="toc-text">1. 代码示例 (kotlin)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-解析"><span class="toc-text">2. 解析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-获取Admin实例"><span class="toc-text">2.1 获取Admin实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-listNamespaceDescriptors-方法"><span class="toc-text">2.2 listNamespaceDescriptors 方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-总结"><span class="toc-text">3. 总结</span></a></li></ol>
   </div>
 
 <div id="asidepart">
