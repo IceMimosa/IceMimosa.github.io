@@ -7,18 +7,13 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>部署springboot应用_centOS7 | Ice の Mimosa</title>
+    <title>Hbase源码04_Get | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
     <meta name="description" content="[TOC]
-部署springboot应用_centOS7
-springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的服务
-
-比如在centos7上使用systemd的方式部署应用服务。下面是一个多模块的通用脚本, 也可以直接用官网的配置脚本。
-
-已经有一">
+Hbase源码04_Get1. 代码示例 (kotlin)1234567891011121314@Testfun testGet() &amp;#123;    // 创建连接    val connection = ConnectionFactory.createConnection()   ">
     
     
     
@@ -95,15 +90,15 @@ springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/spring/部署springboot应用_CentOS7/" title="部署springboot应用_centOS7" itemprop="url">部署springboot应用_centOS7</a>
+      <a href="/icemimosa/HBase/Hbase源码04_Get/" title="Hbase源码04_Get" itemprop="url">Hbase源码04_Get</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2017-01-10T02:30:16.000Z" itemprop="datePublished">2017-01-10</time>
-    更新日期:<time datetime="2017-05-06T07:17:41.000Z" itemprop="dateModified">2017-05-06</time>
+    <time datetime="2018-06-15T07:35:16.000Z" itemprop="datePublished">2018-06-15</time>
+    更新日期:<time datetime="2018-07-05T07:28:59.112Z" itemprop="dateModified">2018-07-05</time>
     
   </p>
 </header>
@@ -112,56 +107,81 @@ springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#部署springboot应用-centOS7"><span class="toc-text">部署springboot应用_centOS7</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hbase源码04-Get"><span class="toc-text">Hbase源码04_Get</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-代码示例-kotlin"><span class="toc-text">1. 代码示例 (kotlin)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-解析"><span class="toc-text">2. 解析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-总结"><span class="toc-text">3. 总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-参考"><span class="toc-text">4. 参考</span></a></li></ol>
 		</div>
 		
 		<p>[TOC]</p>
-<h1 id="部署springboot应用-centOS7"><a href="#部署springboot应用-centOS7" class="headerlink" title="部署springboot应用_centOS7"></a>部署springboot应用_centOS7</h1><blockquote>
-<p>springboot应用可以使用 <code>init.d/systemd</code> 被轻易的部署为 Unix/Linux 的服务</p>
-</blockquote>
-<p>比如在centos7上使用systemd的方式部署应用服务。<br>下面是一个多模块的通用脚本, 也可以直接用官网的配置脚本。</p>
-<ul>
-<li>已经有一个已经打包好的jar包 <code>(myapp-web-1.0-SNAPSHOT.jar)</code>，然后放置在目录 <code>/var/myapp</code> 下</li>
-<li>创建一个服务脚本，如<code>myapp@.service</code>。然后放置到目录 <code>/etc/systemd/system</code>。内容如下，下面是含有 <code>%i</code> 传入<code>myapp.jar</code> 的应用配置参数的，然后是执行脚本 <code>ExecStart中的内容</code>。（当然你的<code>EnvironmentFile</code>可以写死, 或者不存在的话不写也ok）</li>
+<h1 id="Hbase源码04-Get"><a href="#Hbase源码04-Get" class="headerlink" title="Hbase源码04_Get"></a>Hbase源码04_Get</h1><h1 id="1-代码示例-kotlin"><a href="#1-代码示例-kotlin" class="headerlink" title="1. 代码示例 (kotlin)"></a>1. 代码示例 (kotlin)</h1><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">fun</span> <span class="title">testGet</span><span class="params">()</span></span> &#123;</div><div class="line">    <span class="comment">// 创建连接</span></div><div class="line">    <span class="keyword">val</span> connection = ConnectionFactory.createConnection()</div><div class="line">    <span class="comment">// 获取表</span></div><div class="line">    <span class="keyword">val</span> table = connection.getTable(TableName.valueOf(<span class="string">"test"</span>))</div><div class="line">    <span class="comment">// get 请求</span></div><div class="line">    <span class="keyword">val</span> <span class="keyword">get</span> = table.<span class="keyword">get</span>(Get(Bytes.toBytes(<span class="string">"row1"</span>)))</div><div class="line">    <span class="keyword">val</span> cell = <span class="keyword">get</span>.getColumnLatestCell(Bytes.toBytes(<span class="string">"cf"</span>), Bytes.toBytes(<span class="string">"a"</span>))</div><div class="line"></div><div class="line">    println(CellUtil.cloneValue(cell).toString(Charset.defaultCharset()))</div><div class="line">    </div><div class="line">    connection.close()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>connection.getTable</code> 返回 <code>HTable</code> 实例。</p>
+<h1 id="2-解析"><a href="#2-解析" class="headerlink" title="2. 解析"></a>2. 解析</h1><ul>
+<li>1、调用 <code>HTable#get</code> 方法，创建 <code>RegionServerCallable</code> 实例。执行 <code>RegionServerCallable#prepare</code> <ul>
+<li>调用方法: <code>this.location = regionLocator.getRegionLocation(row, reload);</code></li>
+<li>获取 <code>row</code> 这行记录所在的 <code>region server</code> 的地址 <code>location</code>。</li>
+<li>具体操作就是去查询 <code>hbase:meta</code> 表, 找出符合的 <code>regionInfo</code> 信息。代码位于 <code>ConnectionManager#locateRegionInMeta</code>, 创建一个 <code>反向scan</code> 去查询, 整体还算OK。</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[Unit]</div><div class="line">Description=Starts and stops web service</div><div class="line">After=syslog.target</div><div class="line"></div><div class="line">[Service]</div><div class="line">EnvironmentFile=/etc/myapp/%i</div><div class="line">User=root</div><div class="line">Group=root</div><div class="line">ExecStart=/usr/local/bin/myapp-startup %i</div><div class="line">#Type=forking</div><div class="line">SuccessExitStatus=143</div><div class="line">SyslogIdentifier=myapp-web</div><div class="line"></div><div class="line">[Install]</div><div class="line">WantedBy=multi-user.target</div></pre></td></tr></table></figure>
-<ul>
-<li><code>myapp-startup</code>脚本编写如下，记得修改成 <code>755</code> 权限：</li>
+</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line"></div><div class="line"># http://stackoverflow.com/a/6482403</div><div class="line">if [ $# -eq 0 ]; then</div><div class="line">    echo &quot;No module supplied&quot;</div><div class="line">    exit 1</div><div class="line">fi</div><div class="line"></div><div class="line">module=$1</div><div class="line"></div><div class="line">echo $module</div><div class="line">echo $JAVA_OPTS &gt;&gt; /var/testparam.log</div><div class="line">/var/myapp/myapp-$module-1.0-SNAPSHOT.jar</div></pre></td></tr></table></figure>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-07-04-084718.png" alt=""></p>
+<p>关于 <code>hbase:meta</code> 里面的数据信息，需要自行参考其他。基本规则就是 <code>HRegionInfo</code> 类的信息。</p>
 <ul>
-<li>其次是 <code>/etc/myapp/%i</code> 的配置, 比如叫做 <code>web</code>的文件, 内容如下</li>
+<li>2、找到对应的 <code>Region ServerName</code>, 调用RPC请求, 最终调用 <code>RSRpcServices#get方法</code>。然后就是获取 <code>region</code>，然后调用对应的 <code>get</code> 方法。</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">JAVA_HOME=/usr/local/jdk</div><div class="line">PID_FOLDER=/var/run/</div><div class="line">LOG_FOLDER=/var/log/myapp</div><div class="line">JAVA_OPTS=  -Xmx512m  -Xms512m -server -XX:+AggressiveOpts -XX:+UseFastAccessorMethods      \</div><div class="line">            -Dlogging.file=/var/log/myapp/web.log \</div><div class="line">            -Ddev                                 \</div><div class="line">            -Dserver.context-path=/               \</div><div class="line">            -Dserver.port=8080                    \</div><div class="line">            -Dspring.application.name=myapp \</div><div class="line">            -Dspring.redis.database=1     \</div><div class="line">            -Dspring.redis.host=127.0.0.1      \</div><div class="line">            -Dspring.redis.port=6379       \</div><div class="line">            -Dspring.datasource.type=com.zaxxer.hikari.HikariDataSource  \</div><div class="line">            -Dspring.datasource.driver-class-name=com.mysql.jdbc.Driver       \</div><div class="line">-Dspring.datasource.url=jdbc:mysql://127.0.0.1:3306/myapp?useUnicode=true&amp;characterEncoding=UTF8&amp;autoReconnect=true       \</div><div class="line">            -Dspring.datasource.username=root       \</div><div class="line">            -Dspring.datasource.password=123456       \</div></pre></td></tr></table></figure>
+<p>在继续 <code>Region#get</code> 之前，这里需要大致了解下 <code>HRegion</code> 对象的结构，HBase的基本架构如下：</p>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-07-04-090448.png" alt=""></p>
+<p>可以看到，对象之间的关系：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="number">1</span>. RegionServer包含多个Region, 和一个HLog(WAL)。</div><div class="line"><span class="number">2</span>. 一个 Table 被拆分成了多个 Region, Region可以分布在不同的机器上。</div><div class="line"><span class="number">3</span>. 一个 Region 包含一个 Row 的所有 Column 的数据, 以 Row 的维度进行切割。</div><div class="line"><span class="number">4</span>. 一个 Region 包含多个 Store, Store 是列族隔离的, 包含一个列族的数据。</div><div class="line"><span class="number">5</span>. 一个 Store 包含 memstore 和 多个 StoreFile，StoreFile 是对 HFile 的封装, 存储具体的数据。</div><div class="line"><span class="number">6</span>. HFile 的数据来自 memstore 的 flushing操作。</div></pre></td></tr></table></figure>
 <ul>
-<li>启动服务</li>
+<li>3、下面走入 <code>HRegion#get</code> 方法，这里会将 <code>get</code> 转换成 <code>scan</code>, 然后返回 <code>RegionScannerImpl</code>，构造方法部分代码如下。</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl start myapp@web</div></pre></td></tr></table></figure>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-07-04-112436.png" alt=""></p>
 <ul>
-<li>如果想要开机启动的话，执行</li>
+<li>4、对于每个 store, 返回一个 <code>StoreScanner</code>. 里面干的事情如下：</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">systemctl enable myapp@.service</div></pre></td></tr></table></figure>
-<p><a href="http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#deployment-systemd-service" target="_blank" rel="external">参照官方文档</a></p>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-07-04-120938.png" alt=""></p>
+<ul>
+<li><p>5、初始化 <code>this.storeHeap = new KeyValueHeap(scanners, region.comparator);</code> 将所有的 scanners 放到一个 <code>优先级堆</code> 中。<code>comparator</code> 是一个比较器, 实现为 <code>KVScannerComparator</code>。</p>
+</li>
+<li><p>6、最后执行 <code>RegionScannerImpl#next</code>, 从 <code>storeHeap</code> 中不停的 <code>peek()</code> Cell 出来。 一步步获取下一个数据, 直到取出为止。</p>
+</li>
+</ul>
+<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><p>关于 <code>HFile</code> 的结构</p>
+<ul>
+<li><a href="https://blog.csdn.net/yangbutao/article/details/8394149" target="_blank" rel="external">关于HFile的存储结构梳理以及快速定位rowkey</a></li>
+<li><a href="https://www.jianshu.com/p/cd71925375a0" target="_blank" rel="external">HFile的格式</a></li>
+</ul>
+<p>关于 <code>MemStore</code> 或者 <code>StoreFile(HFile)</code> 在内存中的结构(<code>LSM树</code>), 以及 <code>MemStore</code> flush 数据的过程可以参考如下：</p>
+<ul>
+<li><a href="https://blog.csdn.net/u014774781/article/details/52105708" target="_blank" rel="external">LSM树存储引擎</a></li>
+<li><a href="https://www.cnblogs.com/yanghuahui/p/3483754.html" target="_blank" rel="external">LSM树由来</a></li>
+</ul>
+<p>关于 <code>BloomFilter</code> 可以参考 </p>
+<ul>
+<li><a href="https://blog.csdn.net/lovebyz/article/details/51867184" target="_blank" rel="external">HBase BloomFilter</a></li>
+<li><a href="https://blog.csdn.net/u010809185/article/details/51165291" target="_blank" rel="external">Hbase 高级特性Bloom filter</a></li>
+</ul>
+<h1 id="4-参考"><a href="#4-参考" class="headerlink" title="4. 参考"></a>4. 参考</h1><ul>
+<li><a href="https://www.cnblogs.com/foxmailed/p/3958546.html" target="_blank" rel="external">HBase Scan流程分析</a></li>
+</ul>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/spring/">spring</a><a href="/tags/springboot/">springboot</a>
+  <span></span> <a href="/tags/hbase/">hbase</a><a href="/tags/源码/">源码</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/springboot/">springboot</a>
+  <a class="article-category-link" href="/categories/hbase/">hbase</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/spring/部署springboot应用_CentOS7/" data-title="部署springboot应用_centOS7 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/HBase/Hbase源码04_Get/" data-title="Hbase源码04_Get | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -170,19 +190,11 @@ springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/icemimosa/spring/部署springboot应用_CentOS6/" title="部署springboot应用_centOS6">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  部署springboot应用_centOS6</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/icemimosa/Java/ArrayList源码分析/"  title="ArrayList源码分析">
+<a href="/icemimosa/HBase/Hbase源码03_创建表/"  title="Hbase源码03_创建表">
  <strong>NEXT:</strong><br/> 
- <span>ArrayList源码分析
+ <span>Hbase源码03_创建表
 </span>
 </a>
 </div>
@@ -200,7 +212,7 @@ springboot应用可以使用 init.d/systemd 被轻易的部署为 Unix/Linux 的
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#部署springboot应用-centOS7"><span class="toc-text">部署springboot应用_centOS7</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hbase源码04-Get"><span class="toc-text">Hbase源码04_Get</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-代码示例-kotlin"><span class="toc-text">1. 代码示例 (kotlin)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-解析"><span class="toc-text">2. 解析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-总结"><span class="toc-text">3. 总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-参考"><span class="toc-text">4. 参考</span></a></li></ol>
   </div>
 
 <div id="asidepart">
