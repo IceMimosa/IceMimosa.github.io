@@ -89,6 +89,23 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
+    <a href="/icemimosa/Java/BitSet源码分析/" title="Java BitSet源码分析" itemprop="url">
+  
+      <time datetime="2018-05-09T08:35:00.000Z" itemprop="datePublished">2018-05-09</time>
+    <h1 itemprop="name">Java BitSet源码分析</h1>
+    
+     
+           <p itemprop="description" >[TOC]
+Java BitSet源码分析1. 构造方法12public BitSet() // 或者 public BitSet(int nbits)
+两者的代码基本相似，主要调用了 initWords方法：
+123456789101112// nbits默认传进来的是 1 &amp;</p>
+        
+    
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
     <a href="/icemimosa/Java/BitSet基本学习/" title="Java BitSet基本学习" itemprop="url">
   
       <time datetime="2018-05-08T08:35:00.000Z" itemprop="datePublished">2018-05-08</time>
@@ -250,22 +267,6 @@ OPTIONS如下：
   </a>
 </section>
 
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/icemimosa/redis/03_Redis基本键的管理/" title="03_Redis基本键的管理" itemprop="url">
-  
-      <time datetime="2017-05-15T04:30:16.000Z" itemprop="datePublished">2017-05-15</time>
-    <h1 itemprop="name">03_Redis基本键的管理</h1>
-    
-     
-           <p itemprop="description" >[TOC]
-03_Redis基本键的管理1. 简介针对键的管理，如type，del，object，exists，expire等，下面介绍几个重要的。
-2. 单个键的命令2.1 键重命名123456789101112131415$ rename key newkey&amp;gt; 示例1</p>
-        
-    
-  </a>
-</section>
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -306,7 +307,7 @@ OPTIONS如下：
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>1</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>5</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>6</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -337,7 +338,7 @@ OPTIONS如下：
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>10</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>5</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>6</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -365,7 +366,7 @@ OPTIONS如下：
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>11</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>12</sup></a></li>
 		
 		</ul>
 </div>
@@ -379,7 +380,7 @@ OPTIONS如下：
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/hive/" style="font-size: 17.5px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 10px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 16.25px;">oozie</a> <a href="/tags/redis/" style="font-size: 18.75px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 17.5px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 15px;">hbase</a> <a href="/tags/hive/" style="font-size: 17.5px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 10px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 16.25px;">oozie</a> <a href="/tags/redis/" style="font-size: 18.75px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
     </div>
   </div>
 
