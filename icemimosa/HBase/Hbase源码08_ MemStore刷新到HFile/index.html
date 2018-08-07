@@ -7,13 +7,14 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>Sqoop命令 | Ice の Mimosa</title>
+    <title>Hbase源码08_MemStore刷新到HFile | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
-    <meta name="description" content="Sqoop命令1. sqoop导入基本命令
-1sqoop  import  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table bvs_users  --fields-termin">
+    <meta name="description" content="[TOC]
+Hbase源码08_MemStore刷新到HFile1. PUT 最后的代码在PUT代码解析的最后，当MemStore写入到一定的阀值，就会将数据flushing到HFile中，代码如下：
+1234567891011  ......  ......&amp;#125; finally &amp;#123">
     
     
     
@@ -90,15 +91,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/sqoop/Sqoop命令/" title="Sqoop命令" itemprop="url">Sqoop命令</a>
+      <a href="/icemimosa/HBase/Hbase源码08_ MemStore刷新到HFile/" title="Hbase源码08_MemStore刷新到HFile" itemprop="url">Hbase源码08_MemStore刷新到HFile</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-10-12T07:30:16.000Z" itemprop="datePublished">2016-10-12</time>
-    更新日期:<time datetime="2017-05-02T10:50:59.000Z" itemprop="dateModified">2017-05-02</time>
+    <time datetime="2018-07-15T07:42:16.000Z" itemprop="datePublished">2018-07-15</time>
+    更新日期:<time datetime="2018-08-07T07:22:30.148Z" itemprop="dateModified">2018-08-07</time>
     
   </p>
 </header>
@@ -107,67 +108,92 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Sqoop命令"><span class="toc-text">Sqoop命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-sqoop导入"><span class="toc-text">1. sqoop导入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-sqoop导出"><span class="toc-text">2. sqoop导出</span></a></li></ol></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hbase源码08-MemStore刷新到HFile"><span class="toc-text">Hbase源码08_MemStore刷新到HFile</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-PUT-最后的代码"><span class="toc-text">1. PUT 最后的代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-requestFlush"><span class="toc-text">2. requestFlush</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-FlushHandler-run"><span class="toc-text">3. FlushHandler#run()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-flushRegion-方法"><span class="toc-text">4. flushRegion 方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-HRegion-flush-方法"><span class="toc-text">5. HRegion#flush 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-internalPrepareFlushCache-阶段"><span class="toc-text">5.1 internalPrepareFlushCache 阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-internalFlushCacheAndCommit-阶段"><span class="toc-text">5.2 internalFlushCacheAndCommit 阶段</span></a></li></ol></li></ol></li></ol>
 		</div>
 		
-		<h1 id="Sqoop命令"><a href="#Sqoop命令" class="headerlink" title="Sqoop命令"></a>Sqoop命令</h1><h2 id="1-sqoop导入"><a href="#1-sqoop导入" class="headerlink" title="1. sqoop导入"></a>1. sqoop导入</h2><p><strong>基本命令</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqoop  import  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table bvs_users  --fields-terminated-by &quot;\0001&quot;  --lines-terminated-by &apos;\n&apos;    --null-string &apos;\\N&apos;  --null-non-string  &apos;\\N&apos;  -m 1 --hive-table s_bvs_users --hive-import --hive-overwrite --delete-target-dir --hive-drop-import-delims</div></pre></td></tr></table></figure>
-<blockquote>
-<p>参数解释:</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">import:指明该模式为导入模式</div><div class="line">--connect: jdbc连接数据库的参数</div><div class="line">--table: 数据库中要导入的的表名	</div><div class="line">--fields-terminated-by &quot;\0001&quot;: 文件之间分隔符为\0001,hive默认即为\0001</div><div class="line">--lines-terminated-by &apos;\n&apos;: 行之间的分隔符为&apos;\n&apos;，hive默认为&apos;\n&apos;且sqoop只支持&apos;\n&apos;导入</div><div class="line">--null-string: 将数据库中string类型的字段中的null字段替换为接下来指定的参数</div><div class="line">--null-non-string: 将数据库中非string类型的字段中的null字段替换为接下来指定的参数</div><div class="line">-m: 指定几个mapper任务来跑，若该表有主键，则可以不需要指定--split-by参数，否则必须制定--split-by参数</div><div class="line">--hive-table: 导入到hive中的哪个表，即hive中该表的表名</div><div class="line">--hive-import: 指明需要导入到hive中</div><div class="line">--hive-overwrite: 覆盖之前表中存在的全部数据</div><div class="line">--delete-target-dir: 删除目标目录如果导入的目标目录的存在的话</div><div class="line">--hive-drop-import-delims :将导入的数据中的 \n, \r, 和 \01 分隔符删掉</div></pre></td></tr></table></figure>
-<p><strong>高级功能</strong></p>
+		<p>[TOC]</p>
+<h1 id="Hbase源码08-MemStore刷新到HFile"><a href="#Hbase源码08-MemStore刷新到HFile" class="headerlink" title="Hbase源码08_MemStore刷新到HFile"></a>Hbase源码08_MemStore刷新到HFile</h1><h2 id="1-PUT-最后的代码"><a href="#1-PUT-最后的代码" class="headerlink" title="1. PUT 最后的代码"></a>1. PUT 最后的代码</h2><p>在PUT代码解析的最后，当MemStore写入到一定的阀值，就会将数据flushing到HFile中，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">  ......</div><div class="line">  ......</div><div class="line">&#125; <span class="keyword">finally</span> &#123;</div><div class="line">  closeRegionOperation();</div><div class="line">  <span class="comment">// 判断是否达到 flush size</span></div><div class="line">  <span class="keyword">if</span> (!mutations.isEmpty() &amp;&amp;</div><div class="line">      isFlushSize(<span class="keyword">this</span>.addAndGetGlobalMemstoreSize(addedSize))) &#123;</div><div class="line">    <span class="comment">// 请求 flush  </span></div><div class="line">    requestFlush();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <ul>
-<li>字符删除或替换</li>
+<li>this.addAndGetGlobalMemstoreSize 增加<code>当前 HRegion</code> 的 <code>MemstoreSize + addedSize</code></li>
+<li>isFlushSize 就是判断阀值，可以通过建表的时候配置 <code>MEMSTORE_FLUSHSIZE</code>。也可以通过全局配置 <code>hbase.hregion.memstore.flush.size</code> 进行配置，默认 <code>128M</code>。</li>
+<li>然后执行 <code>requestFlush()</code></li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">--hive-delims-replacement: 将导入的数据中的 \n, \r, 和 \01 分隔符替换为自己指定的符号</div></pre></td></tr></table></figure>
+<h2 id="2-requestFlush"><a href="#2-requestFlush" class="headerlink" title="2. requestFlush"></a>2. requestFlush</h2><p>该方法最后执行的代码如下，创建一个FlushRegionEntry，然后提交到flush队列中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// MemStoreFlusher 类</span></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">requestFlush</span><span class="params">(Region r, <span class="keyword">boolean</span> forceFlushAllStores)</span> </span>&#123;</div><div class="line">	<span class="keyword">synchronized</span> (regionsInQueue) &#123;</div><div class="line">	  <span class="keyword">if</span> (!regionsInQueue.containsKey(r)) &#123;</div><div class="line">	    <span class="comment">// This entry has no delay so it will be added at the top of the flush</span></div><div class="line">	    <span class="comment">// queue.  It'll come out near immediately.</span></div><div class="line">	    FlushRegionEntry fqe = <span class="keyword">new</span> FlushRegionEntry(r, forceFlushAllStores);</div><div class="line">	    <span class="keyword">this</span>.regionsInQueue.put(r, fqe);</div><div class="line">	    <span class="keyword">this</span>.flushQueue.add(fqe);</div><div class="line">	  &#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>MemStoreFlusher</code>类是在 HRegionServer 启动的时候初始化的类，在初始化过程中，会初始化一个 <code>FlushHandler</code> 类的数组，这个类就是专门用来处理flush操作的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> handlerCount = conf.getInt(<span class="string">"hbase.hstore.flusher.count"</span>, <span class="number">2</span>);</div><div class="line"><span class="keyword">this</span>.flushHandlers = <span class="keyword">new</span> FlushHandler[handlerCount];</div></pre></td></tr></table></figure>
+<p><code>FlushHandler</code> 是实现了Runnable接口，即后面执行它的<code>run方法</code>。</p>
+<h2 id="3-FlushHandler-run"><a href="#3-FlushHandler-run" class="headerlink" title="3. FlushHandler#run()"></a>3. FlushHandler#run()</h2><ul>
+<li>从 <code>flushQueue</code> 中取出一个 <code>FlushQueueEntry</code>，如果是<code>FlushRegionEntry实例</code>，进行flush操作：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 如果是 FlushRegionEntry, 进行 flush 操作</span></div><div class="line">FlushRegionEntry fre = (FlushRegionEntry) fqe;</div><div class="line"><span class="keyword">if</span> (!flushRegion(fre)) &#123;</div><div class="line">	<span class="keyword">break</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <ul>
-<li>指定分区键</li>
+<li><code>flushRegion</code> 代码如下，<code>split&amp;compact操作</code> 暂时跳过</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">--hive-partition-key: 指定分区键</div><div class="line">--hive-partition-value: 与分区键对应的该分区键的值</div></pre></td></tr></table></figure>
+<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-08-07-053242.png" alt=""></p>
+<h2 id="4-flushRegion-方法"><a href="#4-flushRegion-方法" class="headerlink" title="4. flushRegion 方法"></a>4. flushRegion 方法</h2><ul>
+<li>从队列中移除该 flush entry</li>
+<li>获取当前MemStore的读写锁</li>
+<li>flush操作</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">FlushResult flushResult = region.flush(forceFlushAllStores);</div></pre></td></tr></table></figure>
 <ul>
-<li>增量导入</li>
+<li>判断是否任然需要 <code>split&amp;compact操作</code></li>
+<li>释放锁，唤醒获取flush entry的线程</li>
 </ul>
-<p>sqoop支持用 <code>--incremental lastmodified</code> 设置进行增量导入，比如</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">--incremental lastmodified </div><div class="line">--check-column created </div><div class="line">--last-value &apos;2012-02-01 11:0:00&apos;: 就是只导入created比&apos;2012-02-01 11:0:00&apos;更大的数据。</div><div class="line">--check-column: 根据此列进行判断</div><div class="line">--last-value: 判断大于此值的进行导入</div></pre></td></tr></table></figure>
-<h2 id="2-sqoop导出"><a href="#2-sqoop导出" class="headerlink" title="2. sqoop导出"></a>2. sqoop导出</h2><p><strong>基本命令</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqoop  export  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table bvs_users --export-dir hdfs://127.0.0.1:9000/user/hive/warehouse/s_bvs_users --input-fields-terminated-by &quot;\0001&quot;  --input-lines-terminated-by &apos;\n&apos;   --input-null-string &apos;\\N&apos;  --input-null-non-string &apos;\\N&apos;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>参数解释：</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">--export-dir: 需要指定导出的表所在的在hdfs中的目录；</div><div class="line">--input-fields-terminated-by &quot;\0001&quot;: 指定以\0001为分隔符</div><div class="line">--input-lines-terminated-by &apos;\n&apos;: 指定以\n为列分隔符</div><div class="line">--input-null-string: 字符类型等于该参数指定的值的，则转换为NULL</div><div class="line">--input-null-non-string &apos;\\N&apos;: 非字符类型等于该参数指定的值的，则转换为NULL</div></pre></td></tr></table></figure>
-<p><strong>高级功能</strong></p>
+<h2 id="5-HRegion-flush-方法"><a href="#5-HRegion-flush-方法" class="headerlink" title="5. HRegion#flush 方法"></a>5. HRegion#flush 方法</h2><p>实际执行 <code>flushcache</code> 方法：</p>
 <ul>
-<li>增量导出</li>
+<li>判断是否可以执行flush操作，不可以flush直接返回 <code>CANNOT_FLUSH的FlushResult</code></li>
+<li>获取当前HRegion的读写锁</li>
+<li>========== 执行 preFlush 协处理器</li>
+<li>执行 <code>FlushResult fs = internalFlushcache(specificStoresToFlush, status, writeFlushRequestWalMarker);</code></li>
+<li>========== 执行 postFlush 协处理器</li>
+<li>释放锁，返回成功的FlushResult结果</li>
 </ul>
-<p>增加参数：<code>--update-mode allowinsert --update-key id</code><br>–update-mode allowinsert： 设置模式为allowinsert模式<br>–update-key id： 设置更新列为id，意味着以id这列的值进行匹配，匹配到的更新，匹配不到的插入（在allowinsert模式下）</p>
-<blockquote>
-<p>PS:</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1.若删除以前数据，则不支持增量导出的删除。它以指定列进行匹配时，会翻译为以下语句：</div><div class="line">匹配到的：update ** set where id = xxx；匹配不到的：insert into values()</div><div class="line">2.增量导出时若分区表需要用户指定分区目录</div></pre></td></tr></table></figure>
-<blockquote>
-<p>参考文档： <a href="https://sqoop.apache.org/docs/1.4.6/SqoopUserGuide.html#_create_oracle_tables" target="_blank" rel="external">官方的使用者手册</a>  </p>
-</blockquote>
+<p><code>internalFlushcache</code> 主要代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> FlushResult <span class="title">internalFlushcache</span><span class="params">(<span class="keyword">final</span> WAL wal, <span class="keyword">final</span> <span class="keyword">long</span> myseqid,</span></span></div><div class="line">  <span class="keyword">final</span> Collection&lt;Store&gt; storesToFlush, MonitoredTask status, <span class="keyword">boolean</span> writeFlushWalMarker)</div><div class="line">      <span class="keyword">throws</span> IOException &#123;</div><div class="line">	<span class="comment">// 准备阶段</span></div><div class="line">	PrepareFlushResult result = internalPrepareFlushCache(wal, myseqid, storesToFlush, status, writeFlushWalMarker);</div><div class="line">	<span class="keyword">if</span> (result.result == <span class="keyword">null</span>) &#123;</div><div class="line">	  <span class="comment">// 提交阶段</span></div><div class="line">	  <span class="keyword">return</span> internalFlushCacheAndCommit(wal, status, result, storesToFlush);</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">	  <span class="keyword">return</span> result.result; <span class="comment">// early exit due to failure from prepare stage</span></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="5-1-internalPrepareFlushCache-阶段"><a href="#5-1-internalPrepareFlushCache-阶段" class="headerlink" title="5.1 internalPrepareFlushCache 阶段"></a>5.1 internalPrepareFlushCache 阶段</h3><ul>
+<li>准备写快照的日志WAL和mvcc多版本控制。</li>
+<li>准备 <code>MemStore的快照</code>。<code>DefaultMemStore</code> 内部会将<code>原空间(cellSet)</code> 赋值给 <code>snapshot对象</code>，然后为<code>cellSet</code>重新新建一块空间。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Prepare flush (take a snapshot)</span></div><div class="line"><span class="keyword">for</span> (StoreFlushContext flush : storeFlushCtxs.values()) &#123;</div><div class="line">  flush.prepare();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>提交日志。</li>
+</ul>
+<h3 id="5-2-internalFlushCacheAndCommit-阶段"><a href="#5-2-internalFlushCacheAndCommit-阶段" class="headerlink" title="5.2 internalFlushCacheAndCommit 阶段"></a>5.2 internalFlushCacheAndCommit 阶段</h3><ul>
+<li>执行flushCache操作，将file写入临时目录，返回路径</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// A.  Flush memstore to all the HStores.</span></div><div class="line"><span class="comment">// Keep running vector of all store files that includes both old and the</span></div><div class="line"><span class="comment">// just-made new flush store file. The new flushed file is still in the</span></div><div class="line"><span class="comment">// tmp directory.</span></div><div class="line"></div><div class="line"><span class="keyword">for</span> (StoreFlushContext flush : storeFlushCtxs.values()) &#123;</div><div class="line">	flush.flushCache(status);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>执行commit操作，将file写到实际的文件目录中。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Switch snapshot (in memstore) -&gt; new hfile (thus causing</span></div><div class="line"><span class="comment">// all the store scanners to reset/reseek).</span></div><div class="line"></div><div class="line"><span class="comment">// stores.values() and storeFlushCtxs have same order</span></div><div class="line"><span class="keyword">for</span> (StoreFlushContext flush : storeFlushCtxs.values()) &#123;</div><div class="line">	<span class="keyword">boolean</span> needsCompaction = flush.commit(status);</div><div class="line">	......</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>从<code>memstoreSize</code>里面减去flush大小的值</li>
+<li>记录WAL日志，返回flush结果</li>
+</ul>
+<p>至此，flush操作流程基本完毕了。。。至于 <code>MemStore -&gt; HFile</code> 数据是怎样形成的，这个后面再窥探、、😅</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/sqoop/">sqoop</a>
+  <span></span> <a href="/tags/hbase/">hbase</a><a href="/tags/源码/">源码</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/sqoop/">sqoop</a>
+  <a class="article-category-link" href="/categories/hbase/">hbase</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/sqoop/Sqoop命令/" data-title="Sqoop命令 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/HBase/Hbase源码08_ MemStore刷新到HFile/" data-title="Hbase源码08_MemStore刷新到HFile | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -176,19 +202,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/icemimosa/sqoop/Sqoop源码改造/" title="Sqoop 源码改造">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  Sqoop 源码改造</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/icemimosa/oozie/Oozie-9_自定义UDF和Action节点/"  title="Oozie-9_自定义UDF和Action节点">
+<a href="/icemimosa/HBase/Hbase源码07_HMaster启动/"  title="Hbase源码07_HMaster启动">
  <strong>NEXT:</strong><br/> 
- <span>Oozie-9_自定义UDF和Action节点
+ <span>Hbase源码07_HMaster启动
 </span>
 </a>
 </div>
@@ -206,7 +224,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Sqoop命令"><span class="toc-text">Sqoop命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-sqoop导入"><span class="toc-text">1. sqoop导入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-sqoop导出"><span class="toc-text">2. sqoop导出</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hbase源码08-MemStore刷新到HFile"><span class="toc-text">Hbase源码08_MemStore刷新到HFile</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-PUT-最后的代码"><span class="toc-text">1. PUT 最后的代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-requestFlush"><span class="toc-text">2. requestFlush</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-FlushHandler-run"><span class="toc-text">3. FlushHandler#run()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-flushRegion-方法"><span class="toc-text">4. flushRegion 方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-HRegion-flush-方法"><span class="toc-text">5. HRegion#flush 方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-internalPrepareFlushCache-阶段"><span class="toc-text">5.1 internalPrepareFlushCache 阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-internalFlushCacheAndCommit-阶段"><span class="toc-text">5.2 internalFlushCacheAndCommit 阶段</span></a></li></ol></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
