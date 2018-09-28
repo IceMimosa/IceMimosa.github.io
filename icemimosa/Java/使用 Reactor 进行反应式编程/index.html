@@ -7,13 +7,13 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>Sqoop命令 | Ice の Mimosa</title>
+    <title>使用 Reactor 进行反应式编程 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
-    <meta name="description" content="Sqoop命令1. sqoop导入基本命令
-1sqoop  import  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table bvs_users  --fields-termin">
+    <meta name="description" content="使用 Reactor 进行反应式编程学习文档：使用 Reactor 进行反应式编程
+反应式编程（Reactive Programming）这种新的编程范式越来越受到开发人员的欢迎。在 Java 社区中比较流行的是 RxJava 和 RxJava 2。本文要介绍的是另外一个新的反应式编程库 React">
     
     
     
@@ -90,15 +90,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/sqoop/Sqoop命令/" title="Sqoop命令" itemprop="url">Sqoop命令</a>
+      <a href="/icemimosa/Java/使用 Reactor 进行反应式编程/" title="使用 Reactor 进行反应式编程" itemprop="url">使用 Reactor 进行反应式编程</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-10-12T07:30:16.000Z" itemprop="datePublished">2016-10-12</time>
-    更新日期:<time datetime="2017-05-02T10:50:59.000Z" itemprop="dateModified">2017-05-02</time>
+    <time datetime="2018-09-28T03:04:16.000Z" itemprop="datePublished">2018-09-28</time>
+    更新日期:<time datetime="2018-09-28T03:08:04.887Z" itemprop="dateModified">2018-09-28</time>
     
   </p>
 </header>
@@ -107,67 +107,37 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Sqoop命令"><span class="toc-text">Sqoop命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-sqoop导入"><span class="toc-text">1. sqoop导入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-sqoop导出"><span class="toc-text">2. sqoop导出</span></a></li></ol></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#使用-Reactor-进行反应式编程"><span class="toc-text">使用 Reactor 进行反应式编程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#反应式编程介绍"><span class="toc-text">反应式编程介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reactor-简介"><span class="toc-text">Reactor 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Flux-和-Mono"><span class="toc-text">Flux 和 Mono</span></a></li></ol></li></ol>
 		</div>
 		
-		<h1 id="Sqoop命令"><a href="#Sqoop命令" class="headerlink" title="Sqoop命令"></a>Sqoop命令</h1><h2 id="1-sqoop导入"><a href="#1-sqoop导入" class="headerlink" title="1. sqoop导入"></a>1. sqoop导入</h2><p><strong>基本命令</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqoop  import  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table bvs_users  --fields-terminated-by &quot;\0001&quot;  --lines-terminated-by &apos;\n&apos;    --null-string &apos;\\N&apos;  --null-non-string  &apos;\\N&apos;  -m 1 --hive-table s_bvs_users --hive-import --hive-overwrite --delete-target-dir --hive-drop-import-delims</div></pre></td></tr></table></figure>
-<blockquote>
-<p>参数解释:</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">import:指明该模式为导入模式</div><div class="line">--connect: jdbc连接数据库的参数</div><div class="line">--table: 数据库中要导入的的表名	</div><div class="line">--fields-terminated-by &quot;\0001&quot;: 文件之间分隔符为\0001,hive默认即为\0001</div><div class="line">--lines-terminated-by &apos;\n&apos;: 行之间的分隔符为&apos;\n&apos;，hive默认为&apos;\n&apos;且sqoop只支持&apos;\n&apos;导入</div><div class="line">--null-string: 将数据库中string类型的字段中的null字段替换为接下来指定的参数</div><div class="line">--null-non-string: 将数据库中非string类型的字段中的null字段替换为接下来指定的参数</div><div class="line">-m: 指定几个mapper任务来跑，若该表有主键，则可以不需要指定--split-by参数，否则必须制定--split-by参数</div><div class="line">--hive-table: 导入到hive中的哪个表，即hive中该表的表名</div><div class="line">--hive-import: 指明需要导入到hive中</div><div class="line">--hive-overwrite: 覆盖之前表中存在的全部数据</div><div class="line">--delete-target-dir: 删除目标目录如果导入的目标目录的存在的话</div><div class="line">--hive-drop-import-delims :将导入的数据中的 \n, \r, 和 \01 分隔符删掉</div></pre></td></tr></table></figure>
-<p><strong>高级功能</strong></p>
-<ul>
-<li>字符删除或替换</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">--hive-delims-replacement: 将导入的数据中的 \n, \r, 和 \01 分隔符替换为自己指定的符号</div></pre></td></tr></table></figure>
-<ul>
-<li>指定分区键</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">--hive-partition-key: 指定分区键</div><div class="line">--hive-partition-value: 与分区键对应的该分区键的值</div></pre></td></tr></table></figure>
-<ul>
-<li>增量导入</li>
-</ul>
-<p>sqoop支持用 <code>--incremental lastmodified</code> 设置进行增量导入，比如</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">--incremental lastmodified </div><div class="line">--check-column created </div><div class="line">--last-value &apos;2012-02-01 11:0:00&apos;: 就是只导入created比&apos;2012-02-01 11:0:00&apos;更大的数据。</div><div class="line">--check-column: 根据此列进行判断</div><div class="line">--last-value: 判断大于此值的进行导入</div></pre></td></tr></table></figure>
-<h2 id="2-sqoop导出"><a href="#2-sqoop导出" class="headerlink" title="2. sqoop导出"></a>2. sqoop导出</h2><p><strong>基本命令</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqoop  export  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table bvs_users --export-dir hdfs://127.0.0.1:9000/user/hive/warehouse/s_bvs_users --input-fields-terminated-by &quot;\0001&quot;  --input-lines-terminated-by &apos;\n&apos;   --input-null-string &apos;\\N&apos;  --input-null-non-string &apos;\\N&apos;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>参数解释：</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">--export-dir: 需要指定导出的表所在的在hdfs中的目录；</div><div class="line">--input-fields-terminated-by &quot;\0001&quot;: 指定以\0001为分隔符</div><div class="line">--input-lines-terminated-by &apos;\n&apos;: 指定以\n为列分隔符</div><div class="line">--input-null-string: 字符类型等于该参数指定的值的，则转换为NULL</div><div class="line">--input-null-non-string &apos;\\N&apos;: 非字符类型等于该参数指定的值的，则转换为NULL</div></pre></td></tr></table></figure>
-<p><strong>高级功能</strong></p>
-<ul>
-<li>增量导出</li>
-</ul>
-<p>增加参数：<code>--update-mode allowinsert --update-key id</code><br>–update-mode allowinsert： 设置模式为allowinsert模式<br>–update-key id： 设置更新列为id，意味着以id这列的值进行匹配，匹配到的更新，匹配不到的插入（在allowinsert模式下）</p>
-<blockquote>
-<p>PS:</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1.若删除以前数据，则不支持增量导出的删除。它以指定列进行匹配时，会翻译为以下语句：</div><div class="line">匹配到的：update ** set where id = xxx；匹配不到的：insert into values()</div><div class="line">2.增量导出时若分区表需要用户指定分区目录</div></pre></td></tr></table></figure>
-<blockquote>
-<p>参考文档： <a href="https://sqoop.apache.org/docs/1.4.6/SqoopUserGuide.html#_create_oracle_tables" target="_blank" rel="external">官方的使用者手册</a>  </p>
-</blockquote>
+		<h1 id="使用-Reactor-进行反应式编程"><a href="#使用-Reactor-进行反应式编程" class="headerlink" title="使用 Reactor 进行反应式编程"></a>使用 Reactor 进行反应式编程</h1><p>学习文档：<a href="https://www.ibm.com/developerworks/cn/java/j-cn-with-reactor-response-encode/index.html?lnk=hmhm" target="_blank" rel="external">使用 Reactor 进行反应式编程</a></p>
+<p>反应式编程（Reactive Programming）这种新的编程范式越来越受到开发人员的欢迎。在 Java 社区中比较流行的是 RxJava 和 RxJava 2。本文要介绍的是另外一个新的反应式编程库 Reactor。</p>
+<h2 id="反应式编程介绍"><a href="#反应式编程介绍" class="headerlink" title="反应式编程介绍"></a>反应式编程介绍</h2><p>反应式编程来源于数据流和变化的传播，意味着由底层的执行模型负责通过数据流来自动传播变化。比如求值一个简单的表达式 c=a+b，当 a 或者 b 的值发生变化时，传统的编程范式需要对 a+b 进行重新计算来得到 c 的值。如果使用反应式编程，当 a 或者 b 的值发生变化时，c 的值会自动更新。反应式编程最早由 .NET 平台上的 Reactive Extensions (Rx) 库来实现。后来迁移到 Java 平台之后就产生了著名的 RxJava 库，并产生了很多其他编程语言上的对应实现。在这些实现的基础上产生了后来的反应式流（Reactive Streams）规范。该规范定义了反应式流的相关接口，并将集成到 Java 9 中。</p>
+<p>在传统的编程范式中，我们一般通过迭代器（Iterator）模式来遍历一个序列。这种遍历方式是由调用者来控制节奏的，采用的是拉的方式。每次由调用者通过 next()方法来获取序列中的下一个值。使用反应式流时采用的则是推的方式，即常见的发布者-订阅者模式。当发布者有新的数据产生时，这些数据会被推送到订阅者来进行处理。在反应式流上可以添加各种不同的操作来对数据进行处理，形成数据处理链。这个以声明式的方式添加的处理链只在订阅者进行订阅操作时才会真正执行。</p>
+<p>反应式流中第一个重要概念是负压（backpressure）。在基本的消息推送模式中，当消息发布者产生数据的速度过快时，会使得消息订阅者的处理速度无法跟上产生的速度，从而给订阅者造成很大的压力。当压力过大时，有可能造成订阅者本身的奔溃，所产生的级联效应甚至可能造成整个系统的瘫痪。负压的作用在于提供一种从订阅者到生产者的反馈渠道。订阅者可以通过 request()方法来声明其一次所能处理的消息数量，而生产者就只会产生相应数量的消息，直到下一次 request()方法调用。这实际上变成了推拉结合的模式。</p>
+<h2 id="Reactor-简介"><a href="#Reactor-简介" class="headerlink" title="Reactor 简介"></a>Reactor 简介</h2><p>前面提到的 RxJava 库是 JVM 上反应式编程的先驱，也是反应式流规范的基础。RxJava 2 在 RxJava 的基础上做了很多的更新。不过 RxJava 库也有其不足的地方。RxJava 产生于反应式流规范之前，虽然可以和反应式流的接口进行转换，但是由于底层实现的原因，使用起来并不是很直观。RxJava 2 在设计和实现时考虑到了与规范的整合，不过为了保持与 RxJava 的兼容性，很多地方在使用时也并不直观。Reactor 则是完全基于反应式流规范设计和实现的库，没有 RxJava 那样的历史包袱，在使用上更加的直观易懂。Reactor 也是 Spring 5 中反应式编程的基础。学习和掌握 Reactor 可以更好地理解 Spring 5 中的相关概念。</p>
+<p>在 Java 程序中使用 Reactor 库非常的简单，只需要通过 Maven 或 Gradle 来添加对 io.projectreactor:reactor-core 的依赖即可</p>
+<h2 id="Flux-和-Mono"><a href="#Flux-和-Mono" class="headerlink" title="Flux 和 Mono"></a>Flux 和 Mono</h2><p>Flux 和 Mono 是 Reactor 中的两个基本概念。Flux 表示的是包含 0 到 N 个元素的异步序列。在该序列中可以包含三种不同类型的消息通知：正常的包含元素的消息、序列结束的消息和序列出错的消息。当消息通知产生时，订阅者中对应的方法 onNext(), onComplete()和 onError()会被调用。Mono 表示的是包含 0 或者 1 个元素的异步序列。该序列中同样可以包含与 Flux 相同的三种类型的消息通知。Flux 和 Mono 之间可以进行转换。对一个 Flux 序列进行计数操作，得到的结果是一个 Mono<long>对象。把两个 Mono 序列合并在一起，得到的是一个 Flux 对象。</long></p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/sqoop/">sqoop</a>
+  <span></span> <a href="/tags/java/">java</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/sqoop/">sqoop</a>
+  <a class="article-category-link" href="/categories/java/">java</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/sqoop/Sqoop命令/" data-title="Sqoop命令 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/Java/使用 Reactor 进行反应式编程/" data-title="使用 Reactor 进行反应式编程 | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -176,19 +146,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/icemimosa/sqoop/Sqoop源码改造/" title="Sqoop 源码改造">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  Sqoop 源码改造</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/icemimosa/oozie/Oozie-9_自定义UDF和Action节点/"  title="Oozie-9_自定义UDF和Action节点">
+<a href="/icemimosa/HBase/Hbase源码08_ MemStore刷新到HFile/"  title="Hbase源码08_MemStore刷新到HFile">
  <strong>NEXT:</strong><br/> 
- <span>Oozie-9_自定义UDF和Action节点
+ <span>Hbase源码08_MemStore刷新到HFile
 </span>
 </a>
 </div>
@@ -206,7 +168,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Sqoop命令"><span class="toc-text">Sqoop命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-sqoop导入"><span class="toc-text">1. sqoop导入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-sqoop导出"><span class="toc-text">2. sqoop导出</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#使用-Reactor-进行反应式编程"><span class="toc-text">使用 Reactor 进行反应式编程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#反应式编程介绍"><span class="toc-text">反应式编程介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reactor-简介"><span class="toc-text">Reactor 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Flux-和-Mono"><span class="toc-text">Flux 和 Mono</span></a></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
