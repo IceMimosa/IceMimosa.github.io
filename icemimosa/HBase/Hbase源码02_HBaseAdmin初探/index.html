@@ -99,7 +99,7 @@ HBase源码02_HBaseAdmin初探1. 代码示例 (kotlin)上节我们知道 connect
     </p>
   <p class="article-time">
     <time datetime="2018-06-06T07:24:16.000Z" itemprop="datePublished">2018-06-06</time>
-    更新日期:<time datetime="2018-07-04T04:05:49.114Z" itemprop="dateModified">2018-07-04</time>
+    更新日期:<time datetime="2018-09-30T09:17:19.558Z" itemprop="dateModified">2018-09-30</time>
     
   </p>
 </header>
@@ -120,7 +120,7 @@ HBase源码02_HBaseAdmin初探1. 代码示例 (kotlin)上节我们知道 connect
 <h2 id="2-2-listNamespaceDescriptors-方法"><a href="#2-2-listNamespaceDescriptors-方法" class="headerlink" title="2.2 listNamespaceDescriptors 方法"></a>2.2 listNamespaceDescriptors 方法</h2><ul>
 <li>实际调用，下面一步步分析</li>
 </ul>
-<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-07-03-070007.png" alt=""></p>
+<p><img src="http://ice-img.pigutu.com/2018-07-03-070007.png" alt=""></p>
 <ul>
 <li><p>1、创建一个 <code>MasterCallable</code>, 返回 <code>NamespaceDescriptor[] 类型</code></p>
 <ul>
@@ -131,7 +131,7 @@ HBase源码02_HBaseAdmin初探1. 代码示例 (kotlin)上节我们知道 connect
 </ul>
 </li>
 </ul>
-<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-07-03-071541.png" alt=""></p>
+<p><img src="http://ice-img.pigutu.com/2018-07-03-071541.png" alt=""></p>
 <ul>
 <li><p>2、<code>master</code> 初始化完毕后, 继续执行 <code>call</code> 里面的代码, 主要方法就是 <code>master.listNamespaceDescriptors(...)</code></p>
 <ul>
@@ -251,7 +251,7 @@ HBase源码02_HBaseAdmin初探1. 代码示例 (kotlin)上节我们知道 connect
 		
 			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
 		
-			<li><a href="/categories/redis/" title="redis">redis<sup>12</sup></a></li>
+			<li><a href="/categories/redis/" title="redis">redis<sup>13</sup></a></li>
 		
 			<li><a href="/categories/spark/" title="spark">spark<sup>4</sup></a></li>
 		
@@ -290,7 +290,7 @@ HBase源码02_HBaseAdmin初探1. 代码示例 (kotlin)上节我们知道 connect
 		
 			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
 		
-			<li><a href="/tags/redis/" title="redis">redis<sup>12</sup></a></li>
+			<li><a href="/tags/redis/" title="redis">redis<sup>13</sup></a></li>
 		
 			<li><a href="/tags/spark/" title="spark">spark<sup>4</sup></a></li>
 		

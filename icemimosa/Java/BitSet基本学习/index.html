@@ -99,7 +99,7 @@ B">
     </p>
   <p class="article-time">
     <time datetime="2018-05-08T08:35:00.000Z" itemprop="datePublished">2018-05-08</time>
-    更新日期:<time datetime="2018-05-09T02:54:15.584Z" itemprop="dateModified">2018-05-09</time>
+    更新日期:<time datetime="2018-09-30T10:33:05.620Z" itemprop="dateModified">2018-09-30</time>
     
   </p>
 </header>
@@ -115,7 +115,7 @@ B">
 <h1 id="Java-BitSet基本学习"><a href="#Java-BitSet基本学习" class="headerlink" title="Java BitSet基本学习"></a>Java BitSet基本学习</h1><h1 id="1-基本思想"><a href="#1-基本思想" class="headerlink" title="1. 基本思想"></a>1. 基本思想</h1><p>Java的BitSet即BitMap。Java中，对于一个整型数字<code>int a = 1</code>，则 <code>a</code>占用4个字节，即32位。对于某些场景而言，这属于巨大的浪费，因为我们可以用 <code>32bit</code>来表示 <code>0~31</code>个十进制数字，而这就是Bitmap的基本思想。</p>
 <p>Bitmap可以用来处理大量（海量）数据的排序，查询以及去重。且在做如<code>用户群</code>的交集和并集运算时，也有极大的便利。</p>
 <h1 id="2-场景"><a href="#2-场景" class="headerlink" title="2. 场景"></a>2. 场景</h1><h2 id="2-1-排序（无重复数据）"><a href="#2-1-排序（无重复数据）" class="headerlink" title="2.1 排序（无重复数据）"></a>2.1 排序（无重复数据）</h2><p>假设有整型数据如 <code>[4, 10, 2, 18, 24, 11, 8, 1]</code>。如果我们把数据都放到内存中，一个整型需要4个字节，那么总共需要<code>8 * 4 = 32 Byte</code>。那如果我们按如下方式存放：</p>
-<p><img src="http://7xsz2j.com1.z0.glb.clouddn.com/2018-05-08-104832.png" alt=""></p>
+<p><img src="http://ice-img.pigutu.com/2018-05-08-104832.png" alt=""></p>
 <p>此时你可以发现只需要<code>4个字节</code>就可以搞定了。那如果有上亿的整数呢，结果可想而知。<br>看完图你就会发现，数据就已经达到了排序的目的（当然也达到了 <code>去重的目的</code>）。</p>
 <ul>
 <li>优点<ul>
@@ -248,7 +248,7 @@ B">
 		
 			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
 		
-			<li><a href="/categories/redis/" title="redis">redis<sup>12</sup></a></li>
+			<li><a href="/categories/redis/" title="redis">redis<sup>13</sup></a></li>
 		
 			<li><a href="/categories/spark/" title="spark">spark<sup>4</sup></a></li>
 		
@@ -287,7 +287,7 @@ B">
 		
 			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
 		
-			<li><a href="/tags/redis/" title="redis">redis<sup>12</sup></a></li>
+			<li><a href="/tags/redis/" title="redis">redis<sup>13</sup></a></li>
 		
 			<li><a href="/tags/spark/" title="spark">spark<sup>4</sup></a></li>
 		
