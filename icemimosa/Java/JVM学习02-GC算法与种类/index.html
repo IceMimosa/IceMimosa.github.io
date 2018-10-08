@@ -98,7 +98,7 @@ JVM学习02-GC算法与种类1. GC 简介GC（Garbage Collection） 是垃圾收
     </p>
   <p class="article-time">
     <time datetime="2017-03-15T04:00:34.000Z" itemprop="datePublished">2017-03-15</time>
-    更新日期:<time datetime="2018-03-19T16:05:59.000Z" itemprop="dateModified">2018-03-20</time>
+    更新日期:<time datetime="2018-10-08T02:27:15.537Z" itemprop="dateModified">2018-10-08</time>
     
   </p>
 </header>
@@ -116,24 +116,24 @@ JVM学习02-GC算法与种类1. GC 简介GC（Garbage Collection） 是垃圾收
    　　 </p>
 <h1 id="2-GC-算法"><a href="#2-GC-算法" class="headerlink" title="2. GC 算法"></a>2. GC 算法</h1><h2 id="2-1-引用计数法"><a href="#2-1-引用计数法" class="headerlink" title="2.1 引用计数法"></a>2.1 引用计数法</h2><p>首先呢，java并没有采用引用计数法作为GC算法，因为它有明显的缺陷。</p>
 <p>引用计数法实现比较简单：对于一个对象A来说，只要有任何一个对象或者引用指向了A，那么A的计数器就加1，当引用失效时，引用计数器就减1，最后只要对象A的引用计数器的值为0，那么A就不可能再被使用，就可被视为垃圾。</p>
-<p><img src="http://img.blog.csdn.net/20160103231422234" alt="这里写图片描述"></p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-022444.png" alt=""></p>
 <p>引用计数法存在明显的缺陷，第一由于不断引用和去除引用伴随着加减法，影响性能。第二最大是问题就是很难解决循环引用的问题。</p>
-<p><img src="http://img.blog.csdn.net/20160103231439294" alt="这里写图片描述"></p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-022458.png" alt=""></p>
 <p>这样就会存在很多的对象无法被回收，所以JVM压根没有使用引用计数法作为GC算法。</p>
 <h2 id="2-2-标记-清除"><a href="#2-2-标记-清除" class="headerlink" title="2.2 标记-清除"></a>2.2 标记-清除</h2><p>　　<code>标记清除（Mark-Sweep）</code>算法是现代垃圾回收算法的基础。顾名思义，标记清除算法将垃圾清除分为两个阶段：标记和清除</p>
 <ul>
 <li><code>标记：</code>通过根节点，标记所有从根节点开始的可达对象。因此，未被标记的对象就是未被引用即不可达的对象。</li>
 <li><code>清除：</code>清除所有未被标记的对象。</li>
 </ul>
-<p><img src="http://img.blog.csdn.net/20160103231615085" alt="这里写图片描述"></p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-022515.png" alt=""></p>
 <h2 id="2-3-标记-压缩"><a href="#2-3-标记-压缩" class="headerlink" title="2.3 标记-压缩"></a>2.3 标记-压缩</h2><p><code>标记压缩（Mark-Compact）</code>算法适用于存活对象比较多的场合，比如老年代。它在标记-清除算法基础上做了一些优化，标记压缩算法和标记清除算法一样，首先通过根节点标记可达的对象，然后还将所有可达的对象（存活的对象）压缩到内存一端，然后清理边界外所有空间。</p>
 <ul>
 <li><code>标记：</code>通过根节点标记可达的对象。</li>
 <li><code>压缩：</code>将存活的对象整理到内存一端，清理边界外所有空间。</li>
 </ul>
-<p><img src="http://img.blog.csdn.net/20160103231717923" alt="这里写图片描述"></p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-022529.png" alt=""></p>
 <h2 id="2-4-复制算法"><a href="#2-4-复制算法" class="headerlink" title="2.4 复制算法"></a>2.4 复制算法</h2><p>与标记清除算法相比，<code>复制（Copying）</code>算法相对是一个比较高效的算法，由于涉及到存活对象的赋值，所以复制算法不适合存活对象比较多的场合（如不适合老年代）。复制算法的思想大致如下：将原有的内存分为两块空间，每次只使用其中一块，在垃圾回收的时候，将正在使用内存中存活的对象复制到未使用的内存块中，之后清除正在使用内存中的所有对象，然后交换两个内存的角色完成垃圾回收。</p>
-<p><img src="http://img.blog.csdn.net/20160103231739370" alt="这里写图片描述"></p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-022543.png" alt=""></p>
 <h2 id="2-5-增量算法"><a href="#2-5-增量算法" class="headerlink" title="2.5 增量算法"></a>2.5 增量算法</h2><p>还有一种算法是<code>增量算法</code>（直接摘抄了）：增量算法的基本思想是，如果一次性将所有的垃圾进行处理，需要造成系统长时间的停顿，那么就可以让垃圾收集线程和应用程序线程交替执行。每次，垃圾收集线程只收集一小片区域的内存空间，接着切换到应用程序线程。依次反复，直到垃圾收集完成。使用这种方式，由于在垃圾回收过程中，间断性地还执行了应用程序代码，所以能减少系统的停顿时间。但是，因为线程切换和上下文转换的消耗，会使得垃圾回收的总体成本上升，造成系统吞吐量的下降。</p>
 <h2 id="2-6-总结"><a href="#2-6-总结" class="headerlink" title="2.6 总结"></a>2.6 总结</h2><ol>
 <li>首先是引用计数法，这个缺陷比较明显，JVM也没有采用，不做讨论。</li>
@@ -143,7 +143,7 @@ JVM学习02-GC算法与种类1. GC 简介GC（Garbage Collection） 是垃圾收
 <h1 id="3-分代思想"><a href="#3-分代思想" class="headerlink" title="3. 分代思想"></a>3. 分代思想</h1><p>根据GC算法的总结可以知道，结合不同算法的优点才能规划出一套比较可行的方案，所谓没有最好只有更好。</p>
 <p>前面JVM内存模型中有说到将JAVA堆分为<code>新生代</code>和<code>老年代</code>，然后又将新生代细分为<code>eden space</code>，<code>survivor space(分为from和to或者s0和s1)</code>，然后根据对象的存活周期将短命对象归为新生代，长命对象归为老年代。</p>
 <p><strong>所以根据不同代的特点，在对象存活比较少的新生代采用<code>复制算法</code>，在老年代采用<code>标记清除</code>或<code>标记压缩</code>算法。</strong></p>
-<p><img src="http://img.blog.csdn.net/20160103231843714" alt="这里写图片描述"></p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-022558.png" alt=""></p>
 <p>图中，在进行垃圾回收的时候，存活对象如何存放有很多种可能。</p>
 <ul>
 <li><ol>
@@ -174,15 +174,16 @@ JVM学习02-GC算法与种类1. GC 简介GC（Garbage Collection） 是垃圾收
 <h1 id="6-垃圾回收器的种类"><a href="#6-垃圾回收器的种类" class="headerlink" title="6. 垃圾回收器的种类"></a>6. 垃圾回收器的种类</h1><h2 id="6-1-新生代串行收集器"><a href="#6-1-新生代串行收集器" class="headerlink" title="6.1 新生代串行收集器"></a>6.1 新生代串行收集器</h2><p>串行收集器是一个古老而稳定，经过长时间考验的垃圾收集器。在诸如单 CPU 处理器或者较小的应用内存等硬件平台不是特别优越的场合，它的性能表现可以超过并行回收器和并发回收器。但是有的时候会停顿很长时间，且是线程独占的。</p>
 <p>新生代串行收集器采用了<strong>复制算法</strong>，当 JVM 在 Client 模式下运行时，它是默认的垃圾收集器。</p>
 <p>在 HotSpot 虚拟机中，使用 <strong>-XX：+UseSerialGC</strong> 参数可以指定使用<code>新生代串行收集器</code>和<code>老年代串行收集器</code>。此时老年代串行收集器采用的是<strong>标记-压缩算法</strong>。</p>
-<p><img src="http://img.blog.csdn.net/20160103232129953" alt="这里写图片描述"></p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-022611.png" alt=""></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[GC 0.844: [DefNew: 17472K-&gt;2176K(19648K), 0.0188339 secs] 17472K-&gt;2375K(63360K), 0.0189186 secs] [Times: user=0.01 sys=0.00, real=0.02 secs]</div></pre></td></tr></table></figure>
 <h2 id="6-2-老年代串行收集器"><a href="#6-2-老年代串行收集器" class="headerlink" title="6.2 老年代串行收集器"></a>6.2 老年代串行收集器</h2><p>老年代串行收集器和新生代串行收集器一样，老年代串行收集器采用的是<strong>标记-压缩算法</strong>，可以使用 <strong>-XX：+UseSerialGC</strong> 参数可以指定使用新生代串行收集器和老年代串行收集器。<br>图解和新生代串行收集器一样。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[Full GC 8.259: [Tenured: 43711K-&gt;40302K(43712K), 0.2960477 secs] 63350K-&gt;40302K(63360K), [Perm : 17836K-&gt;17836K(32768K)], 0.2961554 secs] [Times: user=0.28 sys=0.02, real=0.30 secs]</div></pre></td></tr></table></figure>
 <h2 id="6-3-并行收集器"><a href="#6-3-并行收集器" class="headerlink" title="6.3 并行收集器"></a>6.3 并行收集器</h2><p>并行收集器工作在新生代，仅仅是将新生代串行收集器变成了多线程化了，它的回收策略、算法以及参数和串行回收器一样。<br>新生代依旧采用复制算法，老年代还是串行收集器（标记压缩算法）。GC依旧是线程独占的。<br>开启并行回收器可以使用参数 <strong>-XX:+UseParNewGC</strong></p>
-<p><img src="http://img.blog.csdn.net/20160103232240532" alt="这里写图片描述"></p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-022628.png" alt=""></p>
 <p>多线程并不意味着GC一定会很快，且需要多核CPU的支持才会相对提高效率。<br>可以使用 <strong>-XX:ParallelGCThreads</strong> 限制线程数量</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[GC 0.834: [ParNew: 13184K-&gt;1600K(14784K), 0.0092203 secs] 13184K-&gt;1921K(63936K), 0.0093401 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]</div></pre></td></tr></table></figure>
-<h2 id="6-4-新生代并行回收收集器"><a href="#6-4-新生代并行回收收集器" class="headerlink" title="6.4 新生代并行回收收集器"></a>6.4 新生代并行回收收集器</h2><p>与 ParNew 类似，新生代并行回收收集器也是使用<strong>复制算法</strong>的收集器。从表面上看，它和并行收集器一样都是多线程、独占式的收集器。但是，并行回收收集器有一个重要的特点：<strong>它非常关注系统的吞吐量</strong>。<br>使用 <strong>-XX:+UseParallelGC</strong> 设置 新生代使用Parallel收集器 + 老年代使用串行收集器<br>使用 <strong>-XX:+UseParallelOldGC</strong> 设置 新生代和老年代都使用Parallel收集器<br><img src="http://img.blog.csdn.net/20160103232330754" alt="这里写图片描述"></p>
+<h2 id="6-4-新生代并行回收收集器"><a href="#6-4-新生代并行回收收集器" class="headerlink" title="6.4 新生代并行回收收集器"></a>6.4 新生代并行回收收集器</h2><p>与 ParNew 类似，新生代并行回收收集器也是使用<strong>复制算法</strong>的收集器。从表面上看，它和并行收集器一样都是多线程、独占式的收集器。但是，并行回收收集器有一个重要的特点：<strong>它非常关注系统的吞吐量</strong>。<br>使用 <strong>-XX:+UseParallelGC</strong> 设置 新生代使用Parallel收集器 + 老年代使用串行收集器<br>使用 <strong>-XX:+UseParallelOldGC</strong> 设置 新生代和老年代都使用Parallel收集器</p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-022640.png" alt=""></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[Full GC [PSYoungGen: 2682K-&gt;0K(19136K)] [ParOldGen: 28035K-&gt;30437K(43712K)] 30717K-&gt;30437K(62848K) [PSPermGen: 10943K-&gt;10928K(32768K)], 0.2902791 secs] [Times: user=1.44 sys=0.03, real=0.30 secs]</div></pre></td></tr></table></figure>
 <h2 id="6-5-老年代并行回收收集器"><a href="#6-5-老年代并行回收收集器" class="headerlink" title="6.5 老年代并行回收收集器"></a>6.5 老年代并行回收收集器</h2><p>老年代的并行收集器和新生代并行收集器一样，所线程且关注系统吞吐量，采用<strong>标记压缩</strong>的算法。<br>使用 <strong>-XX:+UseParallelOldGC</strong> 设置 新生代和老年代都使用Parallel收集器<br><code>图解和日志清单</code>跟新生代并行收集器一样。</p>
 <p>这里新生代和老年代的并行收集器和使用以下参数启动：</p>
@@ -200,7 +201,7 @@ JVM学习02-GC算法与种类1. GC 简介GC（Garbage Collection） 是垃圾收
 <li>重新标记：由于上一步并发过程，用户线程可能还会生产出垃圾，所以GC 线程独占，在正式清理前重新做一次标记。</li>
 <li>并发清除：GC 线程和用户线程一起执行，GC 回收垃圾对象。</li>
 </ol>
-<p><img src="http://img.blog.csdn.net/20160103232516426" alt="这里写图片描述"></p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-022657.png" alt=""></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">1.662: [GC [1 CMS-initial-mark: 28122K(49152K)] 29959K(63936K), 0.0046877 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] </div><div class="line">1.666: [CMS-concurrent-mark-start]</div><div class="line">1.699: [CMS-concurrent-mark: 0.033/0.033 secs] [Times: user=0.25 sys=0.00, real=0.03 secs] </div><div class="line">1.699: [CMS-concurrent-preclean-start]</div><div class="line">1.700: [CMS-concurrent-preclean: 0.000/0.000 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] </div><div class="line">1.700: [GC[YG occupancy: 1837 K (14784 K)]1.700: [Rescan (parallel) , 0.0009330 secs]1.701: [weak refs processing, 0.0000180 secs] [1 CMS-remark: 28122K(49152K)] 29959K(63936K), 0.0010248 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] </div><div class="line">1.702: [CMS-concurrent-sweep-start]</div><div class="line">1.739: [CMS-concurrent-sweep: 0.035/0.037 secs] [Times: user=0.11 sys=0.02, real=0.05 secs] </div><div class="line">1.739: [CMS-concurrent-reset-start]</div><div class="line">1.741: [CMS-concurrent-reset: 0.001/0.001 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]</div></pre></td></tr></table></figure>
 <p>CMS虽然是并发收集器，但是其实也会存在线程独占的情况导致全局停顿，只是降低了停顿的时间罢了。由于用户线程的运行过程中，GC的时候还需要分CPU去做垃圾回收，这样就会大大降低整体系统的反应速速。在清理阶段，由于和用户线程并发执行，还会产生新的垃圾，导致清理不彻底。甚至还可能会存在产生的垃圾使得CMS来不及清理，让可使用内存的容量迅速减小，直到内存预留不够，引起 concurrent mode failure 错误。</p>
 <p>解决方案：</p>

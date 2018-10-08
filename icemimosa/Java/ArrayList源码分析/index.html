@@ -101,7 +101,7 @@ priva">
     </p>
   <p class="article-time">
     <time datetime="2016-12-24T19:00:34.000Z" itemprop="datePublished">2016-12-25</time>
-    更新日期:<time datetime="2018-03-14T10:43:28.000Z" itemprop="dateModified">2018-03-14</time>
+    更新日期:<time datetime="2018-10-08T02:38:52.803Z" itemprop="dateModified">2018-10-08</time>
     
   </p>
 </header>
@@ -125,8 +125,11 @@ priva">
 <li><code>new ArrayList()</code></li>
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ArrayList list = <span class="keyword">new</span> ArrayList();</div></pre></td></tr></table></figure>
-<p>基本的构造函数调用上来就有不同<br>1.6中调用了该构造方法之后, <code>elementData</code> 的数组大小直接被初始化为  <strong>10</strong>, 源码<br><img src="http://img.blog.csdn.net/20151225100313357" alt=""></p>
-<p>1.7中没有直接初始化 <code>elementData</code> 的大小<br><img src="http://img.blog.csdn.net/20151225100348913" alt=""><br><code>EMPTY_ELEMENTDATA</code> 表示java1.7中维护的一个空数组 <code>{}</code></p>
+<p>基本的构造函数调用上来就有不同<br>1.6中调用了该构造方法之后, <code>elementData</code> 的数组大小直接被初始化为  <strong>10</strong>, 源码</p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-023333.png" alt=""></p>
+<p>1.7中没有直接初始化 <code>elementData</code> 的大小</p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-023348.png" alt=""></p>
+<p><code>EMPTY_ELEMENTDATA</code> 表示java1.7中维护的一个空数组 <code>{}</code></p>
 <ul>
 <li><code>new ArrayList(int initialCapacity)</code></li>
 </ul>
@@ -134,24 +137,44 @@ priva">
 <ul>
 <li><code>public ArrayList(Collection&lt;? extends E&gt; c)</code></li>
 </ul>
-<p><img src="http://img.blog.csdn.net/20151225100942998" alt=""><br>这个没啥好说的, 就是直接将传入的集合变成 Object[] 数组然后赋值给 <code>elementData</code> , 再将 <code>size</code> 数值为数组的大小.</p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-023407.png" alt=""></p>
+<p>这个没啥好说的, 就是直接将传入的集合变成 Object[] 数组然后赋值给 <code>elementData</code> , 再将 <code>size</code> 数值为数组的大小.</p>
 <h2 id="2-add-和-addAll-方法"><a href="#2-add-和-addAll-方法" class="headerlink" title="2. add 和 addAll 方法"></a>2. add 和 addAll 方法</h2><p>add 方法中涉及到一个比较重要的方法: 扩容<br>扩容在1.6和1.7之中唯一的区别就是每次扩容的大小。在者就是1.7中多了几个大小是否越界判断的方法。</p>
-<p>java1.6中, 每次扩容的大小是 <code>elementData</code> 的 <strong>3/2 倍再加 1</strong><br><img src="http://img.blog.csdn.net/20151225101009735" alt=""><br>java1.7中, 每次扩容的大小是 <code>elementData</code> <strong>加上</strong> <code>elementData</code> 的 <strong>1/2</strong><br><img src="http://img.blog.csdn.net/20151225101023605" alt=""><br>它们在扩容完之后再次与<code>minCapacity(add中是size+1,addAll中是size+传入集合的元素大小)</code> 比较大小是因为如果调用了addAll方法传入一个集合的时候, 防止扩容之后的大小仍然小于<code>minCapacity（size+集合的大小）</code>, 索性就直接将 <code>minCapacity</code> 赋值给<code>size</code>。</p>
-<h2 id="3-set-和-get-方法"><a href="#3-set-和-get-方法" class="headerlink" title="3. set 和 get 方法"></a>3. set 和 get 方法</h2><p>set和get方法中比较重要一点的方法就是对下标的大小进行校验：<code>rangeCheck(index);</code><br><img src="http://img.blog.csdn.net/20151225101139708" alt="这里写图片描述"></p>
+<p>java1.6中, 每次扩容的大小是 <code>elementData</code> 的 <strong>3/2 倍再加 1</strong></p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-023440.png" alt=""></p>
+<p>java1.7中, 每次扩容的大小是 <code>elementData</code> <strong>加上</strong> <code>elementData</code> 的 <strong>1/2</strong></p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-023451.png" alt=""></p>
+<p>它们在扩容完之后再次与<code>minCapacity(add中是size+1,addAll中是size+传入集合的元素大小)</code> 比较大小是因为如果调用了addAll方法传入一个集合的时候, 防止扩容之后的大小仍然小于<code>minCapacity（size+集合的大小）</code>, 索性就直接将 <code>minCapacity</code> 赋值给<code>size</code>。</p>
+<h2 id="3-set-和-get-方法"><a href="#3-set-和-get-方法" class="headerlink" title="3. set 和 get 方法"></a>3. set 和 get 方法</h2><p>set和get方法中比较重要一点的方法就是对下标的大小进行校验：<code>rangeCheck(index);</code></p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-023509.png" alt=""></p>
 <h2 id="4-remove-方法"><a href="#4-remove-方法" class="headerlink" title="4. remove 方法"></a>4. remove 方法</h2><p>1、 <code>remove(int index)</code> 方法中比较重要的方法就是 </p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">System.arraycopy(Object src, <span class="keyword">int</span> srcPos, Object dest, <span class="keyword">int</span> destPos, <span class="keyword">int</span> length);</div></pre></td></tr></table></figure>
-<p>其实这个也是整个类中用的比较多的方法, 这个方法将原对象src中srcPos下标开始, 复制到目标对象dest的下标destPos开始, 复制length个的元素。最后在维护一下 size 的大小<br><img src="http://img.blog.csdn.net/20151225101221659" alt=""><br><code>remove(Object o)</code>方法其实就是获取元素的下标, 然后再次调用上述的删除方法。<br><img src="http://img.blog.csdn.net/20151225101235709" alt=""><br>这里的 <code>fastRemove(index)</code>方法与上述的remove(int index) 方法基本一模一样, 代码重复了<br><img src="http://img.blog.csdn.net/20151225101415104" alt=""></p>
+<p>其实这个也是整个类中用的比较多的方法, 这个方法将原对象src中srcPos下标开始, 复制到目标对象dest的下标destPos开始, 复制length个的元素。最后在维护一下 size 的大小</p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-023526.png" alt=""></p>
+<p><code>remove(Object o)</code>方法其实就是获取元素的下标, 然后再次调用上述的删除方法。</p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-023541.png" alt=""></p>
+<p>这里的 <code>fastRemove(index)</code>方法与上述的remove(int index) 方法基本一模一样, 代码重复了</p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-023553.png" alt=""></p>
 <p>2、<code>protected void removeRange(int fromIndex, int toIndex)</code> 方法<br>这个方法是一个受保护的方法, 要想实现这种效果就需要调用subList方法返回一个子集合, 然后在调用clear()方法, 最后的导致的结果就是原来的list调用了removeRange的效果</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">list.subList(start, end).clear();</div><div class="line"></div><div class="line"><span class="comment">// 参考 http://stackoverflow.com/questions/2289183/why-is-javas-abstractlists-removerange-method-protected</span></div></pre></td></tr></table></figure>
-<p><code>list.subList(start, end)</code> 实际返回了一个SubList类<br><img src="http://img.blog.csdn.net/20151225101657862" alt=""><br>这里的<code>clear()</code>方法其实就是调用了 <code>removeRange(0,size())</code> 的方法, 接着看下subList类中的removeRange方法<br><img src="http://img.blog.csdn.net/20151225101718007" alt=""><br><img src="http://img.blog.csdn.net/20151225101741558" alt=""></p>
+<p><code>list.subList(start, end)</code> 实际返回了一个SubList类</p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-023613.png" alt=""></p>
+<p>这里的<code>clear()</code>方法其实就是调用了 <code>removeRange(0,size())</code> 的方法, 接着看下subList类中的removeRange方法</p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-023625.png" alt=""></p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-023638.png" alt=""></p>
 <p>这里,<code>l</code> 代表的就是原来集合, 接着隐含调用了原来集合的 removeRange 方法。<br>但是在java1.7中对subList方法做了自己的实现,并且在自己增了加SubList内部类, 但是基本实现原理基本一致。</p>
-<h2 id="5-indexOf-方法-lastIndexOf-同理"><a href="#5-indexOf-方法-lastIndexOf-同理" class="headerlink" title="5. indexOf 方法 (lastIndexOf 同理)"></a>5. indexOf 方法 (lastIndexOf 同理)</h2><p><img src="http://img.blog.csdn.net/20151225101820956" alt=""></p>
-<h2 id="6-其他一些方法"><a href="#6-其他一些方法" class="headerlink" title="6. 其他一些方法"></a>6. 其他一些方法</h2><p>1.<code>trimToSize()</code>, 将 <code>elementData</code> 的大小变成实际元素的个数大小, 节省了内存空间<br><img src="http://img.blog.csdn.net/20151225101839275" alt=""></p>
+<h2 id="5-indexOf-方法-lastIndexOf-同理"><a href="#5-indexOf-方法-lastIndexOf-同理" class="headerlink" title="5. indexOf 方法 (lastIndexOf 同理)"></a>5. indexOf 方法 (lastIndexOf 同理)</h2><p><img src="http://ice-img.pigutu.com/2018-10-08-023647.png" alt=""></p>
+<h2 id="6-其他一些方法"><a href="#6-其他一些方法" class="headerlink" title="6. 其他一些方法"></a>6. 其他一些方法</h2><p>1、 <code>trimToSize()</code>, 将 <code>elementData</code> 的大小变成实际元素的个数大小, 节省了内存空间</p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-023705.png" alt=""></p>
+<p>2、 <code>size()</code></p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-023719.png" alt=""></p>
+<p>3、 <code>isEmpty()</code></p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-023810.png" alt=""></p>
+<p>4、 <code>contains(Object 0)</code></p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-023818.png" alt=""></p>
+<p>5、 <code>clear()</code></p>
+<p><img src="http://ice-img.pigutu.com/2018-10-08-023830.png" alt=""></p>
 <ol>
-<li><code>size()</code><br><img src="http://img.blog.csdn.net/20151225101853306" alt=""></li>
-<li><code>isEmpty()</code><br><img src="http://img.blog.csdn.net/20151225101908016" alt=""></li>
-<li><code>contains(Object 0)</code><br><img src="http://img.blog.csdn.net/20151225101924014" alt=""></li>
-<li><code>clear()</code><br><img src="http://img.blog.csdn.net/20151225101935699" alt=""></li>
 <li><code>removeAll(Collection&lt;?&gt; c)</code> 和 <code>retainAll(Collection&lt;?&gt; c)</code> 方法</li>
 </ol>
 <blockquote>
@@ -173,7 +196,7 @@ priva">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/源码/">源码</a><a href="/tags/java/">java</a>
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/源码/">源码</a>
   </div>
 
 
@@ -196,10 +219,10 @@ priva">
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/icemimosa/spring/部署springboot应用_CentOS6/" title="部署springboot应用_centOS6">
+ <a href="/icemimosa/spring/部署springboot应用_CentOS7/" title="部署springboot应用_centOS7">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  部署springboot应用_centOS6</span>
+  部署springboot应用_centOS7</span>
 </a>
 </div>
 
