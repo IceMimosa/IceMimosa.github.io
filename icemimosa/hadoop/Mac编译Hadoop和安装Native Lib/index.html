@@ -7,19 +7,20 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>04_Redis之Shell | Ice の Mimosa</title>
+    <title>Mac编译Hadoop和安装Native lib | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
-    <meta name="description" content="[TOC]
-04_Redis之Shell可以使用redis-cli --help查看帮助
-1Usage: redis-cli [OPTIONS] [cmd [arg [arg ...]]]
-OPTIONS如下：
-1. redis-cli
---help，--version
+    <meta name="description" content="Mac编译Hadoop和安装Native lib在mac系统中想要为hadoop添加snappy的支持，需要手动重新编译hadoop源码。
 
--p port，-h ho">
+戳下面的链接
+
+👉 Hadoop native libraries not found on OS/X
+注意事项
+报 protobuf 版本问题
+
+123在">
     
     
     
@@ -96,15 +97,15 @@ OPTIONS如下：
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/redis/04_Redis之Shell/" title="04_Redis之Shell" itemprop="url">04_Redis之Shell</a>
+      <a href="/icemimosa/hadoop/Mac编译Hadoop和安装Native Lib/" title="Mac编译Hadoop和安装Native lib" itemprop="url">Mac编译Hadoop和安装Native lib</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2017-05-19T07:30:16.000Z" itemprop="datePublished">2017-05-19</time>
-    更新日期:<time datetime="2018-03-13T14:54:37.000Z" itemprop="dateModified">2018-03-13</time>
+    <time datetime="2018-10-12T07:30:16.000Z" itemprop="datePublished">2018-10-12</time>
+    更新日期:<time datetime="2018-10-12T08:28:34.851Z" itemprop="dateModified">2018-10-12</time>
     
   </p>
 </header>
@@ -113,127 +114,38 @@ OPTIONS如下：
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#04-Redis之Shell"><span class="toc-text">04_Redis之Shell</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-redis-cli"><span class="toc-text">1. redis-cli</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-redis-server"><span class="toc-text">2. redis-server</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-redis-benchmark"><span class="toc-text">3. redis-benchmark</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Mac编译Hadoop和安装Native-lib"><span class="toc-text">Mac编译Hadoop和安装Native lib</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#注意事项"><span class="toc-text">注意事项</span></a></li></ol>
 		</div>
 		
-		<p>[TOC]</p>
-<h1 id="04-Redis之Shell"><a href="#04-Redis之Shell" class="headerlink" title="04_Redis之Shell"></a>04_Redis之Shell</h1><p>可以使用<code>redis-cli --help</code>查看帮助</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Usage: redis-cli [OPTIONS] [cmd [arg [arg ...]]]</div></pre></td></tr></table></figure>
-<p>OPTIONS如下：</p>
-<h1 id="1-redis-cli"><a href="#1-redis-cli" class="headerlink" title="1. redis-cli"></a>1. redis-cli</h1><ul>
-<li><p><code>--help</code>，<code>--version</code></p>
-</li>
-<li><p><code>-p port</code>，<code>-h hostname</code>，<code>-a password</code>，<code>-n db</code></p>
-</li>
+		<h1 id="Mac编译Hadoop和安装Native-lib"><a href="#Mac编译Hadoop和安装Native-lib" class="headerlink" title="Mac编译Hadoop和安装Native lib"></a>Mac编译Hadoop和安装Native lib</h1><p>在mac系统中想要为hadoop添加snappy的支持，需要手动重新编译hadoop源码。</p>
+<blockquote>
+<p>戳下面的链接</p>
+</blockquote>
+<p>👉 <a href="https://stackoverflow.com/questions/37800605/hadoop-native-libraries-not-found-on-os-x" target="_blank" rel="external">Hadoop native libraries not found on OS/X</a></p>
+<h1 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h1><ul>
+<li>报 protobuf 版本问题</li>
 </ul>
-<p>指定端口，主机，密码，目标库</p>
-<ul>
-<li><code>-r repeat</code>，<code>-i interval</code></li>
-</ul>
-<p>执行命令的次数，每隔多少秒（可以用小数指定为毫秒）执行一次</p>
-<ul>
-<li><code>-x</code></li>
-</ul>
-<p>从标准输入中读取，作为redis-cli的最后一个参数。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ echo &quot;world&quot; | redis-cli -x set hello</div></pre></td></tr></table></figure>
-<ul>
-<li><code>-c</code></li>
-</ul>
-<p>使用集群模式</p>
-<ul>
-<li><code>--scan</code>，<code>--pattern pat</code></li>
-</ul>
-<p>相当于scan命令</p>
-<ul>
-<li><code>--rdb filename</code></li>
-</ul>
-<p>生成RDB持久化文件</p>
-<ul>
-<li><code>--pipe</code></li>
-</ul>
-<p>从标准输入中读取，发送redis通讯协议的数据，批量让redis server执行</p>
-<ul>
-<li><code>--bigkeys</code>，<code>--hotkeys</code></li>
-</ul>
-<p>使用scan进行采样，列出占用内存较大的key，和使用较多的key</p>
-<ul>
-<li><code>--eval file</code></li>
-</ul>
-<p>执行Lua脚本</p>
-<ul>
-<li><code>--latency</code>，<code>--latency-history</code>，<code>--latency-dist</code></li>
-</ul>
-<p>检测客户端到目标redis的网络延迟，以上命令分别展示<code>一行</code>，<code>多行</code>，<code>统计图表</code></p>
-<ul>
-<li><code>--stat</code></li>
-</ul>
-<p>实时获取redis的重要信息，如内存，客户端等。</p>
-<ul>
-<li><code>--raw</code>，<code>--no-raw</code></li>
-</ul>
-<p><code>no-raw</code>返回结果的原始格式，<code>raw</code>返回格式化之后的结果</p>
-<ul>
-<li><code>--csv</code></li>
-</ul>
-<p>以<code>csv</code>格式输出结果</p>
-<h1 id="2-redis-server"><a href="#2-redis-server" class="headerlink" title="2. redis-server"></a>2. redis-server</h1><p>除了启动redis服务外，还有<code>--test-memory</code>的选项。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">src/redis-server --test-memory 1024</div></pre></td></tr></table></figure>
-<p>结果:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Please keep the test running several minutes per GB of memory.</div><div class="line">Also check http://www.memtest86.com/ and http://pyropus.ca/software/memtester/</div><div class="line">Addressing test [4]</div><div class="line">.................</div><div class="line">.................</div><div class="line">.................</div><div class="line">.................</div><div class="line">以下一堆</div></pre></td></tr></table></figure>
-<h1 id="3-redis-benchmark"><a href="#3-redis-benchmark" class="headerlink" title="3. redis-benchmark"></a>3. redis-benchmark</h1><p><code>redis-benchmark</code>可以作为redis的性能基准测试。</p>
-<ul>
-<li><code>-c</code> (clients)</li>
-</ul>
-<p>客户端并发数量，默认50</p>
-<ul>
-<li><code>-n</code> (requests)</li>
-</ul>
-<p>客户端请求总量，默认100000</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">$ src/redis-benchmark -c 50 -n 20000</div><div class="line">====== PING_INLINE ======</div><div class="line">  20000 requests completed in 0.47 seconds</div><div class="line">  50 parallel clients</div><div class="line">  3 bytes payload</div><div class="line">  keep alive: 1</div><div class="line"></div><div class="line">93.14% &lt;= 1 milliseconds</div><div class="line">98.50% &lt;= 2 milliseconds</div><div class="line">99.50% &lt;= 3 milliseconds</div><div class="line">99.75% &lt;= 4 milliseconds</div><div class="line">99.78% &lt;= 5 milliseconds</div><div class="line">99.86% &lt;= 6 milliseconds</div><div class="line">99.94% &lt;= 7 milliseconds</div><div class="line">100.00% &lt;= 7 milliseconds</div><div class="line">42918.46 requests per second</div><div class="line"></div><div class="line">.............</div><div class="line">.............</div></pre></td></tr></table></figure>
-<ul>
-<li><code>-q</code></li>
-</ul>
-<p>仅仅显示<code>requests per second</code></p>
-<ul>
-<li><code>-r</code></li>
-</ul>
-<p>测试的时候随机插入键，会在测试的key名称后加上12位的后缀。</p>
-<ul>
-<li><code>-P</code></li>
-</ul>
-<p>每个请求pipeline的数量，默认为1</p>
-<ul>
-<li><code>-k</code></li>
-</ul>
-<p>是否keepalive，1为使用，0不使用。默认1</p>
-<ul>
-<li><code>-t</code></li>
-</ul>
-<p>使用指定命令做基准测试，如<code>-t set,get</code></p>
-<ul>
-<li><code>-csv</code></li>
-</ul>
-<p>用csv的格式输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">在执行mvn命令之前加上如下命令: </div><div class="line"></div><div class="line">export PATH=&quot;/usr/local/opt/protobuf@2.5/bin:$PATH&quot;</div></pre></td></tr></table></figure>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/redis/">redis</a>
+  <span></span> <a href="/tags/hadoop/">hadoop</a><a href="/tags/mac/">mac</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/redis/">redis</a>
+  <a class="article-category-link" href="/categories/hadoop/">hadoop</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/redis/04_Redis之Shell/" data-title="04_Redis之Shell | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/hadoop/Mac编译Hadoop和安装Native Lib/" data-title="Mac编译Hadoop和安装Native lib | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -242,19 +154,11 @@ OPTIONS如下：
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/icemimosa/redis/04_Redis之Pipeline/" title="04_Redis之Pipeline">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  04_Redis之Pipeline</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/icemimosa/redis/04_Redis慢查询分析/"  title="04_Redis慢查询分析">
+<a href="/icemimosa/Java/使用 Reactor 进行反应式编程/"  title="使用 Reactor 进行反应式编程">
  <strong>NEXT:</strong><br/> 
- <span>04_Redis慢查询分析
+ <span>使用 Reactor 进行反应式编程
 </span>
 </a>
 </div>
@@ -272,7 +176,7 @@ OPTIONS如下：
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#04-Redis之Shell"><span class="toc-text">04_Redis之Shell</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-redis-cli"><span class="toc-text">1. redis-cli</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-redis-server"><span class="toc-text">2. redis-server</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-redis-benchmark"><span class="toc-text">3. redis-benchmark</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Mac编译Hadoop和安装Native-lib"><span class="toc-text">Mac编译Hadoop和安装Native lib</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#注意事项"><span class="toc-text">注意事项</span></a></li></ol>
   </div>
 
 <div id="asidepart">
