@@ -89,17 +89,15 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/icemimosa/hive/hive解决元数据乱码/" title="hive解决元数据乱码" itemprop="url">
+    <a href="/icemimosa/hive/压缩hive表流程/" title="parquet压缩hive表" itemprop="url">
   
       <time datetime="2016-11-24T07:30:16.000Z" itemprop="datePublished">2016-11-24</time>
-    <h1 itemprop="name">hive解决元数据乱码</h1>
+    <h1 itemprop="name">parquet压缩hive表</h1>
     
      
-           <p itemprop="description" >hive解决元数据乱码1. 修改hive表由于 Cloudera Manager 安装的hive的元数据(如在mysql中)的编码是 latin1, 所以在各种有 COMMENT 是中文的情况下各种乱码。
-
-注意：不要修改hive整库的编码，会有问题，报错如下：
-
-12FAILE</p>
+           <p itemprop="description" >[TOC]
+parquet压缩hive表1. 应用场景原表为txt格式，占用硬盘空间太大，hive支持 parquet格式，所以将原表更新为利用parquet格式，来压缩该表占用的硬盘空间。
+2. 压缩过程1. 建立新表show create table TABLE_NAME ;</p>
         
     
   </a>
