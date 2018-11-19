@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>01_Redis初识 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -39,7 +39,7 @@ Redis初识1. 简介1.1 特性Redis是一种基于键值对(key-value)的NoSQL�
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -47,7 +47,7 @@ Redis初识1. 简介1.1 特性Redis是一种基于键值对(key-value)的NoSQL�
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -57,7 +57,7 @@ Redis初识1. 简介1.1 特性Redis是一种基于键值对(key-value)的NoSQL�
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -74,18 +74,18 @@ Redis初识1. 简介1.1 特性Redis是一种基于键值对(key-value)的NoSQL�
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -111,7 +111,7 @@ Redis初识1. 简介1.1 特性Redis是一种基于键值对(key-value)的NoSQL�
 		</div>
 		
 		<p>[TOC]</p>
-<h1 id="Redis初识"><a href="#Redis初识" class="headerlink" title="Redis初识"></a>Redis初识</h1><h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><h2 id="1-1-特性"><a href="#1-1-特性" class="headerlink" title="1.1 特性"></a>1.1 特性</h2><p><a href="http://www.redis.io" target="_blank" rel="external">Redis</a>是一种基于<code>键值对(key-value)</code>的NoSQL数据库，与很多键值对数据库不同的是，Redis中的值可以是<code>string(字符串)</code>、<code>hash(哈希)</code>、<code>list(列表)</code>、<code>set(集合)</code>、<code>zset(有序集合)</code>、<code>Bitmaps(位图)</code>、<code>HyperLogLog</code>、<code>GEO(地理信息定位)</code>等多种数据结构和算法组成。</p>
+<h1 id="Redis初识"><a href="#Redis初识" class="headerlink" title="Redis初识"></a>Redis初识</h1><h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><h2 id="1-1-特性"><a href="#1-1-特性" class="headerlink" title="1.1 特性"></a>1.1 特性</h2><p><a href="http://www.redis.io" target="_blank" rel="noopener">Redis</a>是一种基于<code>键值对(key-value)</code>的NoSQL数据库，与很多键值对数据库不同的是，Redis中的值可以是<code>string(字符串)</code>、<code>hash(哈希)</code>、<code>list(列表)</code>、<code>set(集合)</code>、<code>zset(有序集合)</code>、<code>Bitmaps(位图)</code>、<code>HyperLogLog</code>、<code>GEO(地理信息定位)</code>等多种数据结构和算法组成。</p>
 <blockquote>
 <p>redis的主要特性</p>
 </blockquote>
@@ -134,7 +134,7 @@ Redis初识1. 简介1.1 特性Redis是一种基于键值对(key-value)的NoSQL�
 <ul>
 <li>支持多客户端语言</li>
 </ul>
-<p>Java、Python、Node等等，详细见 <a href="https://redis.io/clients" target="_blank" rel="external">https://redis.io/clients</a></p>
+<p>Java、Python、Node等等，详细见 <a href="https://redis.io/clients" target="_blank" rel="noopener">https://redis.io/clients</a></p>
 <ul>
 <li>持久化</li>
 </ul>
@@ -147,19 +147,19 @@ Redis初识1. 简介1.1 特性Redis是一种基于键值对(key-value)的NoSQL�
 </ul>
 <p>Redis2.8支持<code>Sentinel</code>的功能，从3.0开始正式支持分布式的功能<code>Redis Cluster</code>。</p>
 <h2 id="1-2-使用场景"><a href="#1-2-使用场景" class="headerlink" title="1.2 使用场景"></a>1.2 使用场景</h2><p>缓存，计数器，消息队列。<br>不适合做<code>数据规模很大的存储</code>，以及<code>冷数据的存储</code>。</p>
-<h1 id="2-安装"><a href="#2-安装" class="headerlink" title="2. 安装"></a>2. 安装</h1><p>redis的安装十分简单，参考：<a href="https://redis.io/download" target="_blank" rel="external">https://redis.io/download</a></p>
+<h1 id="2-安装"><a href="#2-安装" class="headerlink" title="2. 安装"></a>2. 安装</h1><p>redis的安装十分简单，参考：<a href="https://redis.io/download" target="_blank" rel="noopener">https://redis.io/download</a></p>
 <ul>
 <li>第一步</li>
 </ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ wget http://download.redis.io/releases/redis-4.0.8.tar.gz</div><div class="line">$ tar xzf redis-4.0.8.tar.gz</div><div class="line">$ <span class="built_in">cd</span> redis-4.0.8</div><div class="line">$ make</div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ wget http://download.redis.io/releases/redis-4.0.8.tar.gz</span><br><span class="line">$ tar xzf redis-4.0.8.tar.gz</span><br><span class="line">$ <span class="built_in">cd</span> redis-4.0.8</span><br><span class="line">$ make</span><br></pre></td></tr></table></figure>
 <ul>
 <li>第二步</li>
 </ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ src/redis-server</div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ src/redis-server</span><br></pre></td></tr></table></figure>
 <ul>
 <li>第三部</li>
 </ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ src/redis-cli</div><div class="line">redis&gt; <span class="built_in">set</span> foo bar</div><div class="line">OK</div><div class="line">redis&gt; get foo</div><div class="line"><span class="string">"bar"</span></div><div class="line"></div><div class="line"><span class="comment">## 最后</span></div><div class="line">$ src/redis-cli shutdown</div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ src/redis-cli</span><br><span class="line">redis&gt; <span class="built_in">set</span> foo bar</span><br><span class="line">OK</span><br><span class="line">redis&gt; get foo</span><br><span class="line"><span class="string">"bar"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 最后</span></span><br><span class="line">$ src/redis-cli shutdown</span><br></pre></td></tr></table></figure>
 <p>注意：Redis的优雅关闭方式是断开与客户端的连接，然后生成持久化文件。可以通过showdown和kill进程号的方式关闭，切勿粗暴使用<code>kill -9</code>，这样redis不会做持久化操作，极端情况会造成数据丢失。</p>
 <h1 id="3-其他"><a href="#3-其他" class="headerlink" title="3. 其他"></a>3. 其他</h1><h2 id="3-1-src下面可执行文件说明"><a href="#3-1-src下面可执行文件说明" class="headerlink" title="3.1 src下面可执行文件说明"></a>3.1 src下面可执行文件说明</h2><table>
 <thead>
@@ -199,12 +199,12 @@ Redis初识1. 简介1.1 特性Redis是一种基于键值对(key-value)的NoSQL�
 <blockquote>
 <p>一些基础配置</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">port - Redis Server 的启动端口, 默认6379</div><div class="line">dir -  Redis 的工作目录，存在持久化文件和日志文件，默认 ./</div><div class="line">logfile - 日志文件名称，默认 &quot;&quot;</div><div class="line">daemonize - 是否以守护进程的方式启动Redis，默认 no</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">port - Redis Server 的启动端口, 默认6379</span><br><span class="line">dir -  Redis 的工作目录，存在持久化文件和日志文件，默认 ./</span><br><span class="line">logfile - 日志文件名称，默认 &quot;&quot;</span><br><span class="line">daemonize - 是否以守护进程的方式启动Redis，默认 no</span><br></pre></td></tr></table></figure>
 <ul>
 <li>以配置文件的方式启动Redis</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ redis-server /opt/redis/redis.conf</div></pre></td></tr></table></figure>
-<h1 id="4-参考"><a href="#4-参考" class="headerlink" title="4. 参考"></a>4. 参考</h1><p>后续所有学习参考书籍：<a href="http://ice-img.pigutu.com/Redis%E5%BC%80%E5%8F%91%E4%B8%8E%E8%BF%90%E7%BB%B4.pdf" target="_blank" rel="external">Redis开发与运维.pdf</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ redis-server /opt/redis/redis.conf</span><br></pre></td></tr></table></figure>
+<h1 id="4-参考"><a href="#4-参考" class="headerlink" title="4. 参考"></a>4. 参考</h1><p>后续所有学习参考书籍：<a href="http://ice-img.pigutu.com/Redis%E5%BC%80%E5%8F%91%E4%B8%8E%E8%BF%90%E7%BB%B4.pdf" target="_blank" rel="noopener">Redis开发与运维.pdf</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -233,9 +233,9 @@ Redis初识1. 简介1.1 特性Redis是一种基于键值对(key-value)的NoSQL�
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/redis/02_Redis基本命令的使用-预备/" title="02_Redis基本命令的使用-预备">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   02_Redis基本命令的使用-预备</span>
 </a>
@@ -243,8 +243,8 @@ Redis初识1. 简介1.1 特性Redis是一种基于键值对(key-value)的NoSQL�
 
 
 <div class="next">
-<a href="/icemimosa/Java/java交换两个变量的值/"  title="java交换两个变量的值">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/Java/java交换两个变量的值/" title="java交换两个变量的值">
+ <strong>NEXT:</strong><br> 
  <span>java交换两个变量的值
 </span>
 </a>
@@ -273,7 +273,7 @@ Redis初识1. 简介1.1 特性Redis是一种基于键值对(key-value)的NoSQL�
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -298,7 +298,7 @@ Redis初识1. 简介1.1 特性Redis是一种基于键值对(key-value)的NoSQL�
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -329,7 +329,7 @@ Redis初识1. 简介1.1 特性Redis是一种基于键值对(key-value)的NoSQL�
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -357,7 +357,7 @@ Redis初识1. 简介1.1 特性Redis是一种基于键值对(key-value)的NoSQL�
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -371,7 +371,7 @@ Redis初识1. 简介1.1 特性Redis是一种基于键值对(key-value)的NoSQL�
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -379,7 +379,7 @@ Redis初识1. 简介1.1 特性Redis是一种基于键值对(key-value)的NoSQL�
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -387,7 +387,7 @@ Redis初识1. 简介1.1 特性Redis是一种基于键值对(key-value)的NoSQL�
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -449,7 +449,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -660,6 +660,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

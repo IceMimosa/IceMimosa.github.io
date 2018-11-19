@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>Hbase源码04_Get | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -39,7 +39,7 @@ Hbase源码04_Get1. 代码示例 (kotlin)1234567891011121314@Testfun testGet() &
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -47,7 +47,7 @@ Hbase源码04_Get1. 代码示例 (kotlin)1234567891011121314@Testfun testGet() &
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -57,7 +57,7 @@ Hbase源码04_Get1. 代码示例 (kotlin)1234567891011121314@Testfun testGet() &
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -74,18 +74,18 @@ Hbase源码04_Get1. 代码示例 (kotlin)1234567891011121314@Testfun testGet() &
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -111,7 +111,7 @@ Hbase源码04_Get1. 代码示例 (kotlin)1234567891011121314@Testfun testGet() &
 		</div>
 		
 		<p>[TOC]</p>
-<h1 id="Hbase源码04-Get"><a href="#Hbase源码04-Get" class="headerlink" title="Hbase源码04_Get"></a>Hbase源码04_Get</h1><h1 id="1-代码示例-kotlin"><a href="#1-代码示例-kotlin" class="headerlink" title="1. 代码示例 (kotlin)"></a>1. 代码示例 (kotlin)</h1><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">fun</span> <span class="title">testGet</span><span class="params">()</span></span> &#123;</div><div class="line">    <span class="comment">// 创建连接</span></div><div class="line">    <span class="keyword">val</span> connection = ConnectionFactory.createConnection()</div><div class="line">    <span class="comment">// 获取表</span></div><div class="line">    <span class="keyword">val</span> table = connection.getTable(TableName.valueOf(<span class="string">"test"</span>))</div><div class="line">    <span class="comment">// get 请求</span></div><div class="line">    <span class="keyword">val</span> <span class="keyword">get</span> = table.<span class="keyword">get</span>(Get(Bytes.toBytes(<span class="string">"row1"</span>)))</div><div class="line">    <span class="keyword">val</span> cell = <span class="keyword">get</span>.getColumnLatestCell(Bytes.toBytes(<span class="string">"cf"</span>), Bytes.toBytes(<span class="string">"a"</span>))</div><div class="line"></div><div class="line">    println(CellUtil.cloneValue(cell).toString(Charset.defaultCharset()))</div><div class="line">    </div><div class="line">    connection.close()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="Hbase源码04-Get"><a href="#Hbase源码04-Get" class="headerlink" title="Hbase源码04_Get"></a>Hbase源码04_Get</h1><h1 id="1-代码示例-kotlin"><a href="#1-代码示例-kotlin" class="headerlink" title="1. 代码示例 (kotlin)"></a>1. 代码示例 (kotlin)</h1><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">testGet</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// 创建连接</span></span><br><span class="line">    <span class="keyword">val</span> connection = ConnectionFactory.createConnection()</span><br><span class="line">    <span class="comment">// 获取表</span></span><br><span class="line">    <span class="keyword">val</span> table = connection.getTable(TableName.valueOf(<span class="string">"test"</span>))</span><br><span class="line">    <span class="comment">// get 请求</span></span><br><span class="line">    <span class="keyword">val</span> <span class="keyword">get</span> = table.<span class="keyword">get</span>(Get(Bytes.toBytes(<span class="string">"row1"</span>)))</span><br><span class="line">    <span class="keyword">val</span> cell = <span class="keyword">get</span>.getColumnLatestCell(Bytes.toBytes(<span class="string">"cf"</span>), Bytes.toBytes(<span class="string">"a"</span>))</span><br><span class="line"></span><br><span class="line">    println(CellUtil.cloneValue(cell).toString(Charset.defaultCharset()))</span><br><span class="line">    </span><br><span class="line">    connection.close()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>connection.getTable</code> 返回 <code>HTable</code> 实例。</p>
 <h1 id="2-解析"><a href="#2-解析" class="headerlink" title="2. 解析"></a>2. 解析</h1><ul>
 <li>1、调用 <code>HTable#get</code> 方法，创建 <code>RegionServerCallable</code> 实例。执行 <code>RegionServerCallable#prepare</code> <ul>
@@ -129,7 +129,7 @@ Hbase源码04_Get1. 代码示例 (kotlin)1234567891011121314@Testfun testGet() &
 <p>在继续 <code>Region#get</code> 之前，这里需要大致了解下 <code>HRegion</code> 对象的结构，HBase的基本架构如下：</p>
 <p><img src="http://ice-img.pigutu.com/2018-07-04-090448.png" alt=""></p>
 <p>可以看到，对象之间的关系：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="number">1</span>. RegionServer包含多个Region, 和一个HLog(WAL)。</div><div class="line"><span class="number">2</span>. 一个 Table 被拆分成了多个 Region, Region可以分布在不同的机器上。</div><div class="line"><span class="number">3</span>. 一个 Region 包含一个 Row 的所有 Column 的数据, 以 Row 的维度进行切割。</div><div class="line"><span class="number">4</span>. 一个 Region 包含多个 Store, Store 是列族隔离的, 包含一个列族的数据。</div><div class="line"><span class="number">5</span>. 一个 Store 包含 memstore 和 多个 StoreFile，StoreFile 是对 HFile 的封装, 存储具体的数据。</div><div class="line"><span class="number">6</span>. HFile 的数据来自 memstore 的 flushing操作。</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>. RegionServer包含多个Region, 和一个HLog(WAL)。</span><br><span class="line"><span class="number">2</span>. 一个 Table 被拆分成了多个 Region, Region可以分布在不同的机器上。</span><br><span class="line"><span class="number">3</span>. 一个 Region 包含一个 Row 的所有 Column 的数据, 以 Row 的维度进行切割。</span><br><span class="line"><span class="number">4</span>. 一个 Region 包含多个 Store, Store 是列族隔离的, 包含一个列族的数据。</span><br><span class="line"><span class="number">5</span>. 一个 Store 包含 memstore 和 多个 StoreFile，StoreFile 是对 HFile 的封装, 存储具体的数据。</span><br><span class="line"><span class="number">6</span>. HFile 的数据来自 memstore 的 flushing操作。</span><br></pre></td></tr></table></figure>
 <ul>
 <li>3、下面走入 <code>HRegion#get</code> 方法，这里会将 <code>get</code> 转换成 <code>scan</code>, 然后返回 <code>RegionScannerImpl</code>，构造方法部分代码如下。</li>
 </ul>
@@ -146,21 +146,21 @@ Hbase源码04_Get1. 代码示例 (kotlin)1234567891011121314@Testfun testGet() &
 </ul>
 <h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><p>关于 <code>HFile</code> 的结构</p>
 <ul>
-<li><a href="https://blog.csdn.net/yangbutao/article/details/8394149" target="_blank" rel="external">关于HFile的存储结构梳理以及快速定位rowkey</a></li>
-<li><a href="https://www.jianshu.com/p/cd71925375a0" target="_blank" rel="external">HFile的格式</a></li>
+<li><a href="https://blog.csdn.net/yangbutao/article/details/8394149" target="_blank" rel="noopener">关于HFile的存储结构梳理以及快速定位rowkey</a></li>
+<li><a href="https://www.jianshu.com/p/cd71925375a0" target="_blank" rel="noopener">HFile的格式</a></li>
 </ul>
 <p>关于 <code>MemStore</code> 或者 <code>StoreFile(HFile)</code> 在内存中的结构(<code>LSM树</code>), 以及 <code>MemStore</code> flush 数据的过程可以参考如下：</p>
 <ul>
-<li><a href="https://blog.csdn.net/u014774781/article/details/52105708" target="_blank" rel="external">LSM树存储引擎</a></li>
-<li><a href="https://www.cnblogs.com/yanghuahui/p/3483754.html" target="_blank" rel="external">LSM树由来</a></li>
+<li><a href="https://blog.csdn.net/u014774781/article/details/52105708" target="_blank" rel="noopener">LSM树存储引擎</a></li>
+<li><a href="https://www.cnblogs.com/yanghuahui/p/3483754.html" target="_blank" rel="noopener">LSM树由来</a></li>
 </ul>
 <p>关于 <code>BloomFilter</code> 可以参考 </p>
 <ul>
-<li><a href="https://blog.csdn.net/lovebyz/article/details/51867184" target="_blank" rel="external">HBase BloomFilter</a></li>
-<li><a href="https://blog.csdn.net/u010809185/article/details/51165291" target="_blank" rel="external">Hbase 高级特性Bloom filter</a></li>
+<li><a href="https://blog.csdn.net/lovebyz/article/details/51867184" target="_blank" rel="noopener">HBase BloomFilter</a></li>
+<li><a href="https://blog.csdn.net/u010809185/article/details/51165291" target="_blank" rel="noopener">Hbase 高级特性Bloom filter</a></li>
 </ul>
 <h1 id="4-参考"><a href="#4-参考" class="headerlink" title="4. 参考"></a>4. 参考</h1><ul>
-<li><a href="https://www.cnblogs.com/foxmailed/p/3958546.html" target="_blank" rel="external">HBase Scan流程分析</a></li>
+<li><a href="https://www.cnblogs.com/foxmailed/p/3958546.html" target="_blank" rel="noopener">HBase Scan流程分析</a></li>
 </ul>
 <h1 id="5-HBase-的基本架构"><a href="#5-HBase-的基本架构" class="headerlink" title="5. HBase 的基本架构"></a>5. HBase 的基本架构</h1><p>此时在来看 HBase 的基本架构图, 就显得很直观了：</p>
 <p><img src="http://ice-img.pigutu.com/2018-07-06-055309.png" alt=""></p>
@@ -170,7 +170,7 @@ Hbase源码04_Get1. 代码示例 (kotlin)1234567891011121314@Testfun testGet() &
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/hbase/">hbase</a><a href="/tags/源码/">源码</a>
+  <span></span> <a href="/tags/源码/">源码</a><a href="/tags/hbase/">hbase</a>
   </div>
 
 
@@ -192,9 +192,9 @@ Hbase源码04_Get1. 代码示例 (kotlin)1234567891011121314@Testfun testGet() &
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/HBase/Hbase源码05_Put/" title="Hbase源码05_Put">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   Hbase源码05_Put</span>
 </a>
@@ -202,8 +202,8 @@ Hbase源码04_Get1. 代码示例 (kotlin)1234567891011121314@Testfun testGet() &
 
 
 <div class="next">
-<a href="/icemimosa/HBase/Hbase源码03_创建表/"  title="Hbase源码03_创建表">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/HBase/Hbase源码03_创建表/" title="Hbase源码03_创建表">
+ <strong>NEXT:</strong><br> 
  <span>Hbase源码03_创建表
 </span>
 </a>
@@ -232,7 +232,7 @@ Hbase源码04_Get1. 代码示例 (kotlin)1234567891011121314@Testfun testGet() &
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -257,7 +257,7 @@ Hbase源码04_Get1. 代码示例 (kotlin)1234567891011121314@Testfun testGet() &
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -288,7 +288,7 @@ Hbase源码04_Get1. 代码示例 (kotlin)1234567891011121314@Testfun testGet() &
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -316,7 +316,7 @@ Hbase源码04_Get1. 代码示例 (kotlin)1234567891011121314@Testfun testGet() &
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -330,7 +330,7 @@ Hbase源码04_Get1. 代码示例 (kotlin)1234567891011121314@Testfun testGet() &
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -338,7 +338,7 @@ Hbase源码04_Get1. 代码示例 (kotlin)1234567891011121314@Testfun testGet() &
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -346,7 +346,7 @@ Hbase源码04_Get1. 代码示例 (kotlin)1234567891011121314@Testfun testGet() &
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -408,7 +408,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -619,6 +619,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

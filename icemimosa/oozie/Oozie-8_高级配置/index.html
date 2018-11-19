@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>Oozie-8_高级配置 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -41,7 +41,7 @@
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -49,7 +49,7 @@
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -59,7 +59,7 @@
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -76,18 +76,18 @@
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -117,25 +117,25 @@
 <ul>
 <li>修改全局的 <code>timezone</code> 时区, 在 <code>oozie-site.xml</code> 文件中配置如下：</li>
 </ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.processing.timezone<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">value</span>&gt;</span>GMT+0800<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">description</span>&gt;</span></div><div class="line">       Oozie server timezone. Valid values are UTC and GMT(+/-)####, for example 'GMT+0530' would be India</div><div class="line">       timezone. All dates parsed and genered dates by Oozie Coordinator/Bundle will be done in the specified</div><div class="line">       timezone. The default value of 'UTC' should not be changed under normal circumtances. If for any reason</div><div class="line">       is changed, note that GMT(+/-)#### timezones do not observe DST changes.</div><div class="line">   <span class="tag">&lt;/<span class="name">description</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.processing.timezone<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">value</span>&gt;</span>GMT+0800<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">description</span>&gt;</span></span><br><span class="line">       Oozie server timezone. Valid values are UTC and GMT(+/-)####, for example 'GMT+0530' would be India</span><br><span class="line">       timezone. All dates parsed and genered dates by Oozie Coordinator/Bundle will be done in the specified</span><br><span class="line">       timezone. The default value of 'UTC' should not be changed under normal circumtances. If for any reason</span><br><span class="line">       is changed, note that GMT(+/-)#### timezones do not observe DST changes.</span><br><span class="line">   <span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>以后提交 Coordinator Job 的时候，修改参数如下：</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">1. 修改 timezone 为 GMT+0800</div><div class="line">2. 修改 start 和 end 时间格式，比如以前是 2016-01-01T00:00Z 的格式。那么现在需要修改成 2016-01-01T00:00+0800 的格式，然后提交</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1. 修改 timezone 为 GMT+0800</span><br><span class="line">2. 修改 start 和 end 时间格式，比如以前是 2016-01-01T00:00Z 的格式。那么现在需要修改成 2016-01-01T00:00+0800 的格式，然后提交</span><br></pre></td></tr></table></figure>
 <h1 id="2-oozie-launcher-分队列运行"><a href="#2-oozie-launcher-分队列运行" class="headerlink" title="2. oozie launcher 分队列运行"></a>2. oozie launcher 分队列运行</h1><p>场景：比如一个oozie任务里面有个sqoop任务，那么在提交给yarn执行的时候是会分成两个任务执行的。即 <code>oozie launcher</code> 和 <code>action(sqoop)</code>两个任务。且默认情况下是在一个队列中执行。由于一个队列执行的任务数量有限(可配置)，当多个<code>oozie launcher</code> 同时执行时，<code>action(sqoop)</code>任务没法开启。。这样就会<code>导致死锁</code>的问题。</p>
 <blockquote>
 <p>参考：</p>
 </blockquote>
 <ul>
-<li><a href="http://www.lamborryan.com/oozie-action-dead-lock/" target="_blank" rel="external">http://www.lamborryan.com/oozie-action-dead-lock/</a></li>
-<li><a href="http://stackoverflow.com/questions/27653937/error-on-running-multiple-workflow-in-oozie-4-1-0/27855432#27855432" target="_blank" rel="external">http://stackoverflow.com/questions/27653937/error-on-running-multiple-workflow-in-oozie-4-1-0/27855432#27855432</a></li>
-<li><a href="http://stackoverflow.com/questions/32438052/job-queue-for-hive-action-in-oozie" target="_blank" rel="external">http://stackoverflow.com/questions/32438052/job-queue-for-hive-action-in-oozie</a></li>
-<li><a href="http://www.163java.com/l/7490801483380675428/hadoop-oozie-hivehuepig" target="_blank" rel="external">http://www.163java.com/l/7490801483380675428/hadoop-oozie-hivehuepig</a></li>
+<li><a href="http://www.lamborryan.com/oozie-action-dead-lock/" target="_blank" rel="noopener">http://www.lamborryan.com/oozie-action-dead-lock/</a></li>
+<li><a href="http://stackoverflow.com/questions/27653937/error-on-running-multiple-workflow-in-oozie-4-1-0/27855432#27855432" target="_blank" rel="noopener">http://stackoverflow.com/questions/27653937/error-on-running-multiple-workflow-in-oozie-4-1-0/27855432#27855432</a></li>
+<li><a href="http://stackoverflow.com/questions/32438052/job-queue-for-hive-action-in-oozie" target="_blank" rel="noopener">http://stackoverflow.com/questions/32438052/job-queue-for-hive-action-in-oozie</a></li>
+<li><a href="http://www.163java.com/l/7490801483380675428/hadoop-oozie-hivehuepig" target="_blank" rel="noopener">http://www.163java.com/l/7490801483380675428/hadoop-oozie-hivehuepig</a></li>
 </ul>
 <blockquote>
 <p>解决：</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">## 公平调度器的参考：</div><div class="line">* http://t.dbdao.com/archives/hadoop-fair-scheduler.html</div><div class="line">* http://hadoop.apache.org/docs/r2.6.0/hadoop-yarn/hadoop-yarn-site/FairScheduler.html</div><div class="line"></div><div class="line">在使用hadoop 公平调度器的情况下，在oozie的执行任务中加入配置（可以是全局配置）如下：</div><div class="line">&lt;property&gt;</div><div class="line">	&lt;name&gt;oozie.launcher.mapred.job.queue.name&lt;/name&gt;</div><div class="line">	&lt;value&gt;oozie&lt;/value&gt;</div><div class="line">&lt;/property&gt;</div><div class="line"></div><div class="line">## 这样 oozie launcher 就会在 oozie 的队列中执行，而其他类型的任务还是像以前一样指定执行队列即可。</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">## 公平调度器的参考：</span><br><span class="line">* http://t.dbdao.com/archives/hadoop-fair-scheduler.html</span><br><span class="line">* http://hadoop.apache.org/docs/r2.6.0/hadoop-yarn/hadoop-yarn-site/FairScheduler.html</span><br><span class="line"></span><br><span class="line">在使用hadoop 公平调度器的情况下，在oozie的执行任务中加入配置（可以是全局配置）如下：</span><br><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;oozie.launcher.mapred.job.queue.name&lt;/name&gt;</span><br><span class="line">	&lt;value&gt;oozie&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">## 这样 oozie launcher 就会在 oozie 的队列中执行，而其他类型的任务还是像以前一样指定执行队列即可。</span><br></pre></td></tr></table></figure>
 <h1 id="3-High-Availability-HA"><a href="#3-High-Availability-HA" class="headerlink" title="3. High Availability (HA)"></a>3. High Availability (HA)</h1><p>Oozie允许针对同一台数据库建立 许多的 <code>Oozie Servers</code>，来提供高可用的 Oozie 服务。</p>
 <blockquote>
 <p>前提：</p>
@@ -144,21 +144,21 @@
 <li>1、 数据库支持多并发连接, 默认的Derby不支持。</li>
 <li>2、 Zookeeper协调。</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Apache ZooKeeper 是一个分布式、开源的分布式应用服务协调者。Oozie就使用它进行Oozie服务之间的通信。为了达到高可用最大化，至少需要3台Zookeeper服务器。</div><div class="line">ZK的官网 http://zookeeper.apache.org/</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Apache ZooKeeper 是一个分布式、开源的分布式应用服务协调者。Oozie就使用它进行Oozie服务之间的通信。为了达到高可用最大化，至少需要3台Zookeeper服务器。</span><br><span class="line">ZK的官网 http://zookeeper.apache.org/</span><br></pre></td></tr></table></figure>
 <ul>
 <li><p>3、 虽然不是强制性，但最好每个Oozie Server的配置都一致。</p>
 </li>
 <li><p>4、负载均衡，虚拟 IP 或者 Round-Robin DNS</p>
 </li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">这么做是为了给 用户访问 或者 JobTracker/ResourceManager的url回调 提供一个统一的单个访问切入点。负载均衡器需要在Oozie服务之前实现分布式请求的转发，用户访问（Oozie Client，浏览器 或者 REST API）应该连接负载均衡器。</div><div class="line">为了达到一个 full HA，负载均衡最好也有HA的支持，否则会出现单点故障。</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这么做是为了给 用户访问 或者 JobTracker/ResourceManager的url回调 提供一个统一的单个访问切入点。负载均衡器需要在Oozie服务之前实现分布式请求的转发，用户访问（Oozie Client，浏览器 或者 REST API）应该连接负载均衡器。</span><br><span class="line">为了达到一个 full HA，负载均衡最好也有HA的支持，否则会出现单点故障。</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>配置步骤：</p>
 </blockquote>
 <ul>
 <li>1、正常配个多个Oozie Servers（配置一致）。确保它们连接的同一台数据库，且 不要启动它们 。</li>
 </ul>
-<h1 id="4-三方jar"><a href="#4-三方jar" class="headerlink" title="4. 三方jar"></a>4. 三方jar</h1><p><a href="http://blog.csdn.net/bluishglc/article/details/46005269" target="_blank" rel="external">http://blog.csdn.net/bluishglc/article/details/46005269</a></p>
+<h1 id="4-三方jar"><a href="#4-三方jar" class="headerlink" title="4. 三方jar"></a>4. 三方jar</h1><p><a href="http://blog.csdn.net/bluishglc/article/details/46005269" target="_blank" rel="noopener">http://blog.csdn.net/bluishglc/article/details/46005269</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -187,9 +187,9 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/oozie/Oozie搭建常见问题/" title="Oozie搭建常见问题">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   Oozie搭建常见问题</span>
 </a>
@@ -197,8 +197,8 @@
 
 
 <div class="next">
-<a href="/icemimosa/oozie/Oozie-7_Java API/"  title="Oozie-7_Java API">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/oozie/Oozie-7_Java API/" title="Oozie-7_Java API">
+ <strong>NEXT:</strong><br> 
  <span>Oozie-7_Java API
 </span>
 </a>
@@ -227,7 +227,7 @@
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -252,7 +252,7 @@
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -283,7 +283,7 @@
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -311,7 +311,7 @@
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -325,7 +325,7 @@
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -333,7 +333,7 @@
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -341,7 +341,7 @@
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -403,7 +403,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -614,6 +614,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

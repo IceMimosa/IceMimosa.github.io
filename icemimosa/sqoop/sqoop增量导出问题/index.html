@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>sqoop增量导出问题 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -40,7 +40,7 @@
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -48,7 +48,7 @@
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -58,7 +58,7 @@
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -75,18 +75,18 @@
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -113,14 +113,14 @@
 		
 		<p>#sqoop增量导出问题  </p>
 <p>##1、未分区表<br>1、默认情况；</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqoop  export  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table dwd_test --export-dir hdfs://127.0.0.1:9000/user/hive/warehouse/dwd_test --input-fields-terminated-by &quot;\001&quot;  --input-lines-terminated-by &apos;\n&apos;  --input-escaped-by \\  --input-null-string &quot;&apos;\\\\N&apos;&quot;  --input-null-non-string &quot;&apos;\\\N&apos;&quot;  -m 1</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop  export  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table dwd_test --export-dir hdfs://127.0.0.1:9000/user/hive/warehouse/dwd_test --input-fields-terminated-by &quot;\001&quot;  --input-lines-terminated-by &apos;\n&apos;  --input-escaped-by \\  --input-null-string &quot;&apos;\\\\N&apos;&quot;  --input-null-non-string &quot;&apos;\\\N&apos;&quot;  -m 1</span><br></pre></td></tr></table></figure>
 <p>以上为sqoop命令，当不指定–update-mode，默认时，默认为生成insert语句然后执行，若增量导，会失败。<br>该模式只能是在关系数据表里不存在要导入的记录时才能使用，比如要导入的hdfs中有一条id=1的记录，如果在mysql表里已经有一条记录id=2，那么导入会失败（mysql表已指定主键的情况下，若没有指定主键，则不会失败，记录会重复导入）。这种模式必须是插入一个空表。</p>
 <p>2、指定–update-key时；</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqoop  export  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table dwd_test --export-dir hdfs://127.0.0.1:9000/user/hive/warehouse/dwd_test --input-fields-terminated-by &quot;\001&quot;  --input-lines-terminated-by &apos;\n&apos;  --input-escaped-by \\  --input-null-string &quot;&apos;\\\\N&apos;&quot;  --input-null-non-string &quot;&apos;\\\N&apos;&quot;  -m 1 --update-key id</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop  export  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table dwd_test --export-dir hdfs://127.0.0.1:9000/user/hive/warehouse/dwd_test --input-fields-terminated-by &quot;\001&quot;  --input-lines-terminated-by &apos;\n&apos;  --input-escaped-by \\  --input-null-string &quot;&apos;\\\\N&apos;&quot;  --input-null-non-string &quot;&apos;\\\N&apos;&quot;  -m 1 --update-key id</span><br></pre></td></tr></table></figure>
 <p>以上为sqoop命令，当加上参数–update-key id，以id为更新列，此时导，只会更新已经存在的。例如要导入的hdfs中有四条记录，id分别为1，2，3，4，mysql表中有id为1，2，3的三条记录。此时加上–update-key id参数，一一匹配，则mysql表中id为1，2，3的记录会被更新为hdfs中的新导入的记录。hdfs中第4条id为4的记录不会保存在mysql中。</p>
 <p>个人认为<strong>解决方案</strong>：经过测试，可以使用–update-mode allowinsert –update-key id 两个参数同时使用，效果为：若以–update-key指定的列匹配到存在，则更新；若匹配不到不存在，则插入（此时mysql必须指定主键，否则会产生数据全部重复导入的情况）。可以产生增量导出的效果。但是效率未经过大数据测试，效率不确定。</p>
 <p>##2、分区表</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqoop  export  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table dwd_partition --export-dir hdfs://127.0.0.1:9000/user/hive/warehouse/dwd_partition/pt=20161110 --input-fields-terminated-by &quot;\001&quot;  --input-lines-terminated-by &apos;\n&apos;  --input-escaped-by \\  --input-null-string &quot;&apos;\\\\N&apos;&quot;  --input-null-non-string &quot;&apos;\\\N&apos;&quot;  -m 1</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop  export  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table dwd_partition --export-dir hdfs://127.0.0.1:9000/user/hive/warehouse/dwd_partition/pt=20161110 --input-fields-terminated-by &quot;\001&quot;  --input-lines-terminated-by &apos;\n&apos;  --input-escaped-by \\  --input-null-string &quot;&apos;\\\\N&apos;&quot;  --input-null-non-string &quot;&apos;\\\N&apos;&quot;  -m 1</span><br></pre></td></tr></table></figure>
 <p>以上为sqoop命令。若为分区表，则导出时不能只指定到该表所在的目录，必须要指定到分区所在的目录。否则会报错：<code>java.io.FileNotFoundException: Path is not a file: /user/hive/warehouse/dwd_partition/pt=20161110</code><br>两种模式情况与未分区表相同。</p>
 <p>个人认为增量导出<strong>解决方案</strong>：<br>1、若根据日期分期，则每天导出最新的分区中的数据。若根据其他信息分区，则每天递增分区信息进行导出。<br>2.每个分区同未分区表，使用–update-mode allowinsert –update-key id</p>
 <blockquote>
@@ -141,7 +141,7 @@
 </ul>
 <p>By default, sqoop-export appends new rows to a table; each input record is transformed into an INSERT statement that adds a row to the target database table. If your table has constraints (e.g., a primary key column whose values must be unique) and already contains data, you must take care to avoid inserting records that violate these constraints. The export process will fail if an INSERT statement fails. This mode is primarily intended for exporting records to a new, empty table intended to receive these results.<br>If you specify the –update-key argument, Sqoop will instead modify an existing dataset in the database. Each input record is treated as an UPDATEstatement that modifies an existing row. The row a statement modifies is determined by the column name(s) specified with –update-key</p>
 <blockquote>
-<p>参考文档： <a href="https://sqoop.apache.org/docs/1.4.6/SqoopUserGuide.html#_create_oracle_tables" target="_blank" rel="external">官方的使用者手册</a>  </p>
+<p>参考文档： <a href="https://sqoop.apache.org/docs/1.4.6/SqoopUserGuide.html#_create_oracle_tables" target="_blank" rel="noopener">官方的使用者手册</a>  </p>
 </blockquote>
   
 	</div>
@@ -171,9 +171,9 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/hive/hive表动态分区/" title="Hive表动态分区">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   Hive表动态分区</span>
 </a>
@@ -181,8 +181,8 @@
 
 
 <div class="next">
-<a href="/icemimosa/sqoop/Sqoop源码改造/"  title="Sqoop 源码改造">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/sqoop/Sqoop源码改造/" title="Sqoop 源码改造">
+ <strong>NEXT:</strong><br> 
  <span>Sqoop 源码改造
 </span>
 </a>
@@ -211,7 +211,7 @@
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -236,7 +236,7 @@
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -267,7 +267,7 @@
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -295,7 +295,7 @@
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -309,7 +309,7 @@
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -317,7 +317,7 @@
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -325,7 +325,7 @@
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -387,7 +387,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -598,6 +598,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

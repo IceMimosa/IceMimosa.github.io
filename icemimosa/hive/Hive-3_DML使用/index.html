@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>Hive-3_DML使用 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -46,7 +46,7 @@
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -54,7 +54,7 @@
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -64,7 +64,7 @@
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -81,18 +81,18 @@
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -119,13 +119,13 @@
 		
 		<h1 id="Hive-3-DML使用"><a href="#Hive-3-DML使用" class="headerlink" title="Hive-3_DML使用"></a>Hive-3_DML使用</h1><p>[TOC]</p>
 <blockquote>
-<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DML" target="_blank" rel="external">原文参考</a></p>
+<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DML" target="_blank" rel="noopener">原文参考</a></p>
 </blockquote>
 <h1 id="1-Loading-files-into-tables"><a href="#1-Loading-files-into-tables" class="headerlink" title="1. Loading files into tables"></a>1. Loading files into tables</h1><p><code>load</code> 数据到hive表中是不会对数据进行转化的, 其实load的操作就是数据文件直接move/copy到hive表中。</p>
 <blockquote>
 <p>语法</p>
 </blockquote>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">LOAD</span> <span class="keyword">DATA</span> [<span class="keyword">LOCAL</span>] INPATH <span class="string">'filepath'</span> [OVERWRITE] <span class="keyword">INTO</span> <span class="keyword">TABLE</span> tablename [<span class="keyword">PARTITION</span> (partcol1=val1, partcol2=val2 ...)]</div></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">LOAD</span> <span class="keyword">DATA</span> [<span class="keyword">LOCAL</span>] INPATH <span class="string">'filepath'</span> [OVERWRITE] <span class="keyword">INTO</span> <span class="keyword">TABLE</span> tablename [<span class="keyword">PARTITION</span> (partcol1=val1, partcol2=val2 ...)]</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>说明</p>
 </blockquote>
@@ -138,7 +138,7 @@
 </li>
 <li>加载数据的目标可以是一个表或分区。如果<code>表是分区表</code>, 那么必须指定需要导入的分区。比如：</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">load data local inpath &apos;/Users/icemimosa/orders.txt&apos; into table orders partition (pt=&quot;2016-01-02&quot;);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">load data local inpath &apos;/Users/icemimosa/orders.txt&apos; into table orders partition (pt=&quot;2016-01-02&quot;);</span><br></pre></td></tr></table></figure>
 <ul>
 <li><code>filepath</code> 可以是一个文件, 也可以是一个目录(会加载目录下所有的文件)。</li>
 <li>如果指定 <code>LOCAL</code> 关键字<ul>
@@ -161,13 +161,13 @@
 <ul>
 <li><code>filepath</code> 不能包含子目录</li>
 <li>如果没有指定 <code>LOCAL</code>，<code>filepath</code>必须和hive的table(partition)在同一个文件系统</li>
-<li>如果数据是被压缩的, 参照 <a href="https://cwiki.apache.org/confluence/display/Hive/CompressedStorage" target="_blank" rel="external">CompressedStorage</a></li>
+<li>如果数据是被压缩的, 参照 <a href="https://cwiki.apache.org/confluence/display/Hive/CompressedStorage" target="_blank" rel="noopener">CompressedStorage</a></li>
 </ul>
 <h1 id="2-Inserting-data-into-Hive-Tables-from-queries"><a href="#2-Inserting-data-into-Hive-Tables-from-queries" class="headerlink" title="2. Inserting data into Hive Tables from queries"></a>2. Inserting data into Hive Tables from queries</h1><p>查询的结果可以通过 <code>insert</code> 插入到指定表中</p>
 <blockquote>
 <p>语法</p>
 </blockquote>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">## 标准的语法</div><div class="line">INSERT OVERWRITE TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...) [IF NOT EXISTS]] select_statement1 FROM from_statement;</div><div class="line">INSERT INTO TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...)] select_statement1 FROM from_statement;</div><div class="line">INSERT INTO TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...)] (z,y) select_statement1 FROM from_statement;</div><div class="line"> </div><div class="line">## Hive extension (multiple inserts):</div><div class="line">FROM from_statement</div><div class="line">INSERT OVERWRITE TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...) [IF NOT EXISTS]] select_statement1</div><div class="line">[INSERT OVERWRITE TABLE tablename2 [PARTITION ... [IF NOT EXISTS]] select_statement2]</div><div class="line">[INSERT INTO TABLE tablename2 [PARTITION ...] select_statement2] ...;</div><div class="line">FROM from_statement</div><div class="line">INSERT INTO TABLE tablename1 [PARTITION (partcol1=val1, partcol2=val2 ...)] select_statement1</div><div class="line">[INSERT INTO TABLE tablename2 [PARTITION ...] select_statement2]</div><div class="line">[INSERT OVERWRITE TABLE tablename2 [PARTITION ... [IF NOT EXISTS]] select_statement2] ...;</div><div class="line"> </div><div class="line">## Hive extension (dynamic partition inserts):</div><div class="line">INSERT OVERWRITE TABLE tablename PARTITION (partcol1[=val1], partcol2[=val2] ...) select_statement FROM from_statement;</div><div class="line">INSERT INTO TABLE tablename PARTITION (partcol1[=val1], partcol2[=val2] ...) select_statement FROM from_statement;</div></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 标准的语法</span></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> tablename1 [<span class="keyword">PARTITION</span> (partcol1=val1, partcol2=val2 ...) [<span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>]] select_statement1 <span class="keyword">FROM</span> from_statement;</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">TABLE</span> tablename1 [<span class="keyword">PARTITION</span> (partcol1=val1, partcol2=val2 ...)] select_statement1 <span class="keyword">FROM</span> from_statement;</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">TABLE</span> tablename1 [<span class="keyword">PARTITION</span> (partcol1=val1, partcol2=val2 ...)] (z,y) select_statement1 <span class="keyword">FROM</span> from_statement;</span><br><span class="line"> </span><br><span class="line"><span class="comment">## Hive extension (multiple inserts):</span></span><br><span class="line">FROM from_statement</span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> tablename1 [<span class="keyword">PARTITION</span> (partcol1=val1, partcol2=val2 ...) [<span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>]] select_statement1</span><br><span class="line">[<span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> tablename2 [<span class="keyword">PARTITION</span> ... [<span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>]] select_statement2]</span><br><span class="line">[<span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">TABLE</span> tablename2 [<span class="keyword">PARTITION</span> ...] select_statement2] ...;</span><br><span class="line">FROM from_statement</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">TABLE</span> tablename1 [<span class="keyword">PARTITION</span> (partcol1=val1, partcol2=val2 ...)] select_statement1</span><br><span class="line">[<span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">TABLE</span> tablename2 [<span class="keyword">PARTITION</span> ...] select_statement2]</span><br><span class="line">[<span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> tablename2 [<span class="keyword">PARTITION</span> ... [<span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>]] select_statement2] ...;</span><br><span class="line"> </span><br><span class="line"><span class="comment">## Hive extension (dynamic partition inserts):</span></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> tablename <span class="keyword">PARTITION</span> (partcol1[=val1], partcol2[=val2] ...) select_statement <span class="keyword">FROM</span> from_statement;</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">TABLE</span> tablename <span class="keyword">PARTITION</span> (partcol1[=val1], partcol2[=val2] ...) select_statement <span class="keyword">FROM</span> from_statement;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>说明</p>
 </blockquote>
@@ -178,13 +178,13 @@
 <li>As of Hive 1.2.0 each INSERT INTO T can take a column list like INSERT INTO T (z, x, c1)</li>
 </ul>
 <blockquote>
-<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DML#LanguageManualDML-DynamicPartitionInserts" target="_blank" rel="external">Dynamic Partition Inserts 参考</a></p>
+<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DML#LanguageManualDML-DynamicPartitionInserts" target="_blank" rel="noopener">Dynamic Partition Inserts 参考</a></p>
 </blockquote>
 <h1 id="3-Writing-data-into-the-filesystem-from-queries"><a href="#3-Writing-data-into-the-filesystem-from-queries" class="headerlink" title="3. Writing data into the filesystem from queries"></a>3. Writing data into the filesystem from queries</h1><p>查询的结果可以写入到文件系统中</p>
 <blockquote>
 <p>语法</p>
 </blockquote>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">## Standard syntax:</div><div class="line">INSERT OVERWRITE [LOCAL] DIRECTORY directory1</div><div class="line">  [ROW FORMAT row_format] [STORED AS file_format] (Note: Only available starting with Hive 0.11.0)</div><div class="line">  SELECT ... FROM ...</div><div class="line"> </div><div class="line">## Hive extension (multiple inserts):</div><div class="line">FROM from_statement</div><div class="line">INSERT OVERWRITE [LOCAL] DIRECTORY directory1 select_statement1</div><div class="line">[INSERT OVERWRITE [LOCAL] DIRECTORY directory2 select_statement2] ...</div><div class="line"> </div><div class="line"> </div><div class="line">row_format</div><div class="line">  : DELIMITED [FIELDS TERMINATED BY char [ESCAPED BY char]] [COLLECTION ITEMS TERMINATED BY char]</div><div class="line">        [MAP KEYS TERMINATED BY char] [LINES TERMINATED BY char]</div><div class="line">        [NULL DEFINED AS char] (Note: Only available starting with Hive 0.13)</div></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Standard syntax:</span></span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE [<span class="keyword">LOCAL</span>] <span class="keyword">DIRECTORY</span> directory1</span><br><span class="line">  [<span class="keyword">ROW</span> <span class="keyword">FORMAT</span> row_format] [<span class="keyword">STORED</span> <span class="keyword">AS</span> file_format] (Note: <span class="keyword">Only</span> available <span class="keyword">starting</span> <span class="keyword">with</span> Hive <span class="number">0.11</span><span class="number">.0</span>)</span><br><span class="line">  <span class="keyword">SELECT</span> ... <span class="keyword">FROM</span> ...</span><br><span class="line"> </span><br><span class="line"><span class="comment">## Hive extension (multiple inserts):</span></span><br><span class="line"><span class="keyword">FROM</span> from_statement</span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE [<span class="keyword">LOCAL</span>] <span class="keyword">DIRECTORY</span> directory1 select_statement1</span><br><span class="line">[<span class="keyword">INSERT</span> OVERWRITE [<span class="keyword">LOCAL</span>] <span class="keyword">DIRECTORY</span> directory2 select_statement2] ...</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">row_format</span><br><span class="line">  : <span class="keyword">DELIMITED</span> [<span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="built_in">char</span> [<span class="keyword">ESCAPED</span> <span class="keyword">BY</span> <span class="built_in">char</span>]] [COLLECTION ITEMS <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="built_in">char</span>]</span><br><span class="line">        [<span class="keyword">MAP</span> <span class="keyword">KEYS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="built_in">char</span>] [<span class="keyword">LINES</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="built_in">char</span>]</span><br><span class="line">        [<span class="literal">NULL</span> DEFINED <span class="keyword">AS</span> <span class="built_in">char</span>] (Note: <span class="keyword">Only</span> available <span class="keyword">starting</span> <span class="keyword">with</span> Hive <span class="number">0.13</span>)</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>说明</p>
 </blockquote>
@@ -196,13 +196,13 @@
 <blockquote>
 <p>语法</p>
 </blockquote>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">## Standard Syntax:</div><div class="line">INSERT INTO TABLE tablename [PARTITION (partcol1[=val1], partcol2[=val2] ...)] VALUES values_row [, values_row ...]</div><div class="line"> </div><div class="line">## Where values_row is:</div><div class="line">( value [, value ...] )</div><div class="line">## where a value is either null or any valid SQL literal</div></pre></td></tr></table></figure>
-<h1 id="5-Update"><a href="#5-Update" class="headerlink" title="5. Update"></a>5. Update</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">UPDATE</span> tablename <span class="keyword">SET</span> <span class="keyword">column</span> = <span class="keyword">value</span> [, <span class="keyword">column</span> = <span class="keyword">value</span> ...] [<span class="keyword">WHERE</span> expression]</div></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Standard Syntax:</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">TABLE</span> tablename [<span class="keyword">PARTITION</span> (partcol1[=val1], partcol2[=val2] ...)] <span class="keyword">VALUES</span> values_row [, values_row ...]</span><br><span class="line"> </span><br><span class="line"><span class="comment">## Where values_row is:</span></span><br><span class="line">( <span class="keyword">value</span> [, <span class="keyword">value</span> ...] )</span><br><span class="line"><span class="comment">## where a value is either null or any valid SQL literal</span></span><br></pre></td></tr></table></figure>
+<h1 id="5-Update"><a href="#5-Update" class="headerlink" title="5. Update"></a>5. Update</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> tablename <span class="keyword">SET</span> <span class="keyword">column</span> = <span class="keyword">value</span> [, <span class="keyword">column</span> = <span class="keyword">value</span> ...] [<span class="keyword">WHERE</span> expression]</span><br></pre></td></tr></table></figure>
 <ul>
 <li>partition的column不能被更新</li>
 <li>Bucketing columns 也不能被更新</li>
 </ul>
-<h1 id="6-Delete"><a href="#6-Delete" class="headerlink" title="6. Delete"></a>6. Delete</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> tablename [<span class="keyword">WHERE</span> expression]</div></pre></td></tr></table></figure>
+<h1 id="6-Delete"><a href="#6-Delete" class="headerlink" title="6. Delete"></a>6. Delete</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> tablename [<span class="keyword">WHERE</span> expression]</span><br></pre></td></tr></table></figure>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -231,9 +231,9 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/hive/Hive-4_Select语句/" title="Hive-4_Select语句">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   Hive-4_Select语句</span>
 </a>
@@ -241,8 +241,8 @@
 
 
 <div class="next">
-<a href="/icemimosa/hive/Hive-2_DDL使用/"  title="Hive-2_DDL使用">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/hive/Hive-2_DDL使用/" title="Hive-2_DDL使用">
+ <strong>NEXT:</strong><br> 
  <span>Hive-2_DDL使用
 </span>
 </a>
@@ -271,7 +271,7 @@
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -296,7 +296,7 @@
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -327,7 +327,7 @@
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -355,7 +355,7 @@
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -369,7 +369,7 @@
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -377,7 +377,7 @@
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -385,7 +385,7 @@
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -447,7 +447,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -658,6 +658,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

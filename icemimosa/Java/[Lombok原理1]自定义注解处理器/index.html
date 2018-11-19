@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>【Lombok原理1】自定义注解处理器 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -41,7 +41,7 @@ Parse and Enter 编译器会将java文件解析成Abstract Syntax Tree (AST)，�
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -49,7 +49,7 @@ Parse and Enter 编译器会将java文件解析成Abstract Syntax Tree (AST)，�
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -59,7 +59,7 @@ Parse and Enter 编译器会将java文件解析成Abstract Syntax Tree (AST)，�
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -76,18 +76,18 @@ Parse and Enter 编译器会将java文件解析成Abstract Syntax Tree (AST)，�
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -113,38 +113,38 @@ Parse and Enter 编译器会将java文件解析成Abstract Syntax Tree (AST)，�
 		</div>
 		
 		<p>[TOC]</p>
-<h2 id="1-java编译过程"><a href="#1-java编译过程" class="headerlink" title="1. java编译过程"></a>1. java编译过程</h2><p>在搞清楚<a href="https://projectlombok.org/" target="_blank" rel="external">Lombok</a>的原理之前, 首先看下java编译的基本过程。如图是<a href="http://openjdk.java.net/groups/compiler/doc/compilation-overview/index.html" target="_blank" rel="external">OpenJDK</a>提供的过程图, 大致分为三个步骤:</p>
+<h2 id="1-java编译过程"><a href="#1-java编译过程" class="headerlink" title="1. java编译过程"></a>1. java编译过程</h2><p>在搞清楚<a href="https://projectlombok.org/" target="_blank" rel="noopener">Lombok</a>的原理之前, 首先看下java编译的基本过程。如图是<a href="http://openjdk.java.net/groups/compiler/doc/compilation-overview/index.html" target="_blank" rel="noopener">OpenJDK</a>提供的过程图, 大致分为三个步骤:</p>
 <ol>
 <li><p><strong>Parse and Enter</strong><br> 编译器会将java文件解析成Abstract Syntax Tree (AST)，即<code>抽象语法树</code>，这个过程会校验语法的正确性等等。</p>
 </li>
-<li><p><strong>Annotation Processing</strong><br> 在这个过程中自定义的注解处理器将会被调用，在这个过程中你可以对语法树进行校验（如<a href="https://github.com/checkstyle/checkstyle" target="_blank" rel="external">checkstyle</a>所做的），你也可以生成新的java文件等等。</p>
+<li><p><strong>Annotation Processing</strong><br> 在这个过程中自定义的注解处理器将会被调用，在这个过程中你可以对语法树进行校验（如<a href="https://github.com/checkstyle/checkstyle" target="_blank" rel="noopener">checkstyle</a>所做的），你也可以生成新的java文件等等。</p>
 </li>
 <li><p><strong>Analyse and Generate</strong><br> 最后一步编译器就会根据抽象语法树生成对应的字节码(class文件)。</p>
 </li>
 </ol>
 <p><img src="http://openjdk.java.net/groups/compiler/doc/compilation-overview/javac-flow.png" alt=""></p>
 <h2 id="2-自定义HelloWorld注解处理器"><a href="#2-自定义HelloWorld注解处理器" class="headerlink" title="2. 自定义HelloWorld注解处理器"></a>2. 自定义HelloWorld注解处理器</h2><p>这样看来我们要想实现类似lombok的功能，看起来就好像很简单，那就是在完成上述的<code>第二部操作</code>。</p>
-<p>所有代码可以参考：<a href="https://github.com/IceMimosa/apt" target="_blank" rel="external">https://github.com/IceMimosa/apt</a></p>
-<h3 id="2-1-定义一个注解"><a href="#2-1-定义一个注解" class="headerlink" title="2.1 定义一个注解"></a>2.1 定义一个注解</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Target</span>(ElementType.TYPE)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.SOURCE)</div><div class="line"><span class="meta">@Documented</span></div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> TestAnnotation &#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 测试名称</div><div class="line">     */</div><div class="line">    <span class="function">String <span class="title">name</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>所有代码可以参考：<a href="https://github.com/IceMimosa/apt" target="_blank" rel="noopener">https://github.com/IceMimosa/apt</a></p>
+<h3 id="2-1-定义一个注解"><a href="#2-1-定义一个注解" class="headerlink" title="2.1 定义一个注解"></a>2.1 定义一个注解</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.SOURCE)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> TestAnnotation &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 测试名称</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">String <span class="title">name</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="2-2-定义一个处理器"><a href="#2-2-定义一个处理器" class="headerlink" title="2.2 定义一个处理器"></a>2.2 定义一个处理器</h3><p>定义一个处理器, 继承<code>AbstractProcessor</code>类。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">@SupportedAnnotationTypes(&#123;&quot;io.patamon.apt.annotation.TestAnnotation&quot;&#125;)</div><div class="line">@SupportedSourceVersion(SourceVersion.RELEASE_8)</div><div class="line">public class TestProcessor extends AbstractProcessor &#123;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public boolean process(Set&lt;? extends TypeElement&gt; annotations, RoundEnvironment roundEnv) &#123;</div><div class="line">        for (TypeElement element : annotations) &#123;</div><div class="line">            this.processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, &quot;HelloWorld, &quot; + element.getSimpleName());</div><div class="line">            System.out.println(&quot;HelloWorld, &quot; + element.getSimpleName());</div><div class="line">        &#125;</div><div class="line">        return false;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@SupportedAnnotationTypes(&#123;&quot;io.patamon.apt.annotation.TestAnnotation&quot;&#125;)</span><br><span class="line">@SupportedSourceVersion(SourceVersion.RELEASE_8)</span><br><span class="line">public class TestProcessor extends AbstractProcessor &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean process(Set&lt;? extends TypeElement&gt; annotations, RoundEnvironment roundEnv) &#123;</span><br><span class="line">        for (TypeElement element : annotations) &#123;</span><br><span class="line">            this.processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, &quot;HelloWorld, &quot; + element.getSimpleName());</span><br><span class="line">            System.out.println(&quot;HelloWorld, &quot; + element.getSimpleName());</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="2-3-注册处理器服务"><a href="#2-3-注册处理器服务" class="headerlink" title="2.3 注册处理器服务"></a>2.3 注册处理器服务</h3><p>在resources目录下新建目录<code>META-INF/services</code>，新建文件<code>javax.annotation.processing.Processor</code>，内容如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">io.patamon.apt.processor.TestProcessor</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">io.patamon.apt.processor.TestProcessor</span><br></pre></td></tr></table></figure>
 <h3 id="2-4-测试注解"><a href="#2-4-测试注解" class="headerlink" title="2.4 测试注解"></a>2.4 测试注解</h3><p>注意：测试的类不要和注解处理在同一个模块（或jar包），不然编译的时候会报类找不到的错误。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@TestAnnotation(name = &quot;TestAnnotationName&quot;)</div><div class="line">public class TestAnnotationDemo &#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@TestAnnotation(name = &quot;TestAnnotationName&quot;)</span><br><span class="line">public class TestAnnotationDemo &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="2-5-查看效果"><a href="#2-5-查看效果" class="headerlink" title="2.5 查看效果"></a>2.5 查看效果</h3><p>1、 如果是在IDEA中测试，需要打开<code>注解编译</code>，位置: <code>Preferences &gt; Build, Execition, Deployment &gt; compiler &gt; Annotation Processors</code></p>
 <p><img src="http://ice-img.pigutu.com/2018-02-04-131656.png" alt=""></p>
 <p>或者pom.xml中添加build配置，IDEA会自动打开和关闭，详细可以参考代码。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"> <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">compilerArgument</span>&gt;</span>-proc:none<span class="tag">&lt;/<span class="name">compilerArgument</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">compilerArgument</span>&gt;</span>-proc:none<span class="tag">&lt;/<span class="name">compilerArgument</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>此时我们点击<code>build &gt; Rebuild Project</code>，会在IDEA的<code>message控制台</code>看到如下信息：</p>
 <p><img src="http://ice-img.pigutu.com/2018-02-04-131751.png" alt=""></p>
 <p>2、 在控制台执行<code>mvn clean package -DskipTests</code></p>
 <p>需要在pom的build中添加<code>tools.jar</code>的配置</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.6.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">compilerArguments</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">bootclasspath</span>&gt;</span>$&#123;JAVA_HOME&#125;/jre/lib/rt.jar:$&#123;JAVA_HOME&#125;/jre/lib/jce.jar:$&#123;JAVA_HOME&#125;/lib/tools.jar<span class="tag">&lt;/<span class="name">bootclasspath</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">compilerArguments</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.6.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">compilerArguments</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">bootclasspath</span>&gt;</span>$&#123;JAVA_HOME&#125;/jre/lib/rt.jar:$&#123;JAVA_HOME&#125;/jre/lib/jce.jar:$&#123;JAVA_HOME&#125;/lib/tools.jar<span class="tag">&lt;/<span class="name">bootclasspath</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">compilerArguments</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p><img src="http://ice-img.pigutu.com/2018-02-04-132039.png" alt=""></p>
 <h2 id="3-参考"><a href="#3-参考" class="headerlink" title="3. 参考"></a>3. 参考</h2><ul>
-<li><a href="http://notatube.blogspot.be/2010/11/project-lombok-trick-explained.html" target="_blank" rel="external">Lombok解释</a></li>
-<li><a href="http://notatube.blogspot.com/2010/12/project-lombok-creating-custom.html" target="_blank" rel="external">Project Lombok: Creating Custom Transformations</a></li>
+<li><a href="http://notatube.blogspot.be/2010/11/project-lombok-trick-explained.html" target="_blank" rel="noopener">Lombok解释</a></li>
+<li><a href="http://notatube.blogspot.com/2010/12/project-lombok-creating-custom.html" target="_blank" rel="noopener">Project Lombok: Creating Custom Transformations</a></li>
 </ul>
   
 	</div>
@@ -174,9 +174,9 @@ Parse and Enter 编译器会将java文件解析成Abstract Syntax Tree (AST)，�
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/Java/[Lombok原理2]生成java代码/" title="【Lombok原理2】生成java代码">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   【Lombok原理2】生成java代码</span>
 </a>
@@ -184,8 +184,8 @@ Parse and Enter 编译器会将java文件解析成Abstract Syntax Tree (AST)，�
 
 
 <div class="next">
-<a href="/icemimosa/其他/[转]Https前世今生/"  title="【转】Https前世今生">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/其他/[转]Https前世今生/" title="【转】Https前世今生">
+ <strong>NEXT:</strong><br> 
  <span>【转】Https前世今生
 </span>
 </a>
@@ -214,7 +214,7 @@ Parse and Enter 编译器会将java文件解析成Abstract Syntax Tree (AST)，�
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -239,7 +239,7 @@ Parse and Enter 编译器会将java文件解析成Abstract Syntax Tree (AST)，�
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -270,7 +270,7 @@ Parse and Enter 编译器会将java文件解析成Abstract Syntax Tree (AST)，�
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -298,7 +298,7 @@ Parse and Enter 编译器会将java文件解析成Abstract Syntax Tree (AST)，�
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -312,7 +312,7 @@ Parse and Enter 编译器会将java文件解析成Abstract Syntax Tree (AST)，�
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -320,7 +320,7 @@ Parse and Enter 编译器会将java文件解析成Abstract Syntax Tree (AST)，�
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -328,7 +328,7 @@ Parse and Enter 编译器会将java文件解析成Abstract Syntax Tree (AST)，�
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -390,7 +390,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -601,6 +601,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

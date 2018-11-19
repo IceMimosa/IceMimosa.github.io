@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>Hive-1_安装配置 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -41,7 +41,7 @@
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -49,7 +49,7 @@
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -59,7 +59,7 @@
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -76,18 +76,18 @@
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -115,36 +115,36 @@
 		<h1 id="Hive-1-安装配置"><a href="#Hive-1-安装配置" class="headerlink" title="Hive-1_安装配置"></a>Hive-1_安装配置</h1><p>[TOC]</p>
 <h1 id="1-节点"><a href="#1-节点" class="headerlink" title="1. 节点"></a>1. 节点</h1><p>Apache Hive是基于分布式存储（Hadoop HDFS）的一个数据仓库。它可以通过 <code>SQL</code> 很方便的读写、管理上面的庞大的数据集。用户可以通过 <code>命令行</code> 和 <code>JDBC Driver</code> 连接Hive并使用。</p>
 <h1 id="2-下载和安装"><a href="#2-下载和安装" class="headerlink" title="2. 下载和安装"></a>2. 下载和安装</h1><ul>
-<li>下载地址：<code>http://hive.apache.org/downloads.html</code> (如下载 1.2.1 版本, 也可以<a href="https://cwiki.apache.org/confluence/display/Hive/GettingStarted#GettingStarted-BuildingHivefromSource" title="编译源码" target="_blank" rel="external">手动下载源码进行编译</a>)</li>
+<li>下载地址：<code>http://hive.apache.org/downloads.html</code> (如下载 1.2.1 版本, 也可以<a href="https://cwiki.apache.org/confluence/display/Hive/GettingStarted#GettingStarted-BuildingHivefromSource" title="编译源码" target="_blank" rel="noopener">手动下载源码进行编译</a>)</li>
 <li>开发文档：<code>https://cwiki.apache.org/confluence/collector/pages.action?key=Hive</code></li>
 </ul>
 <blockquote>
-<p>这里有一些 <a href="https://cwiki.apache.org/confluence/display/Hive/GettingStarted#GettingStarted-Requirements" title="环境要求" target="_blank" rel="external">基本软件环境的要求</a>, 如JDK1.7以上, 还有Hadoop版本相关的注意点。</p>
+<p>这里有一些 <a href="https://cwiki.apache.org/confluence/display/Hive/GettingStarted#GettingStarted-Requirements" title="环境要求" target="_blank" rel="noopener">基本软件环境的要求</a>, 如JDK1.7以上, 还有Hadoop版本相关的注意点。</p>
 </blockquote>
 <h1 id="3-hive基本配置"><a href="#3-hive基本配置" class="headerlink" title="3. hive基本配置"></a>3. hive基本配置</h1><ul>
 <li>JDK的环境配置(不累赘了)</li>
 <li>Hadoop环境配置(不累赘了)</li>
 <li>Hive的环境变量配置</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">export HIVE_HOME=&quot;/Users/icemimosa/mimosa/hive-1.0.1&quot;</div><div class="line">export PATH=&quot;$HIVE_HOME/bin:$PATH&quot;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export HIVE_HOME=&quot;/Users/icemimosa/mimosa/hive-1.0.1&quot;</span><br><span class="line">export PATH=&quot;$HIVE_HOME/bin:$PATH&quot;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>hive是依赖Hadoop的，所以你需要配置上 <code>HADOOP_HOME</code> 的环境变量。或者在 <code>$HIVE_HOME/conf</code> 的 <code>hive-env.sh</code> ( hive-env.sh.template 修改一下名字)中最后可以看到Hadoop的配置。</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">## 如配置上</div><div class="line">HADOOP_HOME=/Users/icemimosa/mimosa/hadoop-2.7.1</div><div class="line"></div><div class="line">## hive conf</div><div class="line">export HIVE_CONF_DIR=/Users/icemimosa/mimosa/hive-1.0.1/conf</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">## 如配置上</span><br><span class="line">HADOOP_HOME=/Users/icemimosa/mimosa/hadoop-2.7.1</span><br><span class="line"></span><br><span class="line">## hive conf</span><br><span class="line">export HIVE_CONF_DIR=/Users/icemimosa/mimosa/hive-1.0.1/conf</span><br></pre></td></tr></table></figure>
 <h1 id="4-数据源配置"><a href="#4-数据源配置" class="headerlink" title="4. 数据源配置"></a>4. 数据源配置</h1><ul>
 <li>由于hive启动默认是使用的内嵌的 <code>Derby</code> 数据库，这个数据库只支持一个hive连接，使用不是很方便。</li>
 <li><p>所以这里将使用 <code>mysql</code> 进行 <code>hive元数据</code> 的存储</p>
 <ul>
 <li>1、将 mysql 的 jdbc 驱动拷贝到 <code>$HIVE_HOME/lib</code> 下</li>
 <li><p>2、修改conf下的 <code>hive-site.xml</code> 文件(由 hive-default.xml.template 修改而来)，注意这里先将 <code>hive-site.xml</code> 情况，需要覆盖什么配置从 hive-default.xml.template 拷贝即可。配置如下：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</div><div class="line">&lt;?xml-stylesheet type="text/xsl" href="configuration.xsl"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">	  <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">	    <span class="tag">&lt;<span class="name">name</span>&gt;</span>javax.jdo.option.ConnectionDriverName<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">	    <span class="tag">&lt;<span class="name">value</span>&gt;</span>com.mysql.jdbc.Driver<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">	    <span class="tag">&lt;<span class="name">description</span>&gt;</span>Driver class name for a JDBC metastore<span class="tag">&lt;/<span class="name">description</span>&gt;</span></div><div class="line">	  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	  <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">	      <span class="tag">&lt;<span class="name">name</span>&gt;</span>javax.jdo.option.ConnectionURL<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">	      <span class="tag">&lt;<span class="name">value</span>&gt;</span>jdbc:mysql://localhost:3306/hive?createDatabaseIfNotExist=true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">	      <span class="tag">&lt;<span class="name">description</span>&gt;</span>JDBC connect string for a JDBC metastore<span class="tag">&lt;/<span class="name">description</span>&gt;</span></div><div class="line">	  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	  <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">	      <span class="tag">&lt;<span class="name">name</span>&gt;</span>javax.jdo.option.ConnectionUserName<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">	      <span class="tag">&lt;<span class="name">value</span>&gt;</span>root<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">	      <span class="tag">&lt;<span class="name">description</span>&gt;</span>Username to use against metastore database<span class="tag">&lt;/<span class="name">description</span>&gt;</span></div><div class="line">	  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	  <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">	      <span class="tag">&lt;<span class="name">name</span>&gt;</span>javax.jdo.option.ConnectionPassword<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">	      <span class="tag">&lt;<span class="name">value</span>&gt;</span>******<span class="tag">&lt;/<span class="name">value</span>&gt;</span>        </div><div class="line">	      <span class="tag">&lt;<span class="name">description</span>&gt;</span>password to use against metastore database<span class="tag">&lt;/<span class="name">description</span>&gt;</span></div><div class="line">	  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span></span><br><span class="line"><span class="meta">&lt;?xml-stylesheet type="text/xsl" href="configuration.xsl"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">name</span>&gt;</span>javax.jdo.option.ConnectionDriverName<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">value</span>&gt;</span>com.mysql.jdbc.Driver<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">description</span>&gt;</span>Driver class name for a JDBC metastore<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	      <span class="tag">&lt;<span class="name">name</span>&gt;</span>javax.jdo.option.ConnectionURL<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	      <span class="tag">&lt;<span class="name">value</span>&gt;</span>jdbc:mysql://localhost:3306/hive?createDatabaseIfNotExist=true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">	      <span class="tag">&lt;<span class="name">description</span>&gt;</span>JDBC connect string for a JDBC metastore<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	      <span class="tag">&lt;<span class="name">name</span>&gt;</span>javax.jdo.option.ConnectionUserName<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	      <span class="tag">&lt;<span class="name">value</span>&gt;</span>root<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">	      <span class="tag">&lt;<span class="name">description</span>&gt;</span>Username to use against metastore database<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	      <span class="tag">&lt;<span class="name">name</span>&gt;</span>javax.jdo.option.ConnectionPassword<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	      <span class="tag">&lt;<span class="name">value</span>&gt;</span>******<span class="tag">&lt;/<span class="name">value</span>&gt;</span>        </span><br><span class="line">	      <span class="tag">&lt;<span class="name">description</span>&gt;</span>password to use against metastore database<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 </li>
 </ul>
 <pre><code>* 修改含有 `${system:java.io.tmpdir}` 的一些路径配置项
 
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.exec.local.scratchdir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">value</span>&gt;</span>/usr/local/var/hive/iotmp<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">description</span>&gt;</span>Local scratch space for Hive jobs<span class="tag">&lt;/<span class="name">description</span>&gt;</span></div><div class="line"> <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"> <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.downloaded.resources.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">value</span>&gt;</span>/usr/local/var/hive/$&#123;hive.session.id&#125;_resources<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">description</span>&gt;</span>Temporary local directory for added resources in the remote file system.<span class="tag">&lt;/<span class="name">description</span>&gt;</span></div><div class="line"> <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"> <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.querylog.location<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">value</span>&gt;</span>/usr/local/var/hive/iotemp<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">description</span>&gt;</span>Location of Hive run time structured log file<span class="tag">&lt;/<span class="name">description</span>&gt;</span></div><div class="line"> <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"> <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.server2.logging.operation.log.location<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">value</span>&gt;</span>/usr/local/var/hive/$&#123;system:user.name&#125;/operation_logs<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">description</span>&gt;</span>Top level directory where operation logs are stored if logging functionality is enabled<span class="tag">&lt;/<span class="name">description</span>&gt;</span></div><div class="line"> <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.exec.local.scratchdir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">value</span>&gt;</span>/usr/local/var/hive/iotmp<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">description</span>&gt;</span>Local scratch space for Hive jobs<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.downloaded.resources.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">value</span>&gt;</span>/usr/local/var/hive/$&#123;hive.session.id&#125;_resources<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">description</span>&gt;</span>Temporary local directory for added resources in the remote file system.<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.querylog.location<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">value</span>&gt;</span>/usr/local/var/hive/iotemp<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">description</span>&gt;</span>Location of Hive run time structured log file<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">name</span>&gt;</span>hive.server2.logging.operation.log.location<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">value</span>&gt;</span>/usr/local/var/hive/$&#123;system:user.name&#125;/operation_logs<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">description</span>&gt;</span>Top level directory where operation logs are stored if logging functionality is enabled<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
 </code></pre><h1 id="5-启动hive"><a href="#5-启动hive" class="headerlink" title="5. 启动hive"></a>5. 启动hive</h1><ul>
 <li>直接运行 <code>hive</code> 命令 (注意：确保 Hadoop 和 mysql 的服务以及启动), 成功如下：</li>
 </ul>
@@ -181,9 +181,9 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/hive/Hive-2_DDL使用/" title="Hive-2_DDL使用">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   Hive-2_DDL使用</span>
 </a>
@@ -191,8 +191,8 @@
 
 
 <div class="next">
-<a href="/icemimosa/oozie/Oozie搭建常见问题/"  title="Oozie搭建常见问题">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/oozie/Oozie搭建常见问题/" title="Oozie搭建常见问题">
+ <strong>NEXT:</strong><br> 
  <span>Oozie搭建常见问题
 </span>
 </a>
@@ -221,7 +221,7 @@
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -246,7 +246,7 @@
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -277,7 +277,7 @@
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -305,7 +305,7 @@
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -319,7 +319,7 @@
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -327,7 +327,7 @@
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -335,7 +335,7 @@
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -397,7 +397,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -608,6 +608,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

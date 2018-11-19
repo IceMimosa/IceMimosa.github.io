@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>LinkedList源码分析 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -40,7 +40,7 @@ LinkedList源码分析LinkedList源码分析，基于java1.6和java1.7的分析�
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -48,7 +48,7 @@ LinkedList源码分析LinkedList源码分析，基于java1.6和java1.7的分析�
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -58,7 +58,7 @@ LinkedList源码分析LinkedList源码分析，基于java1.6和java1.7的分析�
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -75,18 +75,18 @@ LinkedList源码分析LinkedList源码分析，基于java1.6和java1.7的分析�
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -116,39 +116,39 @@ LinkedList源码分析LinkedList源码分析，基于java1.6和java1.7的分析�
 <p><code>########################################################################</code><br>参考之前，我先对1.6实现的LinkedList做下简单的介绍。首先呢，LinkedList是基于链表的，这个大家都知道，所以源代码里面肯定维护了一个头指针（不保存数据，方便操作），但是为了检索性能和方便操作的情况下，java1.6实现了的是一个双向的链表，模型大致如下。</p>
 <p><img src="http://ice-img.pigutu.com/2018-10-08-020725.png" alt=""></p>
 <p>然后其余，剩下的也就是对这个双向链表的操作罢了。由于是一个链表结构，所以也就<strong><code>不存在类似于ArrayList的扩容一说</code></strong>。。</p>
-<p><code>########################################################################</code><br><a href="http://blog.csdn.net/jzhf2012/article/details/8540543" target="_blank" rel="external">http://blog.csdn.net/jzhf2012/article/details/8540543</a><br><code>########################################################################</code><br><code>########################################################################</code></p>
+<p><code>########################################################################</code><br><a href="http://blog.csdn.net/jzhf2012/article/details/8540543" target="_blank" rel="noopener">http://blog.csdn.net/jzhf2012/article/details/8540543</a><br><code>########################################################################</code><br><code>########################################################################</code></p>
 <h1 id="1-java1-6中LinkedList方法的总结"><a href="#1-java1-6中LinkedList方法的总结" class="headerlink" title="1. java1.6中LinkedList方法的总结"></a>1. java1.6中LinkedList方法的总结</h1><p>看完那位博主的讲解其实LinkedList也就那么回事，无非也就是对一个双向链表的操作。<br>由于LinkedList提供了一些可以使其作为栈、队列、双端队列的方法，下面就对这个方法做个总结。</p>
 <h2 id="1-1-add-get-remove系列"><a href="#1-1-add-get-remove系列" class="headerlink" title="1.1 add/get/remove系列"></a>1.1 add/get/remove系列</h2><p>这个系列的获取和删除如果不存在是会<strong><code>抛出异常</code></strong>的。</p>
 <ul>
 <li>1 . 普通方法</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> 和 <span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> index, E element)</span></span>;</div><div class="line"><span class="function">E <span class="title">set</span><span class="params">(<span class="keyword">int</span> index, E element)</span></span>;</div><div class="line"><span class="function">E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</div><div class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span></span>; 和 <span class="function">E <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> 和 <span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> index, E element)</span></span>;</span><br><span class="line"><span class="function">E <span class="title">set</span><span class="params">(<span class="keyword">int</span> index, E element)</span></span>;</span><br><span class="line"><span class="function">E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span></span>; 和 <span class="function">E <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span></span>;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>2 . 带first方法</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">addFirst</span><span class="params">(E e)</span></span>;</div><div class="line"></div><div class="line"><span class="function">E <span class="title">getFirst</span><span class="params">()</span></span>;</div><div class="line"><span class="function">E <span class="title">element</span><span class="params">()</span></span>; <span class="comment">// 实际调用了getFirst()</span></div><div class="line"></div><div class="line"><span class="function">E <span class="title">removeFirst</span><span class="params">()</span></span>;</div><div class="line"><span class="function">E <span class="title">remove</span><span class="params">()</span></span>; <span class="comment">// 实际调用了removeFirst()</span></div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">addFirst</span><span class="params">(E e)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function">E <span class="title">getFirst</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">E <span class="title">element</span><span class="params">()</span></span>; <span class="comment">// 实际调用了getFirst()</span></span><br><span class="line"></span><br><span class="line"><span class="function">E <span class="title">removeFirst</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">E <span class="title">remove</span><span class="params">()</span></span>; <span class="comment">// 实际调用了removeFirst()</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>3 . 带last方法</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">addLast</span><span class="params">(E e)</span></span>;</div><div class="line"><span class="function">E <span class="title">getLast</span><span class="params">()</span></span>;</div><div class="line"><span class="function">E <span class="title">removeLast</span><span class="params">()</span></span>;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">addLast</span><span class="params">(E e)</span></span>;</span><br><span class="line"><span class="function">E <span class="title">getLast</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">E <span class="title">removeLast</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
 <h2 id="1-2-offer-peek-poll系列"><a href="#1-2-offer-peek-poll系列" class="headerlink" title="1.2 offer/peek/poll系列"></a>1.2 offer/peek/poll系列</h2><p>这个系列的获取和删除如果不存在则返回<strong><code>null</code></strong></p>
 <ul>
 <li>1 . 普通方法</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e)</span></span>;</div><div class="line"><span class="function">E <span class="title">peek</span><span class="params">()</span></span>; <span class="comment">// 获取第一个</span></div><div class="line"><span class="function">E <span class="title">poll</span><span class="params">()</span></span>; <span class="comment">// 删除并返回第一个</span></div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e)</span></span>;</span><br><span class="line"><span class="function">E <span class="title">peek</span><span class="params">()</span></span>; <span class="comment">// 获取第一个</span></span><br><span class="line"><span class="function">E <span class="title">poll</span><span class="params">()</span></span>; <span class="comment">// 删除并返回第一个</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>2 . 带first方法</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">offerFirst</span><span class="params">(E e)</span></span>;</div><div class="line"><span class="function">E <span class="title">peekFirst</span><span class="params">()</span></span>;</div><div class="line"><span class="function">E <span class="title">pollFirst</span><span class="params">()</span></span>;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">offerFirst</span><span class="params">(E e)</span></span>;</span><br><span class="line"><span class="function">E <span class="title">peekFirst</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">E <span class="title">pollFirst</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>3 . 带last方法 </li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">offerLast</span><span class="params">(E e)</span></span>;</div><div class="line"><span class="function">E <span class="title">peekLast</span><span class="params">()</span></span>;</div><div class="line"><span class="function">E <span class="title">pollLast</span><span class="params">()</span></span>;</div></pre></td></tr></table></figure>
-<h2 id="1-3-pop-push系列"><a href="#1-3-pop-push系列" class="headerlink" title="1.3 pop/push系列"></a>1.3 pop/push系列</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">push</span><span class="params">(E e)</span></span>; <span class="comment">// 实际是addFirst();</span></div><div class="line"><span class="function">E <span class="title">pop</span><span class="params">()</span></span>; <span class="comment">// 实际是removeFirst();不存在会抛出异常</span></div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">offerLast</span><span class="params">(E e)</span></span>;</span><br><span class="line"><span class="function">E <span class="title">peekLast</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">E <span class="title">pollLast</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<h2 id="1-3-pop-push系列"><a href="#1-3-pop-push系列" class="headerlink" title="1.3 pop/push系列"></a>1.3 pop/push系列</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">push</span><span class="params">(E e)</span></span>; <span class="comment">// 实际是addFirst();</span></span><br><span class="line"><span class="function">E <span class="title">pop</span><span class="params">()</span></span>; <span class="comment">// 实际是removeFirst();不存在会抛出异常</span></span><br></pre></td></tr></table></figure>
 <h1 id="2-java1-7分析"><a href="#2-java1-7分析" class="headerlink" title="2. java1.7分析"></a>2. java1.7分析</h1><p>其实要是弄明白了1.6中的LinkedList，其实1.7也没有多大的难度，无非也就是改变了实现的方式。在java1.7中，取消了header的指针，而是维护了一个first指针和一个last指针，这两个指针都是存放数据的，模型如下。</p>
 <p><img src="http://ice-img.pigutu.com/2018-10-08-020901.png" alt=""></p>
 <p>这里的first就是e1元素，last就是e3元素。java1.7也取消了Entry类作为链表的载体，而采用了Node类，基本和Entry大同小异。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">private static class Node&lt;E&gt; &#123;                    </div><div class="line">    E item;                                       </div><div class="line">    Node&lt;E&gt; next;                                 </div><div class="line">    Node&lt;E&gt; prev;      </div><div class="line">                               </div><div class="line">    // 中间参数为元素，前后参数为前后指针。                                              </div><div class="line">    Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;  </div><div class="line">        this.item = element;                      </div><div class="line">        this.next = next;                         </div><div class="line">        this.prev = prev;                         </div><div class="line">    &#125;                                             </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">private static class Node&lt;E&gt; &#123;                    </span><br><span class="line">    E item;                                       </span><br><span class="line">    Node&lt;E&gt; next;                                 </span><br><span class="line">    Node&lt;E&gt; prev;      </span><br><span class="line">                               </span><br><span class="line">    // 中间参数为元素，前后参数为前后指针。                                              </span><br><span class="line">    Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;  </span><br><span class="line">        this.item = element;                      </span><br><span class="line">        this.next = next;                         </span><br><span class="line">        this.prev = prev;                         </span><br><span class="line">    &#125;                                             </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>剩下来的方法操作跟原来的也就基本差不多，无非也就是同时维护了两个指针更方便于操作罢了。。。<br>比较1.6和1.7的源码在原理上差不多，1.7只是改变了原来的双向链表的实现方式。。。大家加油。</p>
   
 	</div>
@@ -156,7 +156,7 @@ LinkedList源码分析LinkedList源码分析，基于java1.6和java1.7的分析�
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/源码/">源码</a><a href="/tags/java/">java</a>
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/源码/">源码</a>
   </div>
 
 
@@ -178,9 +178,9 @@ LinkedList源码分析LinkedList源码分析，基于java1.6和java1.7的分析�
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/Java/Vector和Stack源码分析/" title="Vector和Stack源码分析">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   Vector和Stack源码分析</span>
 </a>
@@ -188,8 +188,8 @@ LinkedList源码分析LinkedList源码分析，基于java1.6和java1.7的分析�
 
 
 <div class="next">
-<a href="/icemimosa/Java/HashMap源码分析/"  title="HashMap源码分析">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/Java/HashMap源码分析/" title="HashMap源码分析">
+ <strong>NEXT:</strong><br> 
  <span>HashMap源码分析
 </span>
 </a>
@@ -218,7 +218,7 @@ LinkedList源码分析LinkedList源码分析，基于java1.6和java1.7的分析�
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -243,7 +243,7 @@ LinkedList源码分析LinkedList源码分析，基于java1.6和java1.7的分析�
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -274,7 +274,7 @@ LinkedList源码分析LinkedList源码分析，基于java1.6和java1.7的分析�
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -302,7 +302,7 @@ LinkedList源码分析LinkedList源码分析，基于java1.6和java1.7的分析�
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -316,7 +316,7 @@ LinkedList源码分析LinkedList源码分析，基于java1.6和java1.7的分析�
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -324,7 +324,7 @@ LinkedList源码分析LinkedList源码分析，基于java1.6和java1.7的分析�
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -332,7 +332,7 @@ LinkedList源码分析LinkedList源码分析，基于java1.6和java1.7的分析�
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -394,7 +394,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -605,6 +605,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

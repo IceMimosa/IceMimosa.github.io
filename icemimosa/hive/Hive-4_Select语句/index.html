@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>Hive-4_Select语句 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -45,7 +45,7 @@
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -53,7 +53,7 @@
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -63,7 +63,7 @@
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -80,18 +80,18 @@
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -118,29 +118,29 @@
 		
 		<h1 id="Hive-4-Select语句"><a href="#Hive-4-Select语句" class="headerlink" title="Hive-4_Select语句"></a>Hive-4_Select语句</h1><p>[TOC]</p>
 <blockquote>
-<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Select" target="_blank" rel="external">参考 LanguageManual Select</a></p>
+<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Select" target="_blank" rel="noopener">参考 LanguageManual Select</a></p>
 </blockquote>
 <h1 id="1-select-语句"><a href="#1-select-语句" class="headerlink" title="1. select 语句"></a>1. select 语句</h1><blockquote>
 <p>语法</p>
 </blockquote>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">[WITH CommonTableExpression (, CommonTableExpression)*]    (Note: Only available starting with Hive 0.13.0)</div><div class="line">SELECT [ALL | DISTINCT] select_expr, select_expr, ...</div><div class="line">  FROM table_reference</div><div class="line">  [WHERE where_condition]</div><div class="line">  [GROUP BY col_list]</div><div class="line">  [ORDER BY col_list]</div><div class="line">  [CLUSTER BY col_list</div><div class="line">    | [DISTRIBUTE BY col_list] [SORT BY col_list]</div><div class="line">  ]</div><div class="line"> [LIMIT number]</div></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">WITH</span> CommonTableExpression (, CommonTableExpression)*]    (Note: <span class="keyword">Only</span> available <span class="keyword">starting</span> <span class="keyword">with</span> Hive <span class="number">0.13</span><span class="number">.0</span>)</span><br><span class="line"><span class="keyword">SELECT</span> [ALL | <span class="keyword">DISTINCT</span>] select_expr, select_expr, ...</span><br><span class="line">  <span class="keyword">FROM</span> table_reference</span><br><span class="line">  [<span class="keyword">WHERE</span> where_condition]</span><br><span class="line">  [<span class="keyword">GROUP</span> <span class="keyword">BY</span> col_list]</span><br><span class="line">  [<span class="keyword">ORDER</span> <span class="keyword">BY</span> col_list]</span><br><span class="line">  [CLUSTER <span class="keyword">BY</span> col_list</span><br><span class="line">    | [<span class="keyword">DISTRIBUTE</span> <span class="keyword">BY</span> col_list] [<span class="keyword">SORT</span> <span class="keyword">BY</span> col_list]</span><br><span class="line">  ]</span><br><span class="line"> [<span class="keyword">LIMIT</span> <span class="built_in">number</span>]</span><br></pre></td></tr></table></figure>
 <ul>
-<li>select 语句可以是 <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Union" target="_blank" rel="external">union查询</a> 或者 <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+SubQueries" target="_blank" rel="external">子查询</a></li>
-<li><code>table_reference</code> 可以是一个实际的<code>表</code>, <code>View</code>, <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Joins" target="_blank" rel="external">Join数据集</a> 或者 <code>子查询</code></li>
-<li>表名称和列名称都是忽略大小写的。<code>Hive 0.13</code> 之后支持任意 <code>Unicode</code> 字符了。并且重音符 <strong>``</strong> 包裹的字符串也能被正确解析。</li>
+<li>select 语句可以是 <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Union" target="_blank" rel="noopener">union查询</a> 或者 <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+SubQueries" target="_blank" rel="noopener">子查询</a></li>
+<li><code>table_reference</code> 可以是一个实际的<code>表</code>, <code>View</code>, <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Joins" target="_blank" rel="noopener">Join数据集</a> 或者 <code>子查询</code></li>
+<li>表名称和列名称都是忽略大小写的。<code>Hive 0.13</code> 之后支持任意 <code>Unicode</code> 字符了。并且重音符 <strong><code></code></strong> 包裹的字符串也能被正确解析。</li>
 </ul>
 <blockquote>
 <p>例子</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">hive&gt; USE test;</div><div class="line">hive&gt; SELECT * FROM orders;</div><div class="line">hive&gt; SELECT * FROM orders where buyer=&apos;zhangsan&apos;;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hive&gt; USE test;</span><br><span class="line">hive&gt; SELECT * FROM orders;</span><br><span class="line">hive&gt; SELECT * FROM orders where buyer=&apos;zhangsan&apos;;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>查询所有订单数量</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hive&gt; SELECT COUNT(1) FROM orders;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive&gt; SELECT COUNT(1) FROM orders;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>查询每个人的订单数</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hive&gt; SELECT buyer, COUNT(1) FROM orders GROUP BY buyer;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive&gt; SELECT buyer, COUNT(1) FROM orders GROUP BY buyer;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>额、其实用起来和sql基本很类似</li>
 <li>其余的 <code>union</code> ， <code>join</code>，和 <code>子查询</code> 自行参考就行。</li>
@@ -173,9 +173,9 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/hive/Hive-5_UDF/" title="Hive-5_UDF">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   Hive-5_UDF</span>
 </a>
@@ -183,8 +183,8 @@
 
 
 <div class="next">
-<a href="/icemimosa/hive/Hive-3_DML使用/"  title="Hive-3_DML使用">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/hive/Hive-3_DML使用/" title="Hive-3_DML使用">
+ <strong>NEXT:</strong><br> 
  <span>Hive-3_DML使用
 </span>
 </a>
@@ -213,7 +213,7 @@
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -238,7 +238,7 @@
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -269,7 +269,7 @@
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -297,7 +297,7 @@
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -311,7 +311,7 @@
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -319,7 +319,7 @@
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -327,7 +327,7 @@
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -389,7 +389,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -600,6 +600,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

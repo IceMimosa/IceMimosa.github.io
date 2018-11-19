@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>Sqoop命令 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -39,7 +39,7 @@
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -47,7 +47,7 @@
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -57,7 +57,7 @@
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -74,18 +74,18 @@
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -111,31 +111,31 @@
 		</div>
 		
 		<h1 id="Sqoop命令"><a href="#Sqoop命令" class="headerlink" title="Sqoop命令"></a>Sqoop命令</h1><h2 id="1-sqoop导入"><a href="#1-sqoop导入" class="headerlink" title="1. sqoop导入"></a>1. sqoop导入</h2><p><strong>基本命令</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqoop  import  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table bvs_users  --fields-terminated-by &quot;\0001&quot;  --lines-terminated-by &apos;\n&apos;    --null-string &apos;\\N&apos;  --null-non-string  &apos;\\N&apos;  -m 1 --hive-table s_bvs_users --hive-import --hive-overwrite --delete-target-dir --hive-drop-import-delims</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop  import  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table bvs_users  --fields-terminated-by &quot;\0001&quot;  --lines-terminated-by &apos;\n&apos;    --null-string &apos;\\N&apos;  --null-non-string  &apos;\\N&apos;  -m 1 --hive-table s_bvs_users --hive-import --hive-overwrite --delete-target-dir --hive-drop-import-delims</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>参数解释:</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">import:指明该模式为导入模式</div><div class="line">--connect: jdbc连接数据库的参数</div><div class="line">--table: 数据库中要导入的的表名	</div><div class="line">--fields-terminated-by &quot;\0001&quot;: 文件之间分隔符为\0001,hive默认即为\0001</div><div class="line">--lines-terminated-by &apos;\n&apos;: 行之间的分隔符为&apos;\n&apos;，hive默认为&apos;\n&apos;且sqoop只支持&apos;\n&apos;导入</div><div class="line">--null-string: 将数据库中string类型的字段中的null字段替换为接下来指定的参数</div><div class="line">--null-non-string: 将数据库中非string类型的字段中的null字段替换为接下来指定的参数</div><div class="line">-m: 指定几个mapper任务来跑，若该表有主键，则可以不需要指定--split-by参数，否则必须制定--split-by参数</div><div class="line">--hive-table: 导入到hive中的哪个表，即hive中该表的表名</div><div class="line">--hive-import: 指明需要导入到hive中</div><div class="line">--hive-overwrite: 覆盖之前表中存在的全部数据</div><div class="line">--delete-target-dir: 删除目标目录如果导入的目标目录的存在的话</div><div class="line">--hive-drop-import-delims :将导入的数据中的 \n, \r, 和 \01 分隔符删掉</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import:指明该模式为导入模式</span><br><span class="line">--connect: jdbc连接数据库的参数</span><br><span class="line">--table: 数据库中要导入的的表名	</span><br><span class="line">--fields-terminated-by &quot;\0001&quot;: 文件之间分隔符为\0001,hive默认即为\0001</span><br><span class="line">--lines-terminated-by &apos;\n&apos;: 行之间的分隔符为&apos;\n&apos;，hive默认为&apos;\n&apos;且sqoop只支持&apos;\n&apos;导入</span><br><span class="line">--null-string: 将数据库中string类型的字段中的null字段替换为接下来指定的参数</span><br><span class="line">--null-non-string: 将数据库中非string类型的字段中的null字段替换为接下来指定的参数</span><br><span class="line">-m: 指定几个mapper任务来跑，若该表有主键，则可以不需要指定--split-by参数，否则必须制定--split-by参数</span><br><span class="line">--hive-table: 导入到hive中的哪个表，即hive中该表的表名</span><br><span class="line">--hive-import: 指明需要导入到hive中</span><br><span class="line">--hive-overwrite: 覆盖之前表中存在的全部数据</span><br><span class="line">--delete-target-dir: 删除目标目录如果导入的目标目录的存在的话</span><br><span class="line">--hive-drop-import-delims :将导入的数据中的 \n, \r, 和 \01 分隔符删掉</span><br></pre></td></tr></table></figure>
 <p><strong>高级功能</strong></p>
 <ul>
 <li>字符删除或替换</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">--hive-delims-replacement: 将导入的数据中的 \n, \r, 和 \01 分隔符替换为自己指定的符号</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--hive-delims-replacement: 将导入的数据中的 \n, \r, 和 \01 分隔符替换为自己指定的符号</span><br></pre></td></tr></table></figure>
 <ul>
 <li>指定分区键</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">--hive-partition-key: 指定分区键</div><div class="line">--hive-partition-value: 与分区键对应的该分区键的值</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">--hive-partition-key: 指定分区键</span><br><span class="line">--hive-partition-value: 与分区键对应的该分区键的值</span><br></pre></td></tr></table></figure>
 <ul>
 <li>增量导入</li>
 </ul>
 <p>sqoop支持用 <code>--incremental lastmodified</code> 设置进行增量导入，比如</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">--incremental lastmodified </div><div class="line">--check-column created </div><div class="line">--last-value &apos;2012-02-01 11:0:00&apos;: 就是只导入created比&apos;2012-02-01 11:0:00&apos;更大的数据。</div><div class="line">--check-column: 根据此列进行判断</div><div class="line">--last-value: 判断大于此值的进行导入</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">--incremental lastmodified </span><br><span class="line">--check-column created </span><br><span class="line">--last-value &apos;2012-02-01 11:0:00&apos;: 就是只导入created比&apos;2012-02-01 11:0:00&apos;更大的数据。</span><br><span class="line">--check-column: 根据此列进行判断</span><br><span class="line">--last-value: 判断大于此值的进行导入</span><br></pre></td></tr></table></figure>
 <h2 id="2-sqoop导出"><a href="#2-sqoop导出" class="headerlink" title="2. sqoop导出"></a>2. sqoop导出</h2><p><strong>基本命令</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sqoop  export  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table bvs_users --export-dir hdfs://127.0.0.1:9000/user/hive/warehouse/s_bvs_users --input-fields-terminated-by &quot;\0001&quot;  --input-lines-terminated-by &apos;\n&apos;   --input-null-string &apos;\\N&apos;  --input-null-non-string &apos;\\N&apos;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop  export  --connect jdbc:mysql://localhost:3306/bvs --username root --password anywhere --table bvs_users --export-dir hdfs://127.0.0.1:9000/user/hive/warehouse/s_bvs_users --input-fields-terminated-by &quot;\0001&quot;  --input-lines-terminated-by &apos;\n&apos;   --input-null-string &apos;\\N&apos;  --input-null-non-string &apos;\\N&apos;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>参数解释：</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">--export-dir: 需要指定导出的表所在的在hdfs中的目录；</div><div class="line">--input-fields-terminated-by &quot;\0001&quot;: 指定以\0001为分隔符</div><div class="line">--input-lines-terminated-by &apos;\n&apos;: 指定以\n为列分隔符</div><div class="line">--input-null-string: 字符类型等于该参数指定的值的，则转换为NULL</div><div class="line">--input-null-non-string &apos;\\N&apos;: 非字符类型等于该参数指定的值的，则转换为NULL</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">--export-dir: 需要指定导出的表所在的在hdfs中的目录；</span><br><span class="line">--input-fields-terminated-by &quot;\0001&quot;: 指定以\0001为分隔符</span><br><span class="line">--input-lines-terminated-by &apos;\n&apos;: 指定以\n为列分隔符</span><br><span class="line">--input-null-string: 字符类型等于该参数指定的值的，则转换为NULL</span><br><span class="line">--input-null-non-string &apos;\\N&apos;: 非字符类型等于该参数指定的值的，则转换为NULL</span><br></pre></td></tr></table></figure>
 <p><strong>高级功能</strong></p>
 <ul>
 <li>增量导出</li>
@@ -144,9 +144,9 @@
 <blockquote>
 <p>PS:</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1.若删除以前数据，则不支持增量导出的删除。它以指定列进行匹配时，会翻译为以下语句：</div><div class="line">匹配到的：update ** set where id = xxx；匹配不到的：insert into values()</div><div class="line">2.增量导出时若分区表需要用户指定分区目录</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.若删除以前数据，则不支持增量导出的删除。它以指定列进行匹配时，会翻译为以下语句：</span><br><span class="line">匹配到的：update ** set where id = xxx；匹配不到的：insert into values()</span><br><span class="line">2.增量导出时若分区表需要用户指定分区目录</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>参考文档： <a href="https://sqoop.apache.org/docs/1.4.6/SqoopUserGuide.html#_create_oracle_tables" target="_blank" rel="external">官方的使用者手册</a>  </p>
+<p>参考文档： <a href="https://sqoop.apache.org/docs/1.4.6/SqoopUserGuide.html#_create_oracle_tables" target="_blank" rel="noopener">官方的使用者手册</a>  </p>
 </blockquote>
   
 	</div>
@@ -176,9 +176,9 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/sqoop/Sqoop源码改造/" title="Sqoop 源码改造">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   Sqoop 源码改造</span>
 </a>
@@ -186,8 +186,8 @@
 
 
 <div class="next">
-<a href="/icemimosa/oozie/Oozie-9_自定义UDF和Action节点/"  title="Oozie-9_自定义UDF和Action节点">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/oozie/Oozie-9_自定义UDF和Action节点/" title="Oozie-9_自定义UDF和Action节点">
+ <strong>NEXT:</strong><br> 
  <span>Oozie-9_自定义UDF和Action节点
 </span>
 </a>
@@ -216,7 +216,7 @@
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -241,7 +241,7 @@
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -272,7 +272,7 @@
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -300,7 +300,7 @@
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -314,7 +314,7 @@
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -322,7 +322,7 @@
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -330,7 +330,7 @@
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -392,7 +392,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -603,6 +603,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

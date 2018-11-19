@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>hive解决元数据乱码 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -42,7 +42,7 @@
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -50,7 +50,7 @@
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -60,7 +60,7 @@
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -77,18 +77,18 @@
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -117,16 +117,16 @@
 <blockquote>
 <p>注意：不要修改<code>hive</code>整库的编码，会有问题，报错如下：</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">FAILED: Error in metadata: javax.jdo.JDODataStoreException: An exception was thrown while adding/validating class(es) : Specified key was too long; max key length is 767 bytes </div><div class="line">com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Specified key was too long; max key length is 767 bytes</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FAILED: Error in metadata: javax.jdo.JDODataStoreException: An exception was thrown while adding/validating class(es) : Specified key was too long; max key length is 767 bytes </span><br><span class="line">com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Specified key was too long; max key length is 767 bytes</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>方案：</p>
 </blockquote>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">use</span> hive;</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> COLUMNS_V2 <span class="keyword">modify</span> <span class="keyword">column</span> <span class="keyword">COMMENT</span> <span class="built_in">varchar</span>(<span class="number">256</span>) <span class="built_in">character</span> <span class="keyword">set</span> utf8;</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> TABLE_PARAMS <span class="keyword">modify</span> <span class="keyword">column</span> PARAM_VALUE <span class="built_in">varchar</span>(<span class="number">4000</span>) <span class="built_in">character</span> <span class="keyword">set</span> utf8;</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> PARTITION_PARAMS  <span class="keyword">modify</span> <span class="keyword">column</span> PARAM_VALUE <span class="built_in">varchar</span>(<span class="number">4000</span>) <span class="built_in">character</span> <span class="keyword">set</span> utf8;</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> PARTITION_KEYS  <span class="keyword">modify</span> <span class="keyword">column</span> PKEY_COMMENT <span class="built_in">varchar</span>(<span class="number">4000</span>) <span class="built_in">character</span> <span class="keyword">set</span> utf8;</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> INDEX_PARAMS  <span class="keyword">modify</span> <span class="keyword">column</span> PARAM_VALUE  <span class="built_in">varchar</span>(<span class="number">4000</span>) <span class="built_in">character</span> <span class="keyword">set</span> utf8;</div></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> hive;</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> COLUMNS_V2 <span class="keyword">modify</span> <span class="keyword">column</span> <span class="keyword">COMMENT</span> <span class="built_in">varchar</span>(<span class="number">256</span>) <span class="built_in">character</span> <span class="keyword">set</span> utf8;</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> TABLE_PARAMS <span class="keyword">modify</span> <span class="keyword">column</span> PARAM_VALUE <span class="built_in">varchar</span>(<span class="number">4000</span>) <span class="built_in">character</span> <span class="keyword">set</span> utf8;</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> PARTITION_PARAMS  <span class="keyword">modify</span> <span class="keyword">column</span> PARAM_VALUE <span class="built_in">varchar</span>(<span class="number">4000</span>) <span class="built_in">character</span> <span class="keyword">set</span> utf8;</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> PARTITION_KEYS  <span class="keyword">modify</span> <span class="keyword">column</span> PKEY_COMMENT <span class="built_in">varchar</span>(<span class="number">4000</span>) <span class="built_in">character</span> <span class="keyword">set</span> utf8;</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> INDEX_PARAMS  <span class="keyword">modify</span> <span class="keyword">column</span> PARAM_VALUE  <span class="built_in">varchar</span>(<span class="number">4000</span>) <span class="built_in">character</span> <span class="keyword">set</span> utf8;</span><br></pre></td></tr></table></figure>
 <h1 id="2-修改hive配置"><a href="#2-修改hive配置" class="headerlink" title="2. 修改hive配置"></a>2. 修改hive配置</h1><ul>
 <li>一般修改 <code>/etc/hive/conf/hive-site.xml</code>，或者<code>HIVE_HOME</code>下的。</li>
 <li>Cloudera Manager安装的就随意了，不用修改。</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">修改</div><div class="line">jdbc:mysql://YOUR_HOST/hivemeta?createDatabaseIfNotExist=true </div><div class="line">为</div><div class="line">jdbc:mysql://YOUR_HOST/hivemeta?createDatabaseIfNotExist=true&amp;amp;characterEncoding=UTF-8</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">修改</span><br><span class="line">jdbc:mysql://YOUR_HOST/hivemeta?createDatabaseIfNotExist=true </span><br><span class="line">为</span><br><span class="line">jdbc:mysql://YOUR_HOST/hivemeta?createDatabaseIfNotExist=true&amp;amp;characterEncoding=UTF-8</span><br></pre></td></tr></table></figure>
 <h1 id="3-重启服务"><a href="#3-重启服务" class="headerlink" title="3. 重启服务"></a>3. 重启服务</h1><p>最后重启hive的服务即可，然后做下相关含有中文的测试。</p>
   
 	</div>
@@ -156,9 +156,9 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/Java/ArrayList源码分析/" title="ArrayList源码分析">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   ArrayList源码分析</span>
 </a>
@@ -166,8 +166,8 @@
 
 
 <div class="next">
-<a href="/icemimosa/hive/压缩hive表流程/"  title="parquet压缩hive表">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/hive/压缩hive表流程/" title="parquet压缩hive表">
+ <strong>NEXT:</strong><br> 
  <span>parquet压缩hive表
 </span>
 </a>
@@ -196,7 +196,7 @@
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -221,7 +221,7 @@
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -252,7 +252,7 @@
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -280,7 +280,7 @@
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -294,7 +294,7 @@
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -302,7 +302,7 @@
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -310,7 +310,7 @@
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -372,7 +372,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -583,6 +583,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>JVM学习04-class字节码的结构 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -39,7 +39,7 @@ JVM学习04-class字节码的结构1. 字节码简介java作为跨平台的语�
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -47,7 +47,7 @@ JVM学习04-class字节码的结构1. 字节码简介java作为跨平台的语�
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -57,7 +57,7 @@ JVM学习04-class字节码的结构1. 字节码简介java作为跨平台的语�
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -74,18 +74,18 @@ JVM学习04-class字节码的结构1. 字节码简介java作为跨平台的语�
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -114,11 +114,11 @@ JVM学习04-class字节码的结构1. 字节码简介java作为跨平台的语�
 <h1 id="JVM学习04-class字节码的结构"><a href="#JVM学习04-class字节码的结构" class="headerlink" title="JVM学习04-class字节码的结构"></a>JVM学习04-class字节码的结构</h1><h1 id="1-字节码简介"><a href="#1-字节码简介" class="headerlink" title="1. 字节码简介"></a>1. 字节码简介</h1><p>java作为跨平台的语言，其重要性就体现在java源代码编译后的字节码 <code>.class</code> 文件。很多的语言如java、groovy、scala、kotlin等都是基于JVM运行的，其根本就是输出之后的字节码。作为跨平台的一个基础，当然要对字节码的文件结构有一定的认识。</p>
 <h1 id="2-字节码的文件结构"><a href="#2-字节码的文件结构" class="headerlink" title="2. 字节码的文件结构"></a>2. 字节码的文件结构</h1><p>字节码的文件结构一次可以分为（<code>魔数，版本，常量池，访问符，类，超类，接口，字段，方法，属性</code>）。每个部分的数据的大小都采用无符号整形来表示，例如u1,u2,u4等等表示一个字节，两个字节，四个字节。具体参照下图：</p>
 <p><img src="http://ice-img.pigutu.com/2018-10-08-021232.png" alt=""></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">// 或者像这样</div><div class="line">ClassFile &#123;</div><div class="line">    u4 magic;</div><div class="line">    u2 minor_version;</div><div class="line">    u2 major_version;</div><div class="line">    u2 constant_pool_count;</div><div class="line">    cp_info contant_pool[constant_pool_count – 1];</div><div class="line">    u2 access_flags;</div><div class="line">    u2 this_class;</div><div class="line">    u2 super_class;</div><div class="line">    u2 interfaces_count;</div><div class="line">    u2 interfaces[interfaces_count];</div><div class="line">    u2 fields_count;</div><div class="line">    field_info fields[fields_count];</div><div class="line">    u2 methods_count;</div><div class="line">    method_info methods[methods_count];</div><div class="line">    u2 attributes_count;</div><div class="line">    attribute_info attributes[attributes_count];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 或者像这样</span><br><span class="line">ClassFile &#123;</span><br><span class="line">    u4 magic;</span><br><span class="line">    u2 minor_version;</span><br><span class="line">    u2 major_version;</span><br><span class="line">    u2 constant_pool_count;</span><br><span class="line">    cp_info contant_pool[constant_pool_count – 1];</span><br><span class="line">    u2 access_flags;</span><br><span class="line">    u2 this_class;</span><br><span class="line">    u2 super_class;</span><br><span class="line">    u2 interfaces_count;</span><br><span class="line">    u2 interfaces[interfaces_count];</span><br><span class="line">    u2 fields_count;</span><br><span class="line">    field_info fields[fields_count];</span><br><span class="line">    u2 methods_count;</span><br><span class="line">    method_info methods[methods_count];</span><br><span class="line">    u2 attributes_count;</span><br><span class="line">    attribute_info attributes[attributes_count];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>图中的数据类型除了无符号整形之外，还有”_info”结尾的数据类型，这种称之为”表”。例如常量池中是存在多个常量的，所以要通过类似表的结构来进行存储，而且因为字节码是依次排列的，所以在描述常量池信息之前还需要对常量池中常量的个数进行描述（标记），这个很容易理解，就是用来判断什么时候读到常量池的结尾了。当然字段，方法和属性以”_info”结尾就类似了。<br>下面对每一个部分一一描述：</p>
-<p>在分析字节码之前介绍一款工具，<a href="http://www.cs.ioc.ee/~ando/jbe/" target="_blank" rel="external">Java ByteCode Editor</a></p>
+<p>在分析字节码之前介绍一款工具，<a href="http://www.cs.ioc.ee/~ando/jbe/" target="_blank" rel="noopener">Java ByteCode Editor</a></p>
 <p>以下的例子基于代码（<strong>举例子的时候常量池的索引可能会存在误差，下面阅读的时候请考虑这段话</strong>）：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.minosa.test;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloClass</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> String name = <span class="string">"Mimosa"</span>;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> age = <span class="number">20</span>;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> i = <span class="number">10</span>;</div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">sayHello</span><span class="params">()</span></span>&#123;</div><div class="line">		System.out.println(<span class="string">"Hello "</span> + name + <span class="string">" ,"</span> + age);</div><div class="line">		<span class="keyword">return</span> name;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">int</span> a = <span class="number">1</span>;</div><div class="line">		<span class="keyword">int</span> b = <span class="number">2</span>;</div><div class="line">		<span class="keyword">int</span> c = a + b;</div><div class="line">		System.out.println(c);</div><div class="line">		System.out.println(<span class="string">"Hello Class !!!"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.minosa.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloClass</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> String name = <span class="string">"Mimosa"</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> age = <span class="number">20</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> i = <span class="number">10</span>;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">sayHello</span><span class="params">()</span></span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"Hello "</span> + name + <span class="string">" ,"</span> + age);</span><br><span class="line">		<span class="keyword">return</span> name;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> a = <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">int</span> b = <span class="number">2</span>;</span><br><span class="line">		<span class="keyword">int</span> c = a + b;</span><br><span class="line">		System.out.println(c);</span><br><span class="line">		System.out.println(<span class="string">"Hello Class !!!"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="2-1-魔数-magic"><a href="#2-1-魔数-magic" class="headerlink" title="2.1 魔数 magic"></a>2.1 魔数 magic</h2><p>魔数是字节码固定的数值，在文件的最开始部分，占四个字节，值是 （<strong>CA FE BA BE</strong>）。</p>
 <h2 id="2-2-版本-version"><a href="#2-2-版本-version" class="headerlink" title="2.2 版本 version"></a>2.2 版本 version</h2><p>版本分为小版本minor和大版本major，分别占两个字节。例如（00 00 00 33）就表示 51.0版本。如图，稍微看下即可：</p>
 <p><img src="http://ice-img.pigutu.com/2018-10-08-021254.png" alt=""></p>
@@ -210,7 +210,7 @@ JVM学习04-class字节码的结构1. 字节码简介java作为跨平台的语�
 <p><strong>1. 访问标识</strong><br>占用2个字节。</p>
 <p><img src="http://ice-img.pigutu.com/2018-10-08-022141.png" alt=""></p>
 <p><strong>2. 名称和描述</strong><br>名称和描述都是指向常量池中的utf8_info，各占2个字节。这里说下方法的描述符：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 例举几个例子就明白了</span></div><div class="line"><span class="number">1</span>. 构造方法 </div><div class="line">==&gt; ()V</div><div class="line">表示没有参数，返回值为<span class="keyword">void</span></div><div class="line"></div><div class="line"><span class="number">2</span>. <span class="function"><span class="keyword">int</span> <span class="title">indexOf</span><span class="params">(<span class="keyword">char</span>[],<span class="keyword">int</span>)</span> </span></div><div class="line">==&gt; ([CI)I</div><div class="line"></div><div class="line"><span class="number">3</span>. <span class="function">String <span class="title">name</span><span class="params">(String,<span class="keyword">long</span>)</span> </span></div><div class="line">==&gt; (Ljava/lang/String;J)Ljava/lang/String;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例举几个例子就明白了</span></span><br><span class="line"><span class="number">1</span>. 构造方法 </span><br><span class="line">==&gt; ()V</span><br><span class="line">表示没有参数，返回值为<span class="keyword">void</span></span><br><span class="line"></span><br><span class="line"><span class="number">2</span>. <span class="function"><span class="keyword">int</span> <span class="title">indexOf</span><span class="params">(<span class="keyword">char</span>[],<span class="keyword">int</span>)</span> </span></span><br><span class="line"><span class="function"></span>==&gt; ([CI)I</span><br><span class="line"></span><br><span class="line"><span class="number">3</span>. <span class="function">String <span class="title">name</span><span class="params">(String,<span class="keyword">long</span>)</span> </span></span><br><span class="line"><span class="function"></span>==&gt; (Ljava/lang/String;J)Ljava/lang/String;</span><br></pre></td></tr></table></figure>
 <p><strong>3. 属性数量和属性</strong><br>属性的数量占2个字节。<br>在field和method中可以有很多属性，类也存在attribute，每个attribute用于描述一个额外的信息。<br>每个attribute又分为三个部分：attribute名称，attribute的长度和属性的描述。<br>attribute名称是指向常量池中的一个utf8_info，占2个字节；attribute的长度占4个字节；每一个属性内容占1个字节。<br>这里列举一些属性的描述：</p>
 <p><img src="http://ice-img.pigutu.com/2018-10-08-022157.png" alt=""></p>
 <p>例如每个方法含有Code属性，Code包含着需要执行的代码（下一博客讲述），Code属性中又含有LineNumberTable和LocalVaribleTable。<br>LineNumberTable记录在源代码中的行号，LocalVaribleTable就表示之前博客讲过的JVM内存模型中栈中的局部变量分配的表。<br>例如Exceptions属性表示方法申明的抛出的异常（throws的部分，非try/catch部分）。<br>例如SourceFile表示生成该字节码的源文件名称。<br>例如ConstantValue表示final常量的值，上面字段例举过了。</p>
@@ -245,9 +245,9 @@ JVM学习04-class字节码的结构1. 字节码简介java作为跨平台的语�
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/Java/JVM学习05-字节码执行过程和JVM指令集/" title="JVM学习05-字节码执行过程和JVM指令集">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   JVM学习05-字节码执行过程和JVM指令集</span>
 </a>
@@ -255,8 +255,8 @@ JVM学习04-class字节码的结构1. 字节码简介java作为跨平台的语�
 
 
 <div class="next">
-<a href="/icemimosa/Java/JVM学习03-类加载机制/"  title="JVM学习03-类加载机制">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/Java/JVM学习03-类加载机制/" title="JVM学习03-类加载机制">
+ <strong>NEXT:</strong><br> 
  <span>JVM学习03-类加载机制
 </span>
 </a>
@@ -285,7 +285,7 @@ JVM学习04-class字节码的结构1. 字节码简介java作为跨平台的语�
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -310,7 +310,7 @@ JVM学习04-class字节码的结构1. 字节码简介java作为跨平台的语�
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -341,7 +341,7 @@ JVM学习04-class字节码的结构1. 字节码简介java作为跨平台的语�
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -369,7 +369,7 @@ JVM学习04-class字节码的结构1. 字节码简介java作为跨平台的语�
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -383,7 +383,7 @@ JVM学习04-class字节码的结构1. 字节码简介java作为跨平台的语�
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -391,7 +391,7 @@ JVM学习04-class字节码的结构1. 字节码简介java作为跨平台的语�
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -399,7 +399,7 @@ JVM学习04-class字节码的结构1. 字节码简介java作为跨平台的语�
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -461,7 +461,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -672,6 +672,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

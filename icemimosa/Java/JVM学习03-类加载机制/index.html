@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>JVM学习03-类加载机制 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -40,7 +40,7 @@ JVM学习03-类加载机制1. 类加载器简介之前有讲述过 JVM 的启动
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -48,7 +48,7 @@ JVM学习03-类加载机制1. 类加载器简介之前有讲述过 JVM 的启动
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -58,7 +58,7 @@ JVM学习03-类加载机制1. 类加载器简介之前有讲述过 JVM 的启动
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -75,18 +75,18 @@ JVM学习03-类加载机制1. 类加载器简介之前有讲述过 JVM 的启动
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -113,7 +113,7 @@ JVM学习03-类加载机制1. 类加载器简介之前有讲述过 JVM 的启动
 		
 		<p>[TOC]</p>
 <h1 id="JVM学习03-类加载机制"><a href="#JVM学习03-类加载机制" class="headerlink" title="JVM学习03-类加载机制"></a>JVM学习03-类加载机制</h1><h1 id="1-类加载器简介"><a href="#1-类加载器简介" class="headerlink" title="1. 类加载器简介"></a>1. 类加载器简介</h1><p>之前有讲述过 JVM 的启动流程，在JVM找到配置文件对JVM进行初始化的时候，将会生成最基础的类加载器（c/c++语言编写）BootStrap。<br>在说classLoader前先看一段程序：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">ClassLoader classLoader = <span class="keyword">this</span>.getClass().getClassLoader();</div><div class="line">System.out.println(<span class="string">"当前的ClassLoader : "</span> + classLoader);</div><div class="line">System.out.println(<span class="string">"父ClassLoader : "</span> + classLoader.getParent());</div><div class="line">System.out.println(<span class="string">"曾ClassLoader : "</span> + classLoader.getParent().getParent());</div><div class="line"></div><div class="line"><span class="comment">// 结果：</span></div><div class="line"><span class="comment">// 当前的ClassLoader : sun.misc.Launcher$AppClassLoader@2a788b76</span></div><div class="line"><span class="comment">// 父ClassLoader : sun.misc.Launcher$ExtClassLoader@500c05c2</span></div><div class="line"><span class="comment">// 曾ClassLoader : null</span></div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ClassLoader classLoader = <span class="keyword">this</span>.getClass().getClassLoader();</span><br><span class="line">System.out.println(<span class="string">"当前的ClassLoader : "</span> + classLoader);</span><br><span class="line">System.out.println(<span class="string">"父ClassLoader : "</span> + classLoader.getParent());</span><br><span class="line">System.out.println(<span class="string">"曾ClassLoader : "</span> + classLoader.getParent().getParent());</span><br><span class="line"></span><br><span class="line"><span class="comment">// 结果：</span></span><br><span class="line"><span class="comment">// 当前的ClassLoader : sun.misc.Launcher$AppClassLoader@2a788b76</span></span><br><span class="line"><span class="comment">// 父ClassLoader : sun.misc.Launcher$ExtClassLoader@500c05c2</span></span><br><span class="line"><span class="comment">// 曾ClassLoader : null</span></span><br></pre></td></tr></table></figure>
 <p>可以看出来jdk默认当前应用程序的classLoader为AppClassLoader，然后往上的父ClassLoader是ExtClassLoader，然后是null。</p>
 <p>那么为什么最顶层的是null，这也就是BootStrap并不是java语言编写的，而是一个顶级的ClassLoader。当JVM启动Bootrap之后，Bootrap就会随之启动ExtClassLoader和AppClassLoader，并完成父子继承关系，最后由AppClassLoader加载主类的字节码，寻找到main函数进行启动。大致如图：</p>
 <p><img src="http://ice-img.pigutu.com/2018-10-08-022305.png" alt=""></p>
@@ -127,24 +127,24 @@ JVM学习03-类加载机制1. 类加载器简介之前有讲述过 JVM 的启动
 <h2 id="2-1-类加载"><a href="#2-1-类加载" class="headerlink" title="2.1 类加载"></a>2.1 类加载</h2><p>首先肯定是读取class文件的二进制流。由于Class等类的信息的存储在方法区中的，所以进而转化为方法区的数据结构，为了能够被使用，最后在java堆中生成代表这个字节码的java.lang.Class对象。</p>
 <h2 id="2-2-链接"><a href="#2-2-链接" class="headerlink" title="2.2 链接"></a>2.2 链接</h2><p>在链接中又分为验证，准备和解析等几个步骤。</p>
 <p>(1)验证：验证字节码肯定是为了确保字节码的正确性，比如文件是否以<code>0xCAFEBABE</code>开头，版本是否正确等等。这个过程需要对字节码中的内容做大量的验证，诸如文件的格式，元数据，字节码验证，符合引用验证等等。<br>(2)准备：之前在讲述java成员初始化一节中提到，在初始化之后首先需要对类进行加载。所以在这一步就是对类中的成员进行内存的分配。例如对于</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> i = <span class="number">1</span>;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> i = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
 <p>先对i进行内存的分配，然后再赋上初始值为0。注意是准备阶段是0，<strong>然后准备阶段完成之后的类的初始化中</strong>，才会执行语句赋值为1。</p>
 <p>这里在补充一个知识点：编译时常量和运行时常量。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> i = <span class="number">2</span>;</div><div class="line"><span class="comment">// 对于final static类型, 在准备阶段就会被赋值为2.</span></div><div class="line"><span class="comment">// 因为i的值不能修改, 所以在编译的时候, i的值就已经确认了</span></div><div class="line"><span class="comment">// 所以对于final修饰变量称为编译时常量.</span></div><div class="line"><span class="comment">// ------- 举个面试题</span></div><div class="line"><span class="keyword">byte</span> b1=<span class="number">1</span>,b2=<span class="number">2</span>,b3,b6; </div><div class="line"><span class="keyword">final</span> <span class="keyword">byte</span> b4=<span class="number">4</span>,b5=<span class="number">6</span>; </div><div class="line">b6=b4+b5; </div><div class="line">b3=(b1+b2); </div><div class="line">System.out.println(b3+b6);</div><div class="line"><span class="comment">// 该题目在第四行会报错，原因是(b1 + b2) 会自动将类型提升为int型</span></div><div class="line"><span class="comment">// 那为毛第三行不报错呢? 原因是b4和b5带有final类型, 编译器会立即知道他们的值，然后对b4+b5进行优化, 代码其实就变成了</span></div><div class="line"><span class="comment">// b6 = 10; 所以不会报错.</span></div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> i = <span class="number">2</span>;</span><br><span class="line"><span class="comment">// 对于final static类型, 在准备阶段就会被赋值为2.</span></span><br><span class="line"><span class="comment">// 因为i的值不能修改, 所以在编译的时候, i的值就已经确认了</span></span><br><span class="line"><span class="comment">// 所以对于final修饰变量称为编译时常量.</span></span><br><span class="line"><span class="comment">// ------- 举个面试题</span></span><br><span class="line"><span class="keyword">byte</span> b1=<span class="number">1</span>,b2=<span class="number">2</span>,b3,b6; </span><br><span class="line"><span class="keyword">final</span> <span class="keyword">byte</span> b4=<span class="number">4</span>,b5=<span class="number">6</span>; </span><br><span class="line">b6=b4+b5; </span><br><span class="line">b3=(b1+b2); </span><br><span class="line">System.out.println(b3+b6);</span><br><span class="line"><span class="comment">// 该题目在第四行会报错，原因是(b1 + b2) 会自动将类型提升为int型</span></span><br><span class="line"><span class="comment">// 那为毛第三行不报错呢? 原因是b4和b5带有final类型, 编译器会立即知道他们的值，然后对b4+b5进行优化, 代码其实就变成了</span></span><br><span class="line"><span class="comment">// b6 = 10; 所以不会报错.</span></span><br></pre></td></tr></table></figure>
 <p>(3)解析：在解析阶段主要是将符号引用转换为直接引用。符号引用简单来说就是一个字符串，而这个字符串所引用内容的信息必须能够唯一标识一个类、字段和方法等。比如对于一个类的符号引用，必须给出类的全名，如java.lang.Object。而直接引用就是引用某个对象的一个指针或者地址偏移量，是一定存在的引用对象。</p>
-<h2 id="2-3-初始化"><a href="#2-3-初始化" class="headerlink" title="2.3 初始化"></a>2.3 初始化</h2><p>类的初始化，包括static的初始化和非static的初始化，详细参考：<a href="http://patamon.me/icemimosa/Java/java%E5%8F%98%E9%87%8F%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/" target="_blank" rel="external">java变量的初始化顺序</a></p>
+<h2 id="2-3-初始化"><a href="#2-3-初始化" class="headerlink" title="2.3 初始化"></a>2.3 初始化</h2><p>类的初始化，包括static的初始化和非static的初始化，详细参考：<a href="http://patamon.me/icemimosa/Java/java%E5%8F%98%E9%87%8F%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/" target="_blank" rel="noopener">java变量的初始化顺序</a></p>
 <h1 id="3-类的加载器"><a href="#3-类的加载器" class="headerlink" title="3. 类的加载器"></a>3. 类的加载器</h1><h2 id="3-1-父类委托机制"><a href="#3-1-父类委托机制" class="headerlink" title="3.1 父类委托机制"></a>3.1 父类委托机制</h2><p>由上面的类加载器的继承结构可以看出，每个加载器都负责加载自己负责的区域。从java1.2开始，类加载的过程引入了父类委托的机制，这种机制更好的保证了java平台的安全性。<br><strong>原则：类的寻找是由下往上的，类的加载是由上往下的。</strong></p>
 <p>假设平台只有Bootstrap，ExtClassLoader和AppClassLoader三个加载器，当用户类路径下一个类如MyTest类被加载的时候，AppClassLoader首先查看该类是否已经被加载了，如果有就返回该类的字节码，否则询问父亲ExtClassLoader是否已经加载了。同样ExtClassLoader先查看是否自己已经加载了MyTest，如果有就返回，否则继续问Bootstrap。当然由于是在类路径下，Bootstrap也没有加载，也没有父亲可问。这个时候，他就会查看自己是否能够加载MyTest，当然由于在用户路径下（所以不能加载），然后告诉ExtClassLoader说我不能加载。然后同样ExtClassLoader也不能加载并告诉AppClassLoader也不能加载，最后AppClassLoader在查看该类的路径，对该类进行加载。这个就是类的寻找是由下往上的，加载是由上往下的。</p>
 <p>实现父类委托的关键代码（ClassLoader）：</p>
 <p><img src="http://ice-img.pigutu.com/2018-10-08-022341.png" alt=""></p>
-<h2 id="3-2-ClassLoader中的一些方法"><a href="#3-2-ClassLoader中的一些方法" class="headerlink" title="3.2 ClassLoader中的一些方法"></a>3.2 ClassLoader中的一些方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 载入并返回一个Class</span></div><div class="line"><span class="keyword">public</span> Class&lt;?&gt; loadClass(String name) <span class="keyword">throws</span> ClassNotFoundException</div><div class="line"></div><div class="line"><span class="comment">// 定义一个类，不公开调用, jdk提供加载字节码的唯一入口，不能覆盖</span></div><div class="line"><span class="comment">// 可从磁盘读取字节码</span></div><div class="line"><span class="keyword">protected</span> <span class="keyword">final</span> Class&lt;?&gt; defineClass(<span class="keyword">byte</span>[] b, <span class="keyword">int</span> off, <span class="keyword">int</span> len)</div><div class="line"></div><div class="line"><span class="comment">// loadClass回调该方法，自定义ClassLoader的推荐做法</span></div><div class="line"><span class="keyword">protected</span> Class&lt;?&gt; findClass(String name) <span class="keyword">throws</span> ClassNotFoundException</div><div class="line"></div><div class="line"><span class="comment">// 寻找已经加载的类</span></div><div class="line"><span class="keyword">protected</span> <span class="keyword">final</span> Class&lt;?&gt; findLoadedClass(String name)</div></pre></td></tr></table></figure>
+<h2 id="3-2-ClassLoader中的一些方法"><a href="#3-2-ClassLoader中的一些方法" class="headerlink" title="3.2 ClassLoader中的一些方法"></a>3.2 ClassLoader中的一些方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 载入并返回一个Class</span></span><br><span class="line"><span class="keyword">public</span> Class&lt;?&gt; loadClass(String name) <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义一个类，不公开调用, jdk提供加载字节码的唯一入口，不能覆盖</span></span><br><span class="line"><span class="comment">// 可从磁盘读取字节码</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">final</span> Class&lt;?&gt; defineClass(<span class="keyword">byte</span>[] b, <span class="keyword">int</span> off, <span class="keyword">int</span> len)</span><br><span class="line"></span><br><span class="line"><span class="comment">// loadClass回调该方法，自定义ClassLoader的推荐做法</span></span><br><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; findClass(String name) <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line"></span><br><span class="line"><span class="comment">// 寻找已经加载的类</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">final</span> Class&lt;?&gt; findLoadedClass(String name)</span><br></pre></td></tr></table></figure>
 <h2 id="3-3-父类委托的缺陷和解决"><a href="#3-3-父类委托的缺陷和解决" class="headerlink" title="3.3 父类委托的缺陷和解决"></a>3.3 父类委托的缺陷和解决</h2><p>由于类加载器父类委托的存在，就会导致父类加载器无法加载子类加载器所加载的类。换句话说，比如Java的<strong>SPI机制(Service Provider Interface<br> )</strong>中，类的接口是定义在rt.jar包中的，而具体的实现是由指定厂商提供，是定义的AppClassLoader中的，如果rt.jar中有一个类需要返回该接口的一个实现，那么就需要加载获取AppClassLoader中这个接口实现类的字节码。<br>按照父类委托机制，rt.jar的类加载器是无法访问子加载器加载的字节码的，那么该如何解决。<br>这个就引入了一个<strong>线程上下文类加载器</strong>的概念，基本思想是给顶层类加载传入底层类加载器的实例。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 设置线程上下文类加载器</span></div><div class="line">Thread.setContextClassLoader(ClassLoader cl)</div><div class="line"><span class="comment">// 获取线程上下文类加载器</span></div><div class="line">Thread.getContextClassLoader()</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置线程上下文类加载器</span></span><br><span class="line">Thread.setContextClassLoader(ClassLoader cl)</span><br><span class="line"><span class="comment">// 获取线程上下文类加载器</span></span><br><span class="line">Thread.getContextClassLoader()</span><br></pre></td></tr></table></figure>
 <p>这样，顶层的加载器通过线程的上下文就能访问到底层类加载，从而可以获取底层加载器所加载的字节码。<br>打破这种默认的父类委托机制模式的应用如Tomcat的WebappClassLoader，OSGi的ClassLoader根据需要自由加载Class等等。<br>由于父类委托的核心代码是在loadClass方法中实现的，所以当然也可以通过覆盖loadClass方法来打破父类委托的机制，比如：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">protected synchronized Class&lt;?&gt; loadClass(String name, boolean resolve) throws ClassNotFoundException &#123;</div><div class="line">    // First, check if the class has already been loaded</div><div class="line">    // 在findClass中实现类的定义defineClass装载</div><div class="line">    Class re=findClass(name);</div><div class="line">    if(re==null)&#123;</div><div class="line">        System.out.println(“无法载入类:”+name+“ 需要请求父加载器");</div><div class="line">        return super.loadClass(name,resolve);</div><div class="line">    &#125;</div><div class="line">    return re;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">synchronized</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">    <span class="comment">// First, check if the class has already been loaded</span></span><br><span class="line">    <span class="comment">// 在findClass中实现类的定义defineClass装载</span></span><br><span class="line">    Class re=findClass(name);</span><br><span class="line">    <span class="keyword">if</span>(re==<span class="keyword">null</span>)&#123;</span><br><span class="line">        System.out.println(“无法载入类:”+name+“ 需要请求父加载器<span class="string">");</span></span><br><span class="line"><span class="string">        return super.loadClass(name,resolve);</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    return re;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
 <h1 id="4-自定义类加载器"><a href="#4-自定义类加载器" class="headerlink" title="4. 自定义类加载器"></a>4. 自定义类加载器</h1><p>通过自定义类加载器我们可以对手动生成的字节码进行加载，可以实现热部署等等一些功能。<br>相信大家经常使用tomcat的热部署，那么关于自定义类的热部署可参照博文：</p>
-<p><a href="http://blog.csdn.net/ozwarld/article/details/7440868" target="_blank" rel="external">《Java Class热替换》</a></p>
-<p>其他博文参考：<br><a href="http://my.oschina.net/aminqiao/blog/262601" target="_blank" rel="external">《Java Classloader机制解析》</a><br><a href="http://tyrion.iteye.com/blog/1958814" target="_blank" rel="external">《翻译：走出类加载器迷宫》</a> </p>
+<p><a href="http://blog.csdn.net/ozwarld/article/details/7440868" target="_blank" rel="noopener">《Java Class热替换》</a></p>
+<p>其他博文参考：<br><a href="http://my.oschina.net/aminqiao/blog/262601" target="_blank" rel="noopener">《Java Classloader机制解析》</a><br><a href="http://tyrion.iteye.com/blog/1958814" target="_blank" rel="noopener">《翻译：走出类加载器迷宫》</a> </p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -173,9 +173,9 @@ JVM学习03-类加载机制1. 类加载器简介之前有讲述过 JVM 的启动
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/Java/JVM学习04-class字节码的结构/" title="JVM学习04-class字节码的结构">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   JVM学习04-class字节码的结构</span>
 </a>
@@ -183,8 +183,8 @@ JVM学习03-类加载机制1. 类加载器简介之前有讲述过 JVM 的启动
 
 
 <div class="next">
-<a href="/icemimosa/Java/JVM学习02-GC算法与种类/"  title="JVM学习02-GC算法与种类">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/Java/JVM学习02-GC算法与种类/" title="JVM学习02-GC算法与种类">
+ <strong>NEXT:</strong><br> 
  <span>JVM学习02-GC算法与种类
 </span>
 </a>
@@ -213,7 +213,7 @@ JVM学习03-类加载机制1. 类加载器简介之前有讲述过 JVM 的启动
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -238,7 +238,7 @@ JVM学习03-类加载机制1. 类加载器简介之前有讲述过 JVM 的启动
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -269,7 +269,7 @@ JVM学习03-类加载机制1. 类加载器简介之前有讲述过 JVM 的启动
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -297,7 +297,7 @@ JVM学习03-类加载机制1. 类加载器简介之前有讲述过 JVM 的启动
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -311,7 +311,7 @@ JVM学习03-类加载机制1. 类加载器简介之前有讲述过 JVM 的启动
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -319,7 +319,7 @@ JVM学习03-类加载机制1. 类加载器简介之前有讲述过 JVM 的启动
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -327,7 +327,7 @@ JVM学习03-类加载机制1. 类加载器简介之前有讲述过 JVM 的启动
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -389,7 +389,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -600,6 +600,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

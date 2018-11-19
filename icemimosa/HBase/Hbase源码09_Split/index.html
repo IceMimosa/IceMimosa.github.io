@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>Hbase源码09_Split过程 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -42,7 +42,7 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -50,7 +50,7 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -60,7 +60,7 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -77,18 +77,18 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -147,14 +147,14 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 <ul>
 <li>执行 <code>execute</code> 方法</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="number">1</span>. 执行 PairOfSameType&lt;Region&gt; regions = createDaughters(server, services, user);</div><div class="line">	* &gt;&gt;&gt;&gt; 执行 preSplit 的协处理器</div><div class="line">	<span class="comment">// ⭐️ 主要步骤</span></div><div class="line">	* 执行 PairOfSameType&lt;Region&gt; daughterRegions = stepsBeforePONR(server, services, testing);</div><div class="line">		* ====== 管理ZK节点, 开始执行splitting操作（创建PENDING_SPLIT, 等待master修改为SPLITTING）</div><div class="line">		* 创建 .split 目录, 后续split的文件都放在这个目录中</div><div class="line">		* 关闭当前的HRegion, 并下线, 不再提供服务</div><div class="line">		* ⭐️⭐️ 执行 splitStoreFiles 方法, 该方法正式切割HFile文件</div><div class="line">			* 为每个StoreFile创建StoreFileSplitter(Callable接口), 然后丢入到线程池中</div><div class="line">			* 执行StoreFileSplitter的call方法</div><div class="line">			* 执行splitStoreFile, 开始切割. 原理就是根据MidKey, 读取将文件切割放置到.split目录中, 分成两个子Region目录</div><div class="line">		* ⭐️⭐️ 执行 createDaughterRegionFromSplits, 转移子Region(a和b)的.split数据到真实目录中, 并创建子HRegion实例</div><div class="line">	* &gt;&gt;&gt;&gt; 执行 preSplitBeforePONR 的协处理器</div><div class="line">	* 执行 MetaTableAccessor.splitRegion, 创建 META, .regioninfo 等元数据信息</div><div class="line">* &gt;&gt;&gt;&gt; 执行 preSplitAfterPONR 的协处理器</div><div class="line"><span class="number">2</span>. 执行 stepsAfterPONR 方法</div><div class="line">	* ⭐️⭐️ 执行 openDaughters 方法, 创建两个DaughterOpener线程, 打开Region进行服务</div><div class="line">		* 内部就执行initialize, 各种Store, HFile的初始化。</div><div class="line">	* ====== 管理ZK节点, 等待master置为RS_ZK_REGION_SPLIT, 表示split完成</div><div class="line">	* &gt;&gt;&gt;&gt; 执行 postSplit 的协处理器</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>. 执行 PairOfSameType&lt;Region&gt; regions = createDaughters(server, services, user);</span><br><span class="line">	* &gt;&gt;&gt;&gt; 执行 preSplit 的协处理器</span><br><span class="line">	<span class="comment">// ⭐️ 主要步骤</span></span><br><span class="line">	* 执行 PairOfSameType&lt;Region&gt; daughterRegions = stepsBeforePONR(server, services, testing);</span><br><span class="line">		* ====== 管理ZK节点, 开始执行splitting操作（创建PENDING_SPLIT, 等待master修改为SPLITTING）</span><br><span class="line">		* 创建 .split 目录, 后续split的文件都放在这个目录中</span><br><span class="line">		* 关闭当前的HRegion, 并下线, 不再提供服务</span><br><span class="line">		* ⭐️⭐️ 执行 splitStoreFiles 方法, 该方法正式切割HFile文件</span><br><span class="line">			* 为每个StoreFile创建StoreFileSplitter(Callable接口), 然后丢入到线程池中</span><br><span class="line">			* 执行StoreFileSplitter的call方法</span><br><span class="line">			* 执行splitStoreFile, 开始切割. 原理就是根据MidKey, 读取将文件切割放置到.split目录中, 分成两个子Region目录</span><br><span class="line">		* ⭐️⭐️ 执行 createDaughterRegionFromSplits, 转移子Region(a和b)的.split数据到真实目录中, 并创建子HRegion实例</span><br><span class="line">	* &gt;&gt;&gt;&gt; 执行 preSplitBeforePONR 的协处理器</span><br><span class="line">	* 执行 MetaTableAccessor.splitRegion, 创建 META, .regioninfo 等元数据信息</span><br><span class="line">* &gt;&gt;&gt;&gt; 执行 preSplitAfterPONR 的协处理器</span><br><span class="line"><span class="number">2</span>. 执行 stepsAfterPONR 方法</span><br><span class="line">	* ⭐️⭐️ 执行 openDaughters 方法, 创建两个DaughterOpener线程, 打开Region进行服务</span><br><span class="line">		* 内部就执行initialize, 各种Store, HFile的初始化。</span><br><span class="line">	* ====== 管理ZK节点, 等待master置为RS_ZK_REGION_SPLIT, 表示split完成</span><br><span class="line">	* &gt;&gt;&gt;&gt; 执行 postSplit 的协处理器</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>注: 中间会执行各种 <code>transition</code> 方法, 其实就是可以自定义<code>TransactionListener</code>类, 相当于Hook一样。</p>
 </blockquote>
 <ul>
 <li>当抛出异常, 执行 <code>rollback</code> 方法</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt;&gt; 执行 preRollBackSplit 协处理器</div><div class="line">简单说下: 根据transition中记录的执行步骤, 开始进行回滚, 清除各种创建的文件和目录之类的。</div><div class="line">&gt;&gt;&gt;&gt; 执行 postRollBackSplit 协处理器</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;&gt; 执行 preRollBackSplit 协处理器</span><br><span class="line">简单说下: 根据transition中记录的执行步骤, 开始进行回滚, 清除各种创建的文件和目录之类的。</span><br><span class="line">&gt;&gt;&gt;&gt; 执行 postRollBackSplit 协处理器</span><br></pre></td></tr></table></figure>
 <h2 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h2><p>到这基本就结束了, 中间还有判断是否需要<code>Compact</code>, 关于<code>Compact</code>, 下节在介绍。</p>
 <p>其实大多时候打开自动Split的情况不错, 一般优化都是预定义好Region的数量。因为Split过程（Compact过程也一样）很费时间, 并且会影响到线上服务。</p>
   
@@ -163,7 +163,7 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/hbase/">hbase</a><a href="/tags/源码/">源码</a>
+  <span></span> <a href="/tags/源码/">源码</a><a href="/tags/hbase/">hbase</a>
   </div>
 
 
@@ -185,9 +185,9 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/HBase/Hbase源码10_插曲StealJobQueue/" title="Hbase源码10_插曲StealJobQueue">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   Hbase源码10_插曲StealJobQueue</span>
 </a>
@@ -195,8 +195,8 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 
 
 <div class="next">
-<a href="/icemimosa/hadoop/Mac编译Hadoop和安装Native Lib/"  title="Mac编译Hadoop和安装Native lib">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/hadoop/Mac编译Hadoop和安装Native Lib/" title="Mac编译Hadoop和安装Native lib">
+ <strong>NEXT:</strong><br> 
  <span>Mac编译Hadoop和安装Native lib
 </span>
 </a>
@@ -225,7 +225,7 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -250,7 +250,7 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -281,7 +281,7 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -309,7 +309,7 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -323,7 +323,7 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -331,7 +331,7 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -339,7 +339,7 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -401,7 +401,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -612,6 +612,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>02_Redis基本命令的使用-集合 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -46,7 +46,7 @@ Redis除了提供集合的增删改查之外，还支持多个集合的取交集
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -54,7 +54,7 @@ Redis除了提供集合的增删改查之外，还支持多个集合的取交集
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -64,7 +64,7 @@ Redis除了提供集合的增删改查之外，还支持多个集合的取交集
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -81,18 +81,18 @@ Redis除了提供集合的增删改查之外，还支持多个集合的取交集
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -125,70 +125,70 @@ Redis除了提供集合的增删改查之外，还支持多个集合的取交集
 <li><strong>添加元素</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ sadd key member [member ...]</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; sadd skey1 a b c b</div><div class="line">(integer) 3</div><div class="line">127.0.0.1:6379&gt; sadd skey1 a</div><div class="line">(integer) 0</div><div class="line"></div><div class="line"># 返回添加成功的个数</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ sadd key member [member ...]</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br><span class="line">127.0.0.1:6379&gt; sadd skey1 a b c b</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; sadd skey1 a</span><br><span class="line">(integer) 0</span><br><span class="line"></span><br><span class="line"># 返回添加成功的个数</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>删除元素</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ srem key member [member ...]</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; srem skey1 a b</div><div class="line">(integer) 2</div><div class="line"></div><div class="line"># 返回删除成功的个数</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ srem key member [member ...]</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br><span class="line">127.0.0.1:6379&gt; srem skey1 a b</span><br><span class="line">(integer) 2</span><br><span class="line"></span><br><span class="line"># 返回删除成功的个数</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>返回元素个数</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ scard key</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; scard skey1</div><div class="line">(integer) 1</div><div class="line"></div><div class="line"># 时间复杂度是O(1)，不会遍历所有元素，取的Redis内部变量</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ scard key</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br><span class="line">127.0.0.1:6379&gt; scard skey1</span><br><span class="line">(integer) 1</span><br><span class="line"></span><br><span class="line"># 时间复杂度是O(1)，不会遍历所有元素，取的Redis内部变量</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>判断元素存在性</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ sismember key member</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; sismember skey1 a</div><div class="line">(integer) 0</div><div class="line">127.0.0.1:6379&gt; sismember skey1 c</div><div class="line">(integer) 1</div><div class="line"></div><div class="line"># 存在返回1，否则返回0</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ sismember key member</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br><span class="line">127.0.0.1:6379&gt; sismember skey1 a</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; sismember skey1 c</span><br><span class="line">(integer) 1</span><br><span class="line"></span><br><span class="line"># 存在返回1，否则返回0</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>随机获取元素</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ srandmember key [count]</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; srandmember skey1</div><div class="line">&quot;c&quot;</div><div class="line">127.0.0.1:6379&gt; srandmember skey1 2</div><div class="line">1) &quot;c&quot;</div><div class="line"></div><div class="line"># count默认为1</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ srandmember key [count]</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br><span class="line">127.0.0.1:6379&gt; srandmember skey1</span><br><span class="line">&quot;c&quot;</span><br><span class="line">127.0.0.1:6379&gt; srandmember skey1 2</span><br><span class="line">1) &quot;c&quot;</span><br><span class="line"></span><br><span class="line"># count默认为1</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>随机弹出元素</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ spop key [count]</div><div class="line"></div><div class="line"># Redis3.2支持count参数，count默认为1</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ spop key [count]</span><br><span class="line"></span><br><span class="line"># Redis3.2支持count参数，count默认为1</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>获取所有元素</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ smembers key</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; smembers skey1</div><div class="line">1) &quot;c&quot;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ smembers key</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br><span class="line">127.0.0.1:6379&gt; smembers skey1</span><br><span class="line">1) &quot;c&quot;</span><br></pre></td></tr></table></figure>
 <p><strong>注意</strong>：<code>smembers</code>和<code>lrange</code>、<code>hgetall</code>都属于比较重的命令，元素过多就会阻塞Redis，此时可以使用<code>sscan</code>来完成，具体后续会说明。</p>
 <h2 id="2-2-集合间操作"><a href="#2-2-集合间操作" class="headerlink" title="2.2 集合间操作"></a>2.2 集合间操作</h2><p>准备两个集合如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">127.0.0.1:6379&gt; sadd user:1:follow it music his sports</div><div class="line">(integer) 4</div><div class="line">127.0.0.1:6379&gt; sadd user:2:follow it news ent  sports</div><div class="line">(integer) 4</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; sadd user:1:follow it music his sports</span><br><span class="line">(integer) 4</span><br><span class="line">127.0.0.1:6379&gt; sadd user:2:follow it news ent  sports</span><br><span class="line">(integer) 4</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>交集</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ sinter key [key ...]</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; sinter user:1:follow user:2:follow</div><div class="line">1) &quot;sports&quot;</div><div class="line">2) &quot;it&quot;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ sinter key [key ...]</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br><span class="line">127.0.0.1:6379&gt; sinter user:1:follow user:2:follow</span><br><span class="line">1) &quot;sports&quot;</span><br><span class="line">2) &quot;it&quot;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>并集</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ sunion key [key ...]</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; sunion user:1:follow user:2:follow</div><div class="line">1) &quot;news&quot;</div><div class="line">2) &quot;ent&quot;</div><div class="line">3) &quot;his&quot;</div><div class="line">4) &quot;it&quot;</div><div class="line">5) &quot;sports&quot;</div><div class="line">6) &quot;music&quot;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ sunion key [key ...]</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br><span class="line">127.0.0.1:6379&gt; sunion user:1:follow user:2:follow</span><br><span class="line">1) &quot;news&quot;</span><br><span class="line">2) &quot;ent&quot;</span><br><span class="line">3) &quot;his&quot;</span><br><span class="line">4) &quot;it&quot;</span><br><span class="line">5) &quot;sports&quot;</span><br><span class="line">6) &quot;music&quot;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>差集</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ sdiff key [key ...]</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; sdiff user:1:follow user:2:follow</div><div class="line">1) &quot;his&quot;</div><div class="line">2) &quot;music&quot;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ sdiff key [key ...]</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br><span class="line">127.0.0.1:6379&gt; sdiff user:1:follow user:2:follow</span><br><span class="line">1) &quot;his&quot;</span><br><span class="line">2) &quot;music&quot;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>将交集、并集、差集结果保存</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ sinterstore destination key [key ...]</div><div class="line">$ sunionstore destination key [key ...]</div><div class="line">$ sdiffstore destination key [key ...]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sinterstore destination key [key ...]</span><br><span class="line">$ sunionstore destination key [key ...]</span><br><span class="line">$ sdiffstore destination key [key ...]</span><br></pre></td></tr></table></figure>
 <p>由于集合间运算当元素较多时会很耗时，所有Redis提供了上述命令用来存储执行结果。</p>
 <h1 id="3-内部编码"><a href="#3-内部编码" class="headerlink" title="3. 内部编码"></a>3. 内部编码</h1><h2 id="3-1-intset-整数集合"><a href="#3-1-intset-整数集合" class="headerlink" title="3.1 intset(整数集合)"></a>3.1 intset(整数集合)</h2><p>当集合的元素<code>都是整数</code>且<code>个数</code>小于<code>set-max-intset-entries(默认512个)</code>，Redis会使用intset作为列表的内部实现，减少内存使用。</p>
 <h2 id="3-2-hashtable-哈希表"><a href="#3-2-hashtable-哈希表" class="headerlink" title="3.2 hashtable(哈希表)"></a>3.2 hashtable(哈希表)</h2><p>当无法满足intset条件时，Redis会使用hashtable的方式。</p>
@@ -221,9 +221,9 @@ Redis除了提供集合的增删改查之外，还支持多个集合的取交集
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/redis/02_Redis基本命令的使用-有序集合/" title="02_Redis基本命令的使用-有序集合">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   02_Redis基本命令的使用-有序集合</span>
 </a>
@@ -231,8 +231,8 @@ Redis除了提供集合的增删改查之外，还支持多个集合的取交集
 
 
 <div class="next">
-<a href="/icemimosa/redis/02_Redis基本命令的使用-列表/"  title="02_Redis基本命令的使用-列表">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/redis/02_Redis基本命令的使用-列表/" title="02_Redis基本命令的使用-列表">
+ <strong>NEXT:</strong><br> 
  <span>02_Redis基本命令的使用-列表
 </span>
 </a>
@@ -261,7 +261,7 @@ Redis除了提供集合的增删改查之外，还支持多个集合的取交集
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -286,7 +286,7 @@ Redis除了提供集合的增删改查之外，还支持多个集合的取交集
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -317,7 +317,7 @@ Redis除了提供集合的增删改查之外，还支持多个集合的取交集
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -345,7 +345,7 @@ Redis除了提供集合的增删改查之外，还支持多个集合的取交集
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -359,7 +359,7 @@ Redis除了提供集合的增删改查之外，还支持多个集合的取交集
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -367,7 +367,7 @@ Redis除了提供集合的增删改查之外，还支持多个集合的取交集
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -375,7 +375,7 @@ Redis除了提供集合的增删改查之外，还支持多个集合的取交集
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -437,7 +437,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -648,6 +648,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

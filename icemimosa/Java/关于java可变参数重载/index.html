@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>关于java可变参数重载 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -40,7 +40,7 @@
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -48,7 +48,7 @@
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -58,7 +58,7 @@
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -75,18 +75,18 @@
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -111,24 +111,24 @@
 		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#关于java可变参数重载"><span class="toc-text">关于java可变参数重载</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-场景分析"><span class="toc-text">1. 场景分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Google一下"><span class="toc-text">2. Google一下</span></a></li></ol>
 		</div>
 		
-		<h1 id="关于java可变参数重载"><a href="#关于java可变参数重载" class="headerlink" title="关于java可变参数重载"></a>关于java可变参数重载</h1><h1 id="1-场景分析"><a href="#1-场景分析" class="headerlink" title="1. 场景分析"></a>1. 场景分析</h1><p>在使用<a href="https://github.com/google/guava" target="_blank" rel="external">Guava</a>的<code>ImmutableList</code>的类的时候， 发现里面有很多<code>of</code>的重载方法（类似的还有<code>java的EnumSet的of方法</code>）。</p>
+		<h1 id="关于java可变参数重载"><a href="#关于java可变参数重载" class="headerlink" title="关于java可变参数重载"></a>关于java可变参数重载</h1><h1 id="1-场景分析"><a href="#1-场景分析" class="headerlink" title="1. 场景分析"></a>1. 场景分析</h1><p>在使用<a href="https://github.com/google/guava" target="_blank" rel="noopener">Guava</a>的<code>ImmutableList</code>的类的时候， 发现里面有很多<code>of</code>的重载方法（类似的还有<code>java的EnumSet的of方法</code>）。</p>
 <p>如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">of(E e);</div><div class="line">of(E e1, E e2);</div><div class="line">of(E e1, E e2, E e3);</div><div class="line">of(E e1, E e2, E e3, E e4);</div><div class="line">.....</div><div class="line">of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10, E e11, E e12, E... others);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">of(E e);</span><br><span class="line">of(E e1, E e2);</span><br><span class="line">of(E e1, E e2, E e3);</span><br><span class="line">of(E e1, E e2, E e3, E e4);</span><br><span class="line">.....</span><br><span class="line">of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10, E e11, E e12, E... others);</span><br></pre></td></tr></table></figure>
 <p>疑问：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">为什么不直接使用可变参数, 而是在参数很少的时候使用了很多重载。</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">为什么不直接使用可变参数, 而是在参数很少的时候使用了很多重载。</span><br></pre></td></tr></table></figure>
 <h1 id="2-Google一下"><a href="#2-Google一下" class="headerlink" title="2. Google一下"></a>2. Google一下</h1><ul>
-<li><a href="https://stackoverflow.com/questions/3737882/why-does-guavas-immutablelist-have-so-many-overloaded-of-methods" target="_blank" rel="external">https://stackoverflow.com/questions/3737882/why-does-guavas-immutablelist-have-so-many-overloaded-of-methods</a></li>
-<li><a href="https://stackoverflow.com/questions/31924249/why-does-enumset-have-many-overloaded-of-methods?noredirect=1&amp;lq=1" target="_blank" rel="external">https://stackoverflow.com/questions/31924249/why-does-enumset-have-many-overloaded-of-methods?noredirect=1&amp;lq=1</a></li>
+<li><a href="https://stackoverflow.com/questions/3737882/why-does-guavas-immutablelist-have-so-many-overloaded-of-methods" target="_blank" rel="noopener">https://stackoverflow.com/questions/3737882/why-does-guavas-immutablelist-have-so-many-overloaded-of-methods</a></li>
+<li><a href="https://stackoverflow.com/questions/31924249/why-does-enumset-have-many-overloaded-of-methods?noredirect=1&amp;lq=1" target="_blank" rel="noopener">https://stackoverflow.com/questions/31924249/why-does-enumset-have-many-overloaded-of-methods?noredirect=1&amp;lq=1</a></li>
 </ul>
 <blockquote>
 <p>EnumSet的解释</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Creates an enum set initially containing the specified elements.</div><div class="line">This factory, whose parameter list uses the varargs feature, </div><div class="line">may be used to create an enum set initially containing an arbitrary number of elements, </div><div class="line">but it is likely to run slower than the overloadings that do not use varargs.</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Creates an enum set initially containing the specified elements.</span><br><span class="line">This factory, whose parameter list uses the varargs feature, </span><br><span class="line">may be used to create an enum set initially containing an arbitrary number of elements, </span><br><span class="line">but it is likely to run slower than the overloadings that do not use varargs.</span><br></pre></td></tr></table></figure>
 <p>按照上面的解释，有人说是varargs的方法会定义个数组传入，所以在性能上会比不使用varargs的方法慢。</p>
 <blockquote>
 <p>ImmutableList中注释</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">These go up to eleven. After that, you just get the varargs form, and</div><div class="line">whatever warnings might come along with it. :(</div><div class="line"></div><div class="line"># up to eleven参考: https://en.wikipedia.org/wiki/Up_to_eleven</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">These go up to eleven. After that, you just get the varargs form, and</span><br><span class="line">whatever warnings might come along with it. :(</span><br><span class="line"></span><br><span class="line"># up to eleven参考: https://en.wikipedia.org/wiki/Up_to_eleven</span><br></pre></td></tr></table></figure>
 <p>也有人说是避免java的warning（由于泛型和varargs配合不是很好），然后java的做法是使用<code>@SafeVarargs</code>来避免。说是提升性能的，但是ImmutableList内部依旧使用了的是<code>construct(Object... elements)</code>方法，也比较奇怪吧。</p>
 <p>总之姑且认为是避免构建一个数组而提升性能，java自己也说的是<code>likely</code>，23333。</p>
 <p>还有一些乱七八糟的解释和猜测只能围观stackoverflow里面其他人的解释了。</p>
@@ -160,9 +160,9 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/其他/[转]Https前世今生/" title="【转】Https前世今生">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   【转】Https前世今生</span>
 </a>
@@ -170,8 +170,8 @@
 
 
 <div class="next">
-<a href="/icemimosa/spring/部署springboot应用_CentOS7/"  title="部署springboot应用_centOS7">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/spring/部署springboot应用_CentOS7/" title="部署springboot应用_centOS7">
+ <strong>NEXT:</strong><br> 
  <span>部署springboot应用_centOS7
 </span>
 </a>
@@ -200,7 +200,7 @@
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -225,7 +225,7 @@
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -256,7 +256,7 @@
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -284,7 +284,7 @@
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -298,7 +298,7 @@
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -306,7 +306,7 @@
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -314,7 +314,7 @@
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -376,7 +376,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -587,6 +587,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

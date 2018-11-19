@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>Hive-5_UDF | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -46,7 +46,7 @@ In Beeline or the CLI, use the commands below to show the latest documentation
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -54,7 +54,7 @@ In Beeline or the CLI, use the commands below to show the latest documentation
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -64,7 +64,7 @@ In Beeline or the CLI, use the commands below to show the latest documentation
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -81,18 +81,18 @@ In Beeline or the CLI, use the commands below to show the latest documentation
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -119,38 +119,38 @@ In Beeline or the CLI, use the commands below to show the latest documentation
 		
 		<h1 id="Hive-5-UDF"><a href="#Hive-5-UDF" class="headerlink" title="Hive-5_UDF"></a>Hive-5_UDF</h1><p>[TOC]</p>
 <blockquote>
-<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF" target="_blank" rel="external">参考 UDF</a></p>
+<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF" target="_blank" rel="noopener">参考 UDF</a></p>
 </blockquote>
-<p>In <a href="https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients#HiveServer2Clients-Beeline–NewCommandLineShell" target="_blank" rel="external">Beeline</a> or the <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Cli" target="_blank" rel="external">CLI</a>, use the commands below to show the latest documentation</p>
+<p>In <a href="https://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients#HiveServer2Clients-Beeline–NewCommandLineShell" target="_blank" rel="noopener">Beeline</a> or the <a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Cli" target="_blank" rel="noopener">CLI</a>, use the commands below to show the latest documentation</p>
 <ul>
 <li>语法:</li>
 </ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SHOW</span> FUNCTIONS;</div><div class="line"><span class="keyword">DESCRIBE</span> <span class="keyword">FUNCTION</span> &lt;function_name&gt;;</div><div class="line"><span class="keyword">DESCRIBE</span> <span class="keyword">FUNCTION</span> <span class="keyword">EXTENDED</span> &lt;function_name&gt;;</div></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> FUNCTIONS;</span><br><span class="line"><span class="keyword">DESCRIBE</span> <span class="keyword">FUNCTION</span> &lt;function_name&gt;;</span><br><span class="line"><span class="keyword">DESCRIBE</span> <span class="keyword">FUNCTION</span> <span class="keyword">EXTENDED</span> &lt;function_name&gt;;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>注：很多方法可能存在版本的问题，使用请参考</li>
 </ul>
 <h1 id="1-内置的操作符-Operators"><a href="#1-内置的操作符-Operators" class="headerlink" title="1. 内置的操作符(Operators)"></a>1. 内置的操作符(Operators)</h1><h2 id="1-1-关系型操作符"><a href="#1-1-关系型操作符" class="headerlink" title="1.1 关系型操作符"></a>1.1 关系型操作符</h2><p>返回 <code>TRUE</code> 和 <code>FALSE</code> 值的一些操作，比如 <code>=</code>, <code>==</code>, <code>!=</code> 等等</p>
-<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-RelationalOperators" target="_blank" rel="external">Relational Operators</a></p>
+<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-RelationalOperators" target="_blank" rel="noopener">Relational Operators</a></p>
 <h2 id="1-2-算数操作符"><a href="#1-2-算数操作符" class="headerlink" title="1.2 算数操作符"></a>1.2 算数操作符</h2><p>比如 <code>-</code>, <code>+</code>, 等等</p>
-<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-ArithmeticOperators" target="_blank" rel="external">Arithmetic Operators</a></p>
+<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-ArithmeticOperators" target="_blank" rel="noopener">Arithmetic Operators</a></p>
 <h2 id="1-3-逻辑操作符"><a href="#1-3-逻辑操作符" class="headerlink" title="1.3 逻辑操作符"></a>1.3 逻辑操作符</h2><p>如 <code>&amp;&amp;</code>, <code>||</code>, <code>IN</code> 等等</p>
-<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-LogicalOperators" target="_blank" rel="external">Logical Operators</a></p>
-<h2 id="1-4-混合类型和操作"><a href="#1-4-混合类型和操作" class="headerlink" title="1.4 混合类型和操作"></a>1.4 混合类型和操作</h2><p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-ComplexTypeConstructors" target="_blank" rel="external">Complex Type</a></p>
+<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-LogicalOperators" target="_blank" rel="noopener">Logical Operators</a></p>
+<h2 id="1-4-混合类型和操作"><a href="#1-4-混合类型和操作" class="headerlink" title="1.4 混合类型和操作"></a>1.4 混合类型和操作</h2><p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-ComplexTypeConstructors" target="_blank" rel="noopener">Complex Type</a></p>
 <h1 id="2-内置的方法-Functions"><a href="#2-内置的方法-Functions" class="headerlink" title="2. 内置的方法(Functions)"></a>2. 内置的方法(Functions)</h1><h2 id="2-1-算数方法"><a href="#2-1-算数方法" class="headerlink" title="2.1 算数方法"></a>2.1 算数方法</h2><p>如 <code>round方法</code>, <code>abs方法</code>等等。如果值为 null 的话，返回为 null</p>
-<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-MathematicalFunctions" target="_blank" rel="external">Mathematical Functions</a></p>
-<h2 id="2-2-集合方法"><a href="#2-2-集合方法" class="headerlink" title="2.2 集合方法"></a>2.2 集合方法</h2><p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-CollectionFunctions" target="_blank" rel="external">Collection Functions</a></p>
-<h2 id="2-3-类型转换"><a href="#2-3-类型转换" class="headerlink" title="2.3 类型转换"></a>2.3 类型转换</h2><p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-TypeConversionFunctions" target="_blank" rel="external">Type Conversion Functions</a></p>
+<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-MathematicalFunctions" target="_blank" rel="noopener">Mathematical Functions</a></p>
+<h2 id="2-2-集合方法"><a href="#2-2-集合方法" class="headerlink" title="2.2 集合方法"></a>2.2 集合方法</h2><p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-CollectionFunctions" target="_blank" rel="noopener">Collection Functions</a></p>
+<h2 id="2-3-类型转换"><a href="#2-3-类型转换" class="headerlink" title="2.3 类型转换"></a>2.3 类型转换</h2><p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-TypeConversionFunctions" target="_blank" rel="noopener">Type Conversion Functions</a></p>
 <h2 id="2-4-时间方法"><a href="#2-4-时间方法" class="headerlink" title="2.4 时间方法"></a>2.4 时间方法</h2><p>如 <code>current_date方法</code>, <code>date_format方法</code> 等等</p>
-<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-DateFunctions" target="_blank" rel="external">Date Functions</a></p>
+<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-DateFunctions" target="_blank" rel="noopener">Date Functions</a></p>
 <h2 id="2-5-条件方法"><a href="#2-5-条件方法" class="headerlink" title="2.5 条件方法"></a>2.5 条件方法</h2><p>如 <code>isnull</code>, <code>CASE WHEN</code> 等等</p>
-<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-ConditionalFunctions" target="_blank" rel="external">Conditional Functions</a></p>
+<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-ConditionalFunctions" target="_blank" rel="noopener">Conditional Functions</a></p>
 <h2 id="2-6-String方法"><a href="#2-6-String方法" class="headerlink" title="2.6 String方法"></a>2.6 String方法</h2><p>如 <code>concat</code>, <code>decode</code>, <code>lower</code> 等等</p>
-<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-StringFunctions" target="_blank" rel="external">String Functions</a></p>
-<h2 id="2-7-数据掩饰方法"><a href="#2-7-数据掩饰方法" class="headerlink" title="2.7 数据掩饰方法"></a>2.7 数据掩饰方法</h2><p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-DataMaskingFunctions" target="_blank" rel="external">Data Masking Functions</a></p>
+<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-StringFunctions" target="_blank" rel="noopener">String Functions</a></p>
+<h2 id="2-7-数据掩饰方法"><a href="#2-7-数据掩饰方法" class="headerlink" title="2.7 数据掩饰方法"></a>2.7 数据掩饰方法</h2><p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-DataMaskingFunctions" target="_blank" rel="noopener">Data Masking Functions</a></p>
 <h2 id="2-8-其他方法"><a href="#2-8-其他方法" class="headerlink" title="2.8 其他方法"></a>2.8 其他方法</h2><p>如 <code>reflect</code>, <code>current_database</code>, <code>md5</code> 等等</p>
-<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-Misc.Functions" target="_blank" rel="external">Misc. Functions</a></p>
+<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-Misc.Functions" target="_blank" rel="noopener">Misc. Functions</a></p>
 <h1 id="3-内置的统计方法-UDAF"><a href="#3-内置的统计方法-UDAF" class="headerlink" title="3. 内置的统计方法(UDAF)"></a>3. 内置的统计方法(UDAF)</h1><p>如 <code>count</code>, <code>sum</code>, <code>avg</code> 等等</p>
-<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-Built-inAggregateFunctions(UDAF)" target="_blank" rel="external">Built-in Aggregate Functions</a></p>
+<p>参考：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-Built-inAggregateFunctions(UDAF)" target="_blank" rel="noopener">Built-in Aggregate Functions</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -179,9 +179,9 @@ In Beeline or the CLI, use the commands below to show the latest documentation
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/oozie/Oozie-9_自定义UDF和Action节点/" title="Oozie-9_自定义UDF和Action节点">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   Oozie-9_自定义UDF和Action节点</span>
 </a>
@@ -189,8 +189,8 @@ In Beeline or the CLI, use the commands below to show the latest documentation
 
 
 <div class="next">
-<a href="/icemimosa/hive/Hive-4_Select语句/"  title="Hive-4_Select语句">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/hive/Hive-4_Select语句/" title="Hive-4_Select语句">
+ <strong>NEXT:</strong><br> 
  <span>Hive-4_Select语句
 </span>
 </a>
@@ -219,7 +219,7 @@ In Beeline or the CLI, use the commands below to show the latest documentation
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -244,7 +244,7 @@ In Beeline or the CLI, use the commands below to show the latest documentation
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -275,7 +275,7 @@ In Beeline or the CLI, use the commands below to show the latest documentation
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -303,7 +303,7 @@ In Beeline or the CLI, use the commands below to show the latest documentation
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -317,7 +317,7 @@ In Beeline or the CLI, use the commands below to show the latest documentation
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -325,7 +325,7 @@ In Beeline or the CLI, use the commands below to show the latest documentation
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -333,7 +333,7 @@ In Beeline or the CLI, use the commands below to show the latest documentation
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -395,7 +395,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -606,6 +606,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

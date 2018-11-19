@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>02_Redis基本命令的使用-有序集合 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -46,7 +46,7 @@ Redis基本命令的使用-有序集合1. 简介与集合不同的是，有序�
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -54,7 +54,7 @@ Redis基本命令的使用-有序集合1. 简介与集合不同的是，有序�
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -64,7 +64,7 @@ Redis基本命令的使用-有序集合1. 简介与集合不同的是，有序�
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -81,18 +81,18 @@ Redis基本命令的使用-有序集合1. 简介与集合不同的是，有序�
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -125,7 +125,7 @@ Redis基本命令的使用-有序集合1. 简介与集合不同的是，有序�
 <li><strong>添加成员</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ zadd key [NX|XX] [CH] [INCR] score member [score member ...]</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; zadd user:rank 1 a 10 b 5 c</div><div class="line">(integer) 3</div><div class="line"></div><div class="line"># 返回添加成功的个数</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ zadd key [NX|XX] [CH] [INCR] score member [score member ...]</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br><span class="line">127.0.0.1:6379&gt; zadd user:rank 1 a 10 b 5 c</span><br><span class="line">(integer) 3</span><br><span class="line"></span><br><span class="line"># 返回添加成功的个数</span><br></pre></td></tr></table></figure>
 <p>Redis3.2为zadd添加了四个选项：</p>
 <ul>
 <li>NX：元素必须不存在，才能设置成功，用于添加</li>
@@ -139,67 +139,67 @@ Redis基本命令的使用-有序集合1. 简介与集合不同的是，有序�
 <li><strong>计算成员个数</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ zcard key</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; zcard user:rank</div><div class="line">(integer) 3</div><div class="line"></div><div class="line"># 类似scard</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ zcard key</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br><span class="line">127.0.0.1:6379&gt; zcard user:rank</span><br><span class="line">(integer) 3</span><br><span class="line"></span><br><span class="line"># 类似scard</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>计算某个成员分数</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ zscore key member</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; zscore user:rank b</div><div class="line">&quot;10&quot;</div><div class="line"></div><div class="line"># 如果成员不存在，返回nil</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ zscore key member</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br><span class="line">127.0.0.1:6379&gt; zscore user:rank b</span><br><span class="line">&quot;10&quot;</span><br><span class="line"></span><br><span class="line"># 如果成员不存在，返回nil</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>计算成员排名</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ zrank key member</div><div class="line">$ zrevrank key member</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; zrank user:rank c</div><div class="line">(integer) 1</div><div class="line">127.0.0.1:6379&gt; zrevrank user:rank a</div><div class="line">(integer) 2</div><div class="line"></div><div class="line"># zrank从分数低到高排名，zrevrank反之</div><div class="line"># 排名下标从0开始</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ zrank key member</span><br><span class="line">$ zrevrank key member</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br><span class="line">127.0.0.1:6379&gt; zrank user:rank c</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; zrevrank user:rank a</span><br><span class="line">(integer) 2</span><br><span class="line"></span><br><span class="line"># zrank从分数低到高排名，zrevrank反之</span><br><span class="line"># 排名下标从0开始</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>删除成员</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ zrem key member [member ...]</div><div class="line"></div><div class="line"># count默认为1</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ zrem key member [member ...]</span><br><span class="line"></span><br><span class="line"># count默认为1</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>增加成员分数</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ zincrby key increment member</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; zincrby user:rank 1 a</div><div class="line">&quot;2&quot;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ zincrby key increment member</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br><span class="line">127.0.0.1:6379&gt; zincrby user:rank 1 a</span><br><span class="line">&quot;2&quot;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>返回指定排名范围的成员</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">$ zrange key start stop [WITHSCORES]</div><div class="line">$ zrevrange key start stop [WITHSCORES]</div><div class="line"></div><div class="line">&gt; 示例</div><div class="line">127.0.0.1:6379&gt; zrange user:rank 0 1</div><div class="line">1) &quot;a&quot;</div><div class="line">2) &quot;c&quot;</div><div class="line">127.0.0.1:6379&gt; zrevrange user:rank 0 1 WITHSCORES</div><div class="line">1) &quot;b&quot;</div><div class="line">2) &quot;10&quot;</div><div class="line">3) &quot;c&quot;</div><div class="line">4) &quot;5&quot;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ zrange key start stop [WITHSCORES]</span><br><span class="line">$ zrevrange key start stop [WITHSCORES]</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br><span class="line">127.0.0.1:6379&gt; zrange user:rank 0 1</span><br><span class="line">1) &quot;a&quot;</span><br><span class="line">2) &quot;c&quot;</span><br><span class="line">127.0.0.1:6379&gt; zrevrange user:rank 0 1 WITHSCORES</span><br><span class="line">1) &quot;b&quot;</span><br><span class="line">2) &quot;10&quot;</span><br><span class="line">3) &quot;c&quot;</span><br><span class="line">4) &quot;5&quot;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>返回指定分数范围的成员</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ zrangebyscore key min max [WITHSCORES] [LIMIT offset count]</div><div class="line">$ zrevrangebyscore key max min [WITHSCORES] [LIMIT offset count]</div><div class="line"></div><div class="line"></div><div class="line"># zrangebyscore按照分数从低到高，zrevrangebyscore反之。</div><div class="line"># min和max支持开区间和闭区间，以及无限小(-inf)和无限大(+inf)。</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ zrangebyscore key min max [WITHSCORES] [LIMIT offset count]</span><br><span class="line">$ zrevrangebyscore key max min [WITHSCORES] [LIMIT offset count]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># zrangebyscore按照分数从低到高，zrevrangebyscore反之。</span><br><span class="line"># min和max支持开区间和闭区间，以及无限小(-inf)和无限大(+inf)。</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>返回指定分数范围的成员数量</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ zcount key min max</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ zcount key min max</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>删除指定排名范围的升序成员</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ zremrangebyrank key start stop</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ zremrangebyrank key start stop</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>删除指定分数范围的升序成员</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ zremrangebyscore key min max</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ zremrangebyscore key min max</span><br></pre></td></tr></table></figure>
 <h2 id="2-2-集合间操作"><a href="#2-2-集合间操作" class="headerlink" title="2.2 集合间操作"></a>2.2 集合间操作</h2><blockquote>
 <ul>
 <li><strong>交集</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ zinterstore destination numkeys key [key ...] [WEIGHTS weight] [AGGREGATE SUM|MIN|MAX]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ zinterstore destination numkeys key [key ...] [WEIGHTS weight] [AGGREGATE SUM|MIN|MAX]</span><br></pre></td></tr></table></figure>
 <ul>
 <li>numkeys：做交集计算键的个数。</li>
 <li>[WEIGHTS weight]：每个键的权重，在做交集时，每个键的每个成员会将自己的分数乘以这个权重，默认权重为1</li>
@@ -210,7 +210,7 @@ Redis基本命令的使用-有序集合1. 简介与集合不同的是，有序�
 <li><strong>并集</strong></li>
 </ul>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ zunionstore destination numkeys key [key ...] [WEIGHTS weight] [AGGREGATE SUM|MIN|MAX]</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ zunionstore destination numkeys key [key ...] [WEIGHTS weight] [AGGREGATE SUM|MIN|MAX]</span><br></pre></td></tr></table></figure>
 <blockquote>
 <ul>
 <li><strong>差集</strong></li>
@@ -247,9 +247,9 @@ Redis基本命令的使用-有序集合1. 简介与集合不同的是，有序�
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/redis/03_Redis基本键的管理/" title="03_Redis基本键的管理">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   03_Redis基本键的管理</span>
 </a>
@@ -257,8 +257,8 @@ Redis基本命令的使用-有序集合1. 简介与集合不同的是，有序�
 
 
 <div class="next">
-<a href="/icemimosa/redis/02_Redis基本命令的使用-集合/"  title="02_Redis基本命令的使用-集合">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/redis/02_Redis基本命令的使用-集合/" title="02_Redis基本命令的使用-集合">
+ <strong>NEXT:</strong><br> 
  <span>02_Redis基本命令的使用-集合
 </span>
 </a>
@@ -287,7 +287,7 @@ Redis基本命令的使用-有序集合1. 简介与集合不同的是，有序�
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -312,7 +312,7 @@ Redis基本命令的使用-有序集合1. 简介与集合不同的是，有序�
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -343,7 +343,7 @@ Redis基本命令的使用-有序集合1. 简介与集合不同的是，有序�
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -371,7 +371,7 @@ Redis基本命令的使用-有序集合1. 简介与集合不同的是，有序�
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -385,7 +385,7 @@ Redis基本命令的使用-有序集合1. 简介与集合不同的是，有序�
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -393,7 +393,7 @@ Redis基本命令的使用-有序集合1. 简介与集合不同的是，有序�
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -401,7 +401,7 @@ Redis基本命令的使用-有序集合1. 简介与集合不同的是，有序�
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -463,7 +463,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -674,6 +674,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

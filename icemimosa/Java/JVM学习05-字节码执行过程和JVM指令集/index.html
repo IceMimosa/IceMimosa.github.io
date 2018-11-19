@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>JVM学习05-字节码执行过程和JVM指令集 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -39,7 +39,7 @@ JVM学习05-字节码执行过程和JVM指令集1. 字节码的Code部分在执�
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -47,7 +47,7 @@ JVM学习05-字节码执行过程和JVM指令集1. 字节码的Code部分在执�
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -57,7 +57,7 @@ JVM学习05-字节码执行过程和JVM指令集1. 字节码的Code部分在执�
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -74,18 +74,18 @@ JVM学习05-字节码执行过程和JVM指令集1. 字节码的Code部分在执�
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -115,11 +115,11 @@ JVM学习05-字节码执行过程和JVM指令集1. 字节码的Code部分在执�
 <p>在我介绍java内存模型的时候，函数的执行过程是分配在栈内存中的，所以在执行Code部分的时候肯定会涉及到局部变量表和操作数栈，同时还会涉及到程序计数器。之前也介绍了一个小例子，下面继续先以一个小例子讲述。</p>
 <p>#2. 例子</p>
 <p>源码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.minosa.test;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloClass</span> </span>&#123;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">foo</span><span class="params">()</span></span>&#123;</div><div class="line">		<span class="keyword">int</span> a = <span class="number">1</span>;</div><div class="line">		<span class="keyword">int</span> b = <span class="number">2</span>;</div><div class="line">		<span class="keyword">int</span> c = a + b;</div><div class="line">		<span class="keyword">return</span> c;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.minosa.test;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloClass</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">foo</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">int</span> a = <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">int</span> b = <span class="number">2</span>;</span><br><span class="line">		<span class="keyword">int</span> c = a + b;</span><br><span class="line">		<span class="keyword">return</span> c;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>ByteCode visualizer</code>查看</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">/* L6 */</span></div><div class="line">        <span class="number">0</span> iconst_1;</div><div class="line">        <span class="number">1</span> istore_1;               <span class="comment">/* a */</span></div><div class="line">        <span class="comment">/* L7 */</span></div><div class="line">        <span class="number">2</span> iconst_2;</div><div class="line">        <span class="number">3</span> istore_2;               <span class="comment">/* b */</span></div><div class="line">        <span class="comment">/* L8 */</span></div><div class="line">        <span class="number">4</span> iload_1;                <span class="comment">/* a */</span></div><div class="line">        <span class="number">5</span> iload_2;                <span class="comment">/* b */</span></div><div class="line">        <span class="number">6</span> iadd;</div><div class="line">        <span class="number">7</span> istore_3;               <span class="comment">/* c */</span></div><div class="line">        <span class="comment">/* L9 */</span></div><div class="line">        <span class="number">8</span> iload_3;                <span class="comment">/* c */</span></div><div class="line">        <span class="number">9</span> ireturn;</div><div class="line">        <span class="comment">/*     LineNumberTable      */</span></div><div class="line">        <span class="comment">/* ----------+------------- */</span></div><div class="line">        <span class="comment">/*  start_pc | line_number  */</span></div><div class="line">        <span class="comment">/* ----------+------------- */</span></div><div class="line">        <span class="comment">/*         0 |           6  */</span></div><div class="line">        <span class="comment">/*         2 |           7  */</span></div><div class="line">        <span class="comment">/*         4 |           8  */</span></div><div class="line">        <span class="comment">/*         8 |           9  */</span></div><div class="line">        <span class="comment">/* ----------+------------- */</span></div><div class="line">        <span class="comment">/*                     LocalVariableTable                      */</span></div><div class="line">        <span class="comment">/* -------+----------+--------+------------+------------------ */</span></div><div class="line">        <span class="comment">/*  index | start_pc | length | name_index | descriptor_index  */</span></div><div class="line">        <span class="comment">/* -------+----------+--------+------------+------------------ */</span></div><div class="line">        <span class="comment">/*      0 |        0 |     10 |         12 |               13  */</span></div><div class="line">        <span class="comment">/*      1 |        2 |      8 |         16 |               17  */</span></div><div class="line">        <span class="comment">/*      2 |        4 |      6 |         18 |               17  */</span></div><div class="line">        <span class="comment">/*      3 |        8 |      2 |         19 |               17  */</span></div><div class="line">        <span class="comment">/* -------+----------+--------+------------+------------------ */</span></div><div class="line">        <span class="comment">/* ExceptionTable (empty) */</span></div><div class="line">        <span class="comment">/* max_stack: 2 max_locals: 4 */</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">/* L6 */</span></span><br><span class="line">        <span class="number">0</span> iconst_1;</span><br><span class="line">        <span class="number">1</span> istore_1;               <span class="comment">/* a */</span></span><br><span class="line">        <span class="comment">/* L7 */</span></span><br><span class="line">        <span class="number">2</span> iconst_2;</span><br><span class="line">        <span class="number">3</span> istore_2;               <span class="comment">/* b */</span></span><br><span class="line">        <span class="comment">/* L8 */</span></span><br><span class="line">        <span class="number">4</span> iload_1;                <span class="comment">/* a */</span></span><br><span class="line">        <span class="number">5</span> iload_2;                <span class="comment">/* b */</span></span><br><span class="line">        <span class="number">6</span> iadd;</span><br><span class="line">        <span class="number">7</span> istore_3;               <span class="comment">/* c */</span></span><br><span class="line">        <span class="comment">/* L9 */</span></span><br><span class="line">        <span class="number">8</span> iload_3;                <span class="comment">/* c */</span></span><br><span class="line">        <span class="number">9</span> ireturn;</span><br><span class="line">        <span class="comment">/*     LineNumberTable      */</span></span><br><span class="line">        <span class="comment">/* ----------+------------- */</span></span><br><span class="line">        <span class="comment">/*  start_pc | line_number  */</span></span><br><span class="line">        <span class="comment">/* ----------+------------- */</span></span><br><span class="line">        <span class="comment">/*         0 |           6  */</span></span><br><span class="line">        <span class="comment">/*         2 |           7  */</span></span><br><span class="line">        <span class="comment">/*         4 |           8  */</span></span><br><span class="line">        <span class="comment">/*         8 |           9  */</span></span><br><span class="line">        <span class="comment">/* ----------+------------- */</span></span><br><span class="line">        <span class="comment">/*                     LocalVariableTable                      */</span></span><br><span class="line">        <span class="comment">/* -------+----------+--------+------------+------------------ */</span></span><br><span class="line">        <span class="comment">/*  index | start_pc | length | name_index | descriptor_index  */</span></span><br><span class="line">        <span class="comment">/* -------+----------+--------+------------+------------------ */</span></span><br><span class="line">        <span class="comment">/*      0 |        0 |     10 |         12 |               13  */</span></span><br><span class="line">        <span class="comment">/*      1 |        2 |      8 |         16 |               17  */</span></span><br><span class="line">        <span class="comment">/*      2 |        4 |      6 |         18 |               17  */</span></span><br><span class="line">        <span class="comment">/*      3 |        8 |      2 |         19 |               17  */</span></span><br><span class="line">        <span class="comment">/* -------+----------+--------+------------+------------------ */</span></span><br><span class="line">        <span class="comment">/* ExceptionTable (empty) */</span></span><br><span class="line">        <span class="comment">/* max_stack: 2 max_locals: 4 */</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <p>上面在字节码的文件结构中讲过，每个方法中存在很多属性，例如LineNumberTable，LocalVariableTable 等等。里面的一些”_index”就是指向常量池中的索引。对于成员方法来说（非类方法），局部变量表中的第一个是this（之前有讲过）。<br>这里抽出最关键的Code进行讲述：<br>由上面的LocalVariableTable可以知道，a变量的index是1，b是2，c是3。                   </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">/* L6 */</span></div><div class="line">        <span class="number">0</span> iconst_1;</div><div class="line">        <span class="number">1</span> istore_1;               <span class="comment">/* a */</span></div><div class="line">        <span class="comment">/* L7 */</span></div><div class="line">        <span class="number">2</span> iconst_2;</div><div class="line">        <span class="number">3</span> istore_2;               <span class="comment">/* b */</span></div><div class="line">        <span class="comment">/* L8 */</span></div><div class="line">        <span class="number">4</span> iload_1;                <span class="comment">/* a */</span></div><div class="line">        <span class="number">5</span> iload_2;                <span class="comment">/* b */</span></div><div class="line">        <span class="number">6</span> iadd;</div><div class="line">        <span class="number">7</span> istore_3;               <span class="comment">/* c */</span></div><div class="line">        <span class="comment">/* L9 */</span></div><div class="line">        <span class="number">8</span> iload_3;                <span class="comment">/* c */</span></div><div class="line">        <span class="number">9</span> ireturn;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">/* L6 */</span></span><br><span class="line">        <span class="number">0</span> iconst_1;</span><br><span class="line">        <span class="number">1</span> istore_1;               <span class="comment">/* a */</span></span><br><span class="line">        <span class="comment">/* L7 */</span></span><br><span class="line">        <span class="number">2</span> iconst_2;</span><br><span class="line">        <span class="number">3</span> istore_2;               <span class="comment">/* b */</span></span><br><span class="line">        <span class="comment">/* L8 */</span></span><br><span class="line">        <span class="number">4</span> iload_1;                <span class="comment">/* a */</span></span><br><span class="line">        <span class="number">5</span> iload_2;                <span class="comment">/* b */</span></span><br><span class="line">        <span class="number">6</span> iadd;</span><br><span class="line">        <span class="number">7</span> istore_3;               <span class="comment">/* c */</span></span><br><span class="line">        <span class="comment">/* L9 */</span></span><br><span class="line">        <span class="number">8</span> iload_3;                <span class="comment">/* c */</span></span><br><span class="line">        <span class="number">9</span> ireturn;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>1. int a = 1;</strong><br>首先程序计数器值为0，iconst_1指令将整数1压入操作数栈中；执行istore_1，程序计数器为1，将操作数栈中的数弹出，然后赋值给索引为1的变量（即a）。</p>
 <p><img src="http://ice-img.pigutu.com/2018-10-08-021103.png" alt=""></p>
 <p><strong>2. int b = 2;</strong><br>跟 int a = 1; 基本一致。</p>
@@ -130,7 +130,7 @@ JVM学习05-字节码执行过程和JVM指令集1. 字节码的Code部分在执�
 <p><strong>4. return c;</strong><br>这里先将c的值载入压入到栈中，然后执行ireturn指令。</p>
 <p><img src="http://ice-img.pigutu.com/2018-10-08-021156.png" alt=""></p>
 <p>这里有一个很经典的面试题：就是try中的return和finally中的return，两个return的执行流程。其实看一下反汇编的指令就一目了然了。</p>
-<h1 id="3-JVM指令集"><a href="#3-JVM指令集" class="headerlink" title="3. JVM指令集"></a>3. JVM指令集</h1><p>具体的指令集可以参照博文：<br><a href="http://blog.csdn.net/lm2302293/article/details/6713147" target="_blank" rel="external">http://blog.csdn.net/lm2302293/article/details/6713147</a></p>
+<h1 id="3-JVM指令集"><a href="#3-JVM指令集" class="headerlink" title="3. JVM指令集"></a>3. JVM指令集</h1><p>具体的指令集可以参照博文：<br><a href="http://blog.csdn.net/lm2302293/article/details/6713147" target="_blank" rel="noopener">http://blog.csdn.net/lm2302293/article/details/6713147</a></p>
 <p>里面描述了指令在字节码中对应的Byte，助记符以及功能描述，下面将对常用进行描述下。</p>
 <h2 id="3-1-常量入栈"><a href="#3-1-常量入栈" class="headerlink" title="3.1 常量入栈"></a>3.1 常量入栈</h2><p><strong>1. aconst_null</strong><br>null对象入栈，前面的a表示对象ref。</p>
 <p><strong>2. iconst_m1</strong><br>将 -1 压入栈中。其他的byte型和short型参照 bipush 和 sipush 指令</p>
@@ -147,7 +147,7 @@ JVM学习05-字节码执行过程和JVM指令集1. 字节码的Code部分在执�
 <p><strong>2. pop</strong><br>从栈顶弹出一个字长。</p>
 <p><strong>3.  dup</strong><br>赋值栈顶一个字长，复制内容压入栈中。</p>
 <h2 id="3-4-类型转化"><a href="#3-4-类型转化" class="headerlink" title="3.4 类型转化"></a>3.4 类型转化</h2><p>i2c、i2b、i2s、i2l，i2f，l2i，l2f，l2d，f2i，f2d，d2i，d2l，d2f。</p>
-<h2 id="3-5-整数运算和浮点运算"><a href="#3-5-整数运算和浮点运算" class="headerlink" title="3.5 整数运算和浮点运算"></a>3.5 整数运算和浮点运算</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">iadd，ladd，fadd，dadd　　加 +</div><div class="line">isub，lsub，fsub，dsub   减 -</div><div class="line">imul，lmul，fmul，dmul　　乘 *</div><div class="line">idiv， ldiv，fdiv，ddiv　 除 /</div><div class="line">irem，lrem，frem，drem　　取模 %</div><div class="line">ineg，lneg，fneg，dneg    取负 -</div><div class="line">ishl，lshl　　　　　　　　　左移 &lt;&lt;</div><div class="line">ishr，lshr，iushr，lushr  有符号和无符号右移 &gt;&gt;和&gt;&gt;&gt;</div><div class="line">iand，land                按位与 &amp;</div><div class="line">ior，lor                 按位或 |</div><div class="line">ixor，lxor               按位异或 ^</div><div class="line">iinc                     指定int型变量增加指定的值</div></pre></td></tr></table></figure>
+<h2 id="3-5-整数运算和浮点运算"><a href="#3-5-整数运算和浮点运算" class="headerlink" title="3.5 整数运算和浮点运算"></a>3.5 整数运算和浮点运算</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">iadd，ladd，fadd，dadd　　加 +</span><br><span class="line">isub，lsub，fsub，dsub   减 -</span><br><span class="line">imul，lmul，fmul，dmul　　乘 *</span><br><span class="line">idiv， ldiv，fdiv，ddiv　 除 /</span><br><span class="line">irem，lrem，frem，drem　　取模 %</span><br><span class="line">ineg，lneg，fneg，dneg    取负 -</span><br><span class="line">ishl，lshl　　　　　　　　　左移 &lt;&lt;</span><br><span class="line">ishr，lshr，iushr，lushr  有符号和无符号右移 &gt;&gt;和&gt;&gt;&gt;</span><br><span class="line">iand，land                按位与 &amp;</span><br><span class="line">ior，lor                 按位或 |</span><br><span class="line">ixor，lxor               按位异或 ^</span><br><span class="line">iinc                     指定int型变量增加指定的值</span><br></pre></td></tr></table></figure>
 <p>　</p>
 <h2 id="3-6-对象操作指令和方法调用指令"><a href="#3-6-对象操作指令和方法调用指令" class="headerlink" title="3.6 对象操作指令和方法调用指令"></a>3.6 对象操作指令和方法调用指令</h2><p><strong>1. new</strong><br>创建一个对象，并将引用压入栈中。</p>
 <p><strong>2. invokespecial 和 invokevirtual</strong><br>调用构造方法，私有方法</p>
@@ -184,9 +184,9 @@ JVM学习05-字节码执行过程和JVM指令集1. 字节码的Code部分在执�
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/Java/java交换两个变量的值/" title="java交换两个变量的值">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   java交换两个变量的值</span>
 </a>
@@ -194,8 +194,8 @@ JVM学习05-字节码执行过程和JVM指令集1. 字节码的Code部分在执�
 
 
 <div class="next">
-<a href="/icemimosa/Java/JVM学习04-class字节码的结构/"  title="JVM学习04-class字节码的结构">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/Java/JVM学习04-class字节码的结构/" title="JVM学习04-class字节码的结构">
+ <strong>NEXT:</strong><br> 
  <span>JVM学习04-class字节码的结构
 </span>
 </a>
@@ -224,7 +224,7 @@ JVM学习05-字节码执行过程和JVM指令集1. 字节码的Code部分在执�
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -249,7 +249,7 @@ JVM学习05-字节码执行过程和JVM指令集1. 字节码的Code部分在执�
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -280,7 +280,7 @@ JVM学习05-字节码执行过程和JVM指令集1. 字节码的Code部分在执�
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -308,7 +308,7 @@ JVM学习05-字节码执行过程和JVM指令集1. 字节码的Code部分在执�
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -322,7 +322,7 @@ JVM学习05-字节码执行过程和JVM指令集1. 字节码的Code部分在执�
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -330,7 +330,7 @@ JVM学习05-字节码执行过程和JVM指令集1. 字节码的Code部分在执�
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -338,7 +338,7 @@ JVM学习05-字节码执行过程和JVM指令集1. 字节码的Code部分在执�
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -400,7 +400,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -611,6 +611,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

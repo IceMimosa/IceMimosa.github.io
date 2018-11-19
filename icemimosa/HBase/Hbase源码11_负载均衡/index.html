@@ -7,18 +7,14 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
-    <title>java变量的初始化顺序 | Ice の Mimosa</title>
+    <title>Hbase源码11_负载均衡 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
     <meta name="description" content="[TOC]
-java变量的初始化顺序假设子类B继承了父类A,当执行语句new B()或者new B(…)语句之后
-1. 类的装载 (多次实例化只装载一次)
-
-(1). 首先要进行类A和B的装载(类只有在使用New调用创建的时候才会被      java类装载器装入),先装载父类A，再装载子类B
-
-2">
+Hbase源码11_负载均衡1. 简介HBase负载均衡是指在某个RegionServer发生过载（region的数量过多）的时候，需要进行region转移的功能。
+在当HMaster启动的过程中，会向zk注册当前为Active的Master。在成为Active的Master之后会有一系">
     
     
     
@@ -95,15 +91,15 @@ java变量的初始化顺序假设子类B继承了父类A,当执行语句new B()
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/Java/java变量的初始化顺序/" title="java变量的初始化顺序" itemprop="url">java变量的初始化顺序</a>
+      <a href="/icemimosa/HBase/Hbase源码11_负载均衡/" title="Hbase源码11_负载均衡" itemprop="url">Hbase源码11_负载均衡</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2016-01-15T05:00:34.000Z" itemprop="datePublished">2016-01-15</time>
-    更新日期:<time datetime="2018-03-20T16:17:31.000Z" itemprop="dateModified">2018-03-21</time>
+    <time datetime="2018-11-18T07:42:16.000Z" itemprop="datePublished">2018-11-18</time>
+    更新日期:<time datetime="2018-11-19T09:31:15.921Z" itemprop="dateModified">2018-11-19</time>
     
   </p>
 </header>
@@ -112,53 +108,79 @@ java变量的初始化顺序假设子类B继承了父类A,当执行语句new B()
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#java变量的初始化顺序"><span class="toc-text">java变量的初始化顺序</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hbase源码11-负载均衡"><span class="toc-text">Hbase源码11_负载均衡</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-分析"><span class="toc-text">2. 分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-生成RegionPlan"><span class="toc-text">2.1 生成RegionPlan</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-执行生成的计划"><span class="toc-text">2.2 执行生成的计划</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-总结"><span class="toc-text">3. 总结</span></a></li></ol></li></ol>
 		</div>
 		
 		<p>[TOC]</p>
-<h1 id="java变量的初始化顺序"><a href="#java变量的初始化顺序" class="headerlink" title="java变量的初始化顺序"></a>java变量的初始化顺序</h1><p>假设子类B继承了父类A,当执行语句new B()或者new B(…)语句之后</p>
-<p><strong>1. 类的装载 (多次实例化只装载一次)</strong></p>
+<h1 id="Hbase源码11-负载均衡"><a href="#Hbase源码11-负载均衡" class="headerlink" title="Hbase源码11_负载均衡"></a>Hbase源码11_负载均衡</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p>HBase负载均衡是指在某个RegionServer发生过载（region的数量过多）的时候，需要进行region转移的功能。</p>
+<p>在当HMaster启动的过程中，会向zk注册当前为Active的Master。在成为Active的Master之后会有一系列的初始化行为。（<code>HMaster#startActiveMasterManager</code>）。然后具体执行 <code>finishActiveMasterInitialization</code> 方法，里面有一堆初始化的行为，这里就不详细分析。部分截图如下：</p>
+<p><img src="http://ice-img.pigutu.com/2018-11-19-064451.png" alt=""></p>
+<h2 id="2-分析"><a href="#2-分析" class="headerlink" title="2. 分析"></a>2. 分析</h2><p>这里重点分析下，启动<code>负载均衡调度器（BalancerChore）</code>的过程。</p>
+<p><img src="http://ice-img.pigutu.com/2018-11-19-064953.png" alt=""></p>
+<p>其中有个配置<code>hbase.balancer.period</code>，默认为300000，即5分钟。表示这个调度器每5分钟，调度一次。执行<code>BalancerChore#chore</code>方法。<br>代码的入口就是<code>HMaster#balance()</code>。</p>
 <blockquote>
-<p>(1). 首先要进行类A和B的装载(类只有在使用New调用创建的时候才会被      java类装载器装入),先装载父类A，再装载子类B</p>
+<p>如果符合如下条件，则返回false，不进行负载均衡</p>
 </blockquote>
-<p><strong>2. 静态初始化 (多次实例化只初始化一次)</strong></p>
-<blockquote>
-<p>(1). 装载父类A后,完成静态动作(包括静态代码块和变量,它们的级别是相同的,按代码中出现的顺序初始化), 这里需要注意的是装载静态代码的时候,首先为静态变量分配内存空间,赋上默认值,但不把 = 后面的值赋给它(如果存在=后面的值),然后再按出现的顺序依次执行(包括static变量赋值和static代码块).<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 比如这种情况也是ok的</span><br><span class="line">static&#123;</span><br><span class="line">	i = 10;</span><br><span class="line">&#125;	</span><br><span class="line">public static int i = 20;</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<p>  <code>(2). 装载子类B后,同样完成静态动作,同父类A装载.</code></p>
-<p><strong>3. 实例化 (每次实例化都初始化)</strong></p>
-<blockquote>
-<p>(1). 在实例化子类B之前,先要实例化父类A(包括非静态代码块和变量,它们的级别是相同的,按代码中出现的顺序初始化),这里同样需要注意的是在执行代码之前,首先为成员变量分配内存空间,赋上默认值,但不把 = 后面的值赋给它(如果存在=后面的值),然后再按出现的顺序依次执行(包括实例变量赋值和实例代码块),与static初始化类似.</p>
-</blockquote>
-<blockquote>
-<p>(2). 执行父类A的构造方法,这里如果子类B不指定,则执行父类A的默认构造方法,若父类没有默认的构造方法,则需要子类指定需要执行父类A的某个构造方法,否则编译不通过.</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public B() &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">/** 如果父类有默认构造super()就等同于如下代码 */</span><br><span class="line">public B() &#123;</span><br><span class="line">	super();</span><br><span class="line">	/** 如果父类没有默认构造super(), 则这里需要指定, 如super(...) */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>   <code>(3). 子类B的成员实例化,与父类A实例化类似.</code></p>
-<p>   <code>(4). 最后执行子类B的构造方法.</code></p>
-<p>补充：<br>    后来遇到一种情况, 存在子类方法覆盖方法的情况.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">public class B extends A &#123;</span><br><span class="line">	public int i = 10;</span><br><span class="line">	</span><br><span class="line">	public B() &#123;</span><br><span class="line">		System.out.println(&quot;B draw&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	public void draw() &#123;</span><br><span class="line">		System.out.println(&quot;B draw &quot; + i);</span><br><span class="line">	&#125;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		B b = new B();</span><br><span class="line">		b.draw();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">class A &#123;</span><br><span class="line">	public void draw() &#123;</span><br><span class="line">		System.out.println(&quot;A draw&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	public A() &#123;</span><br><span class="line">		System.out.println(&quot;begin&quot;);</span><br><span class="line">		draw();</span><br><span class="line">		System.out.println(&quot;end&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">/* 输出是</span><br><span class="line">    begin</span><br><span class="line">    B draw 0</span><br><span class="line">    end</span><br><span class="line">    B draw</span><br><span class="line">    B draw 10</span><br><span class="line">*/</span><br></pre></td></tr></table></figure>
-<p>  这里父类的构造方法调用了draw()方法, 但实际调用的是子类中的方法, 方法中访问了变量 i, 结果为0. 所以java在实例化的时候, 都已经将类(父类和子类)中的变量和方法都已经分配好了内存空间,并且变量赋值为默认值, 然后再按照上述的规则进行初始化.</p>
+<ul>
+<li>master还在初始化</li>
+<li>balancer的开关处于关闭的状态</li>
+<li>当前有region正处于<code>Transition</code>中，如正在splitting</li>
+<li>正在处理挂掉的regionservers</li>
+<li>过程中超过设定的周期时间，直接cutoff</li>
+</ul>
+<h3 id="2-1-生成RegionPlan"><a href="#2-1-生成RegionPlan" class="headerlink" title="2.1 生成RegionPlan"></a>2.1 生成RegionPlan</h3><ul>
+<li>获取所有region相关的信息</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 优化点: 将 hbase.master.loadbalance.bytable 设置为 true</span></span><br><span class="line"><span class="comment">// flase: TableName为固定值ensemble, 返回所有的合集。按照集群所有region数量进行负载均衡</span></span><br><span class="line"><span class="comment">// true:  TableName为具体的表名, 按照表的region数量进行负载均衡</span></span><br><span class="line">Map&lt;TableName, Map&lt;ServerName, List&lt;HRegionInfo&gt;&gt;&gt; assignmentsByTable =</span><br><span class="line">	<span class="keyword">this</span>.assignmentManager.getRegionStates().getAssignmentsByTable();</span><br></pre></td></tr></table></figure>
+<ul>
+<li>生成执行计划</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// balancer 的实现默认配置为 StochasticLoadBalancer</span><br><span class="line">List&lt;RegionPlan&gt; partialPlans = this.balancer.balanceCluster(assignments);</span><br></pre></td></tr></table></figure>
+<p>注释说<code>StochasticLoadBalancer</code>是最好的一个<code>balancer</code>，他会根据<code>region负载</code>，<code>table负载</code>，<code>数据位置</code>，<code>Memstore的大小</code>，<code>Storefile的大小</code>来计算最佳的执行方案。</p>
+<ul>
+<li>执行 <code>needsBalance</code> 方法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// slop 配置项 hbase.regions.slop , 默认0.2, 表示平均值的上下浮动</span><br><span class="line"></span><br><span class="line">// 平均值</span><br><span class="line">float average = cs.getLoadAverage();</span><br><span class="line">// 下限</span><br><span class="line">int floor = (int) Math.floor(average * (1 - slop));</span><br><span class="line">// 上限</span><br><span class="line">int ceiling = (int) Math.ceil(average * (1 + slop));</span><br></pre></td></tr></table></figure>
+<p>只要当前集群的 <code>最大和最小负载</code> 都落在 <code>[floor, ceiling]</code>区间, 就不进行负载。</p>
+<ul>
+<li>执行 <code>nextAction(cluster);</code></li>
+</ul>
+<p>中间会随机Random来生成下一步操作，所有的实现如下，就不一一分析了（埋个坑）：</p>
+<p><img src="http://ice-img.pigutu.com/2018-11-19-085828.png" alt=""></p>
+<ul>
+<li>最后执行 <code>cluster.doAction(action);</code></li>
+</ul>
+<p>返回执行计划。</p>
+<h3 id="2-2-执行生成的计划"><a href="#2-2-执行生成的计划" class="headerlink" title="2.2 执行生成的计划"></a>2.2 执行生成的计划</h3><ul>
+<li>循环所有的plans，执行如下代码</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.assignmentManager.balance(plan);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>内部执行的主要代码</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (<span class="keyword">this</span>.regionPlans) &#123;</span><br><span class="line">	<span class="comment">// 放到执行计划中  </span></span><br><span class="line">	<span class="keyword">this</span>.regionPlans.put(plan.getRegionName(), plan);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 卸载然后装载</span></span><br><span class="line">unassign(hri, <span class="keyword">false</span>, plan.getDestination());</span><br></pre></td></tr></table></figure>
+<p>关于<code>assign</code>和<code>unassign</code>，这里就不多说了。后面有时间单独分析。</p>
+<h2 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h2><p>中间执行<code>nextAction</code>的地方，我埋了个坑，其实主要pick算法都在那几个实现类中。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/java/">java</a>
+  <span></span> <a href="/tags/源码/">源码</a><a href="/tags/hbase/">hbase</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/java/">java</a>
+  <a class="article-category-link" href="/categories/hbase/">hbase</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/Java/java变量的初始化顺序/" data-title="java变量的初始化顺序 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/HBase/Hbase源码11_负载均衡/" data-title="Hbase源码11_负载均衡 | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -167,19 +189,11 @@ java变量的初始化顺序假设子类B继承了父类A,当执行语句new B()
 	
 <nav class="article-nav clearfix">
  
- <div class="prev">
- <a href="/icemimosa/oozie/Oozie-1_编译/" title="Oozie-1_编译">
-  <strong>PREVIOUS:</strong><br>
-  <span>
-  Oozie-1_编译</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/icemimosa/Java/ConcurrentHashMap源码分析/" title="ConcurrentHashMap源码分析">
+<a href="/icemimosa/HBase/Hbase源码10_插曲StealJobQueue/" title="Hbase源码10_插曲StealJobQueue">
  <strong>NEXT:</strong><br> 
- <span>ConcurrentHashMap源码分析
+ <span>Hbase源码10_插曲StealJobQueue
 </span>
 </a>
 </div>
@@ -197,7 +211,7 @@ java变量的初始化顺序假设子类B继承了父类A,当执行语句new B()
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#java变量的初始化顺序"><span class="toc-text">java变量的初始化顺序</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hbase源码11-负载均衡"><span class="toc-text">Hbase源码11_负载均衡</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-分析"><span class="toc-text">2. 分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-生成RegionPlan"><span class="toc-text">2.1 生成RegionPlan</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-执行生成的计划"><span class="toc-text">2.2 执行生成的计划</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-总结"><span class="toc-text">3. 总结</span></a></li></ol></li></ol>
   </div>
 
 <div id="asidepart">

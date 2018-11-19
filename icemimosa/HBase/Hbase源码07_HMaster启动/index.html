@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>Hbase源码07_HMaster启动 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -40,7 +40,7 @@ Hbase源码07_HMaster启动1. shell启动在执行 start-hbase.sh 这里就不�
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -48,7 +48,7 @@ Hbase源码07_HMaster启动1. shell启动在执行 start-hbase.sh 这里就不�
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -58,7 +58,7 @@ Hbase源码07_HMaster启动1. shell启动在执行 start-hbase.sh 这里就不�
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -75,18 +75,18 @@ Hbase源码07_HMaster启动1. shell启动在执行 start-hbase.sh 这里就不�
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -113,14 +113,14 @@ Hbase源码07_HMaster启动1. shell启动在执行 start-hbase.sh 这里就不�
 		
 		<p>[TOC]</p>
 <h1 id="Hbase源码07-HMaster启动"><a href="#Hbase源码07-HMaster启动" class="headerlink" title="Hbase源码07_HMaster启动"></a>Hbase源码07_HMaster启动</h1><h1 id="1-shell启动"><a href="#1-shell启动" class="headerlink" title="1. shell启动"></a>1. shell启动</h1><p>在执行 <code>start-hbase.sh</code> 这里就不扯了，主要代码如下，可以进对应的脚本看下：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> [ <span class="string">"<span class="variable">$distMode</span>"</span> == <span class="string">'false'</span> ] </div><div class="line"><span class="keyword">then</span></div><div class="line">  <span class="string">"<span class="variable">$bin</span>"</span>/hbase-daemon.sh --config <span class="string">"<span class="variable">$&#123;HBASE_CONF_DIR&#125;</span>"</span> <span class="variable">$commandToRun</span> master <span class="variable">$@</span></div><div class="line"><span class="keyword">else</span></div><div class="line">  <span class="comment"># 启动内置 zk, 内部会判断 HBASE_MANAGES_ZK 的值</span></div><div class="line">  <span class="string">"<span class="variable">$bin</span>"</span>/hbase-daemons.sh --config <span class="string">"<span class="variable">$&#123;HBASE_CONF_DIR&#125;</span>"</span> <span class="variable">$commandToRun</span> zookeeper</div><div class="line">  <span class="comment"># 启动 master</span></div><div class="line">  <span class="string">"<span class="variable">$bin</span>"</span>/hbase-daemon.sh --config <span class="string">"<span class="variable">$&#123;HBASE_CONF_DIR&#125;</span>"</span> <span class="variable">$commandToRun</span> master</div><div class="line">  <span class="comment"># 启动 region servers</span></div><div class="line">  <span class="string">"<span class="variable">$bin</span>"</span>/hbase-daemons.sh --config <span class="string">"<span class="variable">$&#123;HBASE_CONF_DIR&#125;</span>"</span> \</div><div class="line">    --hosts <span class="string">"<span class="variable">$&#123;HBASE_REGIONSERVERS&#125;</span>"</span> <span class="variable">$commandToRun</span> regionserver</div><div class="line">  <span class="comment"># 启动 master backups</span></div><div class="line">  <span class="string">"<span class="variable">$bin</span>"</span>/hbase-daemons.sh --config <span class="string">"<span class="variable">$&#123;HBASE_CONF_DIR&#125;</span>"</span> \</div><div class="line">    --hosts <span class="string">"<span class="variable">$&#123;HBASE_BACKUP_MASTERS&#125;</span>"</span> <span class="variable">$commandToRun</span> master-backup</div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ <span class="string">"<span class="variable">$distMode</span>"</span> == <span class="string">'false'</span> ] </span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">  <span class="string">"<span class="variable">$bin</span>"</span>/hbase-daemon.sh --config <span class="string">"<span class="variable">$&#123;HBASE_CONF_DIR&#125;</span>"</span> <span class="variable">$commandToRun</span> master <span class="variable">$@</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">  <span class="comment"># 启动内置 zk, 内部会判断 HBASE_MANAGES_ZK 的值</span></span><br><span class="line">  <span class="string">"<span class="variable">$bin</span>"</span>/hbase-daemons.sh --config <span class="string">"<span class="variable">$&#123;HBASE_CONF_DIR&#125;</span>"</span> <span class="variable">$commandToRun</span> zookeeper</span><br><span class="line">  <span class="comment"># 启动 master</span></span><br><span class="line">  <span class="string">"<span class="variable">$bin</span>"</span>/hbase-daemon.sh --config <span class="string">"<span class="variable">$&#123;HBASE_CONF_DIR&#125;</span>"</span> <span class="variable">$commandToRun</span> master</span><br><span class="line">  <span class="comment"># 启动 region servers</span></span><br><span class="line">  <span class="string">"<span class="variable">$bin</span>"</span>/hbase-daemons.sh --config <span class="string">"<span class="variable">$&#123;HBASE_CONF_DIR&#125;</span>"</span> \</span><br><span class="line">    --hosts <span class="string">"<span class="variable">$&#123;HBASE_REGIONSERVERS&#125;</span>"</span> <span class="variable">$commandToRun</span> regionserver</span><br><span class="line">  <span class="comment"># 启动 master backups</span></span><br><span class="line">  <span class="string">"<span class="variable">$bin</span>"</span>/hbase-daemons.sh --config <span class="string">"<span class="variable">$&#123;HBASE_CONF_DIR&#125;</span>"</span> \</span><br><span class="line">    --hosts <span class="string">"<span class="variable">$&#123;HBASE_BACKUP_MASTERS&#125;</span>"</span> <span class="variable">$commandToRun</span> master-backup</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
 <p>所有的 <code>启动类</code> 都是在 <code>hbase脚本</code> 中，其中 master 对应启动的主类是 <code>org.apache.hadoop.hbase.master.HMaster</code></p>
 <h1 id="2-HMaster启动"><a href="#2-HMaster启动" class="headerlink" title="2. HMaster启动"></a>2. HMaster启动</h1><ul>
 <li>main 方法如下：</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * <span class="doctag">@see</span> org.apache.hadoop.hbase.master.HMasterCommandLine</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String [] args)</span> </span>&#123;</div><div class="line">	VersionInfo.logVersion();</div><div class="line">	<span class="keyword">new</span> HMasterCommandLine(HMaster.class).doMain(args);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 判断是否是local模式, 执行 HMaster#constructMaster 进行 HMaster 的实例化。</span></div><div class="line"><span class="comment">// 调用 master.start()</span></div><div class="line"><span class="comment">// 由于 HMaster 集成 HRegionServer 类, 调用 HRegionServer#run() 方法</span></div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> org.apache.hadoop.hbase.master.HMasterCommandLine</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String [] args)</span> </span>&#123;</span><br><span class="line">	VersionInfo.logVersion();</span><br><span class="line">	<span class="keyword">new</span> HMasterCommandLine(HMaster.class).doMain(args);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 判断是否是local模式, 执行 HMaster#constructMaster 进行 HMaster 的实例化。</span></span><br><span class="line"><span class="comment">// 调用 master.start()</span></span><br><span class="line"><span class="comment">// 由于 HMaster 集成 HRegionServer 类, 调用 HRegionServer#run() 方法</span></span><br></pre></td></tr></table></figure>
 <h2 id="2-1-RegionServer-构造方法"><a href="#2-1-RegionServer-构造方法" class="headerlink" title="2.1 RegionServer 构造方法"></a>2.1 RegionServer 构造方法</h2><p>执行 HMaster 的构造方法, 先执行 <code>super(...)</code>, 即 RegionServer 的构造方法。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">HRegionServer</span><span class="params">(Configuration conf, CoordinatedStateManager csm)</span> </span>&#123; ... &#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HRegionServer</span><span class="params">(Configuration conf, CoordinatedStateManager csm)</span> </span>&#123; ... &#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>1、初始化各种变量，比如操作的user、消息时间间隔、重试机制的次数、操作超时时间等。</li>
 <li>2、创建 <code>RSRpcServices 类</code>，获取绑定的hostname</li>
@@ -133,7 +133,7 @@ Hbase源码07_HMaster启动1. shell启动在执行 start-hbase.sh 这里就不�
 <li>6、启动 RegionServer WebUI Server</li>
 <li>7、初始化 WAL 相关的对象</li>
 </ul>
-<h2 id="2-2-回到-HMaster-构造方法"><a href="#2-2-回到-HMaster-构造方法" class="headerlink" title="2.2 回到 HMaster 构造方法"></a>2.2 回到 HMaster 构造方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">HMaster</span><span class="params">(<span class="keyword">final</span> Configuration conf, CoordinatedStateManager csm)</span> </span>&#123; ... &#125;</div></pre></td></tr></table></figure>
+<h2 id="2-2-回到-HMaster-构造方法"><a href="#2-2-回到-HMaster-构造方法" class="headerlink" title="2.2 回到 HMaster 构造方法"></a>2.2 回到 HMaster 构造方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HMaster</span><span class="params">(<span class="keyword">final</span> Configuration conf, CoordinatedStateManager csm)</span> </span>&#123; ... &#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>1、初始化各种变量，比如压缩/加密方式。</li>
 <li>2、初始化 <code>MetricsMaster JMX</code></li>
@@ -144,7 +144,7 @@ Hbase源码07_HMaster启动1. shell启动在执行 start-hbase.sh 这里就不�
 <h2 id="2-3-回到-HRegionServer-run-方法"><a href="#2-3-回到-HRegionServer-run-方法" class="headerlink" title="2.3 回到 HRegionServer.run() 方法"></a>2.3 回到 HRegionServer.run() 方法</h2><ul>
 <li>1、初始化zookeeper，加载meta信息等。</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">  <span class="comment">// Do pre-registration initializations; zookeeper, lease threads, etc.</span></div><div class="line">  <span class="comment">// 内部会初始化若干工作线程：每个的作用看看后续能不能补充</span></div><div class="line">  preRegistrationInitialization();</div><div class="line">&#125; <span class="keyword">catch</span> (Throwable e) &#123;</div><div class="line">  abort(<span class="string">"Fatal exception during initialization"</span>, e);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="comment">// Do pre-registration initializations; zookeeper, lease threads, etc.</span></span><br><span class="line">  <span class="comment">// 内部会初始化若干工作线程：每个的作用看看后续能不能补充</span></span><br><span class="line">  preRegistrationInitialization();</span><br><span class="line">&#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">  abort(<span class="string">"Fatal exception during initialization"</span>, e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>2、尝试向master上报集群启动响应信息</li>
 <li>3、进入while循环，进行心跳健康信息上报</li>
@@ -157,7 +157,7 @@ Hbase源码07_HMaster启动1. shell启动在执行 start-hbase.sh 这里就不�
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/hbase/">hbase</a><a href="/tags/源码/">源码</a>
+  <span></span> <a href="/tags/源码/">源码</a><a href="/tags/hbase/">hbase</a>
   </div>
 
 
@@ -179,9 +179,9 @@ Hbase源码07_HMaster启动1. shell启动在执行 start-hbase.sh 这里就不�
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/HBase/Hbase源码08_MemStore刷新到HFile/" title="Hbase源码08_MemStore刷新到HFile">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   Hbase源码08_MemStore刷新到HFile</span>
 </a>
@@ -189,8 +189,8 @@ Hbase源码07_HMaster启动1. shell启动在执行 start-hbase.sh 这里就不�
 
 
 <div class="next">
-<a href="/icemimosa/HBase/Hbase源码06_Delete/"  title="Hbase源码06_Delete">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/HBase/Hbase源码06_Delete/" title="Hbase源码06_Delete">
+ <strong>NEXT:</strong><br> 
  <span>Hbase源码06_Delete
 </span>
 </a>
@@ -219,7 +219,7 @@ Hbase源码07_HMaster启动1. shell启动在执行 start-hbase.sh 这里就不�
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -244,7 +244,7 @@ Hbase源码07_HMaster启动1. shell启动在执行 start-hbase.sh 这里就不�
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -275,7 +275,7 @@ Hbase源码07_HMaster启动1. shell启动在执行 start-hbase.sh 这里就不�
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -303,7 +303,7 @@ Hbase源码07_HMaster启动1. shell启动在执行 start-hbase.sh 这里就不�
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -317,7 +317,7 @@ Hbase源码07_HMaster启动1. shell启动在执行 start-hbase.sh 这里就不�
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -325,7 +325,7 @@ Hbase源码07_HMaster启动1. shell启动在执行 start-hbase.sh 这里就不�
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -333,7 +333,7 @@ Hbase源码07_HMaster启动1. shell启动在执行 start-hbase.sh 这里就不�
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -395,7 +395,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -606,6 +606,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 

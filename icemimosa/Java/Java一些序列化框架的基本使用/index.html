@@ -1,11 +1,11 @@
 
  <!DOCTYPE HTML>
 <html lang="zh-CN">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
-  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
-<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
     <title>Java一些序列化框架的基本使用 | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
@@ -41,7 +41,7 @@ Java一些序列化框架的基本使用最近在学RPC框架相关的原理和�
     </script>
      
 </head>
-
+</html>
   <body>
     <header>
       <div>
@@ -49,7 +49,7 @@ Java一些序列化框架的基本使用最近在学RPC框架相关的原理和�
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width=200 height=230></img>
+				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -59,7 +59,7 @@ Java一些序列化框架的基本使用最近在学RPC框架相关的原理和�
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width=200 height=230></img>
+				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -76,18 +76,18 @@ Java一些序列化框架的基本使用最近在学RPC框架相关的原理和�
 					
 					<li>
 					
-                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
                                             <label>Search</label>
-                                        <input name="s" type="hidden" value= 8360843150509117428 ><input type="text" name="q" size="30" placeholder="搜索"><br>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
 					
-					</li>
+					</form></li>
 				</ul>
-                            </nav>			
+                            </ul></nav>			
 </div>
 
     </header>
     <div id="container">
-      <div id="main" class="post" itemscope itemprop="blogPost">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -115,33 +115,33 @@ Java一些序列化框架的基本使用最近在学RPC框架相关的原理和�
 		<p>[TOC]</p>
 <h1 id="Java一些序列化框架的基本使用"><a href="#Java一些序列化框架的基本使用" class="headerlink" title="Java一些序列化框架的基本使用"></a>Java一些序列化框架的基本使用</h1><p>最近在学<code>RPC框架</code>相关的原理和实现，需要用到对<code>数据传输的序列化框架</code>，下面做下简单使用。</p>
 <p>下面定义一下序列化和反序列的接口，使用kotlin语言。</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Serializer</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 将对象序列化成字节数组</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">serialize</span><span class="params">(obj: <span class="type">Any</span>)</span></span>: ByteArray</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 将字节数组反序列化成指定对象</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">deserialize</span><span class="params">(bytes: <span class="type">ByteArray</span>, clazz: <span class="type">Class</span>&lt;<span class="type">T</span>&gt;)</span></span>: T</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="1-Fastjson"><a href="#1-Fastjson" class="headerlink" title="1. Fastjson"></a>1. <a href="https://github.com/alibaba/fastjson" target="_blank" rel="external">Fastjson</a></h2><ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Serializer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 将对象序列化成字节数组</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">serialize</span><span class="params">(obj: <span class="type">Any</span>)</span></span>: ByteArray</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 将字节数组反序列化成指定对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">deserialize</span><span class="params">(bytes: <span class="type">ByteArray</span>, clazz: <span class="type">Class</span>&lt;<span class="type">T</span>&gt;)</span></span>: T</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="1-Fastjson"><a href="#1-Fastjson" class="headerlink" title="1. Fastjson"></a>1. <a href="https://github.com/alibaba/fastjson" target="_blank" rel="noopener">Fastjson</a></h2><ul>
 <li>依赖</li>
 </ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;fastjson.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;fastjson.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>封装使用</li>
 </ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">class FastJsonSerializer : Serializer &#123;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 将对象序列化成字节数组</div><div class="line">     */</div><div class="line">    override fun serialize(obj: Any): ByteArray =</div><div class="line">            JSON.toJSONBytes(obj, SerializerFeature.SortField)</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 将字节数组反序列化成指定对象</div><div class="line">     */</div><div class="line">    override fun &lt;T&gt; deserialize(bytes: ByteArray, clazz: Class&lt;T&gt;): T =</div><div class="line">            JSON.parseObject(bytes, clazz, Feature.SortFeidFastMatch)</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="2-Kryo"><a href="#2-Kryo" class="headerlink" title="2. Kryo"></a>2. <a href="https://github.com/EsotericSoftware/kryo" target="_blank" rel="external">Kryo</a></h2><ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FastJsonSerializer</span> : <span class="type">Serializer &#123;</span></span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 将对象序列化成字节数组</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">serialize</span><span class="params">(obj: <span class="type">Any</span>)</span></span>: ByteArray =</span><br><span class="line">            JSON.toJSONBytes(obj, SerializerFeature.SortField)</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 将字节数组反序列化成指定对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    override fun &lt;T&gt; deserialize(bytes: ByteArray, clazz: Class&lt;T&gt;): T =</span><br><span class="line">            JSON.parseObject(bytes, clazz, Feature.SortFeidFastMatch)</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-Kryo"><a href="#2-Kryo" class="headerlink" title="2. Kryo"></a>2. <a href="https://github.com/EsotericSoftware/kryo" target="_blank" rel="noopener">Kryo</a></h2><ul>
 <li>依赖</li>
 </ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.esotericsoftware<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>kryo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;kryo.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.esotericsoftware<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>kryo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;kryo.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>封装使用</li>
 </ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">kryoSerializer</span> : <span class="type">Serializer &#123;</span></span></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 将对象序列化成字节数组</div><div class="line">     */</div><div class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">serialize</span><span class="params">(obj: <span class="type">Any</span>)</span></span>: ByteArray &#123;</div><div class="line">        <span class="keyword">val</span> kryo = Kryo()</div><div class="line">        <span class="keyword">val</span> baos = ByteArrayOutputStream()</div><div class="line">        <span class="keyword">val</span> output = Output(baos)</div><div class="line">        kryo.writeObject(output, obj)</div><div class="line"></div><div class="line">        <span class="keyword">return</span> output.use &#123;</div><div class="line">            it.flush()</div><div class="line">            <span class="comment">// 返回baos字节数组</span></div><div class="line">            baos.toByteArray()</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 将字节数组反序列化成指定对象</div><div class="line">     */</div><div class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">deserialize</span><span class="params">(bytes: <span class="type">ByteArray</span>, clazz: <span class="type">Class</span>&lt;<span class="type">T</span>&gt;)</span></span>: T &#123;</div><div class="line">        <span class="keyword">val</span> kryo = Kryo()</div><div class="line">        <span class="keyword">val</span> bais = ByteArrayInputStream(bytes)</div><div class="line">        <span class="keyword">val</span> input = Input(bais)</div><div class="line"></div><div class="line">        <span class="keyword">return</span> input.use &#123;</div><div class="line">            kryo.readObject(it, clazz)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="3-Protostuff"><a href="#3-Protostuff" class="headerlink" title="3. Protostuff"></a>3. <a href="https://github.com/protostuff/protostuff" target="_blank" rel="external">Protostuff</a></h2><ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">kryoSerializer</span> : <span class="type">Serializer &#123;</span></span></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 将对象序列化成字节数组</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">serialize</span><span class="params">(obj: <span class="type">Any</span>)</span></span>: ByteArray &#123;</span><br><span class="line">        <span class="keyword">val</span> kryo = Kryo()</span><br><span class="line">        <span class="keyword">val</span> baos = ByteArrayOutputStream()</span><br><span class="line">        <span class="keyword">val</span> output = Output(baos)</span><br><span class="line">        kryo.writeObject(output, obj)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> output.use &#123;</span><br><span class="line">            it.flush()</span><br><span class="line">            <span class="comment">// 返回baos字节数组</span></span><br><span class="line">            baos.toByteArray()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 将字节数组反序列化成指定对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">deserialize</span><span class="params">(bytes: <span class="type">ByteArray</span>, clazz: <span class="type">Class</span>&lt;<span class="type">T</span>&gt;)</span></span>: T &#123;</span><br><span class="line">        <span class="keyword">val</span> kryo = Kryo()</span><br><span class="line">        <span class="keyword">val</span> bais = ByteArrayInputStream(bytes)</span><br><span class="line">        <span class="keyword">val</span> input = Input(bais)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> input.use &#123;</span><br><span class="line">            kryo.readObject(it, clazz)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="3-Protostuff"><a href="#3-Protostuff" class="headerlink" title="3. Protostuff"></a>3. <a href="https://github.com/protostuff/protostuff" target="_blank" rel="noopener">Protostuff</a></h2><ul>
 <li>依赖</li>
 </ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.protostuff<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>protostuff-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;protostuff.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.protostuff<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>protostuff-runtime<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;protostuff.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.protostuff<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>protostuff-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;protostuff.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.protostuff<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>protostuff-runtime<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;protostuff.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>封装使用</li>
 </ul>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProtostuffSerializer</span> : <span class="type">Serializer &#123;</span></span></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 将对象序列化成字节数组</div><div class="line">     */</div><div class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">serialize</span><span class="params">(obj: <span class="type">Any</span>)</span></span>: ByteArray &#123;</div><div class="line">        <span class="keyword">val</span> schema = RuntimeSchema.createFrom(obj.javaClass)</div><div class="line">        <span class="keyword">val</span> buffer = LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE)</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">return</span> ProtostuffIOUtil.toByteArray(obj, schema, buffer)</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            buffer.clear()</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 将字节数组反序列化成指定对象</div><div class="line">     */</div><div class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">deserialize</span><span class="params">(bytes: <span class="type">ByteArray</span>, clazz: <span class="type">Class</span>&lt;<span class="type">T</span>&gt;)</span></span>: T &#123;</div><div class="line">        <span class="keyword">val</span> schema = RuntimeSchema.createFrom(clazz)</div><div class="line">        <span class="keyword">val</span> message = schema.newMessage()</div><div class="line">        ProtostuffIOUtil.mergeFrom(bytes, message, schema)</div><div class="line">        <span class="keyword">return</span> message</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h2><p>其他还有诸如<a href="https://github.com/google/protobuf" target="_blank" rel="external">Protobuf</a>，<a href="https://github.com/apache/thrift" target="_blank" rel="external">Thrift</a>等等。</p>
-<p>序列化框架之间的比较可以参考：<a href="https://github.com/eishay/jvm-serializers/wiki" target="_blank" rel="external">https://github.com/eishay/jvm-serializers/wiki</a></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProtostuffSerializer</span> : <span class="type">Serializer &#123;</span></span></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 将对象序列化成字节数组</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">serialize</span><span class="params">(obj: <span class="type">Any</span>)</span></span>: ByteArray &#123;</span><br><span class="line">        <span class="keyword">val</span> schema = RuntimeSchema.createFrom(obj.javaClass)</span><br><span class="line">        <span class="keyword">val</span> buffer = LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE)</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> ProtostuffIOUtil.toByteArray(obj, schema, buffer)</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            buffer.clear()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 将字节数组反序列化成指定对象</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">deserialize</span><span class="params">(bytes: <span class="type">ByteArray</span>, clazz: <span class="type">Class</span>&lt;<span class="type">T</span>&gt;)</span></span>: T &#123;</span><br><span class="line">        <span class="keyword">val</span> schema = RuntimeSchema.createFrom(clazz)</span><br><span class="line">        <span class="keyword">val</span> message = schema.newMessage()</span><br><span class="line">        ProtostuffIOUtil.mergeFrom(bytes, message, schema)</span><br><span class="line">        <span class="keyword">return</span> message</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h2><p>其他还有诸如<a href="https://github.com/google/protobuf" target="_blank" rel="noopener">Protobuf</a>，<a href="https://github.com/apache/thrift" target="_blank" rel="noopener">Thrift</a>等等。</p>
+<p>序列化框架之间的比较可以参考：<a href="https://github.com/eishay/jvm-serializers/wiki" target="_blank" rel="noopener">https://github.com/eishay/jvm-serializers/wiki</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -170,9 +170,9 @@ Java一些序列化框架的基本使用最近在学RPC框架相关的原理和�
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
+ <div class="prev">
  <a href="/icemimosa/Java/BitSet基本学习/" title="Java BitSet基本学习">
-  <strong>PREVIOUS:</strong><br/>
+  <strong>PREVIOUS:</strong><br>
   <span>
   Java BitSet基本学习</span>
 </a>
@@ -180,8 +180,8 @@ Java一些序列化框架的基本使用最近在学RPC框架相关的原理和�
 
 
 <div class="next">
-<a href="/icemimosa/hive/Impala读取parquet格式时间的一个坑/"  title="Impala读取parquet格式时间的一个坑">
- <strong>NEXT:</strong><br/> 
+<a href="/icemimosa/hive/Impala读取parquet格式时间的一个坑/" title="Impala读取parquet格式时间的一个坑">
+ <strong>NEXT:</strong><br> 
  <span>Impala读取parquet格式时间的一个坑
 </span>
 </a>
@@ -210,7 +210,7 @@ Java一些序列化框架的基本使用最近在学RPC框架相关的原理和�
 	
 		<div class="author-logo"></div>		
 	
-	<div class="social-list" class="clearfix">
+	<div class="social-list">
 		
 		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
 		
@@ -235,7 +235,7 @@ Java一些序列化框架的基本使用最近在学RPC框架相关的原理和�
 		
 			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
 		
-			<li><a href="/categories/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -266,7 +266,7 @@ Java一些序列化框架的基本使用最近在学RPC框架相关的原理和�
 		
 			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
 		
-			<li><a href="/tags/hbase/" title="hbase">hbase<sup>11</sup></a></li>
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
 		
 			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
 		
@@ -294,7 +294,7 @@ Java一些序列化框架的基本使用最近在学RPC框架相关的原理和�
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>17</sup></a></li>
+			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
 		
 		</ul>
 </div>
@@ -308,7 +308,7 @@ Java一些序列化框架的基本使用最近在学RPC框架相关的原理和�
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16.25px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.25px;">hbase</a> <a href="/tags/hive/" style="font-size: 16.25px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.5px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.25px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.5px;">redis</a> <a href="/tags/spark/" style="font-size: 13.75px;">spark</a> <a href="/tags/spring/" style="font-size: 11.25px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.25px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.75px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.75px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 15.56px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 16.67px;">hbase</a> <a href="/tags/hive/" style="font-size: 15.56px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12.22px;">lombok</a> <a href="/tags/mac/" style="font-size: 11.11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 14.44px;">oozie</a> <a href="/tags/redis/" style="font-size: 17.78px;">redis</a> <a href="/tags/spark/" style="font-size: 13.33px;">spark</a> <a href="/tags/spring/" style="font-size: 11.11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11.11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13.33px;">sqoop</a> <a href="/tags/源码/" style="font-size: 18.89px;">源码</a>
     </div>
   </div>
 
@@ -316,7 +316,7 @@ Java一些序列化框架的基本使用最近在学RPC框架相关的原理和�
 </aside>
 </div>
     </div>
-    <footer><div id="footer" >
+    <footer><div id="footer">
     
             <p class="copyright"> © 2018 
 		
@@ -324,7 +324,7 @@ Java一些序列化框架的基本使用最近在学RPC框架相关的原理和�
 		
             <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
             ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
-            </div>
+            </p></div>
 </footer>
     <script src="/js/jquery-2.1.0.min.js"></script>
 <script src="/js/jquery-icemi-scroll2top.js"></script>
@@ -386,7 +386,7 @@ $(document).ready(function(){
 
 <!-- GrowingIO Analytics code version 2.1 -->
 <!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
-<script type='text/javascript'>
+<script type="text/javascript">
 !function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
 gio('init','b988cbf13dfaa5ac', {});
 //custom page code begin here
@@ -597,6 +597,6 @@ ga('send', 'pageview');
 </script>
 
 
-  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false}});</script></body>
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
 </html>
 
