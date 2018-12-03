@@ -7,20 +7,14 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
   
-    <title>02_Redis基本命令的使用-预备 | Ice の Mimosa</title>
+    <title>Spark自定义WindowFunction | Ice の Mimosa</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="IceMimosa">
     
     <meta name="description" content="[TOC]
-Redis基本命令的使用-预备1. 通用的一些命令
-查看所有键
-
-1$ keys *
-
-示例
-
-12345678910## 插入字符串类型的键值对127.0.0.1:6379&amp;gt; set key1 value1OK127.0.0.1:6379&amp;gt; set key2 value2O">
+Spark Custom Window Functions (UDWF)1. 简介Spark可以自定义UDF、UDAF、UDTF等自定义函数。当然也可以使用开窗函数WindowFunction（如row_number、first_value、lead等）。
+关于一些内置函数的使用, 这里">
     
     
     
@@ -97,15 +91,15 @@ Redis基本命令的使用-预备1. 通用的一些命令
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/icemimosa/redis/02_Redis基本命令的使用-预备/" title="02_Redis基本命令的使用-预备" itemprop="url">02_Redis基本命令的使用-预备</a>
+      <a href="/icemimosa/spark/Spark自定义WindowFunction/" title="Spark自定义WindowFunction" itemprop="url">Spark自定义WindowFunction</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
     </p>
   <p class="article-time">
-    <time datetime="2017-05-02T10:30:16.000Z" itemprop="datePublished">2017-05-02</time>
-    更新日期:<time datetime="2018-09-30T10:14:05.682Z" itemprop="dateModified">2018-09-30</time>
+    <time datetime="2018-12-03T02:42:16.000Z" itemprop="datePublished">2018-12-03</time>
+    更新日期:<time datetime="2018-12-03T03:05:33.662Z" itemprop="dateModified">2018-12-03</time>
     
   </p>
 </header>
@@ -114,118 +108,49 @@ Redis基本命令的使用-预备1. 通用的一些命令
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis基本命令的使用-预备"><span class="toc-text">Redis基本命令的使用-预备</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-通用的一些命令"><span class="toc-text">1. 通用的一些命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Redis的数据结构"><span class="toc-text">2. Redis的数据结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-单线程架构"><span class="toc-text">3. 单线程架构</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spark-Custom-Window-Functions-UDWF"><span class="toc-text">Spark Custom Window Functions (UDWF)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-基于函数的方式自定义"><span class="toc-text">2. 基于函数的方式自定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-基于SQL的方式使用"><span class="toc-text">3. 基于SQL的方式使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-编写my-row-number函数"><span class="toc-text">3.1 编写my_row_number函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-注册MyRowNumber"><span class="toc-text">3.2 注册MyRowNumber</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-注意点（坑）"><span class="toc-text">3.3 注意点（坑）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-使用"><span class="toc-text">3.4 使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-总结"><span class="toc-text">4. 总结</span></a></li></ol></li></ol>
 		</div>
 		
 		<p>[TOC]</p>
-<h1 id="Redis基本命令的使用-预备"><a href="#Redis基本命令的使用-预备" class="headerlink" title="Redis基本命令的使用-预备"></a>Redis基本命令的使用-预备</h1><h1 id="1-通用的一些命令"><a href="#1-通用的一些命令" class="headerlink" title="1. 通用的一些命令"></a>1. 通用的一些命令</h1><ul>
-<li>查看所有键</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ keys *</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>示例</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">## 插入字符串类型的键值对</span><br><span class="line">127.0.0.1:6379&gt; set key1 value1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set key2 value2</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">## 示例输出</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">1) &quot;key1&quot;</span><br><span class="line">2) &quot;key2&quot;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>查看键总数</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dbsize</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>示例</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">## 依然是上述插入例子</span><br><span class="line">127.0.0.1:6379&gt; dbsize</span><br><span class="line">(integer) 2</span><br></pre></td></tr></table></figure>
-<p><code>dbsize</code>在计算总数时不会遍历所有键，而是直接获取内置的<code>键总数变量</code>，所以时间复杂度是<code>O(1)</code>。而<code>keys</code>命令会遍历所有键，时间复杂度是<code>O(n)</code>，由于Redis是<code>单线程架构(后面会说)</code>，所以当存在大量key的时候，线上禁止使用。</p>
-<ul>
-<li>检查key是否存在</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exists key</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>示例</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">## 依然是上述插入例子</span><br><span class="line">127.0.0.1:6379&gt; exists key0</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; exists key1</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
-<p>存在返回1，否则返回0</p>
-<ul>
-<li>删除键</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">del key [key ...]</span><br><span class="line"></span><br><span class="line"># del是一个通用命令，无论是什么数据类型</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>示例</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">## 依然是上述插入例子</span><br><span class="line">127.0.0.1:6379&gt; del key0</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; del key1</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
-<p>返回成功删除键的个数。</p>
-<ul>
-<li>键过期</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">expire key seconds</span><br><span class="line"></span><br><span class="line"># 设置键的过期时间，当超过过期时间后，会自动删除键</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>示例</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set key1 value1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; expire key1 10</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; ttl key1</span><br><span class="line">(integer) 8</span><br><span class="line">127.0.0.1:6379&gt; ttl key1</span><br><span class="line">(integer) 6</span><br><span class="line">127.0.0.1:6379&gt; ttl key1</span><br><span class="line">(integer) -2</span><br><span class="line"></span><br><span class="line"># ttl返回键剩余的过期时间</span><br><span class="line">  * 大于等于0的整数：键剩余的过期时间</span><br><span class="line">  * -1：键未设置过期时间</span><br><span class="line">  * -2：键不存在</span><br></pre></td></tr></table></figure>
-<ul>
-<li>查看键的数据结构类型</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">type key</span><br><span class="line"></span><br><span class="line"># 返回string, list, set, zset 和 hash。</span><br><span class="line"># 键不存在，返回none</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>示例</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set key1 value1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; type key1</span><br><span class="line">string</span><br></pre></td></tr></table></figure>
-<h1 id="2-Redis的数据结构"><a href="#2-Redis的数据结构" class="headerlink" title="2. Redis的数据结构"></a>2. Redis的数据结构</h1><p><img src="http://ice-img.pigutu.com/2018-02-26-152319.png?imageMogr2/thumbnail/!40p" alt="" title="数据结构"></p>
-<ul>
-<li>数据结构的内部编码实现，如下图</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; object encoding key1</span><br><span class="line">&quot;embstr&quot;</span><br></pre></td></tr></table></figure>
-<p><img src="http://ice-img.pigutu.com/2018-02-26-152616.png?imageMogr2/thumbnail/!40p" alt="" title="内部编码实现"></p>
-<blockquote>
-<p>内部编码的好处</p>
-</blockquote>
-<ol>
-<li>当内部编码改变时，对外的数据结构和命令没有影响，用户感知不到。</li>
-<li>多种编码实现在不同场景可以发挥各自的优点。</li>
-</ol>
-<h1 id="3-单线程架构"><a href="#3-单线程架构" class="headerlink" title="3. 单线程架构"></a>3. 单线程架构</h1><p>Redis使用了单线程架构和<a href="https://www.zhihu.com/question/28594409" target="_blank" rel="noopener">I/O多路复用模型</a></p>
-<p>当有多个命令操作redis的时候，所有的命令都会进入<code>一个队列</code>中，然后逐个被执行，<strong>不会存在多个命令被同时执行的情况</strong>。</p>
-<blockquote>
-<p>为什么单线程还这么快？</p>
-</blockquote>
-<ul>
-<li>纯内存访问</li>
-<li>非阻塞IO</li>
-<li>单线程避免线程切换和竞争产生的消耗</li>
-</ul>
-<blockquote>
-<p>单线程的好处</p>
-</blockquote>
-<ul>
-<li>避免并发操作数据结构的复杂性</li>
-<li>避免线程切换和竞争产生的消耗</li>
-</ul>
-<blockquote>
-<p>单线程的问题</p>
-</blockquote>
-<ul>
-<li>如果一个命令执行时间过长，会导致其他命令阻塞（致命）</li>
-</ul>
-<p>所以理解单线程模型是开发和运维人员使用和理解Redis的核心之一。</p>
+<h1 id="Spark-Custom-Window-Functions-UDWF"><a href="#Spark-Custom-Window-Functions-UDWF" class="headerlink" title="Spark Custom Window Functions (UDWF)"></a>Spark Custom Window Functions (UDWF)</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p>Spark可以自定义UDF、UDAF、<del><strong>UDTF</strong></del>等自定义函数。当然也可以使用<strong>开窗函数WindowFunction</strong>（如row_number、first_value、lead等）。</p>
+<p>关于一些内置函数的使用, 这里就不阐述了。后面将讲诉如何自定义（官方没提供，得看源码了解机制。。。）</p>
+<h2 id="2-基于函数的方式自定义"><a href="#2-基于函数的方式自定义" class="headerlink" title="2. 基于函数的方式自定义"></a>2. 基于函数的方式自定义</h2><p>这里可以直接参考：<a href="http://blog.nuvola-tech.com/2017/10/spark-custom-window-function-for-sessionization/" target="_blank" rel="noopener">http://blog.nuvola-tech.com/2017/10/spark-custom-window-function-for-sessionization/</a></p>
+<p>描述的很清楚，基于Spark Core的方式来使用。</p>
+<h2 id="3-基于SQL的方式使用"><a href="#3-基于SQL的方式使用" class="headerlink" title="3. 基于SQL的方式使用"></a>3. 基于SQL的方式使用</h2><p>自定义函数的编写和使用，刚刚的文章其实已经描述的比较清楚了。这里我将以最简单的<code>row_number</code>为例，来注册给Spark的udf，然后在sql中来使用。</p>
+<h3 id="3-1-编写my-row-number函数"><a href="#3-1-编写my-row-number函数" class="headerlink" title="3.1 编写my_row_number函数"></a>3.1 编写my_row_number函数</h3><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">MyRowNumber</span>(<span class="params"></span>) <span class="keyword">extends</span> <span class="title">RowNumberLike</span> </span>&#123;</span><br><span class="line">  <span class="keyword">override</span> <span class="keyword">val</span> evaluateExpression = rowNumber</span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">prettyName</span></span>: <span class="type">String</span> = <span class="string">"my_row_number"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里直接抄的 <code>org.apache.spark.sql.catalyst.expressions.RowNumber</code> 类。</p>
+<h3 id="3-2-注册MyRowNumber"><a href="#3-2-注册MyRowNumber" class="headerlink" title="3.2 注册MyRowNumber"></a>3.2 注册MyRowNumber</h3><p>这里需要查看原生的RowNumber是如何注册的，它是在<code>FunctionRegistry</code>中进行注册的：</p>
+<p><img src="http://ice-img.pigutu.com/2018-12-03-023846.png" alt=""></p>
+<p>然后再来看看expressions里面是啥，这里面其实就是一个个函数的表达式，我们找到<code>row_number</code>：</p>
+<p><img src="http://ice-img.pigutu.com/2018-12-03-023634.png" alt=""></p>
+<p>OK！其实最关键的就是看这个expression是咋实现的，我们就可以进行注册了。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">FunctionRegistry</span>.builtin.registerFunction(</span><br><span class="line">  <span class="string">"my_row_number"</span>, </span><br><span class="line">  <span class="keyword">new</span> <span class="type">ExpressionInfo</span>(<span class="type">MyRowNumber</span>.getClass.getCanonicalName, <span class="string">"my_row_number"</span>), </span><br><span class="line">  <span class="comment">// 这个可以参照 FunctionRegistry#expression 的编写, 我这里比较简单, 没有函数入参</span></span><br><span class="line">  e =&gt; &#123;</span><br><span class="line">    <span class="type">MyRowNumber</span>()</span><br><span class="line">  &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h3 id="3-3-注意点（坑）"><a href="#3-3-注意点（坑）" class="headerlink" title="3.3 注意点（坑）"></a>3.3 注意点（坑）</h3><p>这里有一点需要注意，原先注册udf是这样定义的：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark.udf.register(<span class="string">"my_udf"</span>, <span class="type">MyUDF</span> _)</span><br></pre></td></tr></table></figure>
+<p>查看源码，其实他也是通过 <code>FunctionRegistry</code> 来进行注册的。（辛亏spark.udf是lazy的）</p>
+<p>所以<code>UDWF</code>的注册一定要放在<code>spark.udf.register</code>的注册之前，不然<code>UDWF</code>无法成功注册进去（因为是copy的一份，可以看下源码）</p>
+<h3 id="3-4-使用"><a href="#3-4-使用" class="headerlink" title="3.4 使用"></a>3.4 使用</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> </span><br><span class="line">  <span class="keyword">id</span>, </span><br><span class="line">  age, </span><br><span class="line">  my_row_number() <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> <span class="keyword">id</span> <span class="keyword">order</span> <span class="keyword">by</span> age) rn</span><br><span class="line"><span class="keyword">from</span> (</span><br><span class="line">   <span class="keyword">select</span> <span class="number">1</span> <span class="keyword">id</span>, <span class="number">10</span> age</span><br><span class="line">   <span class="keyword">union</span> all</span><br><span class="line">   <span class="keyword">select</span> <span class="number">2</span> <span class="keyword">id</span>, <span class="number">10</span> age</span><br><span class="line">   <span class="keyword">union</span> all</span><br><span class="line">   <span class="keyword">select</span> <span class="number">1</span> <span class="keyword">id</span>, <span class="number">20</span> age</span><br><span class="line">) t</span><br></pre></td></tr></table></figure>
+<h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h2><p>总体来说还是比较简单的，更复杂的<code>UDWF</code>（比如含有入参）可以自寻摸索。我从官方jira没看到相关的issue，如果有更好的注册方式，麻烦告知。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/redis/">redis</a>
+  <span></span> <a href="/tags/spark/">spark</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/redis/">redis</a>
+  <a class="article-category-link" href="/categories/spark/">spark</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://www.patamon.me/icemimosa/redis/02_Redis基本命令的使用-预备/" data-title="02_Redis基本命令的使用-预备 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  <div data-url="http://www.patamon.me/icemimosa/spark/Spark自定义WindowFunction/" data-title="Spark自定义WindowFunction | Ice の Mimosa" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -234,19 +159,11 @@ Redis基本命令的使用-预备1. 通用的一些命令
 	
 <nav class="article-nav clearfix">
  
- <div class="prev">
- <a href="/icemimosa/redis/02_Redis基本命令的使用-字符串/" title="02_Redis基本命令的使用-字符串">
-  <strong>PREVIOUS:</strong><br>
-  <span>
-  02_Redis基本命令的使用-字符串</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/icemimosa/redis/01_Redis初识/" title="01_Redis初识">
+<a href="/icemimosa/HBase/Hbase源码11_负载均衡/" title="Hbase源码11_负载均衡">
  <strong>NEXT:</strong><br> 
- <span>01_Redis初识
+ <span>Hbase源码11_负载均衡
 </span>
 </a>
 </div>
@@ -264,7 +181,7 @@ Redis基本命令的使用-预备1. 通用的一些命令
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Redis基本命令的使用-预备"><span class="toc-text">Redis基本命令的使用-预备</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-通用的一些命令"><span class="toc-text">1. 通用的一些命令</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Redis的数据结构"><span class="toc-text">2. Redis的数据结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-单线程架构"><span class="toc-text">3. 单线程架构</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spark-Custom-Window-Functions-UDWF"><span class="toc-text">Spark Custom Window Functions (UDWF)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-基于函数的方式自定义"><span class="toc-text">2. 基于函数的方式自定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-基于SQL的方式使用"><span class="toc-text">3. 基于SQL的方式使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-编写my-row-number函数"><span class="toc-text">3.1 编写my_row_number函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-注册MyRowNumber"><span class="toc-text">3.2 注册MyRowNumber</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-注意点（坑）"><span class="toc-text">3.3 注意点（坑）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-使用"><span class="toc-text">3.4 使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-总结"><span class="toc-text">4. 总结</span></a></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
