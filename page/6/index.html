@@ -192,6 +192,25 @@ parquet压缩hive表1. 应用场景原表为txt格式，占用硬盘空间太大
 
   <section class="post" itemscope="" itemprop="blogPost">
   
+    <a href="/icemimosa/hive/hive处理增量数据/" title="hive处理增量数据" itemprop="url">
+  
+      <time datetime="2016-10-25T07:30:16.000Z" itemprop="datePublished">2016-10-25</time>
+    <h1 itemprop="name">hive处理增量数据</h1>
+    
+     
+           <p itemprop="description">[TOC]
+hive处理增量数据1. 场景
+前提：通过 Sqoop 拉取的数据含有 主键 或者 唯一键
+场景：每天 按时间 或者 其他列值 增量拉取数据, 如下
+
+123每天按照时间(如更新时间updated_at)，来增量拉取数据。然后把每天的拉取的数据，增量放入到hive表中</p>
+        
+    
+  </a>
+</section>
+
+  <section class="post" itemscope="" itemprop="blogPost">
+  
     <a href="/icemimosa/hive/hive导入数据的一些方式/" title="hive导入数据的一些方式" itemprop="url">
   
       <time datetime="2016-10-25T07:30:16.000Z" itemprop="datePublished">2016-10-25</time>
@@ -215,25 +234,6 @@ parquet压缩hive表1. 应用场景原表为txt格式，占用硬盘空间太大
            <p itemprop="description">删除MacOS X文件系统的附加属性@场景：之前手贱，一不小心删除了Hdfs的一个目录。还好之前做了备份，但是只是备份整个电脑的，所以只将里面的关于HDFS的备份拿出来。
 但是拿过来之后有个问题, 目录最后多了个@符号：
 123456&amp;gt; lldrwxr-xr-x@   4 </p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope="" itemprop="blogPost">
-  
-    <a href="/icemimosa/hive/hive处理增量数据/" title="hive处理增量数据" itemprop="url">
-  
-      <time datetime="2016-10-25T07:30:16.000Z" itemprop="datePublished">2016-10-25</time>
-    <h1 itemprop="name">hive处理增量数据</h1>
-    
-     
-           <p itemprop="description">[TOC]
-hive处理增量数据1. 场景
-前提：通过 Sqoop 拉取的数据含有 主键 或者 唯一键
-场景：每天 按时间 或者 其他列值 增量拉取数据, 如下
-
-123每天按照时间(如更新时间updated_at)，来增量拉取数据。然后把每天的拉取的数据，增量放入到hive表中</p>
         
     
   </a>
