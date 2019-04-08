@@ -99,7 +99,7 @@ Spark Custom Window Functions (UDWF)1. 简介Spark可以自定义UDF、UDAF、UD
     </p>
   <p class="article-time">
     <time datetime="2018-12-03T02:42:16.000Z" itemprop="datePublished">2018-12-03</time>
-    更新日期:<time datetime="2018-12-03T03:05:33.662Z" itemprop="dateModified">2018-12-03</time>
+    更新日期:<time datetime="2019-04-08T02:24:39.549Z" itemprop="dateModified">2019-04-08</time>
     
   </p>
 </header>
@@ -114,6 +114,9 @@ Spark Custom Window Functions (UDWF)1. 简介Spark可以自定义UDF、UDAF、UD
 		<p>[TOC]</p>
 <h1 id="Spark-Custom-Window-Functions-UDWF"><a href="#Spark-Custom-Window-Functions-UDWF" class="headerlink" title="Spark Custom Window Functions (UDWF)"></a>Spark Custom Window Functions (UDWF)</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p>Spark可以自定义UDF、UDAF、<del><strong>UDTF</strong></del>等自定义函数。当然也可以使用<strong>开窗函数WindowFunction</strong>（如row_number、first_value、lead等）。</p>
 <p>关于一些内置函数的使用, 这里就不阐述了。后面将讲诉如何自定义（官方没提供，得看源码了解机制。。。）</p>
+<blockquote>
+<p>注意: 写文章的时候, spark版本是2.1.x。spark2.3.x以及2.4.x的API有所不同（未测试可行性）</p>
+</blockquote>
 <h2 id="2-基于函数的方式自定义"><a href="#2-基于函数的方式自定义" class="headerlink" title="2. 基于函数的方式自定义"></a>2. 基于函数的方式自定义</h2><p>这里可以直接参考：<a href="http://blog.nuvola-tech.com/2017/10/spark-custom-window-function-for-sessionization/" target="_blank" rel="noopener">http://blog.nuvola-tech.com/2017/10/spark-custom-window-function-for-sessionization/</a></p>
 <p>描述的很清楚，基于Spark Core的方式来使用。</p>
 <h2 id="3-基于SQL的方式使用"><a href="#3-基于SQL的方式使用" class="headerlink" title="3. 基于SQL的方式使用"></a>3. 基于SQL的方式使用</h2><p>自定义函数的编写和使用，刚刚的文章其实已经描述的比较清楚了。这里我将以最简单的<code>row_number</code>为例，来注册给Spark的udf，然后在sql中来使用。</p>
