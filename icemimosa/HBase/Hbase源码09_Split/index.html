@@ -50,7 +50,7 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
+				<img id="i22" src="http://ice-img.flutterdart.cn/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -60,7 +60,7 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
+				<img src="http://ice-img.flutterdart.cn/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -101,7 +101,7 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
     </p>
   <p class="article-time">
     <time datetime="2018-11-07T07:42:16.000Z" itemprop="datePublished">2018-11-07</time>
-    更新日期:<time datetime="2018-11-08T03:46:41.998Z" itemprop="dateModified">2018-11-08</time>
+    更新日期:<time datetime="2019-11-04T10:03:44.654Z" itemprop="dateModified">2019-11-04</time>
     
   </p>
 </header>
@@ -115,7 +115,7 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 		
 		<p>[TOC]</p>
 <h1 id="Hbase源码09-Split过程"><a href="#Hbase源码09-Split过程" class="headerlink" title="Hbase源码09_Split过程"></a>Hbase源码09_Split过程</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p>在上节 <code>MemStore</code> -&gt; <code>HFile</code> 的flush完成之后, 会判断是否需要对HFile进行 <code>Split</code> 或者 <code>Compact</code>。下面对Split的过程做简单的分析。</p>
-<p><img src="http://ice-img.pigutu.com/2018-11-07-081608.png" alt=""></p>
+<p><img src="http://ice-img.flutterdart.cn/2018-11-07-081608.png" alt=""></p>
 <blockquote>
 <p>注: Cannot split meta region in HBase 0.20 and above</p>
 </blockquote>
@@ -125,7 +125,7 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 <ul>
 <li><code>requestSplit</code> 方法</li>
 </ul>
-<p><img src="http://ice-img.pigutu.com/2018-11-07-100504.png" alt=""></p>
+<p><img src="http://ice-img.flutterdart.cn/2018-11-07-100504.png" alt=""></p>
 <blockquote>
 <p>midKey计算: </p>
 <blockquote>
@@ -143,7 +143,7 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 <ul>
 <li>创建 SplitTransactionImpl, 类似事务的概念. 执行 <code>prepare</code> 方法</li>
 </ul>
-<p><img src="http://ice-img.pigutu.com/2018-11-07-130052.png" alt=""></p>
+<p><img src="http://ice-img.flutterdart.cn/2018-11-07-130052.png" alt=""></p>
 <ul>
 <li>执行 <code>execute</code> 方法</li>
 </ul>
@@ -163,7 +163,7 @@ Hbase源码09_Split过程1. 简介在上节 MemStore -&amp;gt; HFile 的flush完
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/源码/">源码</a><a href="/tags/hbase/">hbase</a>
+  <span></span> <a href="/tags/hbase/">hbase</a><a href="/tags/源码/">源码</a>
   </div>
 
 

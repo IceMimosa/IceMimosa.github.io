@@ -46,7 +46,7 @@
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
+				<img id="i22" src="http://ice-img.flutterdart.cn/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -56,7 +56,7 @@
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
+				<img src="http://ice-img.flutterdart.cn/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -97,7 +97,7 @@
     </p>
   <p class="article-time">
     <time datetime="2017-07-09T07:30:16.000Z" itemprop="datePublished">2017-07-09</time>
-    更新日期:<time datetime="2018-09-30T10:10:37.069Z" itemprop="dateModified">2018-09-30</time>
+    更新日期:<time datetime="2019-11-04T10:03:44.682Z" itemprop="dateModified">2019-11-04</time>
     
   </p>
 </header>
@@ -110,7 +110,7 @@
 		</div>
 		
 		<h1 id="Spark-ALS"><a href="#Spark-ALS" class="headerlink" title="Spark ALS"></a>Spark ALS</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p><code>推荐的意义</code>和应用于推荐的<code>协同过滤算法</code>，这里就不说明了。这里主要讲解一下Spark对协同过滤的应用和实现。<br><a href="https://spark.apache.org/docs/1.6.2/mllib-collaborative-filtering.html" target="_blank" rel="noopener">官方文档</a> 说的很明确，Spark目前支持的是<code>基于模型</code>的协同过滤算法，即<code>Alternating Least Squares (ALS)</code>。中文名称是<code>交替最小二乘</code>或者<code>交替最小平方</code>。<br>由于该算法针对的是基于<code>用户-商品</code>的关联矩阵，且在实际应用中，一个用户不可能买过所有的商品，甚至也不可能对已经买过的所有商品进行评分，所以这个矩阵注定就是一个<code>稀疏矩阵</code>。假设我们已经有了<strong>用户数据</strong>，<strong>商品数据</strong>，<strong>评分数据</strong>，那么这个矩阵可能是这个样子（横轴是商品，众轴是用户，每个单元格式评分）：</p>
-<p><img src="http://ice-img.pigutu.com/2017-07-09-084038.jpg?imageMogr2/thumbnail/!50p" alt=""></p>
+<p><img src="http://ice-img.flutterdart.cn/2017-07-09-084038.jpg?imageMogr2/thumbnail/!50p" alt=""></p>
 <p>那么如何计算（预测）剩余<code>?</code>中的空值，那么这就是ALS做的事情了。</p>
 <p>从这个算法，你也应该可以看出，它压根就不关心用户和商品本身的信息，需要的仅仅是用户对商品产生的某种行为，比如评分，浏览等等。</p>
 <h2 id="2-Spark-ALS使用"><a href="#2-Spark-ALS使用" class="headerlink" title="2. Spark ALS使用"></a>2. Spark ALS使用</h2><p>在讲解ALS之前，我们先来看看在Spark中是如何使用的。这里采用Spark1.6.x的版本。虽然Spark ML中分为<code>ml</code>和<code>mllib</code>两个版本的API，但就对于算法本身，影响不是很大。</p>
@@ -132,15 +132,15 @@
 <p>这个 <code>ALS.train(...)</code> 的过程是神特么简单，真不愧是黑盒操作。。算法的细节简直完全对使用者屏蔽。对于这种demo，其实网上也是一堆，比如<a href="https://github.com/apache/spark/blob/master/examples/src/main/scala/org/apache/spark/examples/mllib/RecommendationExample.scala" target="_blank" rel="noopener">RecommendationExample</a>，使用起来很是简单。<br>但是在使用的过程中，你可能会对传入的<code>rank</code>，<code>lambda</code>等参数很是困惑，当然spark也很贴心的为你准备了默认值。或者你也可以结合实际数据来不停的调整它们，以达到最优的效果。那么这些参数在ALS中到底是起什么作用呢，那么就不得不去看下ALS算法的原理了。</p>
 <h2 id="3-ALS算法"><a href="#3-ALS算法" class="headerlink" title="3. ALS算法"></a>3. ALS算法</h2><h3 id="3-1-获取损失函数"><a href="#3-1-获取损失函数" class="headerlink" title="3.1 获取损失函数"></a>3.1 获取损失函数</h3><p>我看别人博客讲ALS简直一头雾水，终于借助<a href="http://fclef.me/" target="_blank" rel="noopener">哥们</a>帮助下，终于能够理解了不少。那么下面我以菜鸟的眼光来讲解一下。</p>
 <p>对于上面的<code>稀疏矩阵</code>，我们假设它为 <code>A</code> 矩阵，这是一个已知矩阵。假设有 <code>i个用户</code> 和<code>j个商品</code>，那么这个矩阵就是 <code>i×j</code> 的矩阵。</p>
-<p>然后对于矩阵分解，其实任何一个矩阵 <code>A(i×j)</code> 都可以被分解成 <code>U(i×k)</code> 和 <code>V(j×k)</code>，即 <img src="http://ice-img.pigutu.com/2017-07-09-095816.jpg?imageMogr2/thumbnail/!50p" alt=""> (T表示V的<code>转置矩阵</code>，且<code>k &lt;= i，j</code>)。比如一个<code>4*4</code>的矩阵，你可以将它分解成<code>4*3矩阵</code>和<code>3*4矩阵</code>相乘的结果。这里的k，你可以把它当作是一个特征参数，对应Spark ALS中就是<code>rank</code>参数。</p>
-<p>但是在这个打分矩阵中，找到完全吻合的U和V是不可能的，所以需要找到一个近似的解。即<img src="http://ice-img.pigutu.com/2017-07-09-100222.jpg?imageMogr2/thumbnail/!50p" alt=""> （<code>k &lt;= i，j</code>）</p>
+<p>然后对于矩阵分解，其实任何一个矩阵 <code>A(i×j)</code> 都可以被分解成 <code>U(i×k)</code> 和 <code>V(j×k)</code>，即 <img src="http://ice-img.flutterdart.cn/2017-07-09-095816.jpg?imageMogr2/thumbnail/!50p" alt=""> (T表示V的<code>转置矩阵</code>，且<code>k &lt;= i，j</code>)。比如一个<code>4*4</code>的矩阵，你可以将它分解成<code>4*3矩阵</code>和<code>3*4矩阵</code>相乘的结果。这里的k，你可以把它当作是一个特征参数，对应Spark ALS中就是<code>rank</code>参数。</p>
+<p>但是在这个打分矩阵中，找到完全吻合的U和V是不可能的，所以需要找到一个近似的解。即<img src="http://ice-img.flutterdart.cn/2017-07-09-100222.jpg?imageMogr2/thumbnail/!50p" alt=""> （<code>k &lt;= i，j</code>）</p>
 <p>此时你就会发现，我们的目的实际就是去求 <code>U</code> 和 <code>V</code>两个矩阵的解。但是直接去求结果肯定不可能，那么我的理解就是先从预测结果的好坏程度出发。</p>
 <p>我们假设有如下公式：</p>
-<p><img src="http://ice-img.pigutu.com/2017-07-09-114512.jpg?imageMogr2/thumbnail/!50p" alt=""></p>
+<p><img src="http://ice-img.flutterdart.cn/2017-07-09-114512.jpg?imageMogr2/thumbnail/!50p" alt=""></p>
 <p>这时你应该会发现如果我们求得的U和V如果越优，那么C的值越小。而且这个公式在实际中肯定会存在一个最小值(只是求不到)，此时我们的方向就是去求这个公式的最小值。</p>
-<p>但是这个公式有个明显的缺点，就是<a href="https://www.zhihu.com/question/32246256" target="_blank" rel="noopener">过于拟合</a>。说白了就是，我这个公式在<code>训练集</code>中能满足大部分数据，但是在<code>测试集</code>中就会存在很多偏离这个函数公式的数据，这就会导致很多指标有很大的误差，如图(右图表示过于拟合)：<br><img src="http://ice-img.pigutu.com/2017-07-09-103306.jpg?imageMogr2/thumbnail/!50p" alt=""></p>
+<p>但是这个公式有个明显的缺点，就是<a href="https://www.zhihu.com/question/32246256" target="_blank" rel="noopener">过于拟合</a>。说白了就是，我这个公式在<code>训练集</code>中能满足大部分数据，但是在<code>测试集</code>中就会存在很多偏离这个函数公式的数据，这就会导致很多指标有很大的误差，如图(右图表示过于拟合)：<br><img src="http://ice-img.flutterdart.cn/2017-07-09-103306.jpg?imageMogr2/thumbnail/!50p" alt=""></p>
 <p>那么怎么才能达到左图的效果，使得结果的指标没有很大的误差。那么就需要对上述的公式进行惩罚，公式变成如下（损失函数）。</p>
-<p><img src="http://ice-img.pigutu.com/2017-07-09-114605.jpg?imageMogr2/thumbnail/!50p" alt=""></p>
+<p><img src="http://ice-img.flutterdart.cn/2017-07-09-114605.jpg?imageMogr2/thumbnail/!50p" alt=""></p>
 <p>至于为毛加了后面那串公式，可以参照<a href="http://blog.csdn.net/shuaishuai3409/article/details/50821071" target="_blank" rel="noopener">矩阵分解</a>中的 <code>正则化矩阵分解</code>。原理我也不是很懂，反正就是解决过拟合的问题。其中的<code>λ</code>（lambda）也是Spark ALS的设置项。</p>
 <p>那么对于<code>损失函数(Loss Function)</code>的优化，通常可以采用<code>交替最小二乘法（Alternative Least Squares）</code>和<code>随机梯度下降法（Stochastic Gradient Descent）</code>。下面就开始介绍是如何通过 <code>ALS</code> 对这个函数进行不断的优化，从而求得以<code>C是最小值</code>的前提下，这个U和V的最优解。</p>
 <p>由于公式里面存在两个变量U和V，所以肯定需要固定一个变量（假设其为常数），这样才能求最小值下的另一个变量的值。步骤如下：</p>
@@ -148,7 +148,7 @@
 <p>第一步：</p>
 </blockquote>
 <p>首先我们假设U的值是个常量，即<code>U(0)</code>。这个值你可以随机生成，取0或者取全局的均值。那么求最小值，就需要对这个公式的<code>V进行求导</code>。</p>
-<p><img src="http://ice-img.pigutu.com/2017-07-09-114642.jpg?imageMogr2/thumbnail/!50p" alt=""></p>
+<p><img src="http://ice-img.flutterdart.cn/2017-07-09-114642.jpg?imageMogr2/thumbnail/!50p" alt=""></p>
 <p>然后令导函数的值为0。从而求到最小值下的<code>V(0)</code>，可以参照<a href="http://blog.csdn.net/oucpowerman/article/details/49847979" target="_blank" rel="noopener">推导步骤</a>。</p>
 <p>这样经过第一步，就可以得到一个V的解，即<code>V(0)</code>。</p>
 <blockquote>

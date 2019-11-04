@@ -48,7 +48,7 @@
 
 			<div id="erer" class="erer" style="">
 				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
-				<img id="i22" src="http://ice-img.pigutu.com/patamon-22.png" width="200" height="230">
+				<img id="i22" src="http://ice-img.flutterdart.cn/patamon-22.png" width="200" height="230">
 			</div>
 
 			<div id="textlogo">
@@ -58,7 +58,7 @@
 
 			<div id="sansan" class="sansan" style="">
 				<!-- <img src="/img/33.png" width=200 height=230></img> -->
-				<img src="http://ice-img.pigutu.com/patamon-33.png" width="200" height="230">
+				<img src="http://ice-img.flutterdart.cn/patamon-33.png" width="200" height="230">
 			</div> 
 
 			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
@@ -99,7 +99,7 @@
     </p>
   <p class="article-time">
     <time datetime="2017-05-15T04:30:16.000Z" itemprop="datePublished">2017-05-15</time>
-    更新日期:<time datetime="2018-09-30T10:15:24.508Z" itemprop="dateModified">2018-09-30</time>
+    更新日期:<time datetime="2019-11-04T10:03:44.591Z" itemprop="dateModified">2019-11-04</time>
     
   </p>
 </header>
@@ -174,7 +174,7 @@
 <h2 id="3-2-渐进式遍历"><a href="#3-2-渐进式遍历" class="headerlink" title="3.2 渐进式遍历"></a>3.2 渐进式遍历</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ scan cursor [MATCH pattern] [COUNT count]</span><br><span class="line"></span><br><span class="line"># cursor：游标，第一次遍历从0开始。</span><br><span class="line">  每次遍历完会返回当前游标，直到游标值为0，表示遍历结束。</span><br><span class="line"># MATCH pattern：符合的正则</span><br><span class="line"># COUNT count：每次遍历键个数，默认是10</span><br></pre></td></tr></table></figure>
 <p>Redis2.8之后提供scan命令可以有效的解决keys带来的问题，所以要真正实现keys的功能，需要多次scan。</p>
 <p>Redis存储键值对实际使用的是<code>hashtable</code>的数据结构，简化模型如下，所以每次scan的时间复杂度是O(1)。</p>
-<p><img src="http://ice-img.pigutu.com/2018-03-11-075115.png?imageMogr2/thumbnail/!30p" alt=""></p>
+<p><img src="http://ice-img.flutterdart.cn/2018-03-11-075115.png?imageMogr2/thumbnail/!30p" alt=""></p>
 <p>除了<code>scan</code>，redis还提供面向哈希，集合，有序几个的扫描命令，解决<code>hgetall，smembers，zrange</code>可能产生的阻塞问题，命令分别是<code>hscan、sscan、zscan</code>，用法基本和scan类似：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hscan key cursor [MATCH pattern] [COUNT count]</span><br><span class="line">$ sscan key cursor [MATCH pattern] [COUNT count]</span><br><span class="line">$ zscan key cursor [MATCH pattern] [COUNT count]</span><br></pre></td></tr></table></figure>
 <p><strong>注意：</strong> scan虽然可以有效解决keys所可能产生阻塞的问题，但也并非完美，如果在scan的过程中有键的变化（增加，删除，修改等），那么遍历的时候可能不能保证遍历出所有的键：如新增的键可能没有遍历到，遍历出重复的键等等。</p>
