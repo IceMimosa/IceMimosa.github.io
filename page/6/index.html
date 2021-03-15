@@ -89,6 +89,22 @@
 
   <section class="post" itemscope="" itemprop="blogPost">
   
+    <a href="/icemimosa/Java/[Lombok原理3]实现一个简单的lombok/" title="【Lombok原理3】实现一个简单的lombok" itemprop="url">
+  
+      <time datetime="2017-03-05T13:00:34.000Z" itemprop="datePublished">2017-03-05</time>
+    <h1 itemprop="name">【Lombok原理3】实现一个简单的lombok</h1>
+    
+     
+           <p itemprop="description">[TOC]
+1. 前言本节将实现一个的Getter/Setter方法作为示例。
+之前说了，通过APT(Annotation Processor Tool)我们可以获取一些基本信息，生成java代码等等（查看JSR269）。那么如果我们想要对抽象语法树进行遍历方法，那么还需要JSR</p>
+        
+    
+  </a>
+</section>
+
+  <section class="post" itemscope="" itemprop="blogPost">
+  
     <a href="/icemimosa/Java/[Lombok原理2]生成java代码/" title="【Lombok原理2】生成java代码" itemprop="url">
   
       <time datetime="2017-03-04T05:00:34.000Z" itemprop="datePublished">2017-03-04</time>
@@ -239,22 +255,6 @@ parquet压缩hive表1. 应用场景原表为txt格式，占用硬盘空间太大
   </a>
 </section>
 
-  <section class="post" itemscope="" itemprop="blogPost">
-  
-    <a href="/icemimosa/hadoop/删除MacOS X文件系统的附加属性@符号/" title="删除MacOS X文件系统的附加属性@" itemprop="url">
-  
-      <time datetime="2016-10-25T07:30:16.000Z" itemprop="datePublished">2016-10-25</time>
-    <h1 itemprop="name">删除MacOS X文件系统的附加属性@</h1>
-    
-     
-           <p itemprop="description">删除MacOS X文件系统的附加属性@场景：之前手贱，一不小心删除了Hdfs的一个目录。还好之前做了备份，但是只是备份整个电脑的，所以只将里面的关于HDFS的备份拿出来。
-但是拿过来之后有个问题, 目录最后多了个@符号：
-123456&amp;gt; lldrwxr-xr-x@   4 </p>
-        
-    
-  </a>
-</section>
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
@@ -315,6 +315,8 @@ parquet压缩hive表1. 应用场景原表为txt格式，占用硬盘空间太大
 		
 			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
 		
+			<li><a href="/categories/数仓/" title="数仓">数仓<sup>1</sup></a></li>
+		
 		</ul>
 </div>
 
@@ -344,6 +346,8 @@ parquet压缩hive表1. 应用场景原表为txt格式，占用硬盘空间太大
 		
 			<li><a href="/tags/mysql/" title="mysql">mysql<sup>1</sup></a></li>
 		
+			<li><a href="/tags/olap/" title="olap">olap<sup>1</sup></a></li>
+		
 			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
 		
 			<li><a href="/tags/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
@@ -360,7 +364,7 @@ parquet压缩hive表1. 应用场景原表为txt格式，占用硬盘空间太大
 		
 			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
 		
-			<li><a href="/tags/源码/" title="源码">源码<sup>18</sup></a></li>
+			<li><a href="/tags/数仓/" title="数仓">数仓<sup>1</sup></a></li>
 		
 		</ul>
 </div>
@@ -374,7 +378,7 @@ parquet压缩hive表1. 应用场景原表为txt格式，占用硬盘空间太大
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/JavaScript/" style="font-size: 11px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 17px;">hbase</a> <a href="/tags/hive/" style="font-size: 16px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12px;">lombok</a> <a href="/tags/mac/" style="font-size: 11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/pulsar/" style="font-size: 10px;">pulsar</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/redis/" style="font-size: 18px;">redis</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/spring/" style="font-size: 11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13px;">sqoop</a> <a href="/tags/源码/" style="font-size: 19px;">源码</a>
+       <a href="/tags/JavaScript/" style="font-size: 11px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 17px;">hbase</a> <a href="/tags/hive/" style="font-size: 16px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12px;">lombok</a> <a href="/tags/mac/" style="font-size: 11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/olap/" style="font-size: 10px;">olap</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/pulsar/" style="font-size: 10px;">pulsar</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/redis/" style="font-size: 18px;">redis</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/spring/" style="font-size: 11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13px;">sqoop</a> <a href="/tags/数仓/" style="font-size: 10px;">数仓</a> <a href="/tags/源码/" style="font-size: 19px;">源码</a>
     </div>
   </div>
 
