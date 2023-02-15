@@ -1,0 +1,608 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
+  
+    <title>Vector和Stack源码分析 | Ice の Mimosa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="IceMimosa">
+    
+    <meta name="description" content="[TOC]
+Vector和Stack源码分析1. Vector与ArrayList作为底层都是采用动态数组作为实现基础的类，Vector和ArrayList在很多方面都是大同小异的。在阅读之前本文之前可以先阅读ArrayList的源码解析，然后Vector基本就一目了然了。说下他们的主要区别：
+1.">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="Ice の Mimosa" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon_mine.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/jquery-icemi-scroll2top.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='1cb536fd996cddc96154515a1ed1d72d';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+</html>
+  <body>
+    <header>
+      <div id="banner">
+		
+
+			<div id="erer" class="erer" style="">
+				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
+				<!-- <img id="i22" src="http://ice-img.dreamylost.cn/patamon-22.png" width=200 height=230></img> -->
+			</div>
+
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Ice の Mimosa">Ice の Mimosa</a></h1>
+				<a class="blog-motto">没有未来的未来不是我想要的未来</a>
+			</div>
+
+			<div id="sansan" class="sansan" style="">
+				<!-- <img src="/img/33.png" width=200 height=230></img> -->
+				<!-- <img src="http://ice-img.dreamylost.cn/patamon-33.png" width=200 height=230></img> -->
+			</div> 
+
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+					<li>
+					
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
+					
+					</form></li>
+				</ul>
+			</ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/icemimosa/Java/Vector和Stack源码分析/" title="Vector和Stack源码分析" itemprop="url">Vector和Stack源码分析</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2016-01-06T04:00:34.000Z" itemprop="datePublished">2016-01-06</time>
+    更新日期:<time datetime="2023-02-15T14:15:04.570Z" itemprop="dateModified">2023-02-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Vector和Stack源码分析"><span class="toc-text">Vector和Stack源码分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Vector与ArrayList"><span class="toc-text">1. Vector与ArrayList</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Vector在java1-6和1-7"><span class="toc-text">2. Vector在java1.6和1.7</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-含Element的方法"><span class="toc-text">3. 含Element的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-elements"><span class="toc-text">3.1 elements()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-firstElement-和lastElement"><span class="toc-text">3.2 firstElement()和lastElement()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-crud操作"><span class="toc-text">3.3 crud操作</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-Stack"><span class="toc-text">4. Stack</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-push"><span class="toc-text">4.1 push</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-pop"><span class="toc-text">4.2 pop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-peek"><span class="toc-text">4.3 peek</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-empty"><span class="toc-text">4.4 empty</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5-search"><span class="toc-text">4.5 search</span></a></li></ol></li></ol>
+		</div>
+		
+		<p>[TOC]</p>
+<h1 id="Vector和Stack源码分析"><a href="#Vector和Stack源码分析" class="headerlink" title="Vector和Stack源码分析"></a>Vector和Stack源码分析</h1><h1 id="1-Vector与ArrayList"><a href="#1-Vector与ArrayList" class="headerlink" title="1. Vector与ArrayList"></a>1. Vector与ArrayList</h1><p>作为底层都是采用动态数组作为实现基础的类，Vector和ArrayList在很多方面都是大同小异的。在阅读之前本文之前可以先阅读ArrayList的源码解析，然后Vector基本就一目了然了。<br>说下他们的主要区别：</p>
+<pre><code>1. Vector里面的方法都是同步的，线程安全的。
+2. Vector的扩容大小与ArrayList不同，Vector1.6和1.7中都是上一次大小的2倍。
+3. Vector多了许多包含Element的方法 (Vector的子类栈Stack实际采用的是这些方法)
+</code></pre><p>其次Vector比ArrayList还多了一个成员变量 <code>capacityIncrement</code>, 可以通过构造方法指定</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 自定义的扩容增长大小, 可以通过构造方法指定大小</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">int</span> capacityIncrement; </span><br><span class="line"><span class="comment">// 在扩容的时候会使用到</span></span><br><span class="line"><span class="comment">// 1.6</span></span><br><span class="line"><span class="keyword">int</span> newCapacity = (capacityIncrement &gt; <span class="number">0</span>) ?</span><br><span class="line">	             (oldCapacity + capacityIncrement) : (oldCapacity * <span class="number">2</span>);</span><br><span class="line"><span class="comment">// 1.7</span></span><br><span class="line"><span class="keyword">int</span> newCapacity = oldCapacity + </span><br><span class="line">                 ((capacityIncrement &gt; <span class="number">0</span>) ? capacityIncrement : oldCapacity);</span><br></pre></td></tr></table></figure>
+<p>然后如果不指定数据数组的大小，那么就和ArrayList一样，Vector的默认大小也是10。其余与ArrayList名称相同的方法，实现上没什么大的区别。</p>
+<h1 id="2-Vector在java1-6和1-7"><a href="#2-Vector在java1-6和1-7" class="headerlink" title="2. Vector在java1.6和1.7"></a>2. Vector在java1.6和1.7</h1><p>Vector在1.6和1.7基本没多少大的区别，首先在初始化上也基本相同。没有像ArrayList从1.6升到1.7，在调用构造方法的时候还有一点小的改动。<br>其次和ArrayList一样，Vector1.7将iterator()和listIterator()方法以及对应的内部类都有了自己的实现，不在采用父类中的方法。</p>
+<h1 id="3-含Element的方法"><a href="#3-含Element的方法" class="headerlink" title="3. 含Element的方法"></a>3. 含Element的方法</h1><h2 id="3-1-elements"><a href="#3-1-elements" class="headerlink" title="3.1 elements()"></a>3.1 elements()</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Enumeration&lt;E&gt; <span class="title">elements</span><span class="params">()</span> </span>&#123;...&#125;</span><br></pre></td></tr></table></figure>
+<p>这个方法返回 Enumeration 接口的实现，与 iterator() 返回的 Iterator 接口实现基本一样，Enumeration 接口貌似由于方法名称太长、功能与Iterator 接口重复原因，后来建议使用Iterator 接口。。。</p>
+<h2 id="3-2-firstElement-和lastElement"><a href="#3-2-firstElement-和lastElement" class="headerlink" title="3.2 firstElement()和lastElement()"></a>3.2 firstElement()和lastElement()</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">firstElement</span><span class="params">()</span> </span>&#123;...&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">lastElement</span><span class="params">()</span> </span>&#123;...&#125;</span><br></pre></td></tr></table></figure>
+<p>顾名思义，返回第一个元素和最后一个元素，如果元素不存，则抛出 NoSuchElementException 异常</p>
+<h2 id="3-3-crud操作"><a href="#3-3-crud操作" class="headerlink" title="3.3 crud操作"></a>3.3 crud操作</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取指定索引的元素</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> E <span class="title">elementAt</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;&#125;</span><br><span class="line"><span class="comment">// 设置某个索引的元素</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">setElementAt</span><span class="params">(E obj, <span class="keyword">int</span> index)</span> </span>&#123;&#125;</span><br><span class="line"><span class="comment">// 新增一个元素</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">addElement</span><span class="params">(E obj)</span> </span>&#123;&#125;</span><br><span class="line"><span class="comment">// 删除元素</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">removeElementAt</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">boolean</span> <span class="title">removeElement</span><span class="params">(Object obj)</span> </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">removeAllElements</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"><span class="comment">// 在某个索引前插入某个元素</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">insertElementAt</span><span class="params">(E obj, <span class="keyword">int</span> index)</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>闻其名而知其意，内部实现与传统的add,get,remove的实现基本一样。</p>
+<h1 id="4-Stack"><a href="#4-Stack" class="headerlink" title="4. Stack"></a>4. Stack</h1><p><code>栈</code>是数据结构中一种很重要的数据结构类型。java提供了其实现<code>Stack类</code>。<br>首先，Stack在java1.6和1.7源码一模一样。。<br>Stack是Vector的子类，大部分的方法都继承于Vector，且自己类中的方法也是同步的。<br>Stack中主要方法如下：</p>
+<h2 id="4-1-push"><a href="#4-1-push" class="headerlink" title="4.1 push"></a>4.1 push</h2><p>往栈中插入一个元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public E push(E item) &#123;</span><br><span class="line">    addElement(item);</span><br><span class="line">    return item;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-2-pop"><a href="#4-2-pop" class="headerlink" title="4.2 pop"></a>4.2 pop</h2><p>从栈中弹出一个元素（删除返回），实际从Vector中数组末尾删除并返回</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public synchronized E pop() &#123;</span><br><span class="line">	E obj;</span><br><span class="line">	int len = size();</span><br><span class="line">	obj = peek();</span><br><span class="line">	removeElementAt(len - 1);</span><br><span class="line">	return obj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-3-peek"><a href="#4-3-peek" class="headerlink" title="4.3 peek"></a>4.3 peek</h2><p>获取栈顶的元素，但不删除。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public synchronized E peek() &#123;</span><br><span class="line">	int len = size();</span><br><span class="line">	if (len == 0)</span><br><span class="line">	    throw new EmptyStackException();</span><br><span class="line">	return elementAt(len - 1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-4-empty"><a href="#4-4-empty" class="headerlink" title="4.4 empty"></a>4.4 empty</h2><p>判断栈是否为空，感觉还不如用isEmpty()</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public boolean empty() &#123;</span><br><span class="line">    return size() == 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-5-search"><a href="#4-5-search" class="headerlink" title="4.5 search"></a>4.5 search</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public synchronized int search(Object o) &#123;</span><br><span class="line">	int i = lastIndexOf(o);</span><br><span class="line">	if (i &gt;= 0) &#123;</span><br><span class="line">	    return size() - i;</span><br><span class="line">	&#125;</span><br><span class="line">	return -1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>综上：stack中的方法也是特别的简单，无非也就是取了个有意义的方法名称而已，具体实现还是沿用了Vector中的方法。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/源码/">源码</a><a href="/tags/java/">java</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/java/">java</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.patamon.me/icemimosa/Java/Vector和Stack源码分析/" data-title="Vector和Stack源码分析 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/icemimosa/Java/LinkedHashMap源码分析/" title="LinkedHashMap源码分析">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  LinkedHashMap源码分析</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/icemimosa/Java/LinkedList源码分析/" title="LinkedList源码分析">
+ <strong>NEXT:</strong><br> 
+ <span>LinkedList源码分析
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Vector和Stack源码分析"><span class="toc-text">Vector和Stack源码分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Vector与ArrayList"><span class="toc-text">1. Vector与ArrayList</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Vector在java1-6和1-7"><span class="toc-text">2. Vector在java1.6和1.7</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-含Element的方法"><span class="toc-text">3. 含Element的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-elements"><span class="toc-text">3.1 elements()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-firstElement-和lastElement"><span class="toc-text">3.2 firstElement()和lastElement()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-crud操作"><span class="toc-text">3.3 crud操作</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-Stack"><span class="toc-text">4. Stack</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-push"><span class="toc-text">4.1 push</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-pop"><span class="toc-text">4.2 pop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-peek"><span class="toc-text">4.3 peek</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-empty"><span class="toc-text">4.4 empty</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5-search"><span class="toc-text">4.5 search</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list">
+		
+		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/IceMimosa" target="_blank" title="github"></a>
+		
+		
+		
+		
+		<a href="mailto:514793425@qq.com" target="_blank" title="email"></a>
+		
+	</div>
+</div>
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/categories/java/" title="java">java<sup>26</sup></a></li>
+		
+			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/categories/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/categories/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/categories/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
+		
+			<li><a href="/categories/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
+		
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/tags/impala/" title="impala">impala<sup>1</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>27</sup></a></li>
+		
+			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/tags/lombok/" title="lombok">lombok<sup>3</sup></a></li>
+		
+			<li><a href="/tags/mac/" title="mac">mac<sup>2</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>1</sup></a></li>
+		
+			<li><a href="/tags/olap/" title="olap">olap<sup>4</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/tags/react/" title="react">react<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/tags/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/tags/spring/" title="spring">spring<sup>2</sup></a></li>
+		
+			<li><a href="/tags/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
+		
+			<li><a href="/tags/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/JavaScript/" style="font-size: 11px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 17px;">hbase</a> <a href="/tags/hive/" style="font-size: 16px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12px;">lombok</a> <a href="/tags/mac/" style="font-size: 11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/olap/" style="font-size: 13px;">olap</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/pulsar/" style="font-size: 10px;">pulsar</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/redis/" style="font-size: 18px;">redis</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/spring/" style="font-size: 11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13px;">sqoop</a> <a href="/tags/数仓/" style="font-size: 13px;">数仓</a> <a href="/tags/源码/" style="font-size: 19px;">源码</a>
+    </div>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    
+            <p class="copyright"> © 2023 
+		
+		<a href="http://www.patamon.me" target="_blank" title="IceMimosa">IceMimosa</a>
+		
+            <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
+            ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
+            </p></div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="/js/jquery-icemi-scroll2top.js"></script>
+<script src="/js/other.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  
+  // 回到顶部
+  $(document.body).scroll2Top({
+    background:"#66ccff",
+    shape:"circle",
+    bottom:40,
+    right:250
+  });
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    // m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,332-$(this).scrollTop()));
+  });
+});
+</script>
+
+<!-- GrowingIO Analytics code version 2.1 -->
+<!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
+<script type="text/javascript">
+!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
+gio('init','b988cbf13dfaa5ac', {});
+//custom page code begin here
+
+//custom page code end here
+gio('send');
+</script>
+<!-- End GrowingIO Analytics code version: 2.1 -->
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
+
+
+
+
+
+
+<script>
+    
+        var _bdImg = '4';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
+</html>
+

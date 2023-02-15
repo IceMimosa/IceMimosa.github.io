@@ -1,0 +1,641 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
+  
+    <title>HBase_Quickstart | Ice の Mimosa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="IceMimosa">
+    
+    <meta name="description" content="[TOC]
+HBase初识👉 官方最新文档👉 笔记基于版本 1.2.6
+1. 简介HBase是一个基于Hadoop，分布式、可伸缩、存储大数据量(billions of rows X millions of columns)的数据库。它能提供大数据的随机、实时的读写。（灵感来自于谷歌的BigTa">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="Ice の Mimosa" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon_mine.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/jquery-icemi-scroll2top.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='1cb536fd996cddc96154515a1ed1d72d';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+</html>
+  <body>
+    <header>
+      <div id="banner">
+		
+
+			<div id="erer" class="erer" style="">
+				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
+				<!-- <img id="i22" src="http://ice-img.dreamylost.cn/patamon-22.png" width=200 height=230></img> -->
+			</div>
+
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Ice の Mimosa">Ice の Mimosa</a></h1>
+				<a class="blog-motto">没有未来的未来不是我想要的未来</a>
+			</div>
+
+			<div id="sansan" class="sansan" style="">
+				<!-- <img src="/img/33.png" width=200 height=230></img> -->
+				<!-- <img src="http://ice-img.dreamylost.cn/patamon-33.png" width=200 height=230></img> -->
+			</div> 
+
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+					<li>
+					
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
+					
+					</form></li>
+				</ul>
+			</ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/icemimosa/HBase/Hbase_Quickstart/" title="HBase_Quickstart" itemprop="url">HBase_Quickstart</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2018-06-01T05:22:16.000Z" itemprop="datePublished">2018-06-01</time>
+    更新日期:<time datetime="2023-02-15T14:15:04.565Z" itemprop="dateModified">2023-02-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#HBase初识"><span class="toc-text">HBase初识</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-安装使用"><span class="toc-text">2. 安装使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-启动-停止服务"><span class="toc-text">2.1 启动/停止服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-基本示例"><span class="toc-text">2.2 基本示例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-数据模型"><span class="toc-text">3. 数据模型</span></a></li></ol>
+		</div>
+		
+		<p>[TOC]</p>
+<h1 id="HBase初识"><a href="#HBase初识" class="headerlink" title="HBase初识"></a>HBase初识</h1><p>👉 <a href="https://hbase.apache.org/book.html" target="_blank" rel="noopener">官方最新文档</a><br>👉 笔记基于版本 <a href="https://hbase.apache.org/1.2/book.html" target="_blank" rel="noopener">1.2.6</a></p>
+<h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p><a href="http://hbase.apache.org/" target="_blank" rel="noopener">HBase</a>是一个基于Hadoop，分布式、可伸缩、存储大数据量(billions of rows X millions of columns)的数据库。它能提供大数据的随机、实时的读写。（灵感来自于谷歌的BigTable）</p>
+<h1 id="2-安装使用"><a href="#2-安装使用" class="headerlink" title="2. 安装使用"></a>2. 安装使用</h1><p>HBase提供Standalone模式、伪分布式模式、完全分布式模式的安装，具体安装参考文档的<a href="https://hbase.apache.org/1.2/book.html#quickstart" target="_blank" rel="noopener">Quick Start</a>。</p>
+<h2 id="2-1-启动-停止服务"><a href="#2-1-启动-停止服务" class="headerlink" title="2.1 启动/停止服务"></a>2.1 启动/停止服务</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动</span></span><br><span class="line">$ ./start-hbase.sh</span><br><span class="line">$ jps</span><br><span class="line"></span><br><span class="line"><span class="comment"># 停止服务</span></span><br><span class="line">$ ./stop-hbase.sh</span><br></pre></td></tr></table></figure>
+<h2 id="2-2-基本示例"><a href="#2-2-基本示例" class="headerlink" title="2.2 基本示例"></a>2.2 基本示例</h2><ul>
+<li>连接HBase</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hbase shell</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>使用 <code>help</code> 查看帮助</p>
+</li>
+<li><p>建表</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.8.7-p357 :002 &gt; create <span class="string">'test'</span>, <span class="string">'cf'</span></span><br><span class="line">0 row(s) <span class="keyword">in</span> 1.6060 seconds</span><br><span class="line"></span><br><span class="line"> =&gt; Hbase::Table - <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>查看表列表</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1.8.7-p357 :005 &gt; list <span class="string">'test'</span></span><br><span class="line">TABLE</span><br><span class="line"><span class="built_in">test</span></span><br><span class="line">1 row(s) <span class="keyword">in</span> 0.0020 seconds</span><br><span class="line"></span><br><span class="line"> =&gt; [<span class="string">"test"</span>]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>插入数据</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1.8.7-p357 :006 &gt; put <span class="string">'test'</span>, <span class="string">'row1'</span>, <span class="string">'cf:a'</span>, <span class="string">'value1'</span></span><br><span class="line">0 row(s) <span class="keyword">in</span> 0.3840 seconds</span><br><span class="line"></span><br><span class="line">1.8.7-p357 :007 &gt; put <span class="string">'test'</span>, <span class="string">'row2'</span>, <span class="string">'cf:b'</span>, <span class="string">'value2'</span></span><br><span class="line">0 row(s) <span class="keyword">in</span> 0.0120 seconds</span><br><span class="line"></span><br><span class="line">1.8.7-p357 :008 &gt; put <span class="string">'test'</span>, <span class="string">'row3'</span>, <span class="string">'cf:c'</span>, <span class="string">'value3'</span></span><br><span class="line">0 row(s) <span class="keyword">in</span> 0.0130 seconds</span><br></pre></td></tr></table></figure>
+<ul>
+<li>查看数据</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1.8.7-p357 :009 &gt; scan <span class="string">'test'</span></span><br><span class="line">ROW                                     COLUMN+CELL</span><br><span class="line"> row1                                   column=cf:a, timestamp=1529991722420, value=value1</span><br><span class="line"> row2                                   column=cf:b, timestamp=1529991725721, value=value2</span><br><span class="line"> row3                                   column=cf:c, timestamp=1529991729647, value=value3</span><br><span class="line">3 row(s) <span class="keyword">in</span> 0.0280 seconds</span><br></pre></td></tr></table></figure>
+<h1 id="3-数据模型"><a href="#3-数据模型" class="headerlink" title="3. 数据模型"></a>3. 数据模型</h1><p>在HBase中，数据是存在<code>Tables(表)</code>中，表由<code>Rows(行)</code>和<code>Columns(列)</code>组成。这个和传统的RDBMS类似。</p>
+<ul>
+<li>Table</li>
+</ul>
+<p><code>表</code>，包含若干<code>行</code></p>
+<ul>
+<li>Row</li>
+</ul>
+<p><code>行</code>，一个行包含一个<code>Row Key(行健)</code>和若干带有值的<code>列</code>。RowKey是按照字母顺序进行排列的，所以<code>设计行健是非常重要的</code>，这样存储的目的是将<code>相关的行</code>存储在一起。</p>
+<ul>
+<li>Column</li>
+</ul>
+<p><code>列</code>，一个列含有<code>Column Family(列族)</code>和<code>Column Qualifier(列名标识)</code>，用冒号<code>:</code>分隔。</p>
+<ul>
+<li>Column Family</li>
+</ul>
+<p><code>列族</code>，在物理存储上包含<code>若干列和值</code>。每个列族还有一堆属性，比如<code>是否需要缓存值</code>、<code>压缩数据的方式</code>等等。每一行数据拥有<code>一样的列族</code>，即使这个列族没有存储任何数据。</p>
+<p>物理上，所有列族的成员都被存储在了一起，数据的调节和存储都是列族级别的。</p>
+<ul>
+<li>Column Qualifier</li>
+</ul>
+<p><code>列名标识</code>, 存储在列族之中，用来定位一个列中的数据。<code>列族</code>在建表的时候就需要指定，<code>列标识</code>是可以动态添加的。</p>
+<ul>
+<li>Cell</li>
+</ul>
+<p><code>数据单元</code>, 一个Cell可以由<code>列，列族，列标识</code>进行定位，Cell中包含一个<code>值</code>和<code>时间戳</code>，时间戳用来标识数据的版本。</p>
+<ul>
+<li>Timestamp</li>
+</ul>
+<p><code>时间戳</code>，时间戳会在写入数据的自动生成，标识着一个数据值的版本。当然，你也可以在写数据的时候自定义Timestamp的值。物理存储上，多个版本的值是按照时间戳是降序存放的，所以在取值的时候，取的是第一个查询到的。</p>
+<p>具体物理上的存储，后续在做讨论。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/hbase/">hbase</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/hbase/">hbase</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.patamon.me/icemimosa/HBase/Hbase_Quickstart/" data-title="HBase_Quickstart | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/icemimosa/HBase/Hbase源码01_创建连接/" title="HBase源码01_创建连接">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  HBase源码01_创建连接</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/icemimosa/JavaScript/JavaScript模块化/" title="JavaScript模块化">
+ <strong>NEXT:</strong><br> 
+ <span>JavaScript模块化
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#HBase初识"><span class="toc-text">HBase初识</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-安装使用"><span class="toc-text">2. 安装使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-启动-停止服务"><span class="toc-text">2.1 启动/停止服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-基本示例"><span class="toc-text">2.2 基本示例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-数据模型"><span class="toc-text">3. 数据模型</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list">
+		
+		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/IceMimosa" target="_blank" title="github"></a>
+		
+		
+		
+		
+		<a href="mailto:514793425@qq.com" target="_blank" title="email"></a>
+		
+	</div>
+</div>
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/categories/java/" title="java">java<sup>26</sup></a></li>
+		
+			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/categories/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/categories/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/categories/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
+		
+			<li><a href="/categories/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
+		
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/tags/impala/" title="impala">impala<sup>1</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>27</sup></a></li>
+		
+			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/tags/lombok/" title="lombok">lombok<sup>3</sup></a></li>
+		
+			<li><a href="/tags/mac/" title="mac">mac<sup>2</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>1</sup></a></li>
+		
+			<li><a href="/tags/olap/" title="olap">olap<sup>4</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/tags/react/" title="react">react<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/tags/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/tags/spring/" title="spring">spring<sup>2</sup></a></li>
+		
+			<li><a href="/tags/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
+		
+			<li><a href="/tags/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/JavaScript/" style="font-size: 11px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 17px;">hbase</a> <a href="/tags/hive/" style="font-size: 16px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12px;">lombok</a> <a href="/tags/mac/" style="font-size: 11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/olap/" style="font-size: 13px;">olap</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/pulsar/" style="font-size: 10px;">pulsar</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/redis/" style="font-size: 18px;">redis</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/spring/" style="font-size: 11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13px;">sqoop</a> <a href="/tags/数仓/" style="font-size: 13px;">数仓</a> <a href="/tags/源码/" style="font-size: 19px;">源码</a>
+    </div>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    
+            <p class="copyright"> © 2023 
+		
+		<a href="http://www.patamon.me" target="_blank" title="IceMimosa">IceMimosa</a>
+		
+            <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
+            ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
+            </p></div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="/js/jquery-icemi-scroll2top.js"></script>
+<script src="/js/other.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  
+  // 回到顶部
+  $(document.body).scroll2Top({
+    background:"#66ccff",
+    shape:"circle",
+    bottom:40,
+    right:250
+  });
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    // m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,332-$(this).scrollTop()));
+  });
+});
+</script>
+
+<!-- GrowingIO Analytics code version 2.1 -->
+<!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
+<script type="text/javascript">
+!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
+gio('init','b988cbf13dfaa5ac', {});
+//custom page code begin here
+
+//custom page code end here
+gio('send');
+</script>
+<!-- End GrowingIO Analytics code version: 2.1 -->
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
+
+
+
+
+
+
+<script>
+    
+        var _bdImg = '4';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
+</html>
+

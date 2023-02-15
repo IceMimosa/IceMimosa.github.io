@@ -1,0 +1,711 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
+  
+    <title>BookKeeper基本使用 | Ice の Mimosa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="IceMimosa">
+    
+    <meta name="description" content="[TOC]
+BookKeeper基本使用在看pulsar的时候，发现它底层的存储使用的是Apache BookKeeper，所以对他的使用做下基本介绍。在看Bookkeeper的时候，发现有几个挺不错的文章，链接如下：
+
+Hadoop NameNode 高可用 (High Availability)">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="Ice の Mimosa" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon_mine.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/jquery-icemi-scroll2top.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='1cb536fd996cddc96154515a1ed1d72d';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+</html>
+  <body>
+    <header>
+      <div id="banner">
+		
+
+			<div id="erer" class="erer" style="">
+				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
+				<!-- <img id="i22" src="http://ice-img.dreamylost.cn/patamon-22.png" width=200 height=230></img> -->
+			</div>
+
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Ice の Mimosa">Ice の Mimosa</a></h1>
+				<a class="blog-motto">没有未来的未来不是我想要的未来</a>
+			</div>
+
+			<div id="sansan" class="sansan" style="">
+				<!-- <img src="/img/33.png" width=200 height=230></img> -->
+				<!-- <img src="http://ice-img.dreamylost.cn/patamon-33.png" width=200 height=230></img> -->
+			</div> 
+
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+					<li>
+					
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
+					
+					</form></li>
+				</ul>
+			</ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/icemimosa/pulsar/Bookkeeper基本使用/" title="BookKeeper基本使用" itemprop="url">BookKeeper基本使用</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2019-04-01T06:30:16.000Z" itemprop="datePublished">2019-04-01</time>
+    更新日期:<time datetime="2023-02-15T14:15:04.576Z" itemprop="dateModified">2023-02-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#BookKeeper基本使用"><span class="toc-text">BookKeeper基本使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-安装"><span class="toc-text">1. 安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-基本的代码操作"><span class="toc-text">2. 基本的代码操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-使用-ledger-API"><span class="toc-text">2.1 使用 ledger API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-使用-Ledger-Advanced-API"><span class="toc-text">2.2 使用 Ledger Advanced API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-使用-DistributedLog"><span class="toc-text">2.3 使用 DistributedLog</span></a></li></ol></li></ol>
+		</div>
+		
+		<p>[TOC]</p>
+<h1 id="BookKeeper基本使用"><a href="#BookKeeper基本使用" class="headerlink" title="BookKeeper基本使用"></a>BookKeeper基本使用</h1><p>在看pulsar的时候，发现它底层的存储使用的是<a href="https://bookkeeper.apache.org/" target="_blank" rel="noopener">Apache BookKeeper</a>，所以对他的使用做下基本介绍。在看Bookkeeper的时候，发现有几个挺不错的文章，链接如下：</p>
+<ul>
+<li><a href="https://www.ibm.com/developerworks/cn/opensource/os-cn-hadoop-name-node/index.html" target="_blank" rel="noopener">Hadoop NameNode 高可用 (High Availability) 实现解析</a></li>
+<li><a href="https://blog.csdn.net/pelick/article/details/18559439" target="_blank" rel="noopener">BookKeeper设计介绍及其在Hadoop2.0 Namenode HA方案中的使用分析</a></li>
+<li><a href="https://blog.csdn.net/liuhong1123/article/details/8945456" target="_blank" rel="noopener">HDFS之Bookkeeper工作原理分析</a></li>
+<li><a href="http://matt33.com/2018/10/19/bk-cluster-install-and-use/" target="_blank" rel="noopener">BookKeeper 集群搭建及使用</a></li>
+</ul>
+<p>下面做下基本API的使用，想要深入可以参考源码或者文章。</p>
+<h1 id="1-安装"><a href="#1-安装" class="headerlink" title="1. 安装"></a>1. 安装</h1><blockquote>
+<p>注意: BookKeeper依赖zookeeper集群，请先提前准备</p>
+</blockquote>
+<p>👉 <a href="https://bookkeeper.apache.org/releases/" target="_blank" rel="noopener">点击连接下载BookKeeper最新版本</a></p>
+<p>解压文件到相应目录，目录的基本结构如下，<a href="https://bookkeeper.apache.org/docs/latest/getting-started/installation/" target="_blank" rel="noopener">你也可以clone代码自己编译打包</a>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">bookkeeper-server-4.9.1</span><br><span class="line">	-- LICENSE</span><br><span class="line">	-- NOTICE</span><br><span class="line">	-- README.md</span><br><span class="line">	-- bin        // 启动脚本相关</span><br><span class="line">	-- conf       // 配置文件</span><br><span class="line">	-- deps</span><br><span class="line">	-- lib</span><br><span class="line">	-- logs</span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改配置文件 <code>conf/bk_server.conf</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>配置</th>
+<th>说明</th>
+<th>默认值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bookiePort</td>
+<td>bookie实例监听的TCP端口</td>
+<td>3181</td>
+<td></td>
+</tr>
+<tr>
+<td>advertisedAddress</td>
+<td>绑定的主机名</td>
+<td></td>
+<td>可以改成 localhost</td>
+</tr>
+<tr>
+<td>zkServers</td>
+<td>逗号分隔的zk集群地址</td>
+<td>localhost:2181</td>
+<td></td>
+</tr>
+<tr>
+<td>journalDirectories</td>
+<td>bookie存放write-ahead log (WAL)的目录，逗号分隔</td>
+<td>/tmp/bk-txn</td>
+<td>可以修改一下, 如/usr/local/var/bookkeeper/bk-txn</td>
+</tr>
+<tr>
+<td>ledgerDirectories</td>
+<td>bookie存放数据ledger的目录，逗号分隔</td>
+<td>/tmp/bk-data</td>
+<td>可以修改一下, 如/usr/local/var/bookkeeper/bk-data</td>
+</tr>
+<tr>
+<td>httpServerEnabled</td>
+<td>是否打开http服务</td>
+<td>false</td>
+<td>可以改为true，<a href="https://bookkeeper.apache.org/docs/latest/admin/http/" target="_blank" rel="noopener">api地址</a></td>
+</tr>
+<tr>
+<td>httpServerPort</td>
+<td>http服务端口</td>
+<td>8080</td>
+<td>可以改为 3182</td>
+</tr>
+<tr>
+<td>dlog.bkcEnsembleSize</td>
+<td>默认bookie的最小节点数量</td>
+<td>3</td>
+<td>本地可换成1</td>
+</tr>
+<tr>
+<td>dlog.bkcWriteQuorumSize</td>
+<td>默认日志的冗余数量</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>dlog.bkcAckQuorumSize</td>
+<td>日志写入成功多少份才会向client返回成功</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>初始化元数据（初始化一次即可）</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ bin/bookkeeper shell metaformat</span><br><span class="line"></span><br><span class="line"># 如果需要删除zk中的元数据：rmr /ledgers</span><br></pre></td></tr></table></figure>
+<ul>
+<li>启动bookie服务</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 后台进程启动</span><br><span class="line">$ bin/bookkeeper-daemon.sh start bookie</span><br><span class="line"></span><br><span class="line"># 或者前台进程启动：</span><br><span class="line"># $ bin/bookkeeper bookie</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注：你也可以使用local的模式启动，<a href="https://bookkeeper.apache.org/docs/latest/admin/bookies/#local-bookies" target="_blank" rel="noopener">参考文档</a></p>
+</blockquote>
+<h1 id="2-基本的代码操作"><a href="#2-基本的代码操作" class="headerlink" title="2. 基本的代码操作"></a>2. 基本的代码操作</h1><p>BookKeeper提供的多套API来操作：</p>
+<ul>
+<li><a href="https://bookkeeper.apache.org/docs/latest/api/ledger-api" target="_blank" rel="noopener">ledger API</a>: 直接操作ledgers的底层API</li>
+<li><a href="https://bookkeeper.apache.org/docs/latest/api/ledger-adv-api" target="_blank" rel="noopener">Ledger Advanced API</a>: 比Ledger API高级、灵活些</li>
+<li><a href="https://bookkeeper.apache.org/docs/latest/api/distributedlog-api/" target="_blank" rel="noopener">DistributedLog API</a>: 高层次的API，提供更好的抽象</li>
+</ul>
+<p>如果你想要使用起来像日志一样滚动、按需保留数据等操作的话，直接使用Ledger API可能需要你手动管理Ledgers列表，比较麻烦。所以在这种场景下建议使用DistributedLog API。</p>
+<h2 id="2-1-使用-ledger-API"><a href="#2-1-使用-ledger-API" class="headerlink" title="2.1 使用 ledger API"></a>2.1 使用 ledger API</h2><ul>
+<li>加入maven依赖</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- in your &lt;properties&gt; block --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bookkeeper.version</span>&gt;</span>4.9.1<span class="tag">&lt;/<span class="name">bookkeeper.version</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- in your &lt;dependencies&gt; block --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.bookkeeper<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>bookkeeper-server<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;bookkeeper.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>初始化客户端（语言选择kotlin）</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> bookKeeper = run &#123;</span><br><span class="line">    <span class="keyword">val</span> conf = ClientConfiguration()</span><br><span class="line">    conf.zkServers = <span class="string">"127.0.0.1:2181"</span></span><br><span class="line">    conf.addEntryTimeout = <span class="number">2000</span></span><br><span class="line">    BookKeeper.forConfig(conf).build()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>创建 Ledger</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 也可以使用 asyncCreateLedger 异步创建</span></span><br><span class="line"><span class="comment">// 我本地只有一个 bookie, 所以传入1和1。默认是3和2</span></span><br><span class="line"><span class="keyword">val</span> ledger = bookKeeper.createLedger(<span class="number">1</span>, <span class="number">1</span>, BookKeeper.DigestType.MAC, <span class="string">"my-password"</span>.toByteArray())</span><br><span class="line">println(ledger.id)</span><br><span class="line"><span class="comment">// 输出: 0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 写入数据 entry</span></span><br><span class="line">ledger.addEntry(<span class="string">"Hello Bookkeeper"</span>.toByteArray())</span><br><span class="line"></span><br><span class="line">ledger.close()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>读取数据</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 0 表示 ledgerID</span></span><br><span class="line"><span class="keyword">val</span> ledger = bookKeeper.openLedger(<span class="number">0L</span>, BookKeeper.DigestType.MAC, <span class="string">"my-password"</span>.toByteArray())</span><br><span class="line"><span class="comment">// 读取 entry</span></span><br><span class="line"><span class="keyword">val</span> entry = ledger.readLastEntry()</span><br><span class="line">println(entry.entry.toString(Charset.defaultCharset()))</span><br><span class="line"></span><br><span class="line">ledger.close()</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>其他操作见：<a href="https://bookkeeper.apache.org/docs/latest/api/ledger-api" target="_blank" rel="noopener">ledger API</a></p>
+</blockquote>
+<h2 id="2-2-使用-Ledger-Advanced-API"><a href="#2-2-使用-Ledger-Advanced-API" class="headerlink" title="2.2 使用 Ledger Advanced API"></a>2.2 使用 Ledger Advanced API</h2><p>从 <code>v4.5.0</code> 版本开始，增加 <a href="https://bookkeeper.apache.org/docs/latest/api/ledger-adv-api" target="_blank" rel="noopener">Ledger Advanced API</a>，使用方式基本和Ledger API差不多（在API尾部加了个<code>Adv</code>，如创建变成了<code>createLedgerAdv</code>），功能增加了<code>ledgerID</code>的自定义传入等。</p>
+<h2 id="2-3-使用-DistributedLog"><a href="#2-3-使用-DistributedLog" class="headerlink" title="2.3 使用 DistributedLog"></a>2.3 使用 DistributedLog</h2><p>参考：<a href="https://bookkeeper.apache.org/distributedlog/docs/latest/user_guide/api/core" target="_blank" rel="noopener">https://bookkeeper.apache.org/distributedlog/docs/latest/user_guide/api/core</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/pulsar/">pulsar</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/pulsar/">pulsar</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.patamon.me/icemimosa/pulsar/Bookkeeper基本使用/" data-title="BookKeeper基本使用 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/icemimosa/其他/笔记转移到Notion私有/" title="笔记转移到Notion私有">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  笔记转移到Notion私有</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/icemimosa/JavaScript/Redux源码解析/" title="Redux源码解析">
+ <strong>NEXT:</strong><br> 
+ <span>Redux源码解析
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#BookKeeper基本使用"><span class="toc-text">BookKeeper基本使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-安装"><span class="toc-text">1. 安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-基本的代码操作"><span class="toc-text">2. 基本的代码操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-使用-ledger-API"><span class="toc-text">2.1 使用 ledger API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-使用-Ledger-Advanced-API"><span class="toc-text">2.2 使用 Ledger Advanced API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-使用-DistributedLog"><span class="toc-text">2.3 使用 DistributedLog</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list">
+		
+		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/IceMimosa" target="_blank" title="github"></a>
+		
+		
+		
+		
+		<a href="mailto:514793425@qq.com" target="_blank" title="email"></a>
+		
+	</div>
+</div>
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/categories/java/" title="java">java<sup>26</sup></a></li>
+		
+			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/categories/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/categories/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/categories/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
+		
+			<li><a href="/categories/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
+		
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/tags/impala/" title="impala">impala<sup>1</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>27</sup></a></li>
+		
+			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/tags/lombok/" title="lombok">lombok<sup>3</sup></a></li>
+		
+			<li><a href="/tags/mac/" title="mac">mac<sup>2</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>1</sup></a></li>
+		
+			<li><a href="/tags/olap/" title="olap">olap<sup>4</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/tags/react/" title="react">react<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/tags/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/tags/spring/" title="spring">spring<sup>2</sup></a></li>
+		
+			<li><a href="/tags/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
+		
+			<li><a href="/tags/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/JavaScript/" style="font-size: 11px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 17px;">hbase</a> <a href="/tags/hive/" style="font-size: 16px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12px;">lombok</a> <a href="/tags/mac/" style="font-size: 11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/olap/" style="font-size: 13px;">olap</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/pulsar/" style="font-size: 10px;">pulsar</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/redis/" style="font-size: 18px;">redis</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/spring/" style="font-size: 11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13px;">sqoop</a> <a href="/tags/数仓/" style="font-size: 13px;">数仓</a> <a href="/tags/源码/" style="font-size: 19px;">源码</a>
+    </div>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    
+            <p class="copyright"> © 2023 
+		
+		<a href="http://www.patamon.me" target="_blank" title="IceMimosa">IceMimosa</a>
+		
+            <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
+            ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
+            </p></div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="/js/jquery-icemi-scroll2top.js"></script>
+<script src="/js/other.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  
+  // 回到顶部
+  $(document.body).scroll2Top({
+    background:"#66ccff",
+    shape:"circle",
+    bottom:40,
+    right:250
+  });
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    // m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,332-$(this).scrollTop()));
+  });
+});
+</script>
+
+<!-- GrowingIO Analytics code version 2.1 -->
+<!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
+<script type="text/javascript">
+!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
+gio('init','b988cbf13dfaa5ac', {});
+//custom page code begin here
+
+//custom page code end here
+gio('send');
+</script>
+<!-- End GrowingIO Analytics code version: 2.1 -->
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
+
+
+
+
+
+
+<script>
+    
+        var _bdImg = '4';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
+</html>
+

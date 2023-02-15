@@ -1,0 +1,774 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
+  
+    <title>JVM学习02-GC算法与种类 | Ice の Mimosa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="IceMimosa">
+    
+    <meta name="description" content="[TOC]
+JVM学习02-GC算法与种类1. GC 简介GC（Garbage Collection） 是垃圾收集的简写，GC机制是java中一个比较重要的概念。java的内存管理提供了内存的分配和释放，内存处理是程序编写人员很容易出错的地方，忘记或错误的内存回收很容易导致系统的不稳定，甚至瘫痪。j">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="Ice の Mimosa" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon_mine.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/jquery-icemi-scroll2top.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='1cb536fd996cddc96154515a1ed1d72d';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+</html>
+  <body>
+    <header>
+      <div id="banner">
+		
+
+			<div id="erer" class="erer" style="">
+				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
+				<!-- <img id="i22" src="http://ice-img.dreamylost.cn/patamon-22.png" width=200 height=230></img> -->
+			</div>
+
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Ice の Mimosa">Ice の Mimosa</a></h1>
+				<a class="blog-motto">没有未来的未来不是我想要的未来</a>
+			</div>
+
+			<div id="sansan" class="sansan" style="">
+				<!-- <img src="/img/33.png" width=200 height=230></img> -->
+				<!-- <img src="http://ice-img.dreamylost.cn/patamon-33.png" width=200 height=230></img> -->
+			</div> 
+
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+					<li>
+					
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
+					
+					</form></li>
+				</ul>
+			</ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/icemimosa/Java/JVM学习02-GC算法与种类/" title="JVM学习02-GC算法与种类" itemprop="url">JVM学习02-GC算法与种类</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2017-03-15T04:00:34.000Z" itemprop="datePublished">2017-03-15</time>
+    更新日期:<time datetime="2023-02-15T14:15:04.568Z" itemprop="dateModified">2023-02-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JVM学习02-GC算法与种类"><span class="toc-text">JVM学习02-GC算法与种类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-GC-简介"><span class="toc-text">1. GC 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-GC-算法"><span class="toc-text">2. GC 算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-引用计数法"><span class="toc-text">2.1 引用计数法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-标记-清除"><span class="toc-text">2.2 标记-清除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-标记-压缩"><span class="toc-text">2.3 标记-压缩</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-复制算法"><span class="toc-text">2.4 复制算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-增量算法"><span class="toc-text">2.5 增量算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-6-总结"><span class="toc-text">2.6 总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-分代思想"><span class="toc-text">3. 分代思想</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-对象的可触及性"><span class="toc-text">4. 对象的可触及性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-Stop-The-World-STW-现象"><span class="toc-text">5. Stop-The-World (STW) 现象</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-垃圾回收器的种类"><span class="toc-text">6. 垃圾回收器的种类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1-新生代串行收集器"><span class="toc-text">6.1 新生代串行收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-2-老年代串行收集器"><span class="toc-text">6.2 老年代串行收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3-并行收集器"><span class="toc-text">6.3 并行收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-4-新生代并行回收收集器"><span class="toc-text">6.4 新生代并行回收收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-5-老年代并行回收收集器"><span class="toc-text">6.5 老年代并行回收收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-6-CMS收集器"><span class="toc-text">6.6 CMS收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-7-G1收集器"><span class="toc-text">6.7 G1收集器</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-GC-相关的参数"><span class="toc-text">7. GC 相关的参数</span></a></li></ol>
+		</div>
+		
+		<p>[TOC]</p>
+<h1 id="JVM学习02-GC算法与种类"><a href="#JVM学习02-GC算法与种类" class="headerlink" title="JVM学习02-GC算法与种类"></a>JVM学习02-GC算法与种类</h1><h1 id="1-GC-简介"><a href="#1-GC-简介" class="headerlink" title="1. GC 简介"></a>1. GC 简介</h1><p><code>GC（Garbage Collection）</code> 是垃圾收集的简写，GC机制是java中一个比较重要的概念。java的内存管理提供了内存的分配和释放，内存处理是程序编写人员很容易出错的地方，忘记或错误的内存回收很容易导致系统的不稳定，甚至瘫痪。java的GC机制可以很好的检测对象是否超过作用域而可以达到回收的要求，从而实现自动回收垃圾对象的释放内存的目的。</p>
+<p>其实早在很久以前（1960）就已经有了GC的概念，只是java借用这个优秀的思想，在java内存模型中，GC的工作区域主要是在堆区域和方法区，大部分都是在堆区域中。
+   　　 </p>
+<h1 id="2-GC-算法"><a href="#2-GC-算法" class="headerlink" title="2. GC 算法"></a>2. GC 算法</h1><h2 id="2-1-引用计数法"><a href="#2-1-引用计数法" class="headerlink" title="2.1 引用计数法"></a>2.1 引用计数法</h2><p>首先呢，java并没有采用引用计数法作为GC算法，因为它有明显的缺陷。</p>
+<p>引用计数法实现比较简单：对于一个对象A来说，只要有任何一个对象或者引用指向了A，那么A的计数器就加1，当引用失效时，引用计数器就减1，最后只要对象A的引用计数器的值为0，那么A就不可能再被使用，就可被视为垃圾。</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022444.png" alt=""></p>
+<p>引用计数法存在明显的缺陷，第一由于不断引用和去除引用伴随着加减法，影响性能。第二最大是问题就是很难解决循环引用的问题。</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022458.png" alt=""></p>
+<p>这样就会存在很多的对象无法被回收，所以JVM压根没有使用引用计数法作为GC算法。</p>
+<h2 id="2-2-标记-清除"><a href="#2-2-标记-清除" class="headerlink" title="2.2 标记-清除"></a>2.2 标记-清除</h2><p>　　<code>标记清除（Mark-Sweep）</code>算法是现代垃圾回收算法的基础。顾名思义，标记清除算法将垃圾清除分为两个阶段：标记和清除</p>
+<ul>
+<li><code>标记：</code>通过根节点，标记所有从根节点开始的可达对象。因此，未被标记的对象就是未被引用即不可达的对象。</li>
+<li><code>清除：</code>清除所有未被标记的对象。</li>
+</ul>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022515.png" alt=""></p>
+<h2 id="2-3-标记-压缩"><a href="#2-3-标记-压缩" class="headerlink" title="2.3 标记-压缩"></a>2.3 标记-压缩</h2><p><code>标记压缩（Mark-Compact）</code>算法适用于存活对象比较多的场合，比如老年代。它在标记-清除算法基础上做了一些优化，标记压缩算法和标记清除算法一样，首先通过根节点标记可达的对象，然后还将所有可达的对象（存活的对象）压缩到内存一端，然后清理边界外所有空间。</p>
+<ul>
+<li><code>标记：</code>通过根节点标记可达的对象。</li>
+<li><code>压缩：</code>将存活的对象整理到内存一端，清理边界外所有空间。</li>
+</ul>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022529.png" alt=""></p>
+<h2 id="2-4-复制算法"><a href="#2-4-复制算法" class="headerlink" title="2.4 复制算法"></a>2.4 复制算法</h2><p>与标记清除算法相比，<code>复制（Copying）</code>算法相对是一个比较高效的算法，由于涉及到存活对象的赋值，所以复制算法不适合存活对象比较多的场合（如不适合老年代）。复制算法的思想大致如下：将原有的内存分为两块空间，每次只使用其中一块，在垃圾回收的时候，将正在使用内存中存活的对象复制到未使用的内存块中，之后清除正在使用内存中的所有对象，然后交换两个内存的角色完成垃圾回收。</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022543.png" alt=""></p>
+<h2 id="2-5-增量算法"><a href="#2-5-增量算法" class="headerlink" title="2.5 增量算法"></a>2.5 增量算法</h2><p>还有一种算法是<code>增量算法</code>（直接摘抄了）：增量算法的基本思想是，如果一次性将所有的垃圾进行处理，需要造成系统长时间的停顿，那么就可以让垃圾收集线程和应用程序线程交替执行。每次，垃圾收集线程只收集一小片区域的内存空间，接着切换到应用程序线程。依次反复，直到垃圾收集完成。使用这种方式，由于在垃圾回收过程中，间断性地还执行了应用程序代码，所以能减少系统的停顿时间。但是，因为线程切换和上下文转换的消耗，会使得垃圾回收的总体成本上升，造成系统吞吐量的下降。</p>
+<h2 id="2-6-总结"><a href="#2-6-总结" class="headerlink" title="2.6 总结"></a>2.6 总结</h2><ol>
+<li>首先是引用计数法，这个缺陷比较明显，JVM也没有采用，不做讨论。</li>
+<li>标记清除和标记压缩相比，前者产生大量不连续的内存碎片。后者虽然不产内存碎片，但是在前者的基础上还进行对象的压缩（整理），所以成本相对较高。且两者都会进行标记和清除，效率不是很高。</li>
+<li>复制算法虽然比较简单高效，且不会产生内存碎片，但是明显浪费了大量的内存空间</li>
+</ol>
+<h1 id="3-分代思想"><a href="#3-分代思想" class="headerlink" title="3. 分代思想"></a>3. 分代思想</h1><p>根据GC算法的总结可以知道，结合不同算法的优点才能规划出一套比较可行的方案，所谓没有最好只有更好。</p>
+<p>前面JVM内存模型中有说到将JAVA堆分为<code>新生代</code>和<code>老年代</code>，然后又将新生代细分为<code>eden space</code>，<code>survivor space(分为from和to或者s0和s1)</code>，然后根据对象的存活周期将短命对象归为新生代，长命对象归为老年代。</p>
+<p><strong>所以根据不同代的特点，在对象存活比较少的新生代采用<code>复制算法</code>，在老年代采用<code>标记清除</code>或<code>标记压缩</code>算法。</strong></p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022558.png" alt=""></p>
+<p>图中，在进行垃圾回收的时候，存活对象如何存放有很多种可能。</p>
+<ul>
+<li><ol>
+<li>左边绿色的箭头表示在垃圾回收的时候，第一种年龄比较大的对象会存放在老年代中；第二种情况就是一些比较大的对象无法放到 survivor 空间中，那么此时大对象也被存放到老年代中，所以有时候也称老年代是一个担保空间。</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>左边红色和黄色的箭头就是进行正常的复制算法，垃圾回收结束就是右图的样子。</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>有的时候查看GC日志的时候，新生代的垃圾回收一般称为minor gc。老年代由于区域比较大且存活对象很多，生命周期很长，所以gc时候会比较长，通常称为full gc。</li>
+</ol>
+</li>
+</ul>
+<h1 id="4-对象的可触及性"><a href="#4-对象的可触及性" class="headerlink" title="4. 对象的可触及性"></a>4. 对象的可触及性</h1><p>对象的可触及性顾名思义就是从根节点可以标记的对象。大家一般情况会认为对象要么是可触及的，要么是不可触及的，其实中间还存在一个可复活性。</p>
+<ul>
+<li><p>可触及性：从根节点可以触及的对象</p>
+</li>
+<li><p>可复活性：一旦所有引用被释放，对象进入可复活状态，因为在 finalize() 方法后对象可能变得可触及</p>
+</li>
+<li><p>不可触及性：<code>finalize() 方法</code>之后，对象可能进入不可触及状态。不可触及的对象不能复活，然后进入可回收的状态。 </p>
+</li>
+</ul>
+<p>这里需要注意的一点是 finalize() 方法只会被<strong>执行一次</strong>，所以某个对象不能无限从可复活性到达可触及性。而且 finalize() 方法的执行优先级很低，何时出发GC并不确定，finalize()方法的调用也变得不确定。</p>
+<p>更详细参照：<a href="http://blog.csdn.net/pi9nc/article/details/12374049" target="_blank" rel="noopener">《finalize 总结》</a> </p>
+<h1 id="5-Stop-The-World-STW-现象"><a href="#5-Stop-The-World-STW-现象" class="headerlink" title="5. Stop-The-World (STW) 现象"></a>5. Stop-The-World (STW) 现象</h1><p><code>STW现象</code>是java的一种全局暂停的现象，所有Java代码停止运行（Native代码可以执行，但不能与JVM交互）。产生这种现象的原因多半是由于 GC 引起的。GC 为什么产生 STW 现象？这个以开 Party 打个比方：我们在开party 的时候会产生很多的垃圾，那么此时如果有人来清理垃圾，我们他在清理的时候，我们又不断产生垃圾，那么房间永远打扫不干净，所以唯一的办法就是我们停止手中的事情，直到房间打扫干净后再进行活动。<br>　　<br>那么GC也是这个道理，当发生GC的时候，必然所有的工作线程会停止，那么此时就会产生java停顿的现象。<br>　　<br>当发生STW现象的时候，如果时间短还好，如果时间特别长甚至几十分钟，服务器就会长时间得不到响应，那么就会带来比较大的危害。解决方法可以使用主备机的切换吧，具体不是很清楚，也不展开了。</p>
+<h1 id="6-垃圾回收器的种类"><a href="#6-垃圾回收器的种类" class="headerlink" title="6. 垃圾回收器的种类"></a>6. 垃圾回收器的种类</h1><h2 id="6-1-新生代串行收集器"><a href="#6-1-新生代串行收集器" class="headerlink" title="6.1 新生代串行收集器"></a>6.1 新生代串行收集器</h2><p>串行收集器是一个古老而稳定，经过长时间考验的垃圾收集器。在诸如单 CPU 处理器或者较小的应用内存等硬件平台不是特别优越的场合，它的性能表现可以超过并行回收器和并发回收器。但是有的时候会停顿很长时间，且是线程独占的。</p>
+<p>新生代串行收集器采用了<strong>复制算法</strong>，当 JVM 在 Client 模式下运行时，它是默认的垃圾收集器。</p>
+<p>在 HotSpot 虚拟机中，使用 <strong>-XX：+UseSerialGC</strong> 参数可以指定使用<code>新生代串行收集器</code>和<code>老年代串行收集器</code>。此时老年代串行收集器采用的是<strong>标记-压缩算法</strong>。</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022611.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[GC 0.844: [DefNew: 17472K-&gt;2176K(19648K), 0.0188339 secs] 17472K-&gt;2375K(63360K), 0.0189186 secs] [Times: user=0.01 sys=0.00, real=0.02 secs]</span><br></pre></td></tr></table></figure>
+<h2 id="6-2-老年代串行收集器"><a href="#6-2-老年代串行收集器" class="headerlink" title="6.2 老年代串行收集器"></a>6.2 老年代串行收集器</h2><p>老年代串行收集器和新生代串行收集器一样，老年代串行收集器采用的是<strong>标记-压缩算法</strong>，可以使用 <strong>-XX：+UseSerialGC</strong> 参数可以指定使用新生代串行收集器和老年代串行收集器。<br>图解和新生代串行收集器一样。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[Full GC 8.259: [Tenured: 43711K-&gt;40302K(43712K), 0.2960477 secs] 63350K-&gt;40302K(63360K), [Perm : 17836K-&gt;17836K(32768K)], 0.2961554 secs] [Times: user=0.28 sys=0.02, real=0.30 secs]</span><br></pre></td></tr></table></figure>
+<h2 id="6-3-并行收集器"><a href="#6-3-并行收集器" class="headerlink" title="6.3 并行收集器"></a>6.3 并行收集器</h2><p>并行收集器工作在新生代，仅仅是将新生代串行收集器变成了多线程化了，它的回收策略、算法以及参数和串行回收器一样。<br>新生代依旧采用复制算法，老年代还是串行收集器（标记压缩算法）。GC依旧是线程独占的。<br>开启并行回收器可以使用参数 <strong>-XX:+UseParNewGC</strong></p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022628.png" alt=""></p>
+<p>多线程并不意味着GC一定会很快，且需要多核CPU的支持才会相对提高效率。<br>可以使用 <strong>-XX:ParallelGCThreads</strong> 限制线程数量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[GC 0.834: [ParNew: 13184K-&gt;1600K(14784K), 0.0092203 secs] 13184K-&gt;1921K(63936K), 0.0093401 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]</span><br></pre></td></tr></table></figure>
+<h2 id="6-4-新生代并行回收收集器"><a href="#6-4-新生代并行回收收集器" class="headerlink" title="6.4 新生代并行回收收集器"></a>6.4 新生代并行回收收集器</h2><p>与 ParNew 类似，新生代并行回收收集器也是使用<strong>复制算法</strong>的收集器。从表面上看，它和并行收集器一样都是多线程、独占式的收集器。但是，并行回收收集器有一个重要的特点：<strong>它非常关注系统的吞吐量</strong>。<br>使用 <strong>-XX:+UseParallelGC</strong> 设置 新生代使用Parallel收集器 + 老年代使用串行收集器<br>使用 <strong>-XX:+UseParallelOldGC</strong> 设置 新生代和老年代都使用Parallel收集器</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022640.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[Full GC [PSYoungGen: 2682K-&gt;0K(19136K)] [ParOldGen: 28035K-&gt;30437K(43712K)] 30717K-&gt;30437K(62848K) [PSPermGen: 10943K-&gt;10928K(32768K)], 0.2902791 secs] [Times: user=1.44 sys=0.03, real=0.30 secs]</span><br></pre></td></tr></table></figure>
+<h2 id="6-5-老年代并行回收收集器"><a href="#6-5-老年代并行回收收集器" class="headerlink" title="6.5 老年代并行回收收集器"></a>6.5 老年代并行回收收集器</h2><p>老年代的并行收集器和新生代并行收集器一样，所线程且关注系统吞吐量，采用<strong>标记压缩</strong>的算法。<br>使用 <strong>-XX:+UseParallelOldGC</strong> 设置 新生代和老年代都使用Parallel收集器<br><code>图解和日志清单</code>跟新生代并行收集器一样。</p>
+<p>这里新生代和老年代的并行收集器和使用以下参数启动：</p>
+<ul>
+<li><strong>-XX:MaxGCPauseMills</strong> ： 设置最大的停顿时间，单位是毫秒。GC会尽力保证回收的时间不超过吞吐量。</li>
+<li><strong>-XX:GCTimeRatio</strong> ： 设置吞吐量的大小n，GC时间比[ 1/(1+n) ]。默认值为99，即最大允许1%的时间用于垃圾回收。</li>
+</ul>
+<p>这两个参数本来就是矛盾的，如果将最大停顿时间设置越小，那么GC就会越频繁，从而降低整个系统的吞吐量。如果吞吐量设置越大，GC导致的停顿时间也会越长，所以有所矛盾。所以在实际中也可以采用自适应的GC调节策略，使用 -<strong>XX:+UseAdaptiveSizePolicy</strong> 可以打开自适应 GC 策略。在这种模式下，新生代的大小、eden 和 survivor 的比例、晋升老年代的对象年龄等参数会被自动调整，以达到在堆大小、吞吐量和停顿时间之间的平衡点。在手工调优比较困难的场合，可以直接使用这种自适应的方式，仅指定虚拟机的最大堆、目标的吞吐量 (GCTimeRatio) 和停顿时间 (MaxGCPauseMills)，让虚拟机自己完成调优工作。</p>
+<h2 id="6-6-CMS收集器"><a href="#6-6-CMS收集器" class="headerlink" title="6.6 CMS收集器"></a>6.6 CMS收集器</h2><p><code>CMS （Concurrent Mark Sweep）</code>是并发标记清除的收集器，这里的并发表示可以和用户线程一起工作，且采用<strong>标记清除算法</strong>。</p>
+<p>CMS 收集器针是老年代收集器，新生代采用 ParNew 并行收集器。可以使用 <code>-XX:+UseConcMarkSweepGC</code>启动 CMS 收集器。</p>
+<p>CMS 工作大致可分为如下几个过程：</p>
+<ol>
+<li>初始标记：GC 线程独占，对根可以直接关联到的对象进行标记，速度比较快。</li>
+<li>并发标记：GC 线程和用户线程一起执行，对所有的对象进行标记。</li>
+<li>重新标记：由于上一步并发过程，用户线程可能还会生产出垃圾，所以GC 线程独占，在正式清理前重新做一次标记。</li>
+<li>并发清除：GC 线程和用户线程一起执行，GC 回收垃圾对象。</li>
+</ol>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022657.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1.662: [GC [1 CMS-initial-mark: 28122K(49152K)] 29959K(63936K), 0.0046877 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] </span><br><span class="line">1.666: [CMS-concurrent-mark-start]</span><br><span class="line">1.699: [CMS-concurrent-mark: 0.033/0.033 secs] [Times: user=0.25 sys=0.00, real=0.03 secs] </span><br><span class="line">1.699: [CMS-concurrent-preclean-start]</span><br><span class="line">1.700: [CMS-concurrent-preclean: 0.000/0.000 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] </span><br><span class="line">1.700: [GC[YG occupancy: 1837 K (14784 K)]1.700: [Rescan (parallel) , 0.0009330 secs]1.701: [weak refs processing, 0.0000180 secs] [1 CMS-remark: 28122K(49152K)] 29959K(63936K), 0.0010248 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] </span><br><span class="line">1.702: [CMS-concurrent-sweep-start]</span><br><span class="line">1.739: [CMS-concurrent-sweep: 0.035/0.037 secs] [Times: user=0.11 sys=0.02, real=0.05 secs] </span><br><span class="line">1.739: [CMS-concurrent-reset-start]</span><br><span class="line">1.741: [CMS-concurrent-reset: 0.001/0.001 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]</span><br></pre></td></tr></table></figure>
+<p>CMS虽然是并发收集器，但是其实也会存在线程独占的情况导致全局停顿，只是降低了停顿的时间罢了。由于用户线程的运行过程中，GC的时候还需要分CPU去做垃圾回收，这样就会大大降低整体系统的反应速速。在清理阶段，由于和用户线程并发执行，还会产生新的垃圾，导致清理不彻底。甚至还可能会存在产生的垃圾使得CMS来不及清理，让可使用内存的容量迅速减小，直到内存预留不够，引起 concurrent mode failure 错误。</p>
+<p>解决方案：</p>
+<p><code>第一可以通过 -XX:CMSInitiatingOccupancyFraction 的值来设置触发CMS收集器的阀值。默认为68，即当老年代空间使用率达到68%的时候触发CMS回收。</code><br><code>第二当引起concurrent mode failure 错误的时候，JVM就会启动备用回收器 **老年代串行回收器** 作为GC回收器。</code></p>
+<p><strong>CMS收集器的一些参数：</strong></p>
+<ol>
+<li><code>-XX:+UseCMSCompactAtFullCollection</code> 参数将在进行一个Full GC之后进行一次内存压缩（整理），由于CMS采用的是标记清除算法。由于整理过程是线程独占的，所以可能引起的停顿时间较长。</li>
+<li><code>-XX:+CMSFullGCsBeforeCompaction</code> 参数设置多少次Full GC后进行一次内存整理。</li>
+<li><code>-XX:ParallelCMSThreads</code> 参数设置CMS线程的数量。</li>
+</ol>
+<h2 id="6-7-G1收集器"><a href="#6-7-G1收集器" class="headerlink" title="6.7 G1收集器"></a>6.7 G1收集器</h2><p><code>G1 (Garbage-First)</code>是一款面向服务器的垃圾收集器, 主要针对配备多颗处理器及大容量内存的机器. 以极高概率满足GC停顿时间要求的同时,还具备高吞吐量性能特征. 在Oracle JDK 7 update 4 及以上版本中得到完全支持, 专为以下应用程序设计:</p>
+<ol>
+<li>可以像CMS收集器一样, GC操作与应用的线程一起并发执行</li>
+<li>紧凑的空闲内存区间且没有很长的GC停顿时间.</li>
+<li>需要可预测的GC暂停耗时.</li>
+<li>不想牺牲太多吞吐量性能.</li>
+<li>启动后不需要请求更大的Java堆.</li>
+</ol>
+<p>G1的长期目标是取代CMS(Concurrent Mark-Sweep Collector, 并发标记-清除). 因为特性的不同使G1成为比CMS更好的解决方案. 一个区别是, G1是一款压缩型的收集器，G1通过有效的压缩完全避免了对细微空闲内存空间的分配, 不用依赖于regions，这不仅大大简化了收集器，而且还消除了潜在的内存碎片问题。除压缩以外，G1的垃圾收集停顿也比CMS容易估计，也允许用户自定义所希望的停顿参数(pause targets)。</p>
+<p>详细参考博文：<a href="http://blog.csdn.net/renfufei/article/details/41897113" target="_blank" rel="noopener">《G1垃圾收集器入门》</a> </p>
+<h1 id="7-GC-相关的参数"><a href="#7-GC-相关的参数" class="headerlink" title="7. GC 相关的参数"></a>7. GC 相关的参数</h1><p><strong>1. 与串行回收器相关的参数</strong></p>
+<ul>
+<li><p><code>-XX:+UseSerialGC ： 在新生代和老年代使用串行回收器。</code></p>
+</li>
+<li><p><code>-XX:+SuivivorRatio ： 设置 eden 区大小和 survivor 区大小的比例。8表示 两个Survivor:eden=2:8，即一个Survivor占年轻代的1/10。</code></p>
+</li>
+<li><p><code>-XX:NewRatio ： 新生代和老年代（不包含永久区）的比。4 表示 新生代:老年代=1:4，即年轻代占堆的1/5。</code></p>
+</li>
+<li><p><code>-XX:+PretenureSizeThreshold : 设置大对象直接进入老年代的阈值。当对象的大小超过这个值时，将直接在老年代分配。</code></p>
+</li>
+<li><p><code>-XX:MaxTenuringThreshold : 设置对象进入老年代的年龄的最大值。每一次 Minor GC 后，对象年龄就加 1。任何大于这个年龄的对象，一定会进入老年代。</code></p>
+</li>
+</ul>
+<p><strong>2. 与并行 GC 相关的参数</strong></p>
+<ul>
+<li><p><code>-XX:+UseParNewGC : 在新生代使用并行收集器。</code></p>
+</li>
+<li><p><code>-XX:+UseParallelOldGC : 老年代使用并行回收收集器。</code></p>
+</li>
+<li><p><code>-XX:ParallelGCThreads：设置用于垃圾回收的线程数。通常情况下可以和 CPU 数量相等。但在 CPU 数量比较多的情况下，设置相对较小的数值也是合理的。</code></p>
+</li>
+<li><p><code>-XX:MaxGCPauseMills：设置最大垃圾收集停顿时间。它的值是一个大于 0 的整数。收集器在工作时，会调整 Java 堆大小或者其他一些参数，尽可能地把停顿时间控制在 MaxGCPauseMills 以内。</code></p>
+</li>
+<li><p><code>-XX:GCTimeRatio : 设置吞吐量大小，它的值是一个 0-100 之间的整数。假设 GCTimeRatio 的值为 n，那么系统将花费不超过 1/(1+n) 的时间用于垃圾收集。</code></p>
+</li>
+<li><p><code>-XX:+UseAdaptiveSizePolicy : 打开自适应 GC 策略。在这种模式下，新生代的大小，eden 和 survivor 的比例、晋升老年代的对象年龄等参数会被自动调整，以达到在堆大小、吞吐量和停顿时间之间的平衡点。</code></p>
+</li>
+</ul>
+<p><strong>3. 与 CMS 回收器相关的参数</strong></p>
+<ul>
+<li><p><code>-XX:+UseConcMarkSweepGC : 新生代使用并行收集器，老年代使用 CMS + 串行收集器（备用收集器）。</code></p>
+</li>
+<li><p><code>-XX:+ParallelCMSThreads : 设定 CMS 的线程数量。</code></p>
+</li>
+<li><p><code>-XX:+CMSInitiatingOccupancyFraction : 设置 CMS 收集器在老年代空间被使用多少后触发，默认为 68%。</code></p>
+</li>
+<li><p><code>-XX:+UseFullGCsBeforeCompaction : 设定进行多少次 CMS 垃圾回收后，进行一次内存压缩。</code></p>
+</li>
+<li><p><code>-XX:+CMSClassUnloadingEnabled : 允许对类元数据进行回收。</code></p>
+</li>
+<li><p><code>-XX:+CMSParallelRemarkEndable : 启用并行重标记。</code></p>
+</li>
+<li><p><code>-XX:CMSInitatingPermOccupancyFraction : 当永久区占用率达到这一百分比后，启动 CMS 回收 (前提是-XX:+CMSClassUnloadingEnabled 激活了)。</code></p>
+</li>
+<li><p><code>-XX:UseCMSInitatingOccupancyOnly : 表示只在到达阈值的时候，才进行 CMS 回收。</code></p>
+</li>
+<li><p><code>-XX:+CMSIncrementalMode : 使用增量模式，比较适合单 CPU。</code></p>
+</li>
+</ul>
+<p><strong>4. 与 G1 回收器相关的参数</strong></p>
+<ul>
+<li><p><code>-XX:+UseG1GC：使用 G1 回收器。</code></p>
+</li>
+<li><p><code>-XX:+UnlockExperimentalVMOptions : 允许使用实验性参数。</code></p>
+</li>
+<li><p><code>-XX:+MaxGCPauseMills : 设置最大垃圾收集停顿时间。</code></p>
+</li>
+<li><p><code>-XX:+GCPauseIntervalMills : 设置停顿间隔时间。</code></p>
+</li>
+</ul>
+<p><strong>5. 其他参数</strong></p>
+<ul>
+<li><p><code>-XX:+PrintGCDetails ： 打开显示GC日志的开关。</code></p>
+</li>
+<li><p><code>-XX:+DisableExplicitGC : 禁用显示 GC。</code></p>
+</li>
+<li><p><code>-Xloggc:Xxx.log : 设置GC的log位置和名称。</code></p>
+</li>
+<li><p><code>-XX:+HeapDumpOnOutOfMemoryError : 当堆内存移除出错的时候显示最后的GC日志。</code></p>
+</li>
+<li><p><code>-XX:HeapDumpPath=/var/log/gc/oom-${your-app-name}.hprof: dump的路径</code></p>
+</li>
+<li><p><code>-Xmx 和 –Xms : 设置堆内存的最大允许值和最小值，如-Xmx32M -Xms32M</code></p>
+</li>
+<li><p><code>-XX:PermSize 和 -XX:MaxPermSize ： 设置永久代的最小初始值和最大允许值 如-XX:PermSize=64MB 和 -XX:MaxPermSize=256M。</code></p>
+</li>
+<li><p><code>-XX:MaxPermSize缺省值和client/server选项相关，-server选项下默认MaxPermSize为64m，-client选项下默认MaxPermSize为32m。</code></p>
+</li>
+<li><p><code>-Xmn ： 设置新生代大小 ， 如 -Xmn16M</code></p>
+</li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/java/">java</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.patamon.me/icemimosa/Java/JVM学习02-GC算法与种类/" data-title="JVM学习02-GC算法与种类 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/icemimosa/Java/JVM学习03-类加载机制/" title="JVM学习03-类加载机制">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  JVM学习03-类加载机制</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/icemimosa/Java/JVM学习01-JVM内存模型/" title="JVM学习01-JVM内存模型">
+ <strong>NEXT:</strong><br> 
+ <span>JVM学习01-JVM内存模型
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JVM学习02-GC算法与种类"><span class="toc-text">JVM学习02-GC算法与种类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-GC-简介"><span class="toc-text">1. GC 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-GC-算法"><span class="toc-text">2. GC 算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-引用计数法"><span class="toc-text">2.1 引用计数法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-标记-清除"><span class="toc-text">2.2 标记-清除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-标记-压缩"><span class="toc-text">2.3 标记-压缩</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-复制算法"><span class="toc-text">2.4 复制算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-增量算法"><span class="toc-text">2.5 增量算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-6-总结"><span class="toc-text">2.6 总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-分代思想"><span class="toc-text">3. 分代思想</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-对象的可触及性"><span class="toc-text">4. 对象的可触及性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-Stop-The-World-STW-现象"><span class="toc-text">5. Stop-The-World (STW) 现象</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-垃圾回收器的种类"><span class="toc-text">6. 垃圾回收器的种类</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1-新生代串行收集器"><span class="toc-text">6.1 新生代串行收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-2-老年代串行收集器"><span class="toc-text">6.2 老年代串行收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3-并行收集器"><span class="toc-text">6.3 并行收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-4-新生代并行回收收集器"><span class="toc-text">6.4 新生代并行回收收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-5-老年代并行回收收集器"><span class="toc-text">6.5 老年代并行回收收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-6-CMS收集器"><span class="toc-text">6.6 CMS收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-7-G1收集器"><span class="toc-text">6.7 G1收集器</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-GC-相关的参数"><span class="toc-text">7. GC 相关的参数</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list">
+		
+		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/IceMimosa" target="_blank" title="github"></a>
+		
+		
+		
+		
+		<a href="mailto:514793425@qq.com" target="_blank" title="email"></a>
+		
+	</div>
+</div>
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/categories/java/" title="java">java<sup>26</sup></a></li>
+		
+			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/categories/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/categories/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/categories/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
+		
+			<li><a href="/categories/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
+		
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/tags/impala/" title="impala">impala<sup>1</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>27</sup></a></li>
+		
+			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/tags/lombok/" title="lombok">lombok<sup>3</sup></a></li>
+		
+			<li><a href="/tags/mac/" title="mac">mac<sup>2</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>1</sup></a></li>
+		
+			<li><a href="/tags/olap/" title="olap">olap<sup>4</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/tags/react/" title="react">react<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/tags/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/tags/spring/" title="spring">spring<sup>2</sup></a></li>
+		
+			<li><a href="/tags/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
+		
+			<li><a href="/tags/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/JavaScript/" style="font-size: 11px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 17px;">hbase</a> <a href="/tags/hive/" style="font-size: 16px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12px;">lombok</a> <a href="/tags/mac/" style="font-size: 11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/olap/" style="font-size: 13px;">olap</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/pulsar/" style="font-size: 10px;">pulsar</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/redis/" style="font-size: 18px;">redis</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/spring/" style="font-size: 11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13px;">sqoop</a> <a href="/tags/数仓/" style="font-size: 13px;">数仓</a> <a href="/tags/源码/" style="font-size: 19px;">源码</a>
+    </div>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    
+            <p class="copyright"> © 2023 
+		
+		<a href="http://www.patamon.me" target="_blank" title="IceMimosa">IceMimosa</a>
+		
+            <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
+            ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
+            </p></div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="/js/jquery-icemi-scroll2top.js"></script>
+<script src="/js/other.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  
+  // 回到顶部
+  $(document.body).scroll2Top({
+    background:"#66ccff",
+    shape:"circle",
+    bottom:40,
+    right:250
+  });
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    // m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,332-$(this).scrollTop()));
+  });
+});
+</script>
+
+<!-- GrowingIO Analytics code version 2.1 -->
+<!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
+<script type="text/javascript">
+!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
+gio('init','b988cbf13dfaa5ac', {});
+//custom page code begin here
+
+//custom page code end here
+gio('send');
+</script>
+<!-- End GrowingIO Analytics code version: 2.1 -->
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
+
+
+
+
+
+
+<script>
+    
+        var _bdImg = '4';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
+</html>
+

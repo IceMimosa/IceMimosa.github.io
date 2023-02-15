@@ -1,0 +1,785 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
+  
+    <title>Oozie-4_Coordinator定义 | Ice の Mimosa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="IceMimosa">
+    
+    <meta name="description" content="Oozie-4_Coordinator定义[TOC]
+1. 简介Coordinator Job通过配置Action来执行 Workflow Jobs。同时Coordinator Job还可以配置  触发时间，触发频率 ，数据集 和 并发数 等配置。
+
+语法：
+
+1234567891011121314">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="Ice の Mimosa" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon_mine.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/jquery-icemi-scroll2top.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='1cb536fd996cddc96154515a1ed1d72d';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+</html>
+  <body>
+    <header>
+      <div id="banner">
+		
+
+			<div id="erer" class="erer" style="">
+				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
+				<!-- <img id="i22" src="http://ice-img.dreamylost.cn/patamon-22.png" width=200 height=230></img> -->
+			</div>
+
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Ice の Mimosa">Ice の Mimosa</a></h1>
+				<a class="blog-motto">没有未来的未来不是我想要的未来</a>
+			</div>
+
+			<div id="sansan" class="sansan" style="">
+				<!-- <img src="/img/33.png" width=200 height=230></img> -->
+				<!-- <img src="http://ice-img.dreamylost.cn/patamon-33.png" width=200 height=230></img> -->
+			</div> 
+
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+					<li>
+					
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
+					
+					</form></li>
+				</ul>
+			</ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/icemimosa/oozie/Oozie-4_Coordinator定义/" title="Oozie-4_Coordinator定义" itemprop="url">Oozie-4_Coordinator定义</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2016-07-12T07:30:16.000Z" itemprop="datePublished">2016-07-12</time>
+    更新日期:<time datetime="2023-02-15T14:15:04.575Z" itemprop="dateModified">2023-02-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oozie-4-Coordinator定义"><span class="toc-text">Oozie-4_Coordinator定义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-时间和频率的配置"><span class="toc-text">2. 时间和频率的配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-Cron-syntax"><span class="toc-text">2.1 Cron syntax</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-Coordinator-Application"><span class="toc-text">3. Coordinator Application</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-Synchronous-Datasets"><span class="toc-text">3.1 Synchronous Datasets</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-Input-Events-和-Output-Events"><span class="toc-text">3.2 Input Events 和 Output Events</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-Coordinator-Action-Execution-Policies"><span class="toc-text">3.3 Coordinator Action Execution Policies</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-Coordinator-每个属性的具体解释和例子"><span class="toc-text">3.4 Coordinator 每个属性的具体解释和例子</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-Parameterization-of-Coordinator-Applications"><span class="toc-text">4. Parameterization of Coordinator Applications</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-Input-and-Output-Events相关"><span class="toc-text">4.1 Input and Output Events相关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-Actions-相关"><span class="toc-text">4.2 Actions 相关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-HCatalog-相关-（since-Oozie-4-x）"><span class="toc-text">4.2 HCatalog 相关 （since  Oozie 4.x）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-Coordinator-Job-的提交"><span class="toc-text">5. Coordinator Job 的提交</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-Coordinator-Job-URI-回调"><span class="toc-text">5.1 Coordinator Job URI 回调</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-SLA-Handling"><span class="toc-text">6. SLA Handling</span></a></li></ol>
+		</div>
+		
+		<h1 id="Oozie-4-Coordinator定义"><a href="#Oozie-4-Coordinator定义" class="headerlink" title="Oozie-4_Coordinator定义"></a>Oozie-4_Coordinator定义</h1><p>[TOC]</p>
+<h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>Coordinator Job通过配置Action来执行 Workflow Jobs。同时Coordinator Job还可以配置  <code>触发时间</code>，<code>触发频率</code> ，<code>数据集</code> 和 <code>并发数</code> 等配置。</p>
+<blockquote>
+<p>语法：</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">coordinator-app</span> <span class="attr">name</span>=<span class="string">"[NAME]"</span> <span class="attr">frequency</span>=<span class="string">"[FREQUENCY]"</span> <span class="attr">start</span>=<span class="string">"[DATETIME]"</span> <span class="attr">end</span>=<span class="string">"[DATETIME]"</span> <span class="attr">timezone</span>=<span class="string">"[TIMEZONE]"</span> <span class="attr">xmlns</span>=<span class="string">"uri:oozie:coordinator:0.1"</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">controls</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">timeout</span>&gt;</span>[TIME_PERIOD]<span class="tag">&lt;/<span class="name">timeout</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">concurrency</span>&gt;</span>[CONCURRENCY]<span class="tag">&lt;/<span class="name">concurrency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">execution</span>&gt;</span>[EXECUTION_STRATEGY]<span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">controls</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">datasets</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">include</span>&gt;</span>[SHARED_DATASETS]<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">          ...</span><br><span class="line">          <span class="comment">&lt;!-- Synchronous datasets --&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">dataset</span> <span class="attr">name</span>=<span class="string">"[NAME]"</span> <span class="attr">frequency</span>=<span class="string">"[FREQUENCY]"</span> <span class="attr">initial-instance</span>=<span class="string">"[DATETIME]"</span> <span class="attr">timezone</span>=<span class="string">"[TIMEZONE]"</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">uri-template</span>&gt;</span>[URI_TEMPLATE]<span class="tag">&lt;/<span class="name">uri-template</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">dataset</span>&gt;</span></span><br><span class="line">          ...</span><br><span class="line">     <span class="tag">&lt;/<span class="name">datasets</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">input-events</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">data-in</span> <span class="attr">name</span>=<span class="string">"[NAME]"</span> <span class="attr">dataset</span>=<span class="string">"[DATASET]"</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">instance</span>&gt;</span>[INSTANCE]<span class="tag">&lt;/<span class="name">instance</span>&gt;</span></span><br><span class="line">               ...</span><br><span class="line">          <span class="tag">&lt;/<span class="name">data-in</span>&gt;</span></span><br><span class="line">          ...</span><br><span class="line">          <span class="tag">&lt;<span class="name">data-in</span> <span class="attr">name</span>=<span class="string">"[NAME]"</span> <span class="attr">dataset</span>=<span class="string">"[DATASET]"</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">start-instance</span>&gt;</span>[INSTANCE]<span class="tag">&lt;/<span class="name">start-instance</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">end-instance</span>&gt;</span>[INSTANCE]<span class="tag">&lt;/<span class="name">end-instance</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">data-in</span>&gt;</span></span><br><span class="line">          ...</span><br><span class="line">     <span class="tag">&lt;/<span class="name">input-events</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">output-events</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">data-out</span> <span class="attr">name</span>=<span class="string">"[NAME]"</span> <span class="attr">dataset</span>=<span class="string">"[DATASET]"</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">instance</span>&gt;</span>[INSTANCE]<span class="tag">&lt;/<span class="name">instance</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">data-out</span>&gt;</span></span><br><span class="line">          ...</span><br><span class="line">     <span class="tag">&lt;/<span class="name">output-events</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">action</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">workflow</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">app-path</span>&gt;</span>[WF-APPLICATION-PATH]<span class="tag">&lt;/<span class="name">app-path</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                         <span class="tag">&lt;<span class="name">name</span>&gt;</span>[PROPERTY-NAME]<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                         <span class="tag">&lt;<span class="name">value</span>&gt;</span>[PROPERTY-VALUE]<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">                    ...</span><br><span class="line">               <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">workflow</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">action</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">coordinator-app</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="2-时间和频率的配置"><a href="#2-时间和频率的配置" class="headerlink" title="2. 时间和频率的配置"></a>2. 时间和频率的配置</h1><ul>
+<li>Oozie使用时间如果是UTC格式，配置为：<code>YYYY-MM-DDTHH:mmZ</code></li>
+</ul>
+<blockquote>
+<p>例子：</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>EL Constant</th>
+<th>Value</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>${coord:minutes(int n)}</td>
+<td>n</td>
+<td>${coord:minutes(45)} –&gt; 45</td>
+</tr>
+<tr>
+<td>${coord:hours(int n)}</td>
+<td>n * 60</td>
+<td>${coord:hours(3)} –&gt; 180</td>
+</tr>
+<tr>
+<td>${coord:days(int n)}</td>
+<td>variable</td>
+<td>${coord:days(2)} –&gt; <br> minutes in 2 full days from the current date</td>
+</tr>
+<tr>
+<td>${coord:months(int n)}</td>
+<td>variable$</td>
+<td>{coord:months(1)} –&gt; <br> minutes in a 1 full month from the current date</td>
+</tr>
+<tr>
+<td>${cron syntax}</td>
+<td>variable</td>
+<td>${0,10 15 <em> </em> 2-6} –&gt; <br> a job that runs every weekday at 3:00pm and 3:10pm UTC time</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Tips：</p>
+<ol>
+<li><code>${coord:endOfDays(int n)}</code> 与 <code>${coord:hours(int n)}</code> 区别在与第一次触发是时间。前者是过n天触发，后者是立即触发。然后都是每n天执行一次。</li>
+<li><code>${coord:endOfMonths(int n)}</code> 类似</li>
+</ol>
+</blockquote>
+<h2 id="2-1-Cron-syntax"><a href="#2-1-Cron-syntax" class="headerlink" title="2.1 Cron syntax"></a>2.1 Cron syntax</h2><ul>
+<li>Cron syntax 含有 <strong>5</strong> 个filed，分别是 <code>minutes</code>, <code>hours</code>, <code>date of month</code>, <code>month</code>, and <code>day of week</code></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Field name</th>
+<th>Allowed Values</th>
+<th>Allowed Special Characters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minutes</td>
+<td>0-59</td>
+<td>, - * /</td>
+</tr>
+<tr>
+<td>Hours</td>
+<td>0-23</td>
+<td>, - * /</td>
+</tr>
+<tr>
+<td>Day-of-month</td>
+<td>1-31</td>
+<td>, - * ? / L W</td>
+</tr>
+<tr>
+<td>Month</td>
+<td>1-12 or JAN-DEC</td>
+<td>, - * /</td>
+</tr>
+<tr>
+<td>Day-of-Week</td>
+<td>1-7 or SUN-SAT</td>
+<td>, - * ? / L #</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>具体规则参考：<a href="https://oozie.apache.org/docs/4.1.0/CoordinatorFunctionalSpec.html#a4.4.3._Cron_syntax_in_coordinator_frequency" title="Cron syntax in coordinator frequency" target="_blank" rel="noopener">Cron syntax in coordinator frequency</a></li>
+</ul>
+<blockquote>
+<p>Examples：</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Cron Expression</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10 9 <em> </em> *</td>
+<td>Runs everyday at 9:10am</td>
+</tr>
+<tr>
+<td>10,30,45 9 <em> </em> *</td>
+<td>Runs everyday at 9:10am, 9:30am, and 9:45am</td>
+</tr>
+<tr>
+<td>0 * 30 JAN 2-6</td>
+<td>Runs at 0 minute of every hour on weekdays and 30th of January</td>
+</tr>
+<tr>
+<td>0/20 9-17 <em> </em> 2-5</td>
+<td>Runs every Mon, Tue, Wed, and Thurs at minutes 0, 20, 40 from 9am to 5pm</td>
+</tr>
+<tr>
+<td>1 2 L-3 <em> </em></td>
+<td>Runs every third-to-last day of month at 2:01am</td>
+</tr>
+<tr>
+<td>1 2 6W 3 ?</td>
+<td>Runs on the nearest weekday to March, 6th every year at 2:01am</td>
+</tr>
+<tr>
+<td>1 2 * 3 3#2</td>
+<td>Runs every second Tuesday of March at 2:01am every year</td>
+</tr>
+<tr>
+<td>0 10,13 <em> </em> MON-FRI</td>
+<td>Runs every weekday at 10am and 1pm</td>
+</tr>
+</tbody>
+</table>
+<h1 id="3-Coordinator-Application"><a href="#3-Coordinator-Application" class="headerlink" title="3. Coordinator Application"></a>3. Coordinator Application</h1><p>一个 Coordinator Application的生命周期：<a href="https://oozie.apache.org/docs/4.1.0/CoordinatorFunctionalSpec.html#a6.1.2._Coordinator_Job" title="Coordinator_Job" target="_blank" rel="noopener">生命周期</a></p>
+<p><img src="http://ice-img.dreamylost.cn/Oozie-Coordinator%20life%20cycle.png" alt="" title="Coordinator Job Life Cycle"></p>
+<h2 id="3-1-Synchronous-Datasets"><a href="#3-1-Synchronous-Datasets" class="headerlink" title="3.1 Synchronous Datasets"></a>3.1 Synchronous Datasets</h2><p>Datasets 可以为Job的运行提供运算的数据，主要来源是 HDFS 上的目录和文件。Datasets 可以配置时间，周期，URI模板等信息。</p>
+<blockquote>
+<p>语法：</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dataset</span> <span class="attr">name</span>=<span class="string">"[NAME]"</span> <span class="attr">frequency</span>=<span class="string">"[FREQUENCY]"</span></span></span><br><span class="line"><span class="tag">           <span class="attr">initial-instance</span>=<span class="string">"[DATETIME]"</span> <span class="attr">timezone</span>=<span class="string">"[TIMEZONE]"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">uri-template</span>&gt;</span>[URI TEMPLATE]<span class="tag">&lt;/<span class="name">uri-template</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">done-flag</span>&gt;</span>[FILE NAME]<span class="tag">&lt;/<span class="name">done-flag</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dataset</span>&gt;</span></span><br><span class="line"></span><br><span class="line"># initial-instance：数据集实例初始化的时间</span><br><span class="line"># uri-template：数据集的URI，URI中可以包括 常量 和 变量</span><br><span class="line">	- constants：包含 YEAR， MONTH，DAY，HOUR 以及 MINUTE 常量。如 $&#123;YEAR&#125;/$&#123;MONTH&#125;</span><br><span class="line">	- variables：启动Job配置的参数（properties），如 $&#123;market&#125;/$&#123;language&#125;</span><br><span class="line"># done-flag：表示这个数据集被消费的标志</span><br><span class="line">	- 如果省略标签：只有当当前目录下存在 _SUCCESS 文件时</span><br><span class="line">	- 如果标签内容为空：只有当当前的目录存在，数据集才会被消费</span><br><span class="line">	- 如果存在内容：表明只有当当前目录下存在改文件的时候，数据集才会被消费</span><br></pre></td></tr></table></figure>
+<h2 id="3-2-Input-Events-和-Output-Events"><a href="#3-2-Input-Events-和-Output-Events" class="headerlink" title="3.2 Input Events 和 Output Events"></a>3.2 Input Events 和 Output Events</h2><p>指定要进行输入和输出的数据集实例。</p>
+<h2 id="3-3-Coordinator-Action-Execution-Policies"><a href="#3-3-Coordinator-Action-Execution-Policies" class="headerlink" title="3.3 Coordinator Action Execution Policies"></a>3.3 Coordinator Action Execution Policies</h2><p>可以指定的一些执行策略：</p>
+<ul>
+<li>Timeout：设置 WAITING 和 READY的超时时间</li>
+<li>Concurrency：设置 RUNNING 状态Action执行的并发数</li>
+<li>Execution strategy：当多个Action累积起来的时候，Actions的执行策略。值可以是’oldest first’, ‘newest first’, ‘none’ and ‘last one only’</li>
+<li>Throttle：指定同时 WAITING 的 Action 的数量（阈值）</li>
+</ul>
+<h2 id="3-4-Coordinator-每个属性的具体解释和例子"><a href="#3-4-Coordinator-每个属性的具体解释和例子" class="headerlink" title="3.4 Coordinator 每个属性的具体解释和例子"></a>3.4 Coordinator 每个属性的具体解释和例子</h2><p><a href="https://oozie.apache.org/docs/4.1.0/CoordinatorFunctionalSpec.html#a6.3._Synchronous_Coordinator_Application_Definition" title="Coordinator 每个属性的具体解释和例子" target="_blank" rel="noopener">Coordinator 每个属性的具体解释和例子</a></p>
+<blockquote>
+<p>例子：</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">coordinator-app</span> <span class="attr">name</span>=<span class="string">"hello2-coord"</span> <span class="attr">frequency</span>=<span class="string">"$&#123;coord:days(7)&#125;"</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">start</span>=<span class="string">"2009-01-07T24:00Z"</span> <span class="attr">end</span>=<span class="string">"2009-12-12T24:00Z"</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">timezone</span>=<span class="string">"UTC"</span></span></span><br><span class="line"><span class="tag">                    <span class="attr">xmlns</span>=<span class="string">"uri:oozie:coordinator:0.1"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">datasets</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dataset</span> <span class="attr">name</span>=<span class="string">"logs"</span> <span class="attr">frequency</span>=<span class="string">"$&#123;coord:days(1)&#125;"</span></span></span><br><span class="line"><span class="tag">                 <span class="attr">initial-instance</span>=<span class="string">"2009-01-01T24:00Z"</span> <span class="attr">timezone</span>=<span class="string">"UTC"</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">uri-template</span>&gt;</span>hdfs://bar:8020/app/logs/$&#123;YEAR&#125;/$&#123;MONTH&#125;/$&#123;DAY&#125;<span class="tag">&lt;/<span class="name">uri-template</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dataset</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dataset</span> <span class="attr">name</span>=<span class="string">"weeklySiteAccessStats"</span> <span class="attr">frequency</span>=<span class="string">"$&#123;coord:days(7)&#125;"</span></span></span><br><span class="line"><span class="tag">                 <span class="attr">initial-instance</span>=<span class="string">"2009-01-07T24:00Z"</span> <span class="attr">timezone</span>=<span class="string">"UTC"</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">uri-template</span>&gt;</span>hdfs://bar:8020/app/weeklystats/$&#123;YEAR&#125;/$&#123;MONTH&#125;/$&#123;DAY&#125;<span class="tag">&lt;/<span class="name">uri-template</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dataset</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">datasets</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input-events</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">data-in</span> <span class="attr">name</span>=<span class="string">"input"</span> <span class="attr">dataset</span>=<span class="string">"logs"</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">start-instance</span>&gt;</span>$&#123;coord:current(-6)&#125;<span class="tag">&lt;/<span class="name">start-instance</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">end-instance</span>&gt;</span>$&#123;coord:current(0)&#125;<span class="tag">&lt;/<span class="name">end-instance</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">data-in</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">input-events</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">output-events</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">data-out</span> <span class="attr">name</span>=<span class="string">"output"</span> <span class="attr">dataset</span>=<span class="string">"weeklySiteAccessStats"</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">instance</span>&gt;</span>$&#123;coord:current(0)&#125;<span class="tag">&lt;/<span class="name">instance</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;/<span class="name">data-out</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">output-events</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">action</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">workflow</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">app-path</span>&gt;</span>hdfs://bar:8020/usr/joe/logsprocessor-wf<span class="tag">&lt;/<span class="name">app-path</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">name</span>&gt;</span>wfInput<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">value</span>&gt;</span>$&#123;coord:dataIn('input')&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">name</span>&gt;</span>wfOutput<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">value</span>&gt;</span>$&#123;coord:dataOut('output')&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">workflow</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">action</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">coordinator-app</span>&gt;</span></span><br><span class="line">   </span><br><span class="line"># 1. 定义了一个名称为 hello2-coord 的 Coordinator Job， 开始时间为start，结束时间为end，执行频率为frequency（7天）。</span><br><span class="line"># 2. 定义了两个数据集，一个名称为 logs， 一个为 weeklySiteAccessStats</span><br><span class="line">	- logs：数据集初始化的时间为initial-instance，然后每一天收集记录一次。其实也就是讲存在于HDFS上的目录记录了下来。</span><br><span class="line">	- weeklySiteAccessStats：同理，每7天记录一次。</span><br><span class="line"># 3. input-events：输入的数据指向 logs 的数据集，收集的数据是（6天前-今天）的数据集合，最后将整个数据集提供给 wfInput 作为输入的数据目录，然后可以供 workflow app去处理。</span><br><span class="line"># 4. output-events：输出的数据指向 weeklySiteAccessStats 的数据集，数据集实例表示当前的数据集。最后提供给 wfOutput 作为输出的目录。</span><br><span class="line"></span><br><span class="line">以上整理意思大概就是每天记录输入的数据集实例，然后每个星期处理一次放到输出的数据集实例中。</span><br></pre></td></tr></table></figure>
+<h1 id="4-Parameterization-of-Coordinator-Applications"><a href="#4-Parameterization-of-Coordinator-Applications" class="headerlink" title="4. Parameterization of Coordinator Applications"></a>4. Parameterization of Coordinator Applications</h1><ul>
+<li>coord:dateOffset(String baseDate, int instance, String timeUnit)</li>
+<li>coord:formatTime(String ts, String format) </li>
+</ul>
+<p>参考：<a href="https://oozie.apache.org/docs/4.1.0/CoordinatorFunctionalSpec.html#a6.9._Parameterization_of_Coordinator_Application" target="_blank" rel="noopener">https://oozie.apache.org/docs/4.1.0/CoordinatorFunctionalSpec.html#a6.9._Parameterization_of_Coordinator_Application</a></p>
+<h2 id="4-1-Input-and-Output-Events相关"><a href="#4-1-Input-and-Output-Events相关" class="headerlink" title="4.1 Input and Output Events相关"></a>4.1 Input and Output Events相关</h2><ul>
+<li>coord:current(int n) </li>
+<li>coord:offset(int n, String timeUnit) </li>
+<li>coord:hoursInDay(int n) </li>
+<li>coord:daysInMonth(int n) </li>
+<li>coord:tzOffset() </li>
+<li>coord:latest(int n)</li>
+<li>coord:future(int n, int limit) </li>
+<li>coord:absolute(String timeStamp) </li>
+</ul>
+<p>参考：<a href="https://oozie.apache.org/docs/4.1.0/CoordinatorFunctionalSpec.html#a6.6._Parameterization_of_Dataset_Instances_in_Input_and_Output_Events" target="_blank" rel="noopener">https://oozie.apache.org/docs/4.1.0/CoordinatorFunctionalSpec.html#a6.6._Parameterization_of_Dataset_Instances_in_Input_and_Output_Events</a></p>
+<h2 id="4-2-Actions-相关"><a href="#4-2-Actions-相关" class="headerlink" title="4.2 Actions 相关"></a>4.2 Actions 相关</h2><ul>
+<li>coord:dataIn(String name) </li>
+<li>coord:dataOut(String name) </li>
+<li>coord:nominalTime() </li>
+<li>coord:actualTime() </li>
+<li>coord:user()</li>
+</ul>
+<p>参考：<a href="https://oozie.apache.org/docs/4.1.0/CoordinatorFunctionalSpec.html#a6.7._Parameterization_of_Coordinator_Application_Actions" target="_blank" rel="noopener">https://oozie.apache.org/docs/4.1.0/CoordinatorFunctionalSpec.html#a6.7._Parameterization_of_Coordinator_Application_Actions</a></p>
+<h2 id="4-2-HCatalog-相关-（since-Oozie-4-x）"><a href="#4-2-HCatalog-相关-（since-Oozie-4-x）" class="headerlink" title="4.2 HCatalog 相关 （since  Oozie 4.x）"></a>4.2 HCatalog 相关 （since  Oozie 4.x）</h2><ul>
+<li>coord:databaseIn(String name), coord:databaseOut(String name) </li>
+<li>coord:tableIn(String name), coord:tableOut(String name) </li>
+<li>coord:dataInPartitionFilter(String name, String type) </li>
+<li>coord:dataOutPartitions(String name) </li>
+<li>coord:dataInPartitionMin(String name, String partition)</li>
+<li>coord:dataInPartitionMax(String name, String partition)</li>
+<li>coord:dataOutPartitionValue(String name, String partition) </li>
+<li>coord:dataInPartitions(String name, String type) </li>
+</ul>
+<p>参考：<a href="https://oozie.apache.org/docs/4.1.0/CoordinatorFunctionalSpec.html#a6.8_Using_HCatalog_data_instances_in_Coordinator_Applications_since_Oozie_4.x" target="_blank" rel="noopener">https://oozie.apache.org/docs/4.1.0/CoordinatorFunctionalSpec.html#a6.8_Using_HCatalog_data_instances_in_Coordinator_Applications_since_Oozie_4.x</a></p>
+<h1 id="5-Coordinator-Job-的提交"><a href="#5-Coordinator-Job-的提交" class="headerlink" title="5. Coordinator Job 的提交"></a>5. Coordinator Job 的提交</h1><p>上传到 HDFS，job.properties中必须指定 <code>oozie.coord.application.path</code> 的路径。</p>
+<h2 id="5-1-Coordinator-Job-URI-回调"><a href="#5-1-Coordinator-Job-URI-回调" class="headerlink" title="5.1 Coordinator Job URI 回调"></a>5.1 Coordinator Job URI 回调</h2><p>指定 <code>oozie.coord.workflow.notification.url</code> 属性设置回调url，当coordinator job中的Action状态发生变化时，进行回调。</p>
+<p>参考：<a href="https://oozie.apache.org/docs/4.1.0/CoordinatorFunctionalSpec.html#a15._Coordinator_Notifications" title="Coordinator Job URI 回调" target="_blank" rel="noopener">Coordinator Job URI 回调</a></p>
+<h1 id="6-SLA-Handling"><a href="#6-SLA-Handling" class="headerlink" title="6. SLA Handling"></a>6. SLA Handling</h1>  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/oozie/">oozie</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/oozie/">oozie</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.patamon.me/icemimosa/oozie/Oozie-4_Coordinator定义/" data-title="Oozie-4_Coordinator定义 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/icemimosa/oozie/Oozie-5_ Bundle定义/" title="Oozie-5_ Bundle定义">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  Oozie-5_ Bundle定义</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/icemimosa/oozie/Oozie-3_工作流程定义/" title="Oozie-3_工作流程定义">
+ <strong>NEXT:</strong><br> 
+ <span>Oozie-3_工作流程定义
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oozie-4-Coordinator定义"><span class="toc-text">Oozie-4_Coordinator定义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-时间和频率的配置"><span class="toc-text">2. 时间和频率的配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-Cron-syntax"><span class="toc-text">2.1 Cron syntax</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-Coordinator-Application"><span class="toc-text">3. Coordinator Application</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-Synchronous-Datasets"><span class="toc-text">3.1 Synchronous Datasets</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-Input-Events-和-Output-Events"><span class="toc-text">3.2 Input Events 和 Output Events</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-Coordinator-Action-Execution-Policies"><span class="toc-text">3.3 Coordinator Action Execution Policies</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-Coordinator-每个属性的具体解释和例子"><span class="toc-text">3.4 Coordinator 每个属性的具体解释和例子</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-Parameterization-of-Coordinator-Applications"><span class="toc-text">4. Parameterization of Coordinator Applications</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-Input-and-Output-Events相关"><span class="toc-text">4.1 Input and Output Events相关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-Actions-相关"><span class="toc-text">4.2 Actions 相关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-HCatalog-相关-（since-Oozie-4-x）"><span class="toc-text">4.2 HCatalog 相关 （since  Oozie 4.x）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-Coordinator-Job-的提交"><span class="toc-text">5. Coordinator Job 的提交</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-Coordinator-Job-URI-回调"><span class="toc-text">5.1 Coordinator Job URI 回调</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-SLA-Handling"><span class="toc-text">6. SLA Handling</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list">
+		
+		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/IceMimosa" target="_blank" title="github"></a>
+		
+		
+		
+		
+		<a href="mailto:514793425@qq.com" target="_blank" title="email"></a>
+		
+	</div>
+</div>
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/categories/java/" title="java">java<sup>26</sup></a></li>
+		
+			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/categories/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/categories/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/categories/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
+		
+			<li><a href="/categories/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
+		
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/tags/impala/" title="impala">impala<sup>1</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>27</sup></a></li>
+		
+			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/tags/lombok/" title="lombok">lombok<sup>3</sup></a></li>
+		
+			<li><a href="/tags/mac/" title="mac">mac<sup>2</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>1</sup></a></li>
+		
+			<li><a href="/tags/olap/" title="olap">olap<sup>4</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/tags/react/" title="react">react<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/tags/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/tags/spring/" title="spring">spring<sup>2</sup></a></li>
+		
+			<li><a href="/tags/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
+		
+			<li><a href="/tags/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/JavaScript/" style="font-size: 11px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 17px;">hbase</a> <a href="/tags/hive/" style="font-size: 16px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12px;">lombok</a> <a href="/tags/mac/" style="font-size: 11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/olap/" style="font-size: 13px;">olap</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/pulsar/" style="font-size: 10px;">pulsar</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/redis/" style="font-size: 18px;">redis</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/spring/" style="font-size: 11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13px;">sqoop</a> <a href="/tags/数仓/" style="font-size: 13px;">数仓</a> <a href="/tags/源码/" style="font-size: 19px;">源码</a>
+    </div>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    
+            <p class="copyright"> © 2023 
+		
+		<a href="http://www.patamon.me" target="_blank" title="IceMimosa">IceMimosa</a>
+		
+            <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
+            ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
+            </p></div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="/js/jquery-icemi-scroll2top.js"></script>
+<script src="/js/other.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  
+  // 回到顶部
+  $(document.body).scroll2Top({
+    background:"#66ccff",
+    shape:"circle",
+    bottom:40,
+    right:250
+  });
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    // m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,332-$(this).scrollTop()));
+  });
+});
+</script>
+
+<!-- GrowingIO Analytics code version 2.1 -->
+<!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
+<script type="text/javascript">
+!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
+gio('init','b988cbf13dfaa5ac', {});
+//custom page code begin here
+
+//custom page code end here
+gio('send');
+</script>
+<!-- End GrowingIO Analytics code version: 2.1 -->
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
+
+
+
+
+
+
+<script>
+    
+        var _bdImg = '4';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
+</html>
+

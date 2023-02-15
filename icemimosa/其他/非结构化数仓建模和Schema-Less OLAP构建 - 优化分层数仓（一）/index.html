@@ -1,0 +1,989 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
+  
+    <title>非结构化数仓建模和Schema-Less OLAP构建 - 优化分层数仓（一） | Ice の Mimosa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="IceMimosa">
+    
+    <meta name="description" content="同步更新：https://icemimosa.notion.site/Schema-Less-OLAP-3d8b1bbcd4e6434eadbe95b86eceb9a9
+非结构化数仓建模和Schema-Less OLAP构建 - 优化分层数仓（一）一、概述上篇文档 非结构化数仓建模和Schema-L">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="Ice の Mimosa" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon_mine.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/jquery-icemi-scroll2top.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='1cb536fd996cddc96154515a1ed1d72d';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+</html>
+  <body>
+    <header>
+      <div id="banner">
+		
+
+			<div id="erer" class="erer" style="">
+				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
+				<!-- <img id="i22" src="http://ice-img.dreamylost.cn/patamon-22.png" width=200 height=230></img> -->
+			</div>
+
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Ice の Mimosa">Ice の Mimosa</a></h1>
+				<a class="blog-motto">没有未来的未来不是我想要的未来</a>
+			</div>
+
+			<div id="sansan" class="sansan" style="">
+				<!-- <img src="/img/33.png" width=200 height=230></img> -->
+				<!-- <img src="http://ice-img.dreamylost.cn/patamon-33.png" width=200 height=230></img> -->
+			</div> 
+
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+					<li>
+					
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
+					
+					</form></li>
+				</ul>
+			</ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/icemimosa/其他/非结构化数仓建模和Schema-Less OLAP构建 - 优化分层数仓（一）/" title="非结构化数仓建模和Schema-Less OLAP构建 - 优化分层数仓（一）" itemprop="url">非结构化数仓建模和Schema-Less OLAP构建 - 优化分层数仓（一）</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2021-12-31T16:22:34.000Z" itemprop="datePublished">2022-01-01</time>
+    更新日期:<time datetime="2023-02-15T14:15:04.581Z" itemprop="dateModified">2023-02-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#非结构化数仓建模和Schema-Less-OLAP构建-优化分层数仓（一）"><span class="toc-text">非结构化数仓建模和Schema-Less OLAP构建 - 优化分层数仓（一）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#一、概述"><span class="toc-text">一、概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二、预聚合层的尴尬"><span class="toc-text">二、预聚合层的尴尬</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-示例"><span class="toc-text">2.1 示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-优缺点"><span class="toc-text">2.2 优缺点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三、优化预聚合层"><span class="toc-text">三、优化预聚合层</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-优化设备数"><span class="toc-text">3.1 优化设备数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-优化指标"><span class="toc-text">3.2 优化指标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-小节"><span class="toc-text">3.3 小节</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#四、兼容维表"><span class="toc-text">四、兼容维表</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#五、总结"><span class="toc-text">五、总结</span></a></li></ol>
+		</div>
+		
+		<p><strong>同步更新：<a href="https://icemimosa.notion.site/Schema-Less-OLAP-3d8b1bbcd4e6434eadbe95b86eceb9a9" target="_blank" rel="noopener">https://icemimosa.notion.site/Schema-Less-OLAP-3d8b1bbcd4e6434eadbe95b86eceb9a9</a></strong></p>
+<h1 id="非结构化数仓建模和Schema-Less-OLAP构建-优化分层数仓（一）"><a href="#非结构化数仓建模和Schema-Less-OLAP构建-优化分层数仓（一）" class="headerlink" title="非结构化数仓建模和Schema-Less OLAP构建 - 优化分层数仓（一）"></a>非结构化数仓建模和Schema-Less OLAP构建 - 优化分层数仓（一）</h1><h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><p>上篇文档 <a href="http://patamon.me/icemimosa/%E5%85%B6%E4%BB%96/%E9%9D%9E%E7%BB%93%E6%9E%84%E5%8C%96%E6%95%B0%E4%BB%93%E5%BB%BA%E6%A8%A1%E5%92%8CSchema-Less%20OLAP%E6%9E%84%E5%BB%BA/" target="_blank" rel="noopener">非结构化数仓建模和Schema-Less OLAP构建</a>（零） 我们宏观讲述了如何基于bitmap来作为<code>非结构化建模</code>的底层数据结构，以及在存储、计算和应用方面所带来的好处。那么本节开始将从微观的角度，讲述非结构化数仓具体的建设思路，bitmap数据结构的使用，以及如何搭建Schema-Less OLAP。</p>
+<p>由于非结构数仓建模是一套完整的建模体系，区别于当前分层建模的思路。所以本节将结合其中一部分进行讲述，且如何让它在分层数仓建模中起到一个补充优化的作用。</p>
+<p>PS：完整的建模思路将在该系列文章最后进行讲述（挖坑）。</p>
+<h1 id="二、预聚合层的尴尬"><a href="#二、预聚合层的尴尬" class="headerlink" title="二、预聚合层的尴尬"></a>二、预聚合层的尴尬</h1><h2 id="2-1-示例"><a href="#2-1-示例" class="headerlink" title="2.1 示例"></a>2.1 示例</h2><p>在分层数仓中，为了便于下游分析，我们一般不会将特别明细的数据暴露给下游使用，通常我们会抽出大宽表「预聚合层」。比如如下用户行为数据（<code>table0</code>）：</p>
+<table>
+<thead>
+<tr>
+<th>日期</th>
+<th>设备ID</th>
+<th>城市</th>
+<th>操作系统</th>
+<th>其他维度…</th>
+<th>访问次数</th>
+<th>访问时长</th>
+<th>分享次数</th>
+<th>其他指标…</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2022-01-01</td>
+<td>1</td>
+<td>北京</td>
+<td>Windows</td>
+<td>…</td>
+<td>1</td>
+<td>100</td>
+<td>3</td>
+<td>…</td>
+</tr>
+<tr>
+<td>2022-01-01</td>
+<td>1</td>
+<td>上海</td>
+<td>Windows</td>
+<td>…</td>
+<td>1</td>
+<td>200</td>
+<td>1</td>
+<td>…</td>
+</tr>
+<tr>
+<td>2022-01-01</td>
+<td>2</td>
+<td>北京</td>
+<td>Mac</td>
+<td>…</td>
+<td>1</td>
+<td>100</td>
+<td>1</td>
+<td>…</td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>当然上面的数据已经是「设备」（也可以是其他实体）的粒度了，通常情况下，数据量还是特别大，需要<code>上卷一些维度</code>再进一步做预聚合，比如（<code>table1</code>）：</p>
+<table>
+<thead>
+<tr>
+<th>日期</th>
+<th>城市</th>
+<th>操作系统</th>
+<th>其他维度…</th>
+<th>设备数</th>
+<th>访问次数</th>
+<th>访问时长</th>
+<th>分享次数</th>
+<th>其他指标…</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2022-01-01</td>
+<td>北京</td>
+<td>Windows</td>
+<td>…</td>
+<td>1</td>
+<td>1</td>
+<td>100</td>
+<td>3</td>
+<td>…</td>
+</tr>
+<tr>
+<td>2022-01-01</td>
+<td>上海</td>
+<td>Windows</td>
+<td>…</td>
+<td>1</td>
+<td>1</td>
+<td>200</td>
+<td>1</td>
+<td>…</td>
+</tr>
+<tr>
+<td>2022-01-01</td>
+<td>北京</td>
+<td>Mac</td>
+<td>…</td>
+<td>1</td>
+<td>1</td>
+<td>100</td>
+<td>1</td>
+<td>…</td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>或者这样（<code>table2</code>）：</p>
+<table>
+<thead>
+<tr>
+<th>日期</th>
+<th>城市</th>
+<th>其他维度…</th>
+<th>设备数</th>
+<th>访问次数</th>
+<th>访问时长</th>
+<th>分享次数</th>
+<th>其他指标…</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2022-01-01</td>
+<td>北京</td>
+<td>…</td>
+<td>2</td>
+<td>2</td>
+<td>200</td>
+<td>4</td>
+<td>…</td>
+</tr>
+<tr>
+<td>2022-01-01</td>
+<td>上海</td>
+<td>…</td>
+<td>1</td>
+<td>1</td>
+<td>200</td>
+<td>1</td>
+<td>…</td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-2-优缺点"><a href="#2-2-优缺点" class="headerlink" title="2.2 优缺点"></a>2.2 优缺点</h2><p>这样利用空间换时间的方式，可以让下游按需使用最佳的表来优化计算路径，从而减少计算时间、计算资源，保证数据产出的及时性。</p>
+<p>但是这种方式的确定也很明显：</p>
+<ul>
+<li>需要冗余建设很多类似cube的表，如果后续需要添加指标维度，那么这些表都需要进行修改，且容易出现逻辑口径不一致的问题，难以维护。</li>
+<li>没有解决「设备去重数」这类不可累加指标的问题，比如<code>table1</code>和<code>table2</code>中的「设备数」无法支持维度上卷。最终可能大多数还是使用<code>table0</code>, <code>1和2</code>使用比较少。</li>
+<li>预聚合的<code>table1</code>和<code>table2</code>抹去的设备与指标粒度关系，比如我想看「访问次数&gt;1」的「设备数」这类画像类值的分布，那么将无法满足，还是需要回到<code>table0</code>。</li>
+<li>如果下游需要对接数据服务，olap查询或者出看板等（比如导入clickhouse），还是比较依赖<code>table1</code>或者<code>table2</code>这类预聚合的表，因为数据量小，查询速度快。但是因为「设备数」无法上卷的问题，比如我想看<code>APP版本维度</code>对应的设备数，<code>table1</code>和<code>table2</code>无法满足。此时还是需要导入<code>table0</code>进行查询，但是<code>table0</code>的数据量比较大，这样就陷入比较两难的局面。</li>
+</ul>
+<p>由于表中的指标都是结构化的数据，已经丢失了聚合前的信息，所以我们需要利用<code>非结构化的思</code>路来进行优化，以达到通用和复用的目的：</p>
+<p><img src="http://ice-img.dreamylost.cn/uPic/20220217/pyPkNh.png" alt="图片路径：[https://github.com/bitlap/drawio/blob/main/2022-01-01.drawio](https://github.com/bitlap/drawio/blob/main/2022-01-01.drawio)"></p>
+<p>图片路径：<a href="https://github.com/bitlap/drawio/blob/main/2022-01-01.drawio" target="_blank" rel="noopener">https://github.com/bitlap/drawio/blob/main/2022-01-01.drawio</a></p>
+<h1 id="三、优化预聚合层"><a href="#三、优化预聚合层" class="headerlink" title="三、优化预聚合层"></a>三、优化预聚合层</h1><p>我们需要借助bitmap数据结构来建设优化后的非结构化表，具体思路如下。</p>
+<h2 id="3-1-优化设备数"><a href="#3-1-优化设备数" class="headerlink" title="3.1 优化设备数"></a>3.1 优化设备数</h2><p>对于「设备数」这类不可累加型的指标来说，为了让它支持可累加，可以将指标变成bitmap，将<code>table2</code>改造如下，设备数存成bitmap（可对应hive的binary类型）：</p>
+<table>
+<thead>
+<tr>
+<th>日期</th>
+<th>城市</th>
+<th>其他维度…</th>
+<th>设备数(bitmap)</th>
+<th>访问次数</th>
+<th>访问时长</th>
+<th>分享次数</th>
+<th>其他指标…</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2022-01-01</td>
+<td>北京</td>
+<td>…</td>
+<td>[1,2]</td>
+<td>2</td>
+<td>200</td>
+<td>4</td>
+<td>…</td>
+</tr>
+<tr>
+<td>2022-01-01</td>
+<td>上海</td>
+<td>…</td>
+<td>[1]</td>
+<td>1</td>
+<td>200</td>
+<td>1</td>
+<td>…</td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>这样在执行 <code>select bm_count(bm_agg(设备数)) num from table2 where dt = &#39;2022-01-01&#39;</code> 的时候，就可以很好的支持上卷。</p>
+<h2 id="3-2-优化指标"><a href="#3-2-优化指标" class="headerlink" title="3.2 优化指标"></a>3.2 优化指标</h2><p>解决了「设备数」的存储，下面需要解决「指标量」的存储。其实一般情况保留成数值类型也没有多大的问题，因为它们都是可累加型的指标，但是有些时候我们做设备画像标签的时候，需要用到（设备→指标）的映射关系。</p>
+<p>比如获取「总分享次数=1」的设备数，那么上述的表将无法实现。</p>
+<p>为了解决这一问题，需要用到「存储指标量的bitmap」，可以简单参开上篇文章的「指标存储优化」章节，详细的使用后续将开一个新的文章讲解。这里为了显示方便，使用简单的json表达，示例如下：</p>
+<table>
+<thead>
+<tr>
+<th>日期</th>
+<th>城市</th>
+<th>其他维度…</th>
+<th>设备数(bitmap)</th>
+<th>访问次数(bitmap)</th>
+<th>访问时长(bitmap)</th>
+<th>分享次数(bitmap)</th>
+<th>其他指标…</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2022-01-01</td>
+<td>北京</td>
+<td>…</td>
+<td>[1,2]</td>
+<td>{1→[1,2]}</td>
+<td>{100→[1,2]}</td>
+<td>{1→[2], 3→[1]}</td>
+<td>…</td>
+</tr>
+<tr>
+<td>2022-01-01</td>
+<td>上海</td>
+<td>…</td>
+<td>[1]</td>
+<td>{1→[2]}</td>
+<td>{200→[2]}</td>
+<td>{1→[1]}</td>
+<td>…</td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>OK，这样获取「总分享次数=1」的设备数可以这样表达：<code>select bm_count(cbm_compute(cbm_agg(分享次数), &#39;=&#39;, 1)) num from table2 where dt = &#39;2022-01-01&#39;</code></p>
+<ul>
+<li>cbm_agg 将所有的「分享次数」合并，类似sum，比如如上的「分享次数」数据得到结果：{1-&gt;[1,2], 3-&gt;[1]}，设备1做了4次，设备2做了1次</li>
+<li>cbm_compute 计算「总分享次数=1」，比如得到结果：{1-&gt;[2]}</li>
+<li>bm_count 计算设备数, 根据结果可得只有「设备2」符合，udf计算返回设备数为1</li>
+</ul>
+<h2 id="3-3-小节"><a href="#3-3-小节" class="headerlink" title="3.3 小节"></a>3.3 小节</h2><p>对于行为类的数据建设，我们需要选取「非结构化实体」作为「bitmap化的对象」，一般会选取「设备」或者「登录用户」。对于如何将String类型的设备标识转化为bitmap所支持的整数类型，这个我们后面会进行讨论，这里假设所有的分析实体已经整数化。</p>
+<p>预聚合层的优化本质上是使用「bitmap技术」对「分析实体」进行预聚合，且不丢失原有的含义表达，使得该指标具备上卷和下钻的能力，同时一个指标可以同时表达「累计指标量」和「去重数指标量」。</p>
+<h1 id="四、兼容维表"><a href="#四、兼容维表" class="headerlink" title="四、兼容维表"></a>四、兼容维表</h1><p>在数仓的维度建模中，事实表和维表在星型模型中是必不可少的组成部分，上节我们对事实的聚合表做了优化，但是维表也需要做一些处理才能兼容去使用。</p>
+<p>假设我们做了一个优化后的事实聚合表（<code>dws_table</code>）：</p>
+<table>
+<thead>
+<tr>
+<th>日期</th>
+<th>维度…</th>
+<th>设备数(bitmap)</th>
+<th>访问次数(bitmap)</th>
+<th>访问时长(bitmap)</th>
+<th>分享次数(bitmap)</th>
+<th>其他指标…</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2022-01-01</td>
+<td>…</td>
+<td>[1,2]</td>
+<td>{1→[1,2]}</td>
+<td>{100→[1,2]}</td>
+<td>{1→[2], 3→[1]}</td>
+<td>…</td>
+</tr>
+<tr>
+<td>2022-01-01</td>
+<td>…</td>
+<td>[1]</td>
+<td>{1→[2]}</td>
+<td>{200→[2]}</td>
+<td>{1→[1]}</td>
+<td>…</td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>假设我们之前我们有一张设备相关的维表，很显然由于事实表设备列的处理，无法与下面的表进行关联：</p>
+<table>
+<thead>
+<tr>
+<th>日期</th>
+<th>设备</th>
+<th>年龄</th>
+<th>性别</th>
+<th>其他维度…</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2022-01-01</td>
+<td>1</td>
+<td>20</td>
+<td>男</td>
+<td>…</td>
+</tr>
+<tr>
+<td>2022-01-01</td>
+<td>2</td>
+<td>22</td>
+<td>女</td>
+<td>…</td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p>所以对于维表的设备，也要进行「bitmap化」的处理，与事实表的处理方式类似（<code>dim_table</code>）：</p>
+<table>
+<thead>
+<tr>
+<th>日期</th>
+<th>年龄</th>
+<th>性别</th>
+<th>其他维度…</th>
+<th>维表设备（bitmap）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2022-01-01</td>
+<td>20</td>
+<td>男</td>
+<td>…</td>
+<td>[1]</td>
+</tr>
+<tr>
+<td>2022-01-01</td>
+<td>22</td>
+<td>女</td>
+<td>…</td>
+<td>[2]</td>
+</tr>
+<tr>
+<td>…</td>
+<td></td>
+<td></td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p>这样维表也能够进行很好的压缩，示例只是做了简单举例，实际情况下也是可以将维表的行数进行有效的削减的。</p>
+<p>对于事实表和维表的关联，确实比以往要复杂一些，不像之前只需要使用device_id进行join即可。</p>
+<p>现在优化后的dws_table和dim_table做关联的时候，需要做很多的准备工作：</p>
+<ul>
+<li>使用bitmap相关技术封装UDF，交集，并集，差集等。</li>
+<li>dws_table和dim_table使用cross join全关联，然后使用「交集UDF」来判断彼此是否存在交集，比如bitmap_and(访问次数, 维表设备)，有交集说明该设备在对应的维表属性中。</li>
+<li>关联之后会形成一个新的「非结构化表」，然后在此基础之上在进行后续处理。</li>
+</ul>
+<h1 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h1><p>本节是为了让「非结构化建模」的思想能够使用在当前比较主流的数仓建设中，作为一个有效的补充，避免因数据量大而带来的冗余和重复性建设，其实对于优化后的「事实表」是可以直接对接主流的OLAP引擎的，因为他在数据量上已经足够的小，且能够支持「去重性的指标」，前提是需要OLAP引擎做到对「bitmap」技术的支持。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/数仓/">数仓</a><a href="/tags/olap/">olap</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/数仓/">数仓</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.patamon.me/icemimosa/其他/非结构化数仓建模和Schema-Less OLAP构建 - 优化分层数仓（一）/" data-title="非结构化数仓建模和Schema-Less OLAP构建 - 优化分层数仓（一） | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/icemimosa/其他/非结构化数仓建模和Schema-Less OLAP构建 - 数据结构（二） /" title="非结构化数仓建模和Schema-Less OLAP构建 - 数据结构（二）">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  非结构化数仓建模和Schema-Less OLAP构建 - 数据结构（二）</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/icemimosa/其他/非结构化数仓建模和Schema-Less OLAP构建（零）/" title="非结构化数仓建模和Schema-Less OLAP构建（零）">
+ <strong>NEXT:</strong><br> 
+ <span>非结构化数仓建模和Schema-Less OLAP构建（零）
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#非结构化数仓建模和Schema-Less-OLAP构建-优化分层数仓（一）"><span class="toc-text">非结构化数仓建模和Schema-Less OLAP构建 - 优化分层数仓（一）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#一、概述"><span class="toc-text">一、概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二、预聚合层的尴尬"><span class="toc-text">二、预聚合层的尴尬</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-示例"><span class="toc-text">2.1 示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-优缺点"><span class="toc-text">2.2 优缺点</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三、优化预聚合层"><span class="toc-text">三、优化预聚合层</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-优化设备数"><span class="toc-text">3.1 优化设备数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-优化指标"><span class="toc-text">3.2 优化指标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-小节"><span class="toc-text">3.3 小节</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#四、兼容维表"><span class="toc-text">四、兼容维表</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#五、总结"><span class="toc-text">五、总结</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list">
+		
+		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/IceMimosa" target="_blank" title="github"></a>
+		
+		
+		
+		
+		<a href="mailto:514793425@qq.com" target="_blank" title="email"></a>
+		
+	</div>
+</div>
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/categories/java/" title="java">java<sup>26</sup></a></li>
+		
+			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/categories/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/categories/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/categories/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
+		
+			<li><a href="/categories/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
+		
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/tags/impala/" title="impala">impala<sup>1</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>27</sup></a></li>
+		
+			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/tags/lombok/" title="lombok">lombok<sup>3</sup></a></li>
+		
+			<li><a href="/tags/mac/" title="mac">mac<sup>2</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>1</sup></a></li>
+		
+			<li><a href="/tags/olap/" title="olap">olap<sup>4</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/tags/react/" title="react">react<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/tags/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/tags/spring/" title="spring">spring<sup>2</sup></a></li>
+		
+			<li><a href="/tags/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
+		
+			<li><a href="/tags/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/JavaScript/" style="font-size: 11px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 17px;">hbase</a> <a href="/tags/hive/" style="font-size: 16px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12px;">lombok</a> <a href="/tags/mac/" style="font-size: 11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/olap/" style="font-size: 13px;">olap</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/pulsar/" style="font-size: 10px;">pulsar</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/redis/" style="font-size: 18px;">redis</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/spring/" style="font-size: 11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13px;">sqoop</a> <a href="/tags/数仓/" style="font-size: 13px;">数仓</a> <a href="/tags/源码/" style="font-size: 19px;">源码</a>
+    </div>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    
+            <p class="copyright"> © 2023 
+		
+		<a href="http://www.patamon.me" target="_blank" title="IceMimosa">IceMimosa</a>
+		
+            <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
+            ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
+            </p></div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="/js/jquery-icemi-scroll2top.js"></script>
+<script src="/js/other.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  
+  // 回到顶部
+  $(document.body).scroll2Top({
+    background:"#66ccff",
+    shape:"circle",
+    bottom:40,
+    right:250
+  });
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    // m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,332-$(this).scrollTop()));
+  });
+});
+</script>
+
+<!-- GrowingIO Analytics code version 2.1 -->
+<!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
+<script type="text/javascript">
+!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
+gio('init','b988cbf13dfaa5ac', {});
+//custom page code begin here
+
+//custom page code end here
+gio('send');
+</script>
+<!-- End GrowingIO Analytics code version: 2.1 -->
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
+
+
+
+
+
+
+<script>
+    
+        var _bdImg = '4';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
+</html>
+

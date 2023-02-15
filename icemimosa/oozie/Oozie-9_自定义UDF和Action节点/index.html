@@ -1,0 +1,625 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
+  
+    <title>Oozie-9_自定义UDF和Action节点 | Ice の Mimosa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="IceMimosa">
+    
+    <meta name="description" content="[TOC]
+Oozie-9_自定义UDF和Action节点1. 自定义UDF有的时候oozie提供的EL函数没法满足需求，这个时候就需要对oozie的udf进行扩展。
+
+新建maven工程项目，这里的pom最好使用oozie项目自身的pom(在oozie的目录下可以找到)
+然后我们可以新建一个静态方">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="Ice の Mimosa" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon_mine.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/jquery-icemi-scroll2top.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='1cb536fd996cddc96154515a1ed1d72d';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+</html>
+  <body>
+    <header>
+      <div id="banner">
+		
+
+			<div id="erer" class="erer" style="">
+				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
+				<!-- <img id="i22" src="http://ice-img.dreamylost.cn/patamon-22.png" width=200 height=230></img> -->
+			</div>
+
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Ice の Mimosa">Ice の Mimosa</a></h1>
+				<a class="blog-motto">没有未来的未来不是我想要的未来</a>
+			</div>
+
+			<div id="sansan" class="sansan" style="">
+				<!-- <img src="/img/33.png" width=200 height=230></img> -->
+				<!-- <img src="http://ice-img.dreamylost.cn/patamon-33.png" width=200 height=230></img> -->
+			</div> 
+
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+					<li>
+					
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
+					
+					</form></li>
+				</ul>
+			</ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/icemimosa/oozie/Oozie-9_自定义UDF和Action节点/" title="Oozie-9_自定义UDF和Action节点" itemprop="url">Oozie-9_自定义UDF和Action节点</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2016-10-10T07:30:16.000Z" itemprop="datePublished">2016-10-10</time>
+    更新日期:<time datetime="2023-02-15T14:15:04.576Z" itemprop="dateModified">2023-02-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oozie-9-自定义UDF和Action节点"><span class="toc-text">Oozie-9_自定义UDF和Action节点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-自定义UDF"><span class="toc-text">1. 自定义UDF</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-自定义Action节点"><span class="toc-text">2. 自定义Action节点</span></a></li></ol>
+		</div>
+		
+		<p>[TOC]</p>
+<h1 id="Oozie-9-自定义UDF和Action节点"><a href="#Oozie-9-自定义UDF和Action节点" class="headerlink" title="Oozie-9_自定义UDF和Action节点"></a>Oozie-9_自定义UDF和Action节点</h1><h1 id="1-自定义UDF"><a href="#1-自定义UDF" class="headerlink" title="1. 自定义UDF"></a>1. 自定义UDF</h1><p>有的时候oozie提供的<code>EL</code>函数没法满足需求，这个时候就需要对oozie的udf进行扩展。</p>
+<ul>
+<li>新建maven工程项目，这里的pom最好使用<code>oozie项目自身的pom</code>(在oozie的目录下可以找到)</li>
+<li>然后我们可以新建一个<code>静态方法</code>，比如我们需要一个获取时间字符串的函数，如下</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 代码随便看看即可，关键是一个静态方法</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TerminusCoordELFunctions</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String defaultValueFormatter = <span class="string">"YYYY-MM-dd"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> inValueFormat 输入日期格式,不输入默认为 "YYYY-MM-DD"</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> inValue       输入日期的值,不输入从当前时间</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> outFormat     输出格式,不输入默认为 "YYYY-MM-DD"</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> interval      时间间隔</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> intervalType  'S' 秒 'MIN' 分钟 'H' 时 'D' 天 'MON' 月 'Y'年</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getDateFromNow</span><span class="params">(String inValueFormat, String inValue, String outFormat, <span class="keyword">int</span> interval, String intervalType)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (Strings.isNullOrEmpty(inValueFormat)) &#123;</span><br><span class="line">            inValueFormat = defaultValueFormatter;</span><br><span class="line">        &#125;</span><br><span class="line">        DateTime inTime = DateTime.now();</span><br><span class="line">        <span class="keyword">if</span> (!Strings.isNullOrEmpty(inValue)) &#123;</span><br><span class="line">            inTime = DateTimeFormat.forPattern(inValueFormat).parseDateTime(inValue);</span><br><span class="line">        &#125;</span><br><span class="line">        DateTime outTime = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!Strings.isNullOrEmpty(intervalType)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (Objects.equal(intervalType.toUpperCase(), <span class="string">"S"</span>)) &#123;</span><br><span class="line">                outTime = inTime.plusSeconds(interval);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (Objects.equal(intervalType.toUpperCase(), <span class="string">"MIN"</span>)) &#123;</span><br><span class="line">                outTime = inTime.plusMinutes(interval);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (Objects.equal(intervalType.toUpperCase(), <span class="string">"H"</span>)) &#123;</span><br><span class="line">                outTime = inTime.plusHours(interval);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (Objects.equal(intervalType.toUpperCase(), <span class="string">"D"</span>)) &#123;</span><br><span class="line">                outTime = inTime.plusDays(interval);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (Objects.equal(intervalType.toUpperCase(), <span class="string">"MON"</span>)) &#123;</span><br><span class="line">                outTime = inTime.plusMonths(interval);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (Objects.equal(intervalType.toUpperCase(), <span class="string">"Y"</span>)) &#123;</span><br><span class="line">                outTime = inTime.plusYears(interval);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            outTime = inTime.plusDays(interval);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (Strings.isNullOrEmpty(outFormat)) &#123;</span><br><span class="line">            outFormat = defaultValueFormatter;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> outTime.toString(outFormat);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>打包项目，然后把jar包放到<code>oozie-server</code>的运行环境中。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Cloudera Manager平台上传到安装oozie那台机器的 `/var/lib/oozie/` 目录</span><br><span class="line"></span><br><span class="line">* 注: `非Cloudera Manager平台`直接上传到 `$OOZIE_HOME/oozie-server/webapps/oozie/WEB-INF/lib/` 即可。</span><br></pre></td></tr></table></figure>
+<ul>
+<li>对<code>oozie-site.xml</code>进行配置</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- oozie EL function ext --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.service.ELService.ext.functions.workflow<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span></span><br><span class="line">       horus:getDateFromNow=io.terminus.horus.oozie.udf.TerminusCoordELFunctions#getDateFromNow</span><br><span class="line">	<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line">## 当然这个是针对workflow的，还有其他的配置参考 oozie-default.xml 文件中</span><br></pre></td></tr></table></figure>
+<ul>
+<li>这样你就可以在<code>workflow.xml</code>中使用了, 如<code>${horus:getDateFromNow(&#39;&#39;, &#39;&#39;, &#39;yyyy-MM-dd&#39;, -1, &#39;D&#39;)}</code></li>
+</ul>
+<h1 id="2-自定义Action节点"><a href="#2-自定义Action节点" class="headerlink" title="2. 自定义Action节点"></a>2. 自定义Action节点</h1><p>有的时候发现oozie提供的Action不够用，那么就需要进行扩展。</p>
+<ul>
+<li>参考：<a href="http://archive.cloudera.com/cdh5/cdh/5/oozie-4.1.0-cdh5.7.0/DG_CustomActionExecutor.html" target="_blank" rel="noopener">Custom Action Nodes</a></li>
+<li>在写之前可以参考Oozie的Email节点：<a href="https://github.com/apache/oozie/blob/master/core/src/main/java/org/apache/oozie/action/email/EmailActionExecutor.java" target="_blank" rel="noopener">EmailActionExecutor.java</a></li>
+</ul>
+<blockquote>
+<p>过程</p>
+</blockquote>
+<p>和自定义UDF一样, 创建一个maven项目, pom同上。</p>
+<ul>
+<li>新建一个类继承<code>ActionExecutor</code>, 然后对里面的覆盖方法进行编写。</li>
+<li>在<code>resources目录</code>新建一个<code>xml schema</code>文件。可以参考其他节点的schema文件, 比如</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">xs:schema</span> <span class="attr">xmlns:xs</span>=<span class="string">"http://www.w3.org/2001/XMLSchema"</span></span></span><br><span class="line"><span class="tag">           <span class="attr">xmlns:custom</span>=<span class="string">"uri:custom:sshfs-action:0.1"</span></span></span><br><span class="line"><span class="tag">           <span class="attr">elementFormDefault</span>=<span class="string">"qualified"</span></span></span><br><span class="line"><span class="tag">           <span class="attr">targetNamespace</span>=<span class="string">"uri:custom:sshfs-action:0.1"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">xs:complexType</span> <span class="attr">name</span>=<span class="string">"sshfs"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">xs:sequence</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">xs:element</span> <span class="attr">name</span>=<span class="string">"protocol"</span> <span class="attr">type</span>=<span class="string">"xs:string"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">xs:element</span> <span class="attr">name</span>=<span class="string">"name-node"</span> <span class="attr">type</span>=<span class="string">"xs:string"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">xs:element</span> <span class="attr">name</span>=<span class="string">"file-path"</span> <span class="attr">type</span>=<span class="string">"xs:string"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">xs:element</span> <span class="attr">name</span>=<span class="string">"des-key"</span> <span class="attr">type</span>=<span class="string">"xs:string"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">xs:element</span> <span class="attr">name</span>=<span class="string">"file-date"</span> <span class="attr">type</span>=<span class="string">"xs:string"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">xs:element</span> <span class="attr">name</span>=<span class="string">"hive-url"</span> <span class="attr">type</span>=<span class="string">"xs:string"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">xs:element</span> <span class="attr">name</span>=<span class="string">"hive-table"</span> <span class="attr">type</span>=<span class="string">"xs:string"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">xs:element</span> <span class="attr">name</span>=<span class="string">"ssh-host"</span> <span class="attr">type</span>=<span class="string">"xs:string"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">xs:element</span> <span class="attr">name</span>=<span class="string">"ssh-port"</span> <span class="attr">type</span>=<span class="string">"xs:string"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">xs:element</span> <span class="attr">name</span>=<span class="string">"ssh-username"</span> <span class="attr">type</span>=<span class="string">"xs:string"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">xs:element</span> <span class="attr">name</span>=<span class="string">"ssh-password"</span> <span class="attr">type</span>=<span class="string">"xs:string"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">xs:element</span> <span class="attr">name</span>=<span class="string">"excel-password"</span> <span class="attr">type</span>=<span class="string">"xs:string"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">xs:element</span> <span class="attr">name</span>=<span class="string">"file-type"</span> <span class="attr">type</span>=<span class="string">"xs:string"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">xs:element</span> <span class="attr">name</span>=<span class="string">"split"</span> <span class="attr">type</span>=<span class="string">"xs:string"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">xs:sequence</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">xs:complexType</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">xs:element</span> <span class="attr">name</span>=<span class="string">"sshfs"</span> <span class="attr">type</span>=<span class="string">"custom:sshfs"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">xs:schema</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>最后打包项目，同样放到oozie的运行环境中。</li>
+<li>配置 <code>oozie-site.xml</code>，如下</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.service.ActionService.executor.ext.classes<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>io.terminus.horus.oozie.udn.nodes.SshFsExecutor<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.service.SchemaService.wf.ext.schemas<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>sshfs.xsd<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>最后你就可以使用自定节点了，比如</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">sshfs</span> <span class="attr">xmlns</span>=<span class="string">"uri:custom:sshfs-action:0.1"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">protocol</span>&gt;</span>http<span class="tag">&lt;/<span class="name">protocol</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name-node</span>&gt;</span>hdfs://xr-test-namenode:8020<span class="tag">&lt;/<span class="name">name-node</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">file-path</span>&gt;</span>http://jfopr.haier.com/order/other/getSuccessOrderXls?dateStr=$&#123;horus:getDateFromNow('', '', 'yyyyMMdd', 0, 'D')&#125;<span class="tag">&lt;/<span class="name">file-path</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">des-key</span>&gt;</span>%24%3DX4uY6%3B%5E4VADN*23A8%23h%3E%5D%294%24wg76V2<span class="tag">&lt;/<span class="name">des-key</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">file-date</span>&gt;</span>null<span class="tag">&lt;/<span class="name">file-date</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">hive-url</span>&gt;</span>jdbc:hive2://xr-test-namenode:10000/default<span class="tag">&lt;/<span class="name">hive-url</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">hive-table</span>&gt;</span>s_haibei_order<span class="tag">&lt;/<span class="name">hive-table</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">ssh-host</span>&gt;</span><span class="tag">&lt;/<span class="name">ssh-host</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">ssh-port</span>&gt;</span><span class="tag">&lt;/<span class="name">ssh-port</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">ssh-username</span>&gt;</span><span class="tag">&lt;/<span class="name">ssh-username</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">ssh-password</span>&gt;</span><span class="tag">&lt;/<span class="name">ssh-password</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">excel-password</span>&gt;</span>null<span class="tag">&lt;/<span class="name">excel-password</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">file-type</span>&gt;</span>excel<span class="tag">&lt;/<span class="name">file-type</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">split</span>&gt;</span>null<span class="tag">&lt;/<span class="name">split</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">sshfs</span>&gt;</span></span><br></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/oozie/">oozie</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/oozie/">oozie</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.patamon.me/icemimosa/oozie/Oozie-9_自定义UDF和Action节点/" data-title="Oozie-9_自定义UDF和Action节点 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/icemimosa/sqoop/Sqoop命令/" title="Sqoop命令">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  Sqoop命令</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/icemimosa/hive/Hive-5_UDF/" title="Hive-5_UDF">
+ <strong>NEXT:</strong><br> 
+ <span>Hive-5_UDF
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oozie-9-自定义UDF和Action节点"><span class="toc-text">Oozie-9_自定义UDF和Action节点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-自定义UDF"><span class="toc-text">1. 自定义UDF</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-自定义Action节点"><span class="toc-text">2. 自定义Action节点</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list">
+		
+		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/IceMimosa" target="_blank" title="github"></a>
+		
+		
+		
+		
+		<a href="mailto:514793425@qq.com" target="_blank" title="email"></a>
+		
+	</div>
+</div>
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/categories/java/" title="java">java<sup>26</sup></a></li>
+		
+			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/categories/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/categories/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/categories/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
+		
+			<li><a href="/categories/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
+		
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/tags/impala/" title="impala">impala<sup>1</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>27</sup></a></li>
+		
+			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/tags/lombok/" title="lombok">lombok<sup>3</sup></a></li>
+		
+			<li><a href="/tags/mac/" title="mac">mac<sup>2</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>1</sup></a></li>
+		
+			<li><a href="/tags/olap/" title="olap">olap<sup>4</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/tags/react/" title="react">react<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/tags/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/tags/spring/" title="spring">spring<sup>2</sup></a></li>
+		
+			<li><a href="/tags/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
+		
+			<li><a href="/tags/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/JavaScript/" style="font-size: 11px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 17px;">hbase</a> <a href="/tags/hive/" style="font-size: 16px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12px;">lombok</a> <a href="/tags/mac/" style="font-size: 11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/olap/" style="font-size: 13px;">olap</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/pulsar/" style="font-size: 10px;">pulsar</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/redis/" style="font-size: 18px;">redis</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/spring/" style="font-size: 11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13px;">sqoop</a> <a href="/tags/数仓/" style="font-size: 13px;">数仓</a> <a href="/tags/源码/" style="font-size: 19px;">源码</a>
+    </div>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    
+            <p class="copyright"> © 2023 
+		
+		<a href="http://www.patamon.me" target="_blank" title="IceMimosa">IceMimosa</a>
+		
+            <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
+            ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
+            </p></div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="/js/jquery-icemi-scroll2top.js"></script>
+<script src="/js/other.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  
+  // 回到顶部
+  $(document.body).scroll2Top({
+    background:"#66ccff",
+    shape:"circle",
+    bottom:40,
+    right:250
+  });
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    // m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,332-$(this).scrollTop()));
+  });
+});
+</script>
+
+<!-- GrowingIO Analytics code version 2.1 -->
+<!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
+<script type="text/javascript">
+!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
+gio('init','b988cbf13dfaa5ac', {});
+//custom page code begin here
+
+//custom page code end here
+gio('send');
+</script>
+<!-- End GrowingIO Analytics code version: 2.1 -->
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
+
+
+
+
+
+
+<script>
+    
+        var _bdImg = '4';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
+</html>
+

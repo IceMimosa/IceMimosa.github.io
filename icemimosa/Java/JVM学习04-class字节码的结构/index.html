@@ -1,0 +1,688 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
+  
+    <title>JVM学习04-class字节码的结构 | Ice の Mimosa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="IceMimosa">
+    
+    <meta name="description" content="[TOC]
+JVM学习04-class字节码的结构1. 字节码简介java作为跨平台的语言，其重要性就体现在java源代码编译后的字节码 .class 文件。很多的语言如java、groovy、scala、kotlin等都是基于JVM运行的，其根本就是输出之后的字节码。作为跨平台的一个基础，当然要对">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="Ice の Mimosa" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon_mine.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/jquery-icemi-scroll2top.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='1cb536fd996cddc96154515a1ed1d72d';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+</html>
+  <body>
+    <header>
+      <div id="banner">
+		
+
+			<div id="erer" class="erer" style="">
+				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
+				<!-- <img id="i22" src="http://ice-img.dreamylost.cn/patamon-22.png" width=200 height=230></img> -->
+			</div>
+
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Ice の Mimosa">Ice の Mimosa</a></h1>
+				<a class="blog-motto">没有未来的未来不是我想要的未来</a>
+			</div>
+
+			<div id="sansan" class="sansan" style="">
+				<!-- <img src="/img/33.png" width=200 height=230></img> -->
+				<!-- <img src="http://ice-img.dreamylost.cn/patamon-33.png" width=200 height=230></img> -->
+			</div> 
+
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+					<li>
+					
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
+					
+					</form></li>
+				</ul>
+			</ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/icemimosa/Java/JVM学习04-class字节码的结构/" title="JVM学习04-class字节码的结构" itemprop="url">JVM学习04-class字节码的结构</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2017-03-24T10:00:34.000Z" itemprop="datePublished">2017-03-24</time>
+    更新日期:<time datetime="2023-02-15T14:15:04.568Z" itemprop="dateModified">2023-02-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JVM学习04-class字节码的结构"><span class="toc-text">JVM学习04-class字节码的结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-字节码简介"><span class="toc-text">1. 字节码简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-字节码的文件结构"><span class="toc-text">2. 字节码的文件结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-魔数-magic"><span class="toc-text">2.1 魔数 magic</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-版本-version"><span class="toc-text">2.2 版本 version</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-常量池-constant-pool-cp"><span class="toc-text">2.3 常量池 constant_pool(cp)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-访问标识-access-flag"><span class="toc-text">2.4 访问标识 access flag</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-本类和超类"><span class="toc-text">2.5 本类和超类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-6-接口-Interfaces"><span class="toc-text">2.6 接口 Interfaces</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-7-字段-Fields"><span class="toc-text">2.7 字段 Fields</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-8-方法-Methods"><span class="toc-text">2.8 方法 Methods</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-9-属性"><span class="toc-text">2.9 属性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-总结"><span class="toc-text">3. 总结</span></a></li></ol>
+		</div>
+		
+		<p>[TOC]</p>
+<h1 id="JVM学习04-class字节码的结构"><a href="#JVM学习04-class字节码的结构" class="headerlink" title="JVM学习04-class字节码的结构"></a>JVM学习04-class字节码的结构</h1><h1 id="1-字节码简介"><a href="#1-字节码简介" class="headerlink" title="1. 字节码简介"></a>1. 字节码简介</h1><p>java作为跨平台的语言，其重要性就体现在java源代码编译后的字节码 <code>.class</code> 文件。很多的语言如java、groovy、scala、kotlin等都是基于JVM运行的，其根本就是输出之后的字节码。作为跨平台的一个基础，当然要对字节码的文件结构有一定的认识。</p>
+<h1 id="2-字节码的文件结构"><a href="#2-字节码的文件结构" class="headerlink" title="2. 字节码的文件结构"></a>2. 字节码的文件结构</h1><p>字节码的文件结构一次可以分为（<code>魔数，版本，常量池，访问符，类，超类，接口，字段，方法，属性</code>）。每个部分的数据的大小都采用无符号整形来表示，例如u1,u2,u4等等表示一个字节，两个字节，四个字节。具体参照下图：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021232.png" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 或者像这样</span><br><span class="line">ClassFile &#123;</span><br><span class="line">    u4 magic;</span><br><span class="line">    u2 minor_version;</span><br><span class="line">    u2 major_version;</span><br><span class="line">    u2 constant_pool_count;</span><br><span class="line">    cp_info contant_pool[constant_pool_count – 1];</span><br><span class="line">    u2 access_flags;</span><br><span class="line">    u2 this_class;</span><br><span class="line">    u2 super_class;</span><br><span class="line">    u2 interfaces_count;</span><br><span class="line">    u2 interfaces[interfaces_count];</span><br><span class="line">    u2 fields_count;</span><br><span class="line">    field_info fields[fields_count];</span><br><span class="line">    u2 methods_count;</span><br><span class="line">    method_info methods[methods_count];</span><br><span class="line">    u2 attributes_count;</span><br><span class="line">    attribute_info attributes[attributes_count];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>图中的数据类型除了无符号整形之外，还有”_info”结尾的数据类型，这种称之为”表”。例如常量池中是存在多个常量的，所以要通过类似表的结构来进行存储，而且因为字节码是依次排列的，所以在描述常量池信息之前还需要对常量池中常量的个数进行描述（标记），这个很容易理解，就是用来判断什么时候读到常量池的结尾了。当然字段，方法和属性以”_info”结尾就类似了。<br>下面对每一个部分一一描述：</p>
+<p>在分析字节码之前介绍一款工具，<a href="http://www.cs.ioc.ee/~ando/jbe/" target="_blank" rel="noopener">Java ByteCode Editor</a></p>
+<p>以下的例子基于代码（<strong>举例子的时候常量池的索引可能会存在误差，下面阅读的时候请考虑这段话</strong>）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.minosa.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloClass</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> String name = <span class="string">"Mimosa"</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> age = <span class="number">20</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> i = <span class="number">10</span>;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">sayHello</span><span class="params">()</span></span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"Hello "</span> + name + <span class="string">" ,"</span> + age);</span><br><span class="line">		<span class="keyword">return</span> name;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> a = <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">int</span> b = <span class="number">2</span>;</span><br><span class="line">		<span class="keyword">int</span> c = a + b;</span><br><span class="line">		System.out.println(c);</span><br><span class="line">		System.out.println(<span class="string">"Hello Class !!!"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-1-魔数-magic"><a href="#2-1-魔数-magic" class="headerlink" title="2.1 魔数 magic"></a>2.1 魔数 magic</h2><p>魔数是字节码固定的数值，在文件的最开始部分，占四个字节，值是 （<strong>CA FE BA BE</strong>）。</p>
+<h2 id="2-2-版本-version"><a href="#2-2-版本-version" class="headerlink" title="2.2 版本 version"></a>2.2 版本 version</h2><p>版本分为小版本minor和大版本major，分别占两个字节。例如（00 00 00 33）就表示 51.0版本。如图，稍微看下即可：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021254.png" alt=""></p>
+<h2 id="2-3-常量池-constant-pool-cp"><a href="#2-3-常量池-constant-pool-cp" class="headerlink" title="2.3 常量池 constant_pool(cp)"></a>2.3 常量池 constant_pool(cp)</h2><p>常量池是整个字节码结构中最重要的一个部分，因为常量池之后的数据基本都是引用常量池中的数据，后面就会看到。<br>常量池分为两个部分：cp数量和cp_info。之前说过先是以数量开头作为标识。<br>这里解决下一个问题：为什么field_info等的数量都是fields_count，而cp_info的数量却要减1。这是因为常量池中的真实存在的数据是以下标1开始的，而下标0则代表”无引用”（不引用常量池中的任意一项），比如一个类没有接口的话就指向常量池中0下标。</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021308.png" alt=""></p>
+<p>常量池中的数据又存在多种类型的常量，如Class_info, Utf8_info等等，如图总表所示：类型有点多（不必害怕），依次使用例子进行描述</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021355.png" alt=""></p>
+<p><strong>1. Utf8_info</strong></p>
+<p>Utf8_info 的数据表示utf8编码中的数据，在字节码中分为三个部分：tag标识，bytes长度，bytes数据。<br>tag表示是固定的，Utf8_info的tag值是（01），占一个字节。<br>其次是bytes数组的length，占两个字节。<br>最后是bytes数组中的数据，依次表示，每个字符占一个字节（中文不止一个字节，可自行研究）。<br>比如一个类的名称（com/minosa/test/HelloClass）是个字符串，指向常量池中一个Utf8_info的数据：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021426.png" alt=""></p>
+<p>class字节码16进制表示中的数据（用的editplus的16进制查看器打开的）：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021456.png" alt=""></p>
+<p>上图蓝色高亮部分：<br>(1) <strong>01</strong> tag 表示Utf8_info类型。<br>(2) <strong>00 1A</strong> 表示字节数组的长度，是26<br>(3) <strong>63 6F 6D … 73 73</strong>，表示数组中的数据，就是字符串utf8编码的表示，这里是的数据是（com … ss）。</p>
+<p><strong>2. Integer_info</strong></p>
+<p>Integer_info 数据分为两个部分：tag标识，int型值<br>tag固定值为 03；其次是int的值，占4个字节。一般在常量池中的整形，浮点型等数据在java中是static final类型的编译时常量。<br>比如一个static final int i = 10;</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021541.png" alt=""></p>
+<p>16进制字节码表示：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021559.png" alt=""></p>
+<p><strong>3. Float_info</strong></p>
+<p>同 Integer_info 类型，只是tag为4，数据占4个字节。</p>
+<p><strong>4. Long_info</strong></p>
+<p>同 Integer_info 类型，只是tag为5，数据占8个字节。</p>
+<p><strong>5. Double_info</strong></p>
+<p>同 Integer_info 类型，只是tag为6，数据占8个字节。</p>
+<p><strong>6. Class_info</strong></p>
+<p>Class_info 表示一个类的信息，包含两个部分：tag和类全名。<br>tag固定值为 07 ，类全名name是一个index（索引），指向一个utf8_info。<br>如上面的类（com/minosa/test/HelloClass），表示为：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021612.png" alt=""></p>
+<p>图中类的名称指向常量池中索引为2的常量，在16进制的字节码中表示为：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021621.png" alt=""></p>
+<p>上图中：魔数是（CA FE BA BE），版本号是（00 00 00 33）。紧接着就是常量池：（00 46）表示常量池中数据的数量，然后就是常量池中的数据。这里的（07 00 02）就表示Class_info。</p>
+<p><strong>7. String_info</strong></p>
+<p>String_info表示字符串常量，分为两个部分：tag和String值。<br>tag固定值为 08，String的值是一个指向utf8_info的索引。<br>比如一个面值为”Mimosa”的string常量，在常量池的表示：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021631.png" alt=""></p>
+<p>在16进制字节码中的表示：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021640.png" alt=""></p>
+<p><strong>8. NameAndType_info</strong></p>
+<p>NameAndType_info 表示名称和类型的常量，为以下Fieldref_info，Methodref_info，InterfaceMethodref_info服务。<br>NameAndType_info 分为三个部分：tag，name和描述description。<br>tag是固定值 0C，name就表示该类型的名称（指向utf8_info的索引），description是该类型的描述（指向utf8_info的索引）。<br>这里的类型到后面再说，比如一个构造方法的描述：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021652.png" alt=""></p>
+<p>这里的<init>表示构造方法的描述名称，()V表示构造方法（这个后面会介绍）。<br>16进制字节码描述：</init></p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021704.png" alt=""></p>
+<p><strong>9. Fieldref_info</strong></p>
+<p>Fieldref_info 表示一个字段的描述，分为三个部分：tag，字段所在的Class（指向一个Class_info），字段的描述（指向一个NameAndType_info）。<br>tag是固定值 09；其次是字段所在的类的描述；然后是字段的NameAndType描述。<br>比如一个字段 public String name;</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021717.png" alt=""></p>
+<p>图中Class_info上面已经有图了，然后是NameAndType_info为：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021731.png" alt=""></p>
+<p>Name表示字段的名称为name，Descriptor是字段的类型为（Ljava/lang/String;），类型后面会讲到。<br>Fieldref_info 在16进制字节码中表示：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021746.png" alt=""></p>
+<p><strong>10. Methodref_info</strong></p>
+<p>Methodref_info 就和 Fieldref_info 同理了，分为tag，方法所在类，方法的描述三个部分。<br>tag固定值为 0A；其次是方法所在类；最后是方法的描述；<br>以构造方法为例：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021757.png" alt=""></p>
+<p>之后的分析就和上面同理。</p>
+<p><strong>11. InterfaceMethodref_info</strong></p>
+<p>接口的方法定义，与 Methodref_info 同理。<br>分为三个部分：tag固定值为 0B，方法所在的接口（指向一个Class_info），方法的描述（指向一个NameAndType_info）。</p>
+<h2 id="2-4-访问标识-access-flag"><a href="#2-4-访问标识-access-flag" class="headerlink" title="2.4 访问标识 access flag"></a>2.4 访问标识 access flag</h2><p>访问标识标识类的访问类型，占2个字节。所有类型如图：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021809.png" alt=""></p>
+<p>比如当前类的访问标识为public：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021823.png" alt=""></p>
+<h2 id="2-5-本类和超类"><a href="#2-5-本类和超类" class="headerlink" title="2.5 本类和超类"></a>2.5 本类和超类</h2><p>紧接着是本类和超类的，this_class和super_class都是指向常量池中的一个Class_info。比如之前的例子：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021835.png" alt=""></p>
+<p>在16进制字节码中的表示：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021846.png" alt=""></p>
+<h2 id="2-6-接口-Interfaces"><a href="#2-6-接口-Interfaces" class="headerlink" title="2.6 接口 Interfaces"></a>2.6 接口 Interfaces</h2><p>接口与常量池类似，分为接口数量和接口描述两个部分。<br>接口数量占用2个字节；每个接口描述是指向常量池中的一个Class_info，也占2个字节。</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021904.png" alt=""></p>
+<p>由于本例子中接口的数量是0，所以后面没有接口的描述。</p>
+<h2 id="2-7-字段-Fields"><a href="#2-7-字段-Fields" class="headerlink" title="2.7 字段 Fields"></a>2.7 字段 Fields</h2><p>字段同样分为两个部分：字段数量和字段的描述。<br>字段数量占2个字节。<br>每个字段描述分为5个部分：访问标识，字段名（常量池索引），字段描述（常量池索引），属性数量和属性描述。</p>
+<p><strong>1. 字段访问标识</strong><br>与类的访问标识类似，占2个字节。</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021916.png" alt=""></p>
+<p><strong>2. 字段名</strong><br>字段的名称，指向常量池中的一个utf8_info数据。</p>
+<p><strong>3. 字段描述</strong><br>字段的描述也是指向常量池中的一个utf8_info数据。之前说类型描述后面会讲到，这里列出所有的字段类型的描述符（方法的描述符后面说）。</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021944.png" alt=""></p>
+<p><strong>4. 属性数量和属性描述</strong><br>attributes_count 占2个字节，后面紧接着就是每个attribute_info 的描述。例如当有一个static final类型的变量，就会生成一个编译时常量Integer_info值的描述。</p>
+<p>例子：比如name字段和age字段<br>首先是字段的数量：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-021957.png" alt=""></p>
+<p><code>1 . private String name;</code></p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022019.png" alt=""></p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022031.png" alt=""><br>name属性依次是：（00 02）表示private；（00 05和00 06）表示name和Descriptor；（00 00）表示属性的数量，这里不存在。</p>
+<p><code>2 . private int age;</code></p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022041.png" alt=""></p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022049.png" alt=""></p>
+<p>同上。</p>
+<p><code>3 . public static final int i = 10;</code></p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022100.png" alt=""></p>
+<p>然后字段有一个ConstantValue（常量）属性：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022110.png" alt=""></p>
+<p>这里常量池中的#10和#11分为表示：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022121.png" alt=""></p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022131.png" alt=""></p>
+<h2 id="2-8-方法-Methods"><a href="#2-8-方法-Methods" class="headerlink" title="2.8 方法 Methods"></a>2.8 方法 Methods</h2><p>同样，方法也分为数量和方法的描述。<br>方法的描述和字段类似，也分为：访问标识，名称，描述，属性数量和属性。</p>
+<p><strong>1. 访问标识</strong><br>占用2个字节。</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022141.png" alt=""></p>
+<p><strong>2. 名称和描述</strong><br>名称和描述都是指向常量池中的utf8_info，各占2个字节。这里说下方法的描述符：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例举几个例子就明白了</span></span><br><span class="line"><span class="number">1</span>. 构造方法 </span><br><span class="line">==&gt; ()V</span><br><span class="line">表示没有参数，返回值为<span class="keyword">void</span></span><br><span class="line"></span><br><span class="line"><span class="number">2</span>. <span class="function"><span class="keyword">int</span> <span class="title">indexOf</span><span class="params">(<span class="keyword">char</span>[],<span class="keyword">int</span>)</span> </span></span><br><span class="line"><span class="function"></span>==&gt; ([CI)I</span><br><span class="line"></span><br><span class="line"><span class="number">3</span>. <span class="function">String <span class="title">name</span><span class="params">(String,<span class="keyword">long</span>)</span> </span></span><br><span class="line"><span class="function"></span>==&gt; (Ljava/lang/String;J)Ljava/lang/String;</span><br></pre></td></tr></table></figure>
+<p><strong>3. 属性数量和属性</strong><br>属性的数量占2个字节。<br>在field和method中可以有很多属性，类也存在attribute，每个attribute用于描述一个额外的信息。<br>每个attribute又分为三个部分：attribute名称，attribute的长度和属性的描述。<br>attribute名称是指向常量池中的一个utf8_info，占2个字节；attribute的长度占4个字节；每一个属性内容占1个字节。<br>这里列举一些属性的描述：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022157.png" alt=""></p>
+<p>例如每个方法含有Code属性，Code包含着需要执行的代码（下一博客讲述），Code属性中又含有LineNumberTable和LocalVaribleTable。<br>LineNumberTable记录在源代码中的行号，LocalVaribleTable就表示之前博客讲过的JVM内存模型中栈中的局部变量分配的表。<br>例如Exceptions属性表示方法申明的抛出的异常（throws的部分，非try/catch部分）。<br>例如SourceFile表示生成该字节码的源文件名称。<br>例如ConstantValue表示final常量的值，上面字段例举过了。</p>
+<h2 id="2-9-属性"><a href="#2-9-属性" class="headerlink" title="2.9 属性"></a>2.9 属性</h2><p>刚刚说了类也存在属性，那么字节码的最后一项就是类的属性。同样分为属性的数量和属性描述。<br>例如在本例子中，存在SourceFile属性：</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-10-08-022217.png" alt=""></p>
+<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><p>其实字节码的结构还算是比较简单的，稍微过下就好。下面需要理解的就是方法中代码Code的执行过程，可以使用java自带的javap -verbose对字节码进行反汇编，查看执行的指令。理解完了字节码的执行过程，那么在此基础上可以使用ASM等字节码工具更好的对字节码进行操作。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/java/">java</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.patamon.me/icemimosa/Java/JVM学习04-class字节码的结构/" data-title="JVM学习04-class字节码的结构 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/icemimosa/Java/JVM学习05-字节码执行过程和JVM指令集/" title="JVM学习05-字节码执行过程和JVM指令集">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  JVM学习05-字节码执行过程和JVM指令集</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/icemimosa/Java/JVM学习03-类加载机制/" title="JVM学习03-类加载机制">
+ <strong>NEXT:</strong><br> 
+ <span>JVM学习03-类加载机制
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#JVM学习04-class字节码的结构"><span class="toc-text">JVM学习04-class字节码的结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-字节码简介"><span class="toc-text">1. 字节码简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-字节码的文件结构"><span class="toc-text">2. 字节码的文件结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-魔数-magic"><span class="toc-text">2.1 魔数 magic</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-版本-version"><span class="toc-text">2.2 版本 version</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-常量池-constant-pool-cp"><span class="toc-text">2.3 常量池 constant_pool(cp)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-访问标识-access-flag"><span class="toc-text">2.4 访问标识 access flag</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-本类和超类"><span class="toc-text">2.5 本类和超类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-6-接口-Interfaces"><span class="toc-text">2.6 接口 Interfaces</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-7-字段-Fields"><span class="toc-text">2.7 字段 Fields</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-8-方法-Methods"><span class="toc-text">2.8 方法 Methods</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-9-属性"><span class="toc-text">2.9 属性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-总结"><span class="toc-text">3. 总结</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list">
+		
+		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/IceMimosa" target="_blank" title="github"></a>
+		
+		
+		
+		
+		<a href="mailto:514793425@qq.com" target="_blank" title="email"></a>
+		
+	</div>
+</div>
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/categories/java/" title="java">java<sup>26</sup></a></li>
+		
+			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/categories/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/categories/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/categories/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
+		
+			<li><a href="/categories/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
+		
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/tags/impala/" title="impala">impala<sup>1</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>27</sup></a></li>
+		
+			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/tags/lombok/" title="lombok">lombok<sup>3</sup></a></li>
+		
+			<li><a href="/tags/mac/" title="mac">mac<sup>2</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>1</sup></a></li>
+		
+			<li><a href="/tags/olap/" title="olap">olap<sup>4</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/tags/react/" title="react">react<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/tags/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/tags/spring/" title="spring">spring<sup>2</sup></a></li>
+		
+			<li><a href="/tags/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
+		
+			<li><a href="/tags/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/JavaScript/" style="font-size: 11px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 17px;">hbase</a> <a href="/tags/hive/" style="font-size: 16px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12px;">lombok</a> <a href="/tags/mac/" style="font-size: 11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/olap/" style="font-size: 13px;">olap</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/pulsar/" style="font-size: 10px;">pulsar</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/redis/" style="font-size: 18px;">redis</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/spring/" style="font-size: 11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13px;">sqoop</a> <a href="/tags/数仓/" style="font-size: 13px;">数仓</a> <a href="/tags/源码/" style="font-size: 19px;">源码</a>
+    </div>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    
+            <p class="copyright"> © 2023 
+		
+		<a href="http://www.patamon.me" target="_blank" title="IceMimosa">IceMimosa</a>
+		
+            <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
+            ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
+            </p></div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="/js/jquery-icemi-scroll2top.js"></script>
+<script src="/js/other.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  
+  // 回到顶部
+  $(document.body).scroll2Top({
+    background:"#66ccff",
+    shape:"circle",
+    bottom:40,
+    right:250
+  });
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    // m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,332-$(this).scrollTop()));
+  });
+});
+</script>
+
+<!-- GrowingIO Analytics code version 2.1 -->
+<!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
+<script type="text/javascript">
+!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
+gio('init','b988cbf13dfaa5ac', {});
+//custom page code begin here
+
+//custom page code end here
+gio('send');
+</script>
+<!-- End GrowingIO Analytics code version: 2.1 -->
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
+
+
+
+
+
+
+<script>
+    
+        var _bdImg = '4';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
+</html>
+

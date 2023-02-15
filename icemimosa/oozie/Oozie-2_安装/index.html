@@ -1,0 +1,660 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
+  
+    <title>Oozie-2_安装 | Ice の Mimosa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="IceMimosa">
+    
+    <meta name="description" content="Oozie-2_安装[TOC]
+1. 设置环境变量解压 oozie-4.1.0-cdh5.7.0.tar.gz
+123# 目录自定义export OOZIE_HOME=&amp;quot;/Users/icemimosa/mimosa/oozie-4.1.0&amp;quot;export PATH=&amp;quot;$">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="Ice の Mimosa" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon_mine.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/jquery-icemi-scroll2top.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='1cb536fd996cddc96154515a1ed1d72d';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+</html>
+  <body>
+    <header>
+      <div id="banner">
+		
+
+			<div id="erer" class="erer" style="">
+				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
+				<!-- <img id="i22" src="http://ice-img.dreamylost.cn/patamon-22.png" width=200 height=230></img> -->
+			</div>
+
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Ice の Mimosa">Ice の Mimosa</a></h1>
+				<a class="blog-motto">没有未来的未来不是我想要的未来</a>
+			</div>
+
+			<div id="sansan" class="sansan" style="">
+				<!-- <img src="/img/33.png" width=200 height=230></img> -->
+				<!-- <img src="http://ice-img.dreamylost.cn/patamon-33.png" width=200 height=230></img> -->
+			</div> 
+
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+					<li>
+					
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
+					
+					</form></li>
+				</ul>
+			</ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/icemimosa/oozie/Oozie-2_安装/" title="Oozie-2_安装" itemprop="url">Oozie-2_安装</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2016-07-10T07:30:16.000Z" itemprop="datePublished">2016-07-10</time>
+    更新日期:<time datetime="2023-02-15T14:15:04.574Z" itemprop="dateModified">2023-02-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oozie-2-安装"><span class="toc-text">Oozie-2_安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-设置环境变量"><span class="toc-text">1. 设置环境变量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-生成-war-包"><span class="toc-text">2. 生成 war 包</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-修改数据源配置"><span class="toc-text">3. 修改数据源配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-生成数据库schema脚本"><span class="toc-text">4. 生成数据库schema脚本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-启动-Oozie-服务端"><span class="toc-text">5. 启动 Oozie 服务端</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-启动-Oozie-Client-测试"><span class="toc-text">6. 启动 Oozie Client 测试</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1-修改配置"><span class="toc-text">6.1 修改配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-2-上传文件"><span class="toc-text">6.2 上传文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3-测试-map-reduce-example"><span class="toc-text">6.3 测试 map-reduce example</span></a></li></ol></li></ol>
+		</div>
+		
+		<h1 id="Oozie-2-安装"><a href="#Oozie-2-安装" class="headerlink" title="Oozie-2_安装"></a>Oozie-2_安装</h1><p>[TOC]</p>
+<h1 id="1-设置环境变量"><a href="#1-设置环境变量" class="headerlink" title="1. 设置环境变量"></a>1. 设置环境变量</h1><p>解压 <code>oozie-4.1.0-cdh5.7.0.tar.gz</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 目录自定义</span><br><span class="line">export OOZIE_HOME=&quot;/Users/icemimosa/mimosa/oozie-4.1.0&quot;</span><br><span class="line">export PATH=&quot;$PATH:$OOZIE_HOME/bin:...&quot;</span><br></pre></td></tr></table></figure>
+<h1 id="2-生成-war-包"><a href="#2-生成-war-包" class="headerlink" title="2. 生成 war 包"></a>2. 生成 war 包</h1><p>1、在 Oozie Home 目录下新建文件夹：<code>libext</code>，然后将 <strong>mysql驱动</strong> 和 <strong>extJs2.2</strong> 放入libext文件夹下。</p>
+<ul>
+<li><a href="https://yunpan.cn/cBjxLdLSWeSvv" title="ext-2.2.zip" target="_blank" rel="noopener">ext-2.2.zip 下载, 密码49da</a></li>
+</ul>
+<blockquote>
+<p>备注：</p>
+<ol>
+<li>由于Oozie需要保存<strong>任务调度</strong>的元数据，默认使用的Derby数据库，这里修改为Mysql。</li>
+<li>extJs的zip包名字必须是 <code>ext-2.2.zip</code> , 这里可以看bin/oozie-setup.sh脚本。</li>
+</ol>
+</blockquote>
+<p>2、然后在加入hadoop相关的jar包（除去yarn相关的，位于 $OOZIE_HOME/libtools, 以及一些其他jar</p>
+<p>总体如下（截图）：</p>
+<p><img src="http://ice-img.dreamylost.cn/Oozie_libext.png?imageMogr2/thumbnail/!50p" alt="libext截图" title="libext"></p>
+<ul>
+<li>执行脚本，生成 war 包</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bin/oozie-setup.sh prepare-war</span><br><span class="line"></span><br><span class="line"># 然后在 $OOZIE_HOME/oozie-server/webapps下生成 oozie.war</span><br></pre></td></tr></table></figure>
+<h1 id="3-修改数据源配置"><a href="#3-修改数据源配置" class="headerlink" title="3. 修改数据源配置"></a>3. 修改数据源配置</h1><p>Oozie 的默认配置是 <strong>$OOZIE_HOME/conf</strong> 下的 <code>oozie-default.xml</code> 文件, 然后可以在 <code>oozie-site.xml</code> 实现<strong>配置的覆盖</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"># 增加如下</span><br><span class="line">&lt;!-- DataBase configuration --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">   &lt;name&gt;oozie.service.JPAService.jdbc.driver&lt;/name&gt;</span><br><span class="line">   &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;</span><br><span class="line">   &lt;description&gt;</span><br><span class="line">       JDBC driver class.</span><br><span class="line">   &lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">&lt;property&gt;</span><br><span class="line">   &lt;name&gt;oozie.service.JPAService.jdbc.url&lt;/name&gt;</span><br><span class="line">   &lt;value&gt;jdbc:mysql://127.0.0.1:3306/oozie&lt;/value&gt;</span><br><span class="line">   &lt;description&gt;</span><br><span class="line">       JDBC URL.</span><br><span class="line">   &lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">&lt;property&gt;</span><br><span class="line">   &lt;name&gt;oozie.service.JPAService.jdbc.username&lt;/name&gt;</span><br><span class="line">   &lt;value&gt;root&lt;/value&gt;</span><br><span class="line">   &lt;description&gt;</span><br><span class="line">       DB user name.</span><br><span class="line">   &lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">&lt;property&gt;</span><br><span class="line">   &lt;name&gt;oozie.service.JPAService.jdbc.password&lt;/name&gt;</span><br><span class="line">   &lt;value&gt;anywhere&lt;/value&gt;</span><br><span class="line">   &lt;description&gt;</span><br><span class="line">       DB user password.</span><br><span class="line"></span><br><span class="line">       IMPORTANT: if password is emtpy leave a 1 space string, the service trims the value,</span><br><span class="line">                  if empty Configuration assumes it is NULL.</span><br><span class="line"></span><br><span class="line">       IMPORTANT: if the StoreServicePasswordService is active, it will reset this value with the value given in</span><br><span class="line">                  the console.</span><br><span class="line">   &lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="4-生成数据库schema脚本"><a href="#4-生成数据库schema脚本" class="headerlink" title="4. 生成数据库schema脚本"></a>4. 生成数据库schema脚本</h1><ul>
+<li>创建数据库 <code>oozie</code></li>
+<li>执行命令: <code>bin/ooziedb.sh create -run -sqlfile oozie.sql</code></li>
+</ul>
+<p>随后在 $OOZIE_HOME 下生成 oozie.sql并执行。</p>
+<h1 id="5-启动-Oozie-服务端"><a href="#5-启动-Oozie-服务端" class="headerlink" title="5. 启动 Oozie 服务端"></a>5. 启动 Oozie 服务端</h1><p>执行命令: <code>bin/oozied.sh start</code> 这个是 <strong>后台启动</strong><br>剩下的还有 <code>run</code> 和 <code>stop</code><br>如果启动报错，可以查看logs下的日志或者用 <code>run</code> 启动查询</p>
+<blockquote>
+<p>然后打开网址：<code>http://localhost:11000/oozie/</code> 看看是否可以访问</p>
+</blockquote>
+<h1 id="6-启动-Oozie-Client-测试"><a href="#6-启动-Oozie-Client-测试" class="headerlink" title="6. 启动 Oozie Client 测试"></a>6. 启动 Oozie Client 测试</h1><h2 id="6-1-修改配置"><a href="#6-1-修改配置" class="headerlink" title="6.1 修改配置"></a>6.1 修改配置</h2><ul>
+<li>修改 $HADOOP_HOME/etc/hadoop/core-site.xml</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 增加, 将[USER]替换成机器的User</span><br><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;hadoop.proxyuser.[USER].hosts&lt;/name&gt;</span><br><span class="line">	&lt;value&gt;*&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;hadoop.proxyuser.[USER].groups&lt;/name&gt;</span><br><span class="line">	&lt;value&gt;*&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改 $HADOOP_HOME/etc/hadoop/mapred-site.xml</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"># 增加jobhistory, [HOST_NAME]为主机名</span><br><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;mapreduce.jobhistory.address&lt;/name&gt;</span><br><span class="line">	&lt;value&gt;[HOST_NAME]:10020&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line"></span><br><span class="line"># 设置mapreduce.map.memory.mb和mapreduce.reduce.memory.mb配置</span><br><span class="line"># 否则Oozie读取的默认配置 -1, 提交给yarn的时候会抛异常Invalid resource request, requested memory &lt; 0, or requested memory &gt; max configured, requestedMemory=-1, maxMemory=8192</span><br><span class="line"></span><br><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;mapreduce.map.memory.mb&lt;/name&gt;</span><br><span class="line">	&lt;value&gt;1024&lt;/value&gt;</span><br><span class="line">	&lt;description&gt;The amount of memory to request from the scheduler for each</span><br><span class="line">	 map task. If this is not specified or is non-positive, it is inferred from</span><br><span class="line">	 mapreduce.map.java.opts and mapreduce.job.heap.memory-mb.ratio.</span><br><span class="line">	 If java-opts are also not specified, we set it to 1024.</span><br><span class="line">	&lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;mapreduce.reduce.memory.mb&lt;/name&gt;</span><br><span class="line">	&lt;value&gt;1024&lt;/value&gt;</span><br><span class="line">	&lt;description&gt;The amount of memory to request from the scheduler for each</span><br><span class="line">	 reduce task. If this is not specified or is non-positive, it is inferred</span><br><span class="line">	 from mapreduce.reduce.java.opts and mapreduce.job.heap.memory-mb.ratio.</span><br><span class="line">	 If java-opts are also not specified, we set it to 1024.</span><br><span class="line">	&lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改 <strong>$OOZIE_HOME/conf</strong> 下的 <code>oozie-site.xml</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"># 增加Hadoop的conf配置</span><br><span class="line">&lt;property&gt;</span><br><span class="line">   &lt;name&gt;oozie.service.HadoopAccessorService.hadoop.configurations&lt;/name&gt;</span><br><span class="line">   &lt;value&gt;*=/Users/icemimosa/mimosa/hadoop-2.7.1/etc/hadoop&lt;/value&gt;</span><br><span class="line">   &lt;description&gt;</span><br><span class="line">       Comma separated AUTHORITY=HADOOP_CONF_DIR, where AUTHORITY is the HOST:PORT of</span><br><span class="line">       the Hadoop service (JobTracker, YARN, HDFS). The wildcard &apos;*&apos; configuration is</span><br><span class="line">       used when there is no exact match for an authority. The HADOOP_CONF_DIR contains</span><br><span class="line">       the relevant Hadoop *-site.xml files. If the path is relative is looked within</span><br><span class="line">       the Oozie configuration directory; though the path can be absolute (i.e. to point</span><br><span class="line">       to Hadoop client conf/ directories in the local filesystem.</span><br><span class="line">   &lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line"></span><br><span class="line"># 增加Spark的conf配置</span><br><span class="line">&lt;property&gt;</span><br><span class="line">   &lt;name&gt;oozie.service.SparkConfigurationService.spark.configurations&lt;/name&gt;</span><br><span class="line">   &lt;value&gt;*=/Users/icemimosa/mimosa/spark-1.6.2/conf&lt;/value&gt;</span><br><span class="line">   &lt;description&gt;</span><br><span class="line">       Comma separated AUTHORITY=SPARK_CONF_DIR, where AUTHORITY is the HOST:PORT of</span><br><span class="line">       the ResourceManager of a YARN cluster. The wildcard &apos;*&apos; configuration is</span><br><span class="line">       used when there is no exact match for an authority. The SPARK_CONF_DIR contains</span><br><span class="line">       the relevant spark-defaults.conf properties file. If the path is relative is looked within</span><br><span class="line">       the Oozie configuration directory; though the path can be absolute.  This is only used</span><br><span class="line">       when the Spark master is set to either &quot;yarn-client&quot; or &quot;yarn-cluster&quot;.</span><br><span class="line">   &lt;/description&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>tips：每次修改完配置记得重新启动Oozie服务</p>
+</blockquote>
+<h2 id="6-2-上传文件"><a href="#6-2-上传文件" class="headerlink" title="6.2 上传文件"></a>6.2 上传文件</h2><ul>
+<li>上传 share lib</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 执行命令：</span><br><span class="line">bin/oozie-setup.sh sharelib create -fs hdfs://127.0.0.1:9000 -locallib oozie-</span><br><span class="line">sharelib-4.1.0-cdh5.7.0-yarn.tar.gz</span><br><span class="line"></span><br><span class="line"># 或者(解压oozie-sharelib-4.1.0-cdh5.7.0-yarn.tar.gz)：</span><br><span class="line">hadoop dfs -put share /user/[USER]/share</span><br><span class="line"></span><br><span class="line"># 此时HDFS上就会生成目录 /user/[USER]/share/...</span><br></pre></td></tr></table></figure>
+<ul>
+<li>上传 examples</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 解压 oozie-examples.tar.gz</span><br><span class="line"># 执行命令：</span><br><span class="line">hadoop dfs -put examples /user/[USER]/examples</span><br></pre></td></tr></table></figure>
+<h2 id="6-3-测试-map-reduce-example"><a href="#6-3-测试-map-reduce-example" class="headerlink" title="6.3 测试 map-reduce example"></a>6.3 测试 map-reduce example</h2><ul>
+<li>出了启动hadoop，别忘了启动 <code>jobhistory</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 执行命令</span><br><span class="line">mr-jobhistory-daemon.sh start historyserver</span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改 <strong>examples/apps/map-reduce</strong> 下的 <code>job.properties</code> 文件, 指定 <code>hdfs地址</code> 和<code>resourceManager的地址</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">nameNode=hdfs://localhost:9000</span><br><span class="line">jobTracker=localhost:8032</span><br><span class="line">queueName=default</span><br><span class="line">examplesRoot=examples</span><br><span class="line"></span><br><span class="line">oozie.wf.application.path=$&#123;nameNode&#125;/user/$&#123;user.name&#125;/$&#123;examplesRoot&#125;/apps/map-reduce/workflow.xml</span><br><span class="line">outputDir=map-reduce</span><br></pre></td></tr></table></figure>
+<ul>
+<li>提交作业</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 执行命令, $OOZIE_HOME为Oozie的home</span><br><span class="line">oozie job -oozie http://localhost:11000/oozie -config $OOZIE_HOME/examples/apps/map-reduce/job.properties -run</span><br><span class="line"></span><br><span class="line"># 显示（例子）:</span><br><span class="line"># job: 0000000-160704142405284-oozie-icem-W</span><br></pre></td></tr></table></figure>
+<ul>
+<li>查看作业</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># 执行命令（job id 为提交作业生成的id）：</span><br><span class="line">bin/oozie job -oozie http://localhost:11000/oozie -info 0000000-160704140949971-oozie-icem-W</span><br><span class="line"></span><br><span class="line"># 显示：</span><br><span class="line">------------------------------------------------------------------------------------------------------------------------------------</span><br><span class="line">Workflow Name : map-reduce-wf</span><br><span class="line">App Path      : hdfs://localhost:9000/user/icemimosa/examples/apps/map-reduce/workflow.xml</span><br><span class="line">Status        : KILLED</span><br><span class="line">Run           : 0</span><br><span class="line">User          : icemimosa</span><br><span class="line">Group         : -</span><br><span class="line">Created       : 2016-07-04 06:10 GMT</span><br><span class="line">Started       : 2016-07-04 06:10 GMT</span><br><span class="line">Last Modified : 2016-07-04 06:12 GMT</span><br><span class="line">Ended         : 2016-07-04 06:12 GMT</span><br><span class="line">CoordAction ID: -</span><br><span class="line"></span><br><span class="line">Actions</span><br><span class="line">----------------------------------------------------------------------------------</span><br><span class="line">ID                         	               Status   Ext ID   Ext  Status Err Code</span><br><span class="line">----------------------------------------------------------------------------------</span><br><span class="line">0000000-160704140949971-oozie-icem-W@:start:  OK     -        OK         -</span><br><span class="line">----------------------------------------------------------------------------------</span><br><span class="line">0000000-160704140949971-oozie-icem-W@mr-node KILLED  job_1467612585401_0001 KILLED     -</span><br><span class="line">----------------------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>也可以通过 Oozie 控制台查看（要是一直处于RUNNING状态，也可以通过Hadoop job manager端查看日志等。默认：<a href="http://localhost:8088/cluster" target="_blank" rel="noopener">http://localhost:8088/cluster</a> ）</p>
+</li>
+<li><p>查看结果输出：</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># hdfs路径：</span><br><span class="line">hadoop dfs -cat /user/[USER]/examples/output-data/map-reduce/part-00000</span><br></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/oozie/">oozie</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/oozie/">oozie</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.patamon.me/icemimosa/oozie/Oozie-2_安装/" data-title="Oozie-2_安装 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/icemimosa/oozie/Oozie-3_工作流程定义/" title="Oozie-3_工作流程定义">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  Oozie-3_工作流程定义</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/icemimosa/kotlin/Kotlin Learn/" title="Kotlin Learn">
+ <strong>NEXT:</strong><br> 
+ <span>Kotlin Learn
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oozie-2-安装"><span class="toc-text">Oozie-2_安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-设置环境变量"><span class="toc-text">1. 设置环境变量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-生成-war-包"><span class="toc-text">2. 生成 war 包</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-修改数据源配置"><span class="toc-text">3. 修改数据源配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-生成数据库schema脚本"><span class="toc-text">4. 生成数据库schema脚本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-启动-Oozie-服务端"><span class="toc-text">5. 启动 Oozie 服务端</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-启动-Oozie-Client-测试"><span class="toc-text">6. 启动 Oozie Client 测试</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1-修改配置"><span class="toc-text">6.1 修改配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-2-上传文件"><span class="toc-text">6.2 上传文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3-测试-map-reduce-example"><span class="toc-text">6.3 测试 map-reduce example</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list">
+		
+		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/IceMimosa" target="_blank" title="github"></a>
+		
+		
+		
+		
+		<a href="mailto:514793425@qq.com" target="_blank" title="email"></a>
+		
+	</div>
+</div>
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/categories/java/" title="java">java<sup>26</sup></a></li>
+		
+			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/categories/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/categories/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/categories/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
+		
+			<li><a href="/categories/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
+		
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/tags/impala/" title="impala">impala<sup>1</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>27</sup></a></li>
+		
+			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/tags/lombok/" title="lombok">lombok<sup>3</sup></a></li>
+		
+			<li><a href="/tags/mac/" title="mac">mac<sup>2</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>1</sup></a></li>
+		
+			<li><a href="/tags/olap/" title="olap">olap<sup>4</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/tags/react/" title="react">react<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/tags/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/tags/spring/" title="spring">spring<sup>2</sup></a></li>
+		
+			<li><a href="/tags/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
+		
+			<li><a href="/tags/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/JavaScript/" style="font-size: 11px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 17px;">hbase</a> <a href="/tags/hive/" style="font-size: 16px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12px;">lombok</a> <a href="/tags/mac/" style="font-size: 11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/olap/" style="font-size: 13px;">olap</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/pulsar/" style="font-size: 10px;">pulsar</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/redis/" style="font-size: 18px;">redis</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/spring/" style="font-size: 11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13px;">sqoop</a> <a href="/tags/数仓/" style="font-size: 13px;">数仓</a> <a href="/tags/源码/" style="font-size: 19px;">源码</a>
+    </div>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    
+            <p class="copyright"> © 2023 
+		
+		<a href="http://www.patamon.me" target="_blank" title="IceMimosa">IceMimosa</a>
+		
+            <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
+            ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
+            </p></div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="/js/jquery-icemi-scroll2top.js"></script>
+<script src="/js/other.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  
+  // 回到顶部
+  $(document.body).scroll2Top({
+    background:"#66ccff",
+    shape:"circle",
+    bottom:40,
+    right:250
+  });
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    // m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,332-$(this).scrollTop()));
+  });
+});
+</script>
+
+<!-- GrowingIO Analytics code version 2.1 -->
+<!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
+<script type="text/javascript">
+!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
+gio('init','b988cbf13dfaa5ac', {});
+//custom page code begin here
+
+//custom page code end here
+gio('send');
+</script>
+<!-- End GrowingIO Analytics code version: 2.1 -->
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
+
+
+
+
+
+
+<script>
+    
+        var _bdImg = '4';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
+</html>
+

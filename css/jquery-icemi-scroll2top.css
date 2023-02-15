@@ -1,0 +1,46 @@
+/*
+    scrollTop  By IceMimosa
+*/
+.mimosa-scrollTop{
+    border: none;
+    position: fixed;
+    height: 50px;
+    width: 50px;
+}
+
+.mimosa-scrollTop a.none{
+    height: 0;
+    width: 0;
+}
+.mimosa-scrollTop a.block{
+    display: block;
+}
+.mimosa-scrollTop a{
+    display: inline-block;
+    text-align: center;
+    line-height: 50px;
+    height: 50px;
+    width: 50px;
+    border: none;
+    border-radius: 50%;
+    background: #6cf;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    outline: none;
+    overflow: hidden;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-transition: all 0.3s cubic-bezier(0.25, 0.25, 0, 1);
+    -ms-transition: all 0.3s cubic-bezier(0.25, 0.25, 0, 1);
+    -moz-transition: all 0.3s cubic-bezier(0.25, 0.25, 0, 1);
+    -o-transition: all 0.3s cubic-bezier(0.25, 0.25, 0, 1);
+    transition: all 0.3s cubic-bezier(0.25, 0.25, 0, 1);
+}
+
+.mimosa-scrollTop a:hover{
+    background: #39beff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), 0 3px 15px rgba(0, 0, 0, 0.5);
+}

@@ -1,0 +1,1031 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
+  
+    <title>Oozie-6_Web Service API | Ice の Mimosa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="IceMimosa">
+    
+    <meta name="description" content="Oozie-6_Web Service API[TOC]
+1. 简介The Oozie Web Services API is a HTTP REST JSON API.All responses are in UTF-8 .
+Assuming Oozie is runing at OOZIE_UR">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="Ice の Mimosa" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon_mine.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/jquery-icemi-scroll2top.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='1cb536fd996cddc96154515a1ed1d72d';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+</html>
+  <body>
+    <header>
+      <div id="banner">
+		
+
+			<div id="erer" class="erer" style="">
+				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
+				<!-- <img id="i22" src="http://ice-img.dreamylost.cn/patamon-22.png" width=200 height=230></img> -->
+			</div>
+
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Ice の Mimosa">Ice の Mimosa</a></h1>
+				<a class="blog-motto">没有未来的未来不是我想要的未来</a>
+			</div>
+
+			<div id="sansan" class="sansan" style="">
+				<!-- <img src="/img/33.png" width=200 height=230></img> -->
+				<!-- <img src="http://ice-img.dreamylost.cn/patamon-33.png" width=200 height=230></img> -->
+			</div> 
+
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+					<li>
+					
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
+					
+					</form></li>
+				</ul>
+			</ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/icemimosa/oozie/Oozie-6_Web Service API/" title="Oozie-6_Web Service API" itemprop="url">Oozie-6_Web Service API</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2016-07-14T07:30:16.000Z" itemprop="datePublished">2016-07-14</time>
+    更新日期:<time datetime="2023-02-15T14:15:04.575Z" itemprop="dateModified">2023-02-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oozie-6-Web-Service-API"><span class="toc-text">Oozie-6_Web Service API</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-versions"><span class="toc-text">2. versions</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-admin"><span class="toc-text">3. admin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-status"><span class="toc-text">3.1 status</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-available-oozie-servers"><span class="toc-text">3.2 available-oozie-servers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-OS-Environment"><span class="toc-text">3.3 OS Environment</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-Java-System-Properties"><span class="toc-text">3.4 Java System Properties</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-5-Oozie-Configuration"><span class="toc-text">3.5 Oozie Configuration</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-6-Oozie-Instrumentation-和-Oozie-Metrics"><span class="toc-text">3.6 Oozie Instrumentation 和 Oozie Metrics</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-7-Build-Version"><span class="toc-text">3.7 Build Version</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-8-Available-Time-Zones"><span class="toc-text">3.8 Available Time Zones</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-9-List-available-sharelib"><span class="toc-text">3.9 List available sharelib</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-Job-和-Jobs"><span class="toc-text">4. Job 和 Jobs</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-Standard-Job-Submission"><span class="toc-text">4.1 Standard Job Submission</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-Proxy-MapReduce-Job-Submission"><span class="toc-text">4.2 Proxy MapReduce Job Submission</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-Proxy-Pig-Job-Submission"><span class="toc-text">4.3 Proxy Pig Job Submission</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-Proxy-Hive-Job-Submission"><span class="toc-text">4.4 Proxy Hive Job Submission</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5-Proxy-Sqoop-Job-Submission"><span class="toc-text">4.5 Proxy Sqoop Job Submission</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-6-Managing-a-Job"><span class="toc-text">4.6 Managing a Job</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-6-1-Start-a-Job"><span class="toc-text">4.6.1 Start a Job</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-6-2-Re-Runing-a-Workflow-Job"><span class="toc-text">4.6.2 Re-Runing a Workflow Job</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-6-3-Re-Runing-a-coordinator-job"><span class="toc-text">4.6.3 Re-Runing a coordinator job</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#返回："><span class="toc-text">返回：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#返回：-1"><span class="toc-text">返回：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-9-Job-Log"><span class="toc-text">4.9 Job Log</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-10-Job-graph"><span class="toc-text">4.10 Job graph</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-11-Jobs-Information"><span class="toc-text">4.11 Jobs Information</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-12-Jobs-information-using-Bulk-API"><span class="toc-text">4.12 Jobs information using Bulk API</span></a></li></ol></li></ol>
+		</div>
+		
+		<h1 id="Oozie-6-Web-Service-API"><a href="#Oozie-6-Web-Service-API" class="headerlink" title="Oozie-6_Web Service API"></a>Oozie-6_Web Service API</h1><p>[TOC]</p>
+<h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>The Oozie Web Services API is a <code>HTTP REST JSON API</code>.<br>All responses are in <code>UTF-8</code> .</p>
+<p>Assuming Oozie is runing at <code>OOZIE_URL</code> ( 如<code>http://localhost:11000/oozie</code> ) , the following web services end points are supported:</p>
+<ul>
+<li>/versions</li>
+<li>/v1/admin</li>
+<li>/v1/job</li>
+<li>/v1/jobs</li>
+<li>/v2/job</li>
+<li>/v2/jobs</li>
+<li>/v2/admin</li>
+<li>/v2/sla</li>
+</ul>
+<p>在一些案例中，有些相当于使用 oozie 命令行：<br><a href="https://oozie.apache.org/docs/4.1.0/DG_CommandLineTool.html" target="_blank" rel="noopener">https://oozie.apache.org/docs/4.1.0/DG_CommandLineTool.html</a></p>
+<h1 id="2-versions"><a href="#2-versions" class="headerlink" title="2. versions"></a>2. versions</h1><ul>
+<li>描述： 获取Oozie服务支持的协议版本号</li>
+<li>method：GET</li>
+<li>url：/versions</li>
+<li>入参：无</li>
+<li>出参：目前返回 0, 1, 2</li>
+<li><p>示例：</p>
+<ul>
+<li>url：GET /versions</li>
+<li><p>返回：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[0,1,2]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="3-admin"><a href="#3-admin" class="headerlink" title="3. admin"></a>3. admin</h1><blockquote>
+<p>获取系统的 <code>状态</code> 以及一些 <code>配置信息</code></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># admin支持的 sub-resources</span><br><span class="line">status, os-env, sys-props, configuration, instrumentation, systems, available-timezones .</span><br></pre></td></tr></table></figure>
+<h2 id="3-1-status"><a href="#3-1-status" class="headerlink" title="3.1 status"></a>3.1 status</h2><ul>
+<li>描述：获取系统服务状态</li>
+<li>method：GET</li>
+<li>url：/v1/admin/status</li>
+<li>入参：systemmode（可选, 为下面模式的一种)。如果指定, 相应无返回值。</li>
+<li>出参：返回系统的状态, 可能值 <strong>NORMAL</strong> , <strong>NOWEBSERVICE</strong> , <strong>SAFEMODE</strong> .</li>
+<li><p>示例：</p>
+<ul>
+<li>url：GET /v1/admin/status</li>
+<li><p>返回：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;systemMode&quot;:&quot;NORMAL&quot;&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-2-available-oozie-servers"><a href="#3-2-available-oozie-servers" class="headerlink" title="3.2 available-oozie-servers"></a>3.2 available-oozie-servers</h2><ul>
+<li>描述：获取可用的Oozie服务</li>
+<li>method：GET</li>
+<li>url：/v2/admin/available-oozie-servers</li>
+<li>入参：无</li>
+<li>出参：可用的Oozie服务列表</li>
+<li><p>示例：</p>
+<ul>
+<li>url：GET /v2/admin/available-oozie-servers</li>
+<li><p>返回：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;hostA&quot;: &quot;http://hostA:11000/oozie&quot;,</span><br><span class="line">    &quot;hostB&quot;: &quot;http://hostB:11000/oozie&quot;,</span><br><span class="line">    &quot;hostC&quot;: &quot;http://hostC:11000/oozie&quot;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-3-OS-Environment"><a href="#3-3-OS-Environment" class="headerlink" title="3.3 OS Environment"></a>3.3 OS Environment</h2><ul>
+<li>描述：获取Oozie服务系统的配置参数</li>
+<li>method：GET</li>
+<li>url：/v1/admin/os-env</li>
+<li>出参：Content-Type: application/json;charset=UTF-8</li>
+</ul>
+<h2 id="3-4-Java-System-Properties"><a href="#3-4-Java-System-Properties" class="headerlink" title="3.4 Java System Properties"></a>3.4 Java System Properties</h2><ul>
+<li>描述：获取Oozie Java系统参数</li>
+<li>method：GET</li>
+<li>url：/v1/admin/java-sys-properties</li>
+<li>Content-Type: application/json;charset=UTF-8</li>
+</ul>
+<h2 id="3-5-Oozie-Configuration"><a href="#3-5-Oozie-Configuration" class="headerlink" title="3.5 Oozie Configuration"></a>3.5 Oozie Configuration</h2><ul>
+<li>描述：获取Oozie服务的配置</li>
+<li>method：GET</li>
+<li>url：/v1/admin/configuration</li>
+<li>出参：Content-Type: application/json;charset=UTF-8</li>
+</ul>
+<h2 id="3-6-Oozie-Instrumentation-和-Oozie-Metrics"><a href="#3-6-Oozie-Instrumentation-和-Oozie-Metrics" class="headerlink" title="3.6 Oozie Instrumentation 和 Oozie Metrics"></a>3.6 Oozie Instrumentation 和 Oozie Metrics</h2><ul>
+<li>描述：获取Oozie的一些测试指标数据</li>
+<li>method：GET</li>
+<li>url：/v1/admin/instrumentation 和 /v2/admin/metrics</li>
+<li>出参：Content-Type: application/json;charset=UTF-8</li>
+</ul>
+<h2 id="3-7-Build-Version"><a href="#3-7-Build-Version" class="headerlink" title="3.7 Build Version"></a>3.7 Build Version</h2><ul>
+<li>描述：获取Oozie build version</li>
+<li>method：GET</li>
+<li>url：/v1/admin/build-version</li>
+<li><p>示例返回：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;buildVersion&quot;: &quot;4.1.0-cdh5.7.0&quot;&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="3-8-Available-Time-Zones"><a href="#3-8-Available-Time-Zones" class="headerlink" title="3.8 Available Time Zones"></a>3.8 Available Time Zones</h2><ul>
+<li>描述：获取可用的时区</li>
+<li>method：GET</li>
+<li>url：/v1/admin/available-timezones</li>
+<li>出参：Content-Type: application/json;charset=UTF-8</li>
+</ul>
+<h2 id="3-9-List-available-sharelib"><a href="#3-9-List-available-sharelib" class="headerlink" title="3.9 List available sharelib"></a>3.9 List available sharelib</h2><ul>
+<li>描述：获取共享的libs</li>
+<li>method：GET</li>
+<li>url：/v2/admin/list_sharelib</li>
+<li>入参：lib（可选，如 <strong>?lib=pig*</strong>）</li>
+<li>参数：Content-Type: application/json;charset=UTF-8</li>
+</ul>
+<h1 id="4-Job-和-Jobs"><a href="#4-Job-和-Jobs" class="headerlink" title="4. Job 和 Jobs"></a>4. Job 和 Jobs</h1><blockquote>
+<p>这些参数可以进行对 <strong>workflow</strong>, <strong>coordinator</strong>, 和 <strong>bundle jobs</strong> 进行提交，管理和信息的提取。</p>
+</blockquote>
+<h2 id="4-1-Standard-Job-Submission"><a href="#4-1-Standard-Job-Submission" class="headerlink" title="4.1 Standard Job Submission"></a>4.1 Standard Job Submission</h2><ul>
+<li>描述：job的提交</li>
+<li>method：POST</li>
+<li>url：/v1/jobs</li>
+<li>入参：xml作为payload，job的类取决于以下几个参数<ul>
+<li><strong>oozie.wf.application.path</strong> : path to a workflow aplication directory, creates a workflow job</li>
+<li><strong>oozie.coord.application.path</strong> : path to a coordinator application file, creates a coordinator job</li>
+<li><strong>oozie.bundle.application.path</strong> : path to a bundle application file, creates a bundle job</li>
+</ul>
+</li>
+<li>出参：Job的id</li>
+</ul>
+<blockquote>
+<p>示例：</p>
+</blockquote>
+<ul>
+<li>url：POST /v1/jobs</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"># xml的内容跟之前的job.properties一致</span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	   <span class="tag">&lt;<span class="name">name</span>&gt;</span>user.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	   <span class="tag">&lt;<span class="name">value</span>&gt;</span>icemimosa<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	   <span class="tag">&lt;<span class="name">name</span>&gt;</span>nameNode<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	   <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://localhost:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	   <span class="tag">&lt;<span class="name">name</span>&gt;</span>jobTracker<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	   <span class="tag">&lt;<span class="name">value</span>&gt;</span>localhost:8032<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	   <span class="tag">&lt;<span class="name">name</span>&gt;</span>queueName<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	   <span class="tag">&lt;<span class="name">value</span>&gt;</span>default<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	   <span class="tag">&lt;<span class="name">name</span>&gt;</span>examplesRoot<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	   <span class="tag">&lt;<span class="name">value</span>&gt;</span>examples<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	   <span class="tag">&lt;<span class="name">name</span>&gt;</span>outputDir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	   <span class="tag">&lt;<span class="name">value</span>&gt;</span>map-reduce<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	   <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.wf.application.path<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	   <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://localhost:9000/user/icemimosa/examples/apps/map-reduce/workflow.xml<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>返回：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># HTTP/1.1 201 CREATED</span><br><span class="line"># Content-Type: application/json;charset=UTF-8</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;id&quot;: &quot;0000001-160704142405284-oozie-icem-W&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>注意</strong>：通过Oozie控制台, 上面的job状态处于 <code>PREP</code> 状态, 即 prepared。<br><img src="http://ice-img.dreamylost.cn/Oozie-job-PREP.png" alt="Job PREP" title="JOB PREP"></p>
+<ol>
+<li>启动方式一：提交Job的时候，url加上参数 ‘<strong>?action=start</strong>‘。 注意这个参数对 <strong>coordinator job</strong> 不起效。</li>
+<li>启动方式二：提交完任务后，使用 <strong>/v1/job/[JOB-ID]?action=start</strong> (详细见<a href="#start-a-job">4.6.2</a>)</li>
+</ol>
+</blockquote>
+<h2 id="4-2-Proxy-MapReduce-Job-Submission"><a href="#4-2-Proxy-MapReduce-Job-Submission" class="headerlink" title="4.2 Proxy MapReduce Job Submission"></a>4.2 Proxy MapReduce Job Submission</h2><p>通过这种方式可以直接提交只有<strong>一个MapReduce action节点</strong>的任务，从而避免去编写 workflow.xml 文件。<br>执行任务前需要确保对应的 <strong>Jars</strong> 和 <strong>文件</strong> 在 HDFS 上存在。</p>
+<ul>
+<li>url：/v1/jobs?jobtype=mapreduce</li>
+<li>method：POST</li>
+</ul>
+<blockquote>
+<p>xml消息体中下面是需要指定的参数：</p>
+</blockquote>
+<ul>
+<li>fs.default.name : The NameNode</li>
+<li>mapred.job.tracker : The JobTracker (ResourceManager)</li>
+<li>mapred.mapper.class : The map-task classname</li>
+<li>mapred.reducer.class : The reducer-task classname</li>
+<li>mapred.input.dir : The map-task input directory</li>
+<li>mapred.output.dir : The reduce-task output directory</li>
+<li>user.name : The username of the user submitting the job</li>
+<li>oozie.libpath : A directory in HDFS that contains necessary Jars for your job</li>
+<li>oozie.proxysubmission : Must be set to true</li>
+</ul>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<ul>
+<li>url：POST /v1/jobs?jobtype=mapreduce</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;configuration&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;fs.default.name&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;hdfs://localhost:9000&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;mapred.job.tracker&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;localhost:8032&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;mapred.mapper.class&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;org.apache.oozie.example.SampleMapper&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;mapred.reducer.class&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;org.apache.oozie.example.SampleReducer&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;mapred.input.dir&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;hdfs://localhost:9000/user/icemimosa/examples/input-data/text&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;mapred.output.dir&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;hdfs://localhost:9000/user/icemimosa/examples/output-data/map-reduce&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;user.name&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;icemimosa&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;oozie.libpath&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;hdfs://localhost:9000/user/icemimosa/examples/apps/map-reduce/lib&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;oozie.proxysubmission&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;true&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>返回：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># HTTP/1.1 201 CREATED</span><br><span class="line"># Content-Type: application/json;charset=UTF-8</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;id&quot;: &quot;0000006-160704142405284-oozie-icem-W&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-3-Proxy-Pig-Job-Submission"><a href="#4-3-Proxy-Pig-Job-Submission" class="headerlink" title="4.3 Proxy Pig Job Submission"></a>4.3 Proxy Pig Job Submission</h2><p>同理，可以提交一个单节点的 Pig 节点。</p>
+<ul>
+<li>url：/v1/jobs?jobtype=mapreduce</li>
+<li>method：POST</li>
+</ul>
+<blockquote>
+<p>xml 消息体中必须的参数</p>
+</blockquote>
+<ul>
+<li>fs.default.name : The NameNode</li>
+<li>mapred.job.tracker : The JobTracker</li>
+<li>user.name : The username of the user submitting the job</li>
+<li>oozie.pig.script : Contains the pig script you want to run (<strong>the actual script, not a file path</strong>)</li>
+<li>oozie.libpath : A directory in HDFS that contains necessary Jars for your job</li>
+<li>oozie.proxysubmission : Must be set to true</li>
+</ul>
+<blockquote>
+<p>可选的参数</p>
+</blockquote>
+<ul>
+<li>oozie.pig.script.params.size : The number of parameters you’ll be passing to Pig</li>
+<li>oozie.pig.script.params.n : A parameter (variable definition for the script) in ‘key=value’ format, the ‘n’ should be an integer starting with 0 to indicate the parameter number</li>
+<li>oozie.pig.options.size : The number of options you’ll be passing to Pig</li>
+<li>oozie.pig.options.n : An argument to pass to Pig, the ‘n’ should be an integer starting with 0 to indicate the option number</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oozie.pig.options.n ： 最后会被解释成执行脚本的 -D 参数。它还可以指定 -param_file 选项，用来指定 oozie.pig.script.params.n 中的参数。</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>示例：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 指定 param_file 的文件</span><br><span class="line"></span><br><span class="line">$ hadoop dfs -cat /user/icemimosa/pig_params.properties</span><br><span class="line"> 输出：INPUT=/user/icemimosa/examples/input-data/text</span><br></pre></td></tr></table></figure>
+<ul>
+<li>url：POST /v1/jobs?jobtype=pig</li>
+<li>Content-Type: application/xml;charset=UTF-8</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.default.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://localhost:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapred.job.tracker<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>localhost:8032<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>user.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>icemimosa<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.pig.script<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span></span><br><span class="line">            A  load '$INPUT' using PigStorage(':');</span><br><span class="line">            B = foreach A generate $0 as id;</span><br><span class="line">            store B into '$OUTPUT' USING PigStorage();</span><br><span class="line">        <span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.pig.script.params.size<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.pig.script.params.0<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>OUTPUT=/user/icemimosa/examples/output-data/pig<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.pig.options.size<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>2<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.pig.options.0<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>-param_file<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.pig.options.1<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://localhost:9000/user/icemimosa/pig_params.properties<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.libpath<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://localhost:9000/user/icemimosa/share/lib/pig<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.proxysubmission<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>返回：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># HTTP/1.1 201 CREATED</span><br><span class="line"># Content-Type: application/json;charset=UTF-8</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">	&quot;id&quot; : &quot;job-3&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-4-Proxy-Hive-Job-Submission"><a href="#4-4-Proxy-Hive-Job-Submission" class="headerlink" title="4.4 Proxy Hive Job Submission"></a>4.4 Proxy Hive Job Submission</h2><p>与Pig任务类似。</p>
+<ul>
+<li>url：/oozie/v1/jobs?jobtype=hive</li>
+<li>method：POST</li>
+</ul>
+<blockquote>
+<p>xml消息体中必须的参数</p>
+</blockquote>
+<ul>
+<li>fs.default.name : The NameNode</li>
+<li>mapred.job.tracker : The JobTracker</li>
+<li>user.name : The username of the user submitting the job</li>
+<li>oozie.hive.script : Contains the hive script you want to run (the actual script, not a file path)</li>
+<li>oozie.libpath : A directory in HDFS that contains necessary Jars for your job</li>
+<li>oozie.proxysubmission : Must be set to true</li>
+</ul>
+<blockquote>
+<p>可选的参数</p>
+</blockquote>
+<ul>
+<li>oozie.hive.script.params.size : The number of parameters you’ll be passing to Hive</li>
+<li>oozie.hive.script.params.n : A parameter (variable definition for the script) in ‘key=value’ format, the ‘n’ should be an integer starting with 0 to indicate the parameter number</li>
+<li>oozie.hive.options.size : The number of options you’ll be passing to Pig</li>
+<li>oozie.hive.options.n : An argument to pass to Hive, the ‘n’ should be an integer starting with 0 to indicate the option number</li>
+</ul>
+<blockquote>
+<p>示例：</p>
+</blockquote>
+<ul>
+<li>url：POST /v1/jobs?jobtype=hive</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.default.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://localhost:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapred.job.tracker<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>localhost:8032<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>user.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>icemimosa<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.hive.script<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span></span><br><span class="line">            CREATE EXTERNAL TABLE test (a INT) STORED AS TEXTFILE LOCATION '$&#123;INPUT&#125;';</span><br><span class="line">            INSERT OVERWRITE DIRECTORY '$&#123;OUTPUT&#125;' SELECT * FROM test;</span><br><span class="line">        <span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.hive.script.params.size<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>2<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.hive.script.params.0<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>OUTPUT=/user/icemimosa/examples/output-data/hive<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.hive.script.params.1<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>INPUT=/user/icemimosa/examples/input-data/table<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.libpath<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://localhost:9000/user/icemimosa/share/lib/hive<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.proxysubmission<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>返回：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># HTTP/1.1 201 CREATED</span><br><span class="line"># Content-Type: application/json;charset=UTF-8</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">	&quot;id&quot; : &quot;job-3&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-5-Proxy-Sqoop-Job-Submission"><a href="#4-5-Proxy-Sqoop-Job-Submission" class="headerlink" title="4.5 Proxy Sqoop Job Submission"></a>4.5 Proxy Sqoop Job Submission</h2><p>执行一个Sqoop脚本任务。</p>
+<ul>
+<li>url：/v1/jobs?jobtype=sqoop</li>
+<li>method：POST</li>
+</ul>
+<blockquote>
+<p>xml消息体中必须的参数</p>
+</blockquote>
+<ul>
+<li>fs.default.name : The NameNode</li>
+<li>mapred.job.tracker : The JobTracker</li>
+<li>user.name : The username of the user submitting the job</li>
+<li>oozie.sqoop.command : The sqoop command you want to run where each argument occupies one line or separated by “\n”</li>
+<li>oozie.libpath : A directory in HDFS that contains necessary Jars for your job</li>
+<li>oozie.proxysubmission : Must be set to true</li>
+</ul>
+<blockquote>
+<p>可选的参数</p>
+</blockquote>
+<ul>
+<li>oozie.sqoop.options.size : The number of options you’ll be passing to Sqoop Hadoop job</li>
+<li>oozie.sqoop.options.n : An argument to pass to Sqoop hadoop job conf, the ‘n’ should be an integer starting with 0 to indicate the option number</li>
+</ul>
+<blockquote>
+<p>示例：</p>
+</blockquote>
+<ul>
+<li>url：POST /v1/jobs?jobtype=sqoop</li>
+<li>Content-Type: application/xml;charset=UTF-8</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.default.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://localhost:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapred.job.tracker<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>localhost:8032<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>user.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>icemimosa<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.sqoop.command<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span></span><br><span class="line">            import</span><br><span class="line">            --connect</span><br><span class="line">            jdbc:mysql://localhost:3306/oozie</span><br><span class="line">            --username</span><br><span class="line">            root</span><br><span class="line">            --password</span><br><span class="line">            anywhere</span><br><span class="line">            --table</span><br><span class="line">            WF_JOBS</span><br><span class="line">            --target-dir</span><br><span class="line">            /user/$&#123;wf:user()&#125;/$&#123;examplesRoot&#125;/output-data/sqoop</span><br><span class="line">        <span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.libpath<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://localhost:8020/user/icemimosa/share/lib/sqoop<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>oozie.proxysubmission<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>返回：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># HTTP/1.1 201 CREATED</span><br><span class="line"># Content-Type: application/json;charset=UTF-8</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">	&quot;id&quot; : &quot;job-3&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-6-Managing-a-Job"><a href="#4-6-Managing-a-Job" class="headerlink" title="4.6 Managing a Job"></a>4.6 Managing a Job</h2><p>A HTTP <code>PUT</code> request ： <code>starts</code>, <code>suspends</code>, <code>resumes</code>, <code>kills</code>, <code>update</code> or <code>dryruns</code> a job</p>
+<ul>
+<li>url：/v1/job/[JOB-ID]?action=Xxx</li>
+</ul>
+<blockquote>
+<p>合法的 <strong>action</strong> 参数：<code>start</code>, <code>suspend</code>, <code>resume</code>, <code>kill</code>, <code>dryrun</code>, <code>rerun</code>, <code>change</code> 以及 <code>ignore</code></p>
+</blockquote>
+<hr>
+<p><a id="start-a-job"></a></p>
+<h3 id="4-6-1-Start-a-Job"><a href="#4-6-1-Start-a-Job" class="headerlink" title="4.6.1 Start a Job"></a>4.6.1 Start a Job</h3><ul>
+<li>描述：启动一个job</li>
+<li>method：PUT</li>
+<li>url：/v1/job/[JOB-ID]?action=start</li>
+<li>返回：无返回（成功：HTTP/1.1 200 OK）</li>
+</ul>
+<blockquote>
+<p>备注：这里仅能对Job状态为 <code>PREP</code> 的进行启动。</p>
+</blockquote>
+<h3 id="4-6-2-Re-Runing-a-Workflow-Job"><a href="#4-6-2-Re-Runing-a-Workflow-Job" class="headerlink" title="4.6.2 Re-Runing a Workflow Job"></a>4.6.2 Re-Runing a Workflow Job</h3><ul>
+<li>描述：可以重新启动状态为 <code>SUCCEEDED</code>, <code>KILLED</code> or <code>FAILED</code> 的 workflow job</li>
+<li>method：PUT</li>
+<li>url：/v1/job/[JOB-ID]?action=rerun</li>
+<li>入参：<ul>
+<li>与提交一个标准Job参数基本一致</li>
+<li>也可以指定<strong>跳过</strong>的action，PUT的xml消息体重配置中指定 <code>oozie.wf.rerun.skip.nodes</code>，值为action的name，多个以逗号 <code>,</code> 分隔</li>
+</ul>
+</li>
+<li>返回：无返回（成功：HTTP/1.1 200 OK）</li>
+</ul>
+<h3 id="4-6-3-Re-Runing-a-coordinator-job"><a href="#4-6-3-Re-Runing-a-coordinator-job" class="headerlink" title="4.6.3 Re-Runing a coordinator job"></a>4.6.3 Re-Runing a coordinator job</h3><ul>
+<li>描述：可以重新启动状态为 <code>RUNNING</code>, <code>SUCCEEDED</code>, <code>KILLED</code> or <code>FAILED</code>的 coordinator job</li>
+<li>method：PUT</li>
+<li>url：/v1/job/[JOB-ID]?action=coord-rerun</li>
+<li>入参：<ul>
+<li>action=coord-rerun （必须）</li>
+<li>type：值可以是 action 和 date<ul>
+<li>date：指定一个时间范围，时间范围用 <code>::</code> 分隔</li>
+<li>action：指定重启节点的范围，用 <code>-</code> 分隔</li>
+</ul>
+</li>
+<li>refresh：是否刷新input-events和output-events</li>
+<li>nocleanp：是否清除output-events</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>示例：</p>
+</blockquote>
+<ul>
+<li>url：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">PUT /v1/job/job-3?action=coord-rerun&amp;type=action&amp;scope=1-2&amp;refresh=false&amp;nocleanup=false</span><br><span class="line"></span><br><span class="line">## 或者</span><br><span class="line">PUT /v1/job/job-3?action=coord-rerun&amp;type=date&amp;scope=2009-02-01T00:10Z::2009-03-01T00:10Z&amp;refresh=false&amp;nocleanup=false</span><br><span class="line"></span><br><span class="line">## 返回</span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">```	</span><br><span class="line"></span><br><span class="line">### 4.6.4 Re-Runing a bundle job</span><br><span class="line">- 描述：可以部分重新执行状态为 `RUNNING`, `SUCCEEDED` , `KILLED` or `FAILED`的 Coordinator Job。</span><br><span class="line">- url：/v1/job/[JOB-ID]?action=bundle-rerun</span><br><span class="line">- method：PUT</span><br><span class="line">- 入参：</span><br><span class="line">	- coord-scope：指定 Coordinator Job 的name （不是id）</span><br><span class="line">	- date-scope：指定一个时间范围，时间范围用 `::` 分隔</span><br><span class="line">	- refresh：是否刷新input-events和output-events</span><br><span class="line">	- nocleanp：是否清除output-events</span><br><span class="line">- 出参：无</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br></pre></td></tr></table></figure>
+<p>PUT /v1/job/job-3?action=bundle-rerun&amp;coord-scope=coord-1&amp;refresh=false&amp;nocleanup=false</p>
+<h2 id="返回："><a href="#返回：" class="headerlink" title="返回："></a>返回：</h2><p>HTTP/1.1 200 OK<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 4.6.5 Changing endtime/concurrency/pausetime of a Coordinator Job</span><br><span class="line">- 描述：可以修改一个状态 `不是KILLED` 的 Coordinator Job 的 `endtime`, `concurrency`, or `pausetime`</span><br><span class="line">- url：/v1/job/job-3?action=change</span><br><span class="line">- method：PUT</span><br><span class="line">- 入参：`value` , 可以指定参数，且用分号 `;` 隔开</span><br><span class="line">- 出参：无</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br></pre></td></tr></table></figure></p>
+<p>PUT /v1/job/job-3?action=change&amp;value=endtime=2011-12-01T05:00Z;concurrency=100;pausetime=2011-12-01T05:00Z</p>
+<h2 id="返回：-1"><a href="#返回：-1" class="headerlink" title="返回："></a>返回：</h2><p>HTTP/1.1 200 OK<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 4.6.6 Updating coordinator definition and properties</span><br><span class="line">- 描述：可以替换现有 coordinator 定义文件</span><br><span class="line">- url：/v2/job/[JOB-ID]?action=update</span><br><span class="line">- method：PUT</span><br><span class="line"></span><br><span class="line">### 4.6.7 Ignore a Coordinator Job or Action</span><br><span class="line">- 描述：忽略 Coordinator Job 的一些Action的执行</span><br><span class="line">- url：/v2/job/job-3?action=ignore</span><br><span class="line">- method：PUT</span><br><span class="line">- 入参：</span><br><span class="line">	- type：目前只支持 action</span><br><span class="line">	- scope：指定忽略的Action的ids范围</span><br><span class="line">- 出参：无</span><br><span class="line"></span><br><span class="line">&gt; 示例：</span><br></pre></td></tr></table></figure></p>
+<p>PUT /v2/job/job-3?action=ignore&amp;type=action&amp;scope=3-4<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 4.7 Job Information</span><br><span class="line">- 描述：获取Job的详情</span><br><span class="line">- method：GET</span><br><span class="line">- url：/v1/job/[JOB-ID]?show=info    (url中v1变为v2也支持)</span><br><span class="line">- 入参：show=info（必须）</span><br><span class="line">- 出参：Content-Type: application/json;charset=UTF-8</span><br><span class="line">- 示例：</span><br><span class="line">	- url：GET /v1/0000005-160704142405284-oozie-icem-W/?show=info</span><br><span class="line">	- 返回：</span><br></pre></td></tr></table></figure></p>
+<pre><code>{
+  &quot;appName&quot;: &quot;map-reduce-wf&quot;,
+  &quot;externalId&quot;: null,
+  &quot;status&quot;: &quot;SUCCEEDED&quot;,
+  &quot;group&quot;: null
+  ......
+  ......
+}
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 4.8 Job Application Definition</span><br><span class="line">- 描述：获取 workflow, coordinator, bundle job的定义文件</span><br><span class="line">- method：GET</span><br><span class="line">- url：v1/job/[JOB-ID]?show=definition</span><br><span class="line">- 入参：show=definition</span><br><span class="line">- 出参：job的定义文件（xml格式）</span><br><span class="line">- 示例：</span><br><span class="line">	- url：GET v1/job/0000005-160704142405284-oozie-icem-W?show=definition</span><br><span class="line">	- 返回：</span><br><span class="line"></span><br><span class="line">	```xml</span><br><span class="line">	## 截取部分（这里是workflow-app）</span><br><span class="line">	&lt;workflow-app xmlns=&quot;uri:oozie:workflow:0.2&quot; name=&quot;map-reduce-wf&quot;&gt;</span><br><span class="line">	    &lt;start to=&quot;mr-node&quot;/&gt;</span><br><span class="line">	    &lt;action name=&quot;mr-node&quot;&gt;</span><br><span class="line">	        &lt;map-reduce&gt;</span><br><span class="line">	            &lt;job-tracker&gt;$&#123;jobTracker&#125;&lt;/job-tracker&gt;</span><br><span class="line">	            &lt;name-node&gt;$&#123;nameNode&#125;&lt;/name-node&gt;</span><br><span class="line">	            &lt;prepare&gt;</span><br><span class="line">	                &lt;delete path=&quot;$&#123;nameNode&#125;/user/$&#123;wf:user()&#125;/$&#123;examplesRoot&#125;/output-data/$&#123;outputDir&#125;&quot;/&gt;</span><br><span class="line">	            &lt;/prepare&gt;</span><br><span class="line">	            ......</span><br><span class="line">	            ......</span><br></pre></td></tr></table></figure>
+</code></pre><h2 id="4-9-Job-Log"><a href="#4-9-Job-Log" class="headerlink" title="4.9 Job Log"></a>4.9 Job Log</h2><ul>
+<li>描述：获取job的日志</li>
+<li>method：GET</li>
+<li>url：/v1/job/[JOB-ID]?show=log</li>
+<li>入参：<ul>
+<li>show=log (必须)</li>
+<li>logfilter (可选，过滤日志的参数，格式是 <code>opt1=val1;opt2=val1;opt3=val1</code>)<ul>
+<li>recent：指定最近小时/分钟的日志（如3h, 30m）</li>
+<li>start：开始时间（yyyy-MM-dd HH:mm:ss,SSS）</li>
+<li>end：结束时间</li>
+<li>loglevel：可用竖线 <code>|</code> 分隔，可选 <code>ALL</code>, <code>DEBUG</code>, <code>ERROR</code>, <code>INFO</code>, <code>TRACE</code>, <code>WARN</code>, <code>FATAL</code></li>
+<li>text：搜索log的参数</li>
+<li>limit：日志的数量</li>
+<li>debug：打印debug日志</li>
+<li>参考：<a href="https://oozie.apache.org/docs/4.1.0/DG_CommandLineTool.html#Filtering_the_server_logs_with_logfilter_options" title="log filter" target="_blank" rel="noopener">日志 logfilter 参数</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>出参：text/plain格式</li>
+<li><p>示例：</p>
+<ul>
+<li>url：/v1/job/0000005-160704142405284-oozie-icem-W?show=log&amp;logfilter=limit=8;loglevel=INFO</li>
+<li><p>返回：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">2016-07-04 19:15:17,992  INFO ActionStartXCommand:520 - SERVER[IceMimosa.local] USER[icemimosa] GROUP[-] TOKEN[] APP[map-reduce-wf] JOB[0000005-160704142405284-oozie-icem-W] ACTION[0000005-160704142405284-oozie-icem-W@:start:] Start action [0000005-160704142405284-oozie-icem-W@:start:] with user-retry state : userRetryCount [0], userRetryMax [0], userRetryInterval [10]</span><br><span class="line">2016-07-04 19:15:17,995  INFO ActionStartXCommand:520 - SERVER[IceMimosa.local] USER[icemimosa] GROUP[-] TOKEN[] APP[map-reduce-wf] JOB[0000005-160704142405284-oozie-icem-W] ACTION[0000005-160704142405284-oozie-icem-W@:start:] [***0000005-160704142405284-oozie-icem-W@:start:***]Action status=DONE</span><br><span class="line">2016-07-04 19:15:17,996  INFO ActionStartXCommand:520 - SERVER[IceMimosa.local] USER[icemimosa] GROUP[-] TOKEN[] APP[map-reduce-wf] JOB[0000005-160704142405284-oozie-icem-W] ACTION[0000005-160704142405284-oozie-icem-W@:start:] [***0000005-160704142405284-oozie-icem-W@:start:***]Action updated in DB!</span><br><span class="line">2016-07-04 19:15:18,090  INFO ActionStartXCommand:520 - SERVER[IceMimosa.local] USER[icemimosa] GROUP[-] TOKEN[] APP[map-reduce-wf] JOB[0000005-160704142405284-oozie-icem-W] ACTION[0000005-160704142405284-oozie-icem-W@mr-node] Start action </span><br><span class="line">......</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-10-Job-graph"><a href="#4-10-Job-graph" class="headerlink" title="4.10 Job graph"></a>4.10 Job graph</h2><ul>
+<li>描述：获取job的视图</li>
+<li>method：GET</li>
+<li>url：/v1/job/[JOB-ID]?show=graph</li>
+<li>入参：<ul>
+<li>show：值为graph （必须）</li>
+<li>show-kill：是否显示kill节点, <code>true</code> or <code>false</code></li>
+</ul>
+</li>
+<li>出参：类型 image/png</li>
+<li><p>示例：</p>
+<ul>
+<li>url：GET /v1/job/0000005-160704142405284-oozie-icem-W?show=graph&amp;show-kill=true</li>
+<li><p>返回：</p>
+<p><img src="http://ice-img.dreamylost.cn/Oozie-Job-Graph.png?imageMogr2/thumbnail/!50p" alt="Job Graph" title="Job Graph"></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-11-Jobs-Information"><a href="#4-11-Jobs-Information" class="headerlink" title="4.11 Jobs Information"></a>4.11 Jobs Information</h2><ul>
+<li>描述：获取Jobs的信息</li>
+<li>method：GET</li>
+<li>url：/v1/jobs</li>
+<li>入参：<ul>
+<li>filter：值为user=Xxx，进行用户过滤, 多个用 <code>;</code> 分隔<ul>
+<li>name：application name from the workflow/coordinator/bundle definition</li>
+<li>user：the user that submitted the job</li>
+<li>group：the group for the job</li>
+<li>status： the status of the job</li>
+<li>jobtype：值为 <code>wf</code> , <code>coordinator</code> or <code>bundle</code></li>
+<li><strong>备注</strong>：不同的属性名称用 <code>AND</code> 过滤，相同的属性名称用 <code>OR</code> 过滤。</li>
+</ul>
+</li>
+<li>offset：分页第一个下标（从1开始），默认1</li>
+<li>len：获取的数量，默认50</li>
+</ul>
+</li>
+<li><p>示例：</p>
+<ul>
+<li>url：GET /v1/jobs?filter=user=icemimosa&amp;offset=1&amp;len=2</li>
+<li><p>返回：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">	&#123;</span><br><span class="line">	  &quot;total&quot;: 14,</span><br><span class="line">	  &quot;offset&quot;: 1,</span><br><span class="line">	  &quot;len&quot;: 2,</span><br><span class="line">	  &quot;workflows&quot;: [</span><br><span class="line">	    &#123;</span><br><span class="line">	      &quot;appName&quot;: &quot;oozie-mapreduce&quot;,</span><br><span class="line">	      &quot;externalId&quot;: null,</span><br><span class="line">	      &quot;conf&quot;: null,</span><br><span class="line">	      &quot;run&quot;: 0,</span><br><span class="line">	      &quot;acl&quot;: null,</span><br><span class="line">	      &quot;appPath&quot;: null,</span><br><span class="line">	      &quot;parentId&quot;: null,</span><br><span class="line">	      &quot;lastModTime&quot;: &quot;Tue, 05 Jul 2016 01:59:30 GMT&quot;,</span><br><span class="line">	      &quot;consoleUrl&quot;: &quot;http://IceMimosa.local:11000/oozie?job=0000007-160704142405284-oozie-icem-W&quot;,</span><br><span class="line">	      &quot;createdTime&quot;: &quot;Tue, 05 Jul 2016 01:59:19 GMT&quot;,</span><br><span class="line">	      &quot;startTime&quot;: &quot;Tue, 05 Jul 2016 01:59:19 GMT&quot;,</span><br><span class="line">	      &quot;toString&quot;: &quot;Workflow id[0000007-160704142405284-oozie-icem-W] status[KILLED]&quot;,</span><br><span class="line">	      &quot;id&quot;: &quot;0000007-160704142405284-oozie-icem-W&quot;,</span><br><span class="line">	      &quot;endTime&quot;: &quot;Tue, 05 Jul 2016 01:59:30 GMT&quot;,</span><br><span class="line">	      &quot;user&quot;: &quot;icemimosa&quot;,</span><br><span class="line">	      &quot;actions&quot;: [],</span><br><span class="line">	      &quot;status&quot;: &quot;KILLED&quot;,</span><br><span class="line">	      &quot;group&quot;: null</span><br><span class="line">	    &#125;,</span><br><span class="line">	    &#123;</span><br><span class="line">	      &quot;appName&quot;: &quot;oozie-mapreduce&quot;,</span><br><span class="line">	      &quot;externalId&quot;: null,</span><br><span class="line">	      &quot;conf&quot;: null,</span><br><span class="line">	      &quot;run&quot;: 0,</span><br><span class="line">	      &quot;acl&quot;: null,</span><br><span class="line">	      &quot;appPath&quot;: null,</span><br><span class="line">	      &quot;parentId&quot;: null,</span><br><span class="line">	      &quot;lastModTime&quot;: &quot;Tue, 05 Jul 2016 01:57:30 GMT&quot;,</span><br><span class="line">	      &quot;consoleUrl&quot;: &quot;http://IceMimosa.local:11000/oozie?job=0000006-160704142405284-oozie-icem-W&quot;,</span><br><span class="line">	      &quot;createdTime&quot;: &quot;Tue, 05 Jul 2016 01:57:29 GMT&quot;,</span><br><span class="line">	      &quot;startTime&quot;: &quot;Tue, 05 Jul 2016 01:57:29 GMT&quot;,</span><br><span class="line">	      &quot;toString&quot;: &quot;Workflow id[0000006-160704142405284-oozie-icem-W] status[SUSPENDED]&quot;,</span><br><span class="line">	      &quot;id&quot;: &quot;0000006-160704142405284-oozie-icem-W&quot;,</span><br><span class="line">	      &quot;endTime&quot;: null,</span><br><span class="line">	      &quot;user&quot;: &quot;icemimosa&quot;,</span><br><span class="line">	      &quot;actions&quot;: [],</span><br><span class="line">	      &quot;status&quot;: &quot;SUSPENDED&quot;,</span><br><span class="line">	      &quot;group&quot;: null</span><br><span class="line">	    &#125;</span><br><span class="line">	  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-12-Jobs-information-using-Bulk-API"><a href="#4-12-Jobs-information-using-Bulk-API" class="headerlink" title="4.12 Jobs information using Bulk API"></a>4.12 Jobs information using Bulk API</h2><p>获取一个指定 bundle 的一个大的Actions集合。这有利于监控所有Coordinator Jobs的状态。查询的时候可以指定 <code>bulk</code> ，<code>offset</code> 和 <code>len</code> 参数。</p>
+<blockquote>
+<p>在进行查询的时候可以指定如下的bulk参数：</p>
+</blockquote>
+<ul>
+<li>bundle : the application name from the bundle definition</li>
+<li>coordinators : the application name(s) from the coordinator definition.</li>
+<li>actionStatus : the status of coordinator action (Valid values are WAITING, READY, SUBMITTED, RUNNING, SUSPENDED, TIMEDOUT, SUCCEEDED, KILLED, FAILED)</li>
+<li>startCreatedTime : the start of the window you want to look at, of the actions’ created time</li>
+<li>endCreatedTime : the end of above window</li>
+<li>startScheduledTime : the start of the window you want to look at, of the actions’ scheduled i.e. nominal time.</li>
+<li>endScheduledTime : the end of above window</li>
+</ul>
+<blockquote>
+<p>参数 Tips：</p>
+<ol>
+<li>bundle必须指定，所有的参数都是进行 AND 查询。</li>
+<li>actionStatus如果未指定，默认为 KILLED,FAILED。</li>
+<li>bulk的这些参数使用分号 <code>;</code> 进行分割。</li>
+<li>coordinators 和 actionStatus 如果指定多个可以使用逗号 <code>,</code> 分隔进行 OR 查询。</li>
+<li>时间使用 UTC 的格式。</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>示例：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">GET /v1/jobs?bulk=bundle=my-bundle-app;coordinators=my-coord-1,my-coord-5;actionStatus=KILLED&amp;offset=1&amp;len=50</span><br><span class="line"></span><br><span class="line">## 返回</span><br><span class="line">&#123;</span><br><span class="line">  offset: 1,</span><br><span class="line">  len: 50,</span><br><span class="line">  total: 1002,</span><br><span class="line">  	bulkresponses: [</span><br><span class="line">  	&#123;</span><br><span class="line">      bulkbundle:</span><br><span class="line">      &#123;</span><br><span class="line">        bundleJobName: &quot;my-bundle-app&quot;,</span><br><span class="line">        bundleJobId: &quot;0-200905191240-oozie-B&quot;,</span><br><span class="line">        status: &quot;SUSPENDED&quot;,</span><br><span class="line">      &#125;,</span><br><span class="line">      bulkcoord:</span><br><span class="line">      &#123;</span><br><span class="line">        coordJobName: &quot;my-coord-1&quot;,</span><br><span class="line">        status: &quot;SUSPENDED&quot;,</span><br><span class="line">      &#125;,</span><br><span class="line">      bulkaction:</span><br><span class="line">      &#123;</span><br><span class="line">        id: &quot;0-200905191240-oozie-C@21&quot;,</span><br><span class="line">        coordJobId: &quot;0-200905191240-oozie-C&quot;,</span><br><span class="line">        actionNumber: 21,</span><br><span class="line">        externalId: &quot;job_00076_0009&quot;,</span><br><span class="line">        status: &quot;KILLED&quot;,</span><br><span class="line">        externalStatus: &quot;FAILED&quot;,</span><br><span class="line">        errorCode: &quot;E0902&quot;,</span><br><span class="line">        errorMessage: &quot;Input file corrupt&quot;,</span><br><span class="line">        createdTime: &quot;Fri, 02 Jan 2009 00:00:00 GMT&quot;,</span><br><span class="line">        nominalTime: &quot;Thu, 01 Jan 2009 00:00:00 GMT&quot;,</span><br><span class="line">        missingDependencies: &quot;hdfs://nn:port/user/joe/file.txt&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      bulkbundle:</span><br><span class="line">      &#123;</span><br><span class="line">        bundleJobName: &quot;my-bundle-app&quot;,</span><br><span class="line">        bundleJobId: &quot;0-200905191240-oozie-B&quot;,</span><br><span class="line">        status: &quot;SUSPENDED&quot;,</span><br><span class="line">      &#125;</span><br><span class="line">      bulkcoord:</span><br><span class="line">      &#123;</span><br><span class="line">        coordJobName: &quot;my-coord-5&quot;,</span><br><span class="line">        status: &quot;SUSPENDED&quot;,</span><br><span class="line">      &#125;</span><br><span class="line">      bulkaction:</span><br><span class="line">      &#123;</span><br><span class="line">        id: &quot;0-200905191245-oozie-C@114&quot;,</span><br><span class="line">        coordJobId: &quot;0-200905191245-oozie-C&quot;,</span><br><span class="line">        actionNumber: 114,</span><br><span class="line">        externalId: &quot;job_00076_0265&quot;,</span><br><span class="line">        status: &quot;KILLED&quot;,</span><br><span class="line">        externalStatus: &quot;KILLED&quot;,</span><br><span class="line">        errorCode: &quot;E0603&quot;,</span><br><span class="line">        errorMessage: &quot;SQL error in operation ...&quot;,</span><br><span class="line">        createdTime: &quot;Fri, 02 Jan 2009 00:00:00 GMT&quot;,</span><br><span class="line">        nominalTime: &quot;Thu, 01 Jan 2009 00:00:00 GMT&quot;,</span><br><span class="line">        missingDependencies:</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/oozie/">oozie</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/oozie/">oozie</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.patamon.me/icemimosa/oozie/Oozie-6_Web Service API/" data-title="Oozie-6_Web Service API | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/icemimosa/oozie/Oozie-7_Java API/" title="Oozie-7_Java API">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  Oozie-7_Java API</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/icemimosa/oozie/Oozie-5_ Bundle定义/" title="Oozie-5_ Bundle定义">
+ <strong>NEXT:</strong><br> 
+ <span>Oozie-5_ Bundle定义
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oozie-6-Web-Service-API"><span class="toc-text">Oozie-6_Web Service API</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-versions"><span class="toc-text">2. versions</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-admin"><span class="toc-text">3. admin</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-status"><span class="toc-text">3.1 status</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-available-oozie-servers"><span class="toc-text">3.2 available-oozie-servers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-OS-Environment"><span class="toc-text">3.3 OS Environment</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-Java-System-Properties"><span class="toc-text">3.4 Java System Properties</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-5-Oozie-Configuration"><span class="toc-text">3.5 Oozie Configuration</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-6-Oozie-Instrumentation-和-Oozie-Metrics"><span class="toc-text">3.6 Oozie Instrumentation 和 Oozie Metrics</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-7-Build-Version"><span class="toc-text">3.7 Build Version</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-8-Available-Time-Zones"><span class="toc-text">3.8 Available Time Zones</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-9-List-available-sharelib"><span class="toc-text">3.9 List available sharelib</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-Job-和-Jobs"><span class="toc-text">4. Job 和 Jobs</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-Standard-Job-Submission"><span class="toc-text">4.1 Standard Job Submission</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-Proxy-MapReduce-Job-Submission"><span class="toc-text">4.2 Proxy MapReduce Job Submission</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-Proxy-Pig-Job-Submission"><span class="toc-text">4.3 Proxy Pig Job Submission</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-Proxy-Hive-Job-Submission"><span class="toc-text">4.4 Proxy Hive Job Submission</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5-Proxy-Sqoop-Job-Submission"><span class="toc-text">4.5 Proxy Sqoop Job Submission</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-6-Managing-a-Job"><span class="toc-text">4.6 Managing a Job</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-6-1-Start-a-Job"><span class="toc-text">4.6.1 Start a Job</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-6-2-Re-Runing-a-Workflow-Job"><span class="toc-text">4.6.2 Re-Runing a Workflow Job</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-6-3-Re-Runing-a-coordinator-job"><span class="toc-text">4.6.3 Re-Runing a coordinator job</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#返回："><span class="toc-text">返回：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#返回：-1"><span class="toc-text">返回：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-9-Job-Log"><span class="toc-text">4.9 Job Log</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-10-Job-graph"><span class="toc-text">4.10 Job graph</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-11-Jobs-Information"><span class="toc-text">4.11 Jobs Information</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-12-Jobs-information-using-Bulk-API"><span class="toc-text">4.12 Jobs information using Bulk API</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list">
+		
+		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/IceMimosa" target="_blank" title="github"></a>
+		
+		
+		
+		
+		<a href="mailto:514793425@qq.com" target="_blank" title="email"></a>
+		
+	</div>
+</div>
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/categories/java/" title="java">java<sup>26</sup></a></li>
+		
+			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/categories/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/categories/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/categories/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
+		
+			<li><a href="/categories/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
+		
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/tags/impala/" title="impala">impala<sup>1</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>27</sup></a></li>
+		
+			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/tags/lombok/" title="lombok">lombok<sup>3</sup></a></li>
+		
+			<li><a href="/tags/mac/" title="mac">mac<sup>2</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>1</sup></a></li>
+		
+			<li><a href="/tags/olap/" title="olap">olap<sup>4</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/tags/react/" title="react">react<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/tags/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/tags/spring/" title="spring">spring<sup>2</sup></a></li>
+		
+			<li><a href="/tags/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
+		
+			<li><a href="/tags/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/JavaScript/" style="font-size: 11px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 17px;">hbase</a> <a href="/tags/hive/" style="font-size: 16px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12px;">lombok</a> <a href="/tags/mac/" style="font-size: 11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/olap/" style="font-size: 13px;">olap</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/pulsar/" style="font-size: 10px;">pulsar</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/redis/" style="font-size: 18px;">redis</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/spring/" style="font-size: 11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13px;">sqoop</a> <a href="/tags/数仓/" style="font-size: 13px;">数仓</a> <a href="/tags/源码/" style="font-size: 19px;">源码</a>
+    </div>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    
+            <p class="copyright"> © 2023 
+		
+		<a href="http://www.patamon.me" target="_blank" title="IceMimosa">IceMimosa</a>
+		
+            <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
+            ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
+            </p></div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="/js/jquery-icemi-scroll2top.js"></script>
+<script src="/js/other.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  
+  // 回到顶部
+  $(document.body).scroll2Top({
+    background:"#66ccff",
+    shape:"circle",
+    bottom:40,
+    right:250
+  });
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    // m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,332-$(this).scrollTop()));
+  });
+});
+</script>
+
+<!-- GrowingIO Analytics code version 2.1 -->
+<!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
+<script type="text/javascript">
+!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
+gio('init','b988cbf13dfaa5ac', {});
+//custom page code begin here
+
+//custom page code end here
+gio('send');
+</script>
+<!-- End GrowingIO Analytics code version: 2.1 -->
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
+
+
+
+
+
+
+<script>
+    
+        var _bdImg = '4';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
+</html>
+

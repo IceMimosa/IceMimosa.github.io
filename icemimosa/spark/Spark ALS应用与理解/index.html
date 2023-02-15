@@ -1,0 +1,634 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
+  
+    <title>Spark ALS应用与理解 | Ice の Mimosa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="IceMimosa">
+    
+    <meta name="description" content="Spark ALS1. 简介推荐的意义和应用于推荐的协同过滤算法，这里就不说明了。这里主要讲解一下Spark对协同过滤的应用和实现。官方文档 说的很明确，Spark目前支持的是基于模型的协同过滤算法，即Alternating Least Squares (ALS)。中文名称是交替最小二乘或者交替最小">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="Ice の Mimosa" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon_mine.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/jquery-icemi-scroll2top.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='1cb536fd996cddc96154515a1ed1d72d';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+</html>
+  <body>
+    <header>
+      <div id="banner">
+		
+
+			<div id="erer" class="erer" style="">
+				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
+				<!-- <img id="i22" src="http://ice-img.dreamylost.cn/patamon-22.png" width=200 height=230></img> -->
+			</div>
+
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Ice の Mimosa">Ice の Mimosa</a></h1>
+				<a class="blog-motto">没有未来的未来不是我想要的未来</a>
+			</div>
+
+			<div id="sansan" class="sansan" style="">
+				<!-- <img src="/img/33.png" width=200 height=230></img> -->
+				<!-- <img src="http://ice-img.dreamylost.cn/patamon-33.png" width=200 height=230></img> -->
+			</div> 
+
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+					<li>
+					
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
+					
+					</form></li>
+				</ul>
+			</ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/icemimosa/spark/Spark ALS应用与理解/" title="Spark ALS应用与理解" itemprop="url">Spark ALS应用与理解</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2017-07-09T07:30:16.000Z" itemprop="datePublished">2017-07-09</time>
+    更新日期:<time datetime="2023-02-15T14:15:04.578Z" itemprop="dateModified">2023-02-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spark-ALS"><span class="toc-text">Spark ALS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Spark-ALS使用"><span class="toc-text">2. Spark ALS使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-ALS算法"><span class="toc-text">3. ALS算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-获取损失函数"><span class="toc-text">3.1 获取损失函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-公式推导"><span class="toc-text">3.2 公式推导</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-总结"><span class="toc-text">4. 总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol>
+		</div>
+		
+		<h1 id="Spark-ALS"><a href="#Spark-ALS" class="headerlink" title="Spark ALS"></a>Spark ALS</h1><h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p><code>推荐的意义</code>和应用于推荐的<code>协同过滤算法</code>，这里就不说明了。这里主要讲解一下Spark对协同过滤的应用和实现。<br><a href="https://spark.apache.org/docs/1.6.2/mllib-collaborative-filtering.html" target="_blank" rel="noopener">官方文档</a> 说的很明确，Spark目前支持的是<code>基于模型</code>的协同过滤算法，即<code>Alternating Least Squares (ALS)</code>。中文名称是<code>交替最小二乘</code>或者<code>交替最小平方</code>。<br>由于该算法针对的是基于<code>用户-商品</code>的关联矩阵，且在实际应用中，一个用户不可能买过所有的商品，甚至也不可能对已经买过的所有商品进行评分，所以这个矩阵注定就是一个<code>稀疏矩阵</code>。假设我们已经有了<strong>用户数据</strong>，<strong>商品数据</strong>，<strong>评分数据</strong>，那么这个矩阵可能是这个样子（横轴是商品，众轴是用户，每个单元格式评分）：</p>
+<p><img src="http://ice-img.dreamylost.cn/2017-07-09-084038.jpg?imageMogr2/thumbnail/!50p" alt=""></p>
+<p>那么如何计算（预测）剩余<code>?</code>中的空值，那么这就是ALS做的事情了。</p>
+<p>从这个算法，你也应该可以看出，它压根就不关心用户和商品本身的信息，需要的仅仅是用户对商品产生的某种行为，比如评分，浏览等等。</p>
+<h2 id="2-Spark-ALS使用"><a href="#2-Spark-ALS使用" class="headerlink" title="2. Spark ALS使用"></a>2. Spark ALS使用</h2><p>在讲解ALS之前，我们先来看看在Spark中是如何使用的。这里采用Spark1.6.x的版本。虽然Spark ML中分为<code>ml</code>和<code>mllib</code>两个版本的API，但就对于算法本身，影响不是很大。</p>
+<p>实际应用中，应该会有<code>离线推荐</code>和<code>在线推荐</code>两个场景。但不管是哪个场景，也仅仅是如何读取<code>评分数据</code>的区别，调用ALS的API都是一致的。</p>
+<blockquote>
+<p>离线场景</p>
+</blockquote>
+<p>对于离线场景，你可以将数据整理到<code>Hive</code>中，这个hive表中有<code>user_id, item_id, rating</code>这个三个字段。然后在spark应用程序中，你就可以通过Spark SQL来读取这些数据。然后使用<code>val model = ALS.train(...)</code>来训练这些数据，最后使用<code>model</code>就可以为用户推荐商品。然后还可以将推荐的结果数据存储在HBase数据库中以方便查询。</p>
+<ul>
+<li>注：当然还有<code>ALS.trainImplicit(...)</code>方法，这个是做<code>隐式推荐</code>的，默认是<code>显式推荐</code>。隐式的就是用户没有对商品有明确的评分行为，比如仅仅是点击或浏览。</li>
+</ul>
+<blockquote>
+<p>在线场景</p>
+</blockquote>
+<p>对于在线场景，你可能是在Spark Streaming中不停的接收来自Kafka的评分数据，然后结合<code>历史数据</code>进行推荐。操作基本和上述一致。</p>
+<blockquote>
+<p>问题</p>
+</blockquote>
+<p>这个 <code>ALS.train(...)</code> 的过程是神特么简单，真不愧是黑盒操作。。算法的细节简直完全对使用者屏蔽。对于这种demo，其实网上也是一堆，比如<a href="https://github.com/apache/spark/blob/master/examples/src/main/scala/org/apache/spark/examples/mllib/RecommendationExample.scala" target="_blank" rel="noopener">RecommendationExample</a>，使用起来很是简单。<br>但是在使用的过程中，你可能会对传入的<code>rank</code>，<code>lambda</code>等参数很是困惑，当然spark也很贴心的为你准备了默认值。或者你也可以结合实际数据来不停的调整它们，以达到最优的效果。那么这些参数在ALS中到底是起什么作用呢，那么就不得不去看下ALS算法的原理了。</p>
+<h2 id="3-ALS算法"><a href="#3-ALS算法" class="headerlink" title="3. ALS算法"></a>3. ALS算法</h2><h3 id="3-1-获取损失函数"><a href="#3-1-获取损失函数" class="headerlink" title="3.1 获取损失函数"></a>3.1 获取损失函数</h3><p>我看别人博客讲ALS简直一头雾水，终于借助<a href="http://fclef.me/" target="_blank" rel="noopener">哥们</a>帮助下，终于能够理解了不少。那么下面我以菜鸟的眼光来讲解一下。</p>
+<p>对于上面的<code>稀疏矩阵</code>，我们假设它为 <code>A</code> 矩阵，这是一个已知矩阵。假设有 <code>i个用户</code> 和<code>j个商品</code>，那么这个矩阵就是 <code>i×j</code> 的矩阵。</p>
+<p>然后对于矩阵分解，其实任何一个矩阵 <code>A(i×j)</code> 都可以被分解成 <code>U(i×k)</code> 和 <code>V(j×k)</code>，即 <img src="http://ice-img.dreamylost.cn/2017-07-09-095816.jpg?imageMogr2/thumbnail/!50p" alt=""> (T表示V的<code>转置矩阵</code>，且<code>k &lt;= i，j</code>)。比如一个<code>4*4</code>的矩阵，你可以将它分解成<code>4*3矩阵</code>和<code>3*4矩阵</code>相乘的结果。这里的k，你可以把它当作是一个特征参数，对应Spark ALS中就是<code>rank</code>参数。</p>
+<p>但是在这个打分矩阵中，找到完全吻合的U和V是不可能的，所以需要找到一个近似的解。即<img src="http://ice-img.dreamylost.cn/2017-07-09-100222.jpg?imageMogr2/thumbnail/!50p" alt=""> （<code>k &lt;= i，j</code>）</p>
+<p>此时你就会发现，我们的目的实际就是去求 <code>U</code> 和 <code>V</code>两个矩阵的解。但是直接去求结果肯定不可能，那么我的理解就是先从预测结果的好坏程度出发。</p>
+<p>我们假设有如下公式：</p>
+<p><img src="http://ice-img.dreamylost.cn/2017-07-09-114512.jpg?imageMogr2/thumbnail/!50p" alt=""></p>
+<p>这时你应该会发现如果我们求得的U和V如果越优，那么C的值越小。而且这个公式在实际中肯定会存在一个最小值(只是求不到)，此时我们的方向就是去求这个公式的最小值。</p>
+<p>但是这个公式有个明显的缺点，就是<a href="https://www.zhihu.com/question/32246256" target="_blank" rel="noopener">过于拟合</a>。说白了就是，我这个公式在<code>训练集</code>中能满足大部分数据，但是在<code>测试集</code>中就会存在很多偏离这个函数公式的数据，这就会导致很多指标有很大的误差，如图(右图表示过于拟合)：<br><img src="http://ice-img.dreamylost.cn/2017-07-09-103306.jpg?imageMogr2/thumbnail/!50p" alt=""></p>
+<p>那么怎么才能达到左图的效果，使得结果的指标没有很大的误差。那么就需要对上述的公式进行惩罚，公式变成如下（损失函数）。</p>
+<p><img src="http://ice-img.dreamylost.cn/2017-07-09-114605.jpg?imageMogr2/thumbnail/!50p" alt=""></p>
+<p>至于为毛加了后面那串公式，可以参照<a href="http://blog.csdn.net/shuaishuai3409/article/details/50821071" target="_blank" rel="noopener">矩阵分解</a>中的 <code>正则化矩阵分解</code>。原理我也不是很懂，反正就是解决过拟合的问题。其中的<code>λ</code>（lambda）也是Spark ALS的设置项。</p>
+<p>那么对于<code>损失函数(Loss Function)</code>的优化，通常可以采用<code>交替最小二乘法（Alternative Least Squares）</code>和<code>随机梯度下降法（Stochastic Gradient Descent）</code>。下面就开始介绍是如何通过 <code>ALS</code> 对这个函数进行不断的优化，从而求得以<code>C是最小值</code>的前提下，这个U和V的最优解。</p>
+<p>由于公式里面存在两个变量U和V，所以肯定需要固定一个变量（假设其为常数），这样才能求最小值下的另一个变量的值。步骤如下：</p>
+<h3 id="3-2-公式推导"><a href="#3-2-公式推导" class="headerlink" title="3.2 公式推导"></a>3.2 公式推导</h3><blockquote>
+<p>第一步：</p>
+</blockquote>
+<p>首先我们假设U的值是个常量，即<code>U(0)</code>。这个值你可以随机生成，取0或者取全局的均值。那么求最小值，就需要对这个公式的<code>V进行求导</code>。</p>
+<p><img src="http://ice-img.dreamylost.cn/2017-07-09-114642.jpg?imageMogr2/thumbnail/!50p" alt=""></p>
+<p>然后令导函数的值为0。从而求到最小值下的<code>V(0)</code>，可以参照<a href="http://blog.csdn.net/oucpowerman/article/details/49847979" target="_blank" rel="noopener">推导步骤</a>。</p>
+<p>这样经过第一步，就可以得到一个V的解，即<code>V(0)</code>。</p>
+<blockquote>
+<p>第二步</p>
+</blockquote>
+<p>既然已经求到了 <code>V(0)</code>，那么我们就可以把V的值设成常量<code>V(0)</code>，从而去求<code>U(1)</code>。这个求值的过程就跟第一步差不多了。</p>
+<blockquote>
+<p>第N步</p>
+</blockquote>
+<p>…… 按照上述的思路一次次迭代，这个过程就是求U和V最优解的<code>交替过程</code>。迭代的次数可以人为指定，这也是Spark ALS中的设置参数。</p>
+<p>这样损失函数C的值就会不断的收敛，这样就会求出一个近似最优的解U和V。</p>
+<h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h2><p>至此，经过<code>不停的交替</code>来<code>求C的最小值</code>的过程，从而求得最优的<code>U和V</code>的解。这也是ALS名称的由来。这样在去计算 <code>U*V</code> 的值，就可以将原先<code>稀疏的矩阵A</code>中的空缺值补充完毕，这是一个预测的过程。</p>
+<p>然后就可以通过这个预测后的矩阵对每个用户进行商品的推荐了，比如可以按照分值从大到小推荐出前10个商品出来。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://lib.csdn.net/article/machinelearning/1100" target="_blank" rel="noopener">基于Spark机器学习和实时流计算的智能推荐系统</a><br><a href="http://blog.csdn.net/shuaishuai3409/article/details/50821071" target="_blank" rel="noopener">矩阵分解原理详解</a><br><a href="http://blog.csdn.net/wangqi880/article/details/52923356#reply" target="_blank" rel="noopener">推荐demo</a><br><a href="https://jessesw.com/Rec-System/" target="_blank" rel="noopener">隐式反馈推荐</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/spark/">spark</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/spark/">spark</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.patamon.me/icemimosa/spark/Spark ALS应用与理解/" data-title="Spark ALS应用与理解 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/icemimosa/hive/Impala读取parquet格式时间的一个坑/" title="Impala读取parquet格式时间的一个坑">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  Impala读取parquet格式时间的一个坑</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/icemimosa/Java/Mysql优化/" title="Mysql性能优化">
+ <strong>NEXT:</strong><br> 
+ <span>Mysql性能优化
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spark-ALS"><span class="toc-text">Spark ALS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Spark-ALS使用"><span class="toc-text">2. Spark ALS使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-ALS算法"><span class="toc-text">3. ALS算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-获取损失函数"><span class="toc-text">3.1 获取损失函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-公式推导"><span class="toc-text">3.2 公式推导</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-总结"><span class="toc-text">4. 总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list">
+		
+		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/IceMimosa" target="_blank" title="github"></a>
+		
+		
+		
+		
+		<a href="mailto:514793425@qq.com" target="_blank" title="email"></a>
+		
+	</div>
+</div>
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/categories/java/" title="java">java<sup>26</sup></a></li>
+		
+			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/categories/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/categories/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/categories/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
+		
+			<li><a href="/categories/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
+		
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/tags/impala/" title="impala">impala<sup>1</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>27</sup></a></li>
+		
+			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/tags/lombok/" title="lombok">lombok<sup>3</sup></a></li>
+		
+			<li><a href="/tags/mac/" title="mac">mac<sup>2</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>1</sup></a></li>
+		
+			<li><a href="/tags/olap/" title="olap">olap<sup>4</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/tags/react/" title="react">react<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/tags/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/tags/spring/" title="spring">spring<sup>2</sup></a></li>
+		
+			<li><a href="/tags/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
+		
+			<li><a href="/tags/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/JavaScript/" style="font-size: 11px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 17px;">hbase</a> <a href="/tags/hive/" style="font-size: 16px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12px;">lombok</a> <a href="/tags/mac/" style="font-size: 11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/olap/" style="font-size: 13px;">olap</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/pulsar/" style="font-size: 10px;">pulsar</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/redis/" style="font-size: 18px;">redis</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/spring/" style="font-size: 11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13px;">sqoop</a> <a href="/tags/数仓/" style="font-size: 13px;">数仓</a> <a href="/tags/源码/" style="font-size: 19px;">源码</a>
+    </div>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    
+            <p class="copyright"> © 2023 
+		
+		<a href="http://www.patamon.me" target="_blank" title="IceMimosa">IceMimosa</a>
+		
+            <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
+            ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
+            </p></div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="/js/jquery-icemi-scroll2top.js"></script>
+<script src="/js/other.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  
+  // 回到顶部
+  $(document.body).scroll2Top({
+    background:"#66ccff",
+    shape:"circle",
+    bottom:40,
+    right:250
+  });
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    // m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,332-$(this).scrollTop()));
+  });
+});
+</script>
+
+<!-- GrowingIO Analytics code version 2.1 -->
+<!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
+<script type="text/javascript">
+!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
+gio('init','b988cbf13dfaa5ac', {});
+//custom page code begin here
+
+//custom page code end here
+gio('send');
+</script>
+<!-- End GrowingIO Analytics code version: 2.1 -->
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
+
+
+
+
+
+
+<script>
+    
+        var _bdImg = '4';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
+</html>
+

@@ -1,0 +1,592 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
+  
+    <title>Oozie-7_Java API | Ice の Mimosa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="IceMimosa">
+    
+    <meta name="description" content="Oozie-7_Java API1. 一个简单的例子
+依赖包
+
+12345&amp;lt;dependency&amp;gt;	&amp;lt;groupId&amp;gt;org.apache.oozie&amp;lt;/groupId&amp;gt;	&amp;lt;artifactId&amp;gt;oozie-client&amp;lt;/artifactId&amp;">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="Ice の Mimosa" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon_mine.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/jquery-icemi-scroll2top.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='1cb536fd996cddc96154515a1ed1d72d';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+</html>
+  <body>
+    <header>
+      <div id="banner">
+		
+
+			<div id="erer" class="erer" style="">
+				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
+				<!-- <img id="i22" src="http://ice-img.dreamylost.cn/patamon-22.png" width=200 height=230></img> -->
+			</div>
+
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Ice の Mimosa">Ice の Mimosa</a></h1>
+				<a class="blog-motto">没有未来的未来不是我想要的未来</a>
+			</div>
+
+			<div id="sansan" class="sansan" style="">
+				<!-- <img src="/img/33.png" width=200 height=230></img> -->
+				<!-- <img src="http://ice-img.dreamylost.cn/patamon-33.png" width=200 height=230></img> -->
+			</div> 
+
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+					<li>
+					
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
+					
+					</form></li>
+				</ul>
+			</ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/icemimosa/oozie/Oozie-7_Java API/" title="Oozie-7_Java API" itemprop="url">Oozie-7_Java API</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2016-07-15T07:30:16.000Z" itemprop="datePublished">2016-07-15</time>
+    更新日期:<time datetime="2023-02-15T14:15:04.575Z" itemprop="dateModified">2023-02-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oozie-7-Java-API"><span class="toc-text">Oozie-7_Java API</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-一个简单的例子"><span class="toc-text">1. 一个简单的例子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-获取任务详情-Junit-测试"><span class="toc-text">2. 获取任务详情 (Junit 测试)</span></a></li></ol>
+		</div>
+		
+		<h1 id="Oozie-7-Java-API"><a href="#Oozie-7-Java-API" class="headerlink" title="Oozie-7_Java API"></a>Oozie-7_Java API</h1><h1 id="1-一个简单的例子"><a href="#1-一个简单的例子" class="headerlink" title="1. 一个简单的例子"></a>1. 一个简单的例子</h1><ul>
+<li>依赖包</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.apache.oozie&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;oozie-client&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;4.1.0&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>java 代码</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WordCountTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> OozieClientException, InterruptedException </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取 Oozie Client</span></span><br><span class="line">        OozieClient client = <span class="keyword">new</span> OozieClient(<span class="string">"http://127.0.0.1:11000/oozie"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置配置</span></span><br><span class="line">        Properties configuration = client.createConfiguration();</span><br><span class="line">        configuration.put(OozieClient.APP_PATH, <span class="string">"hdfs://127.0.0.1:9000/user/icemimosa/examples/apps/map-reduce/workflow.xml"</span>);</span><br><span class="line">        configuration.put(<span class="string">"nameNode"</span>, <span class="string">"hdfs://127.0.0.1:9000"</span>);</span><br><span class="line">        configuration.put(<span class="string">"jobTracker"</span>, <span class="string">"localhost:8032"</span>);</span><br><span class="line">        configuration.put(<span class="string">"queueName"</span>, <span class="string">"default"</span>);</span><br><span class="line">        configuration.put(<span class="string">"examplesRoot"</span>, <span class="string">"examples"</span>);</span><br><span class="line">        configuration.put(<span class="string">"outputDir"</span>, <span class="string">"map-reduce"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 执行</span></span><br><span class="line">        String jobId = client.run(configuration);</span><br><span class="line">        <span class="keyword">while</span>(client.getJobInfo(jobId).getStatus() == WorkflowJob.Status.RUNNING) &#123;</span><br><span class="line">            System.out.println(<span class="string">"Workflow job running ..."</span>);</span><br><span class="line">            Thread.sleep(<span class="number">5</span> * <span class="number">1000</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 执行结束</span></span><br><span class="line">        System.out.println(<span class="string">"Workflow job completed ..."</span>);</span><br><span class="line">        System.out.println(client.getJobInfo(jobId));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="2-获取任务详情-Junit-测试"><a href="#2-获取任务详情-Junit-测试" class="headerlink" title="2. 获取任务详情 (Junit 测试)"></a>2. 获取任务详情 (Junit 测试)</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> io.terminus.oozie;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.oozie.client.CoordinatorAction;</span><br><span class="line"><span class="keyword">import</span> org.apache.oozie.client.CoordinatorJob;</span><br><span class="line"><span class="keyword">import</span> org.apache.oozie.client.OozieClientException;</span><br><span class="line"><span class="keyword">import</span> org.apache.oozie.client.WorkflowAction;</span><br><span class="line"><span class="keyword">import</span> org.apache.oozie.client.WorkflowJob;</span><br><span class="line"><span class="keyword">import</span> org.apache.oozie.client.XOozieClient;</span><br><span class="line"><span class="keyword">import</span> org.junit.Before;</span><br><span class="line"><span class="keyword">import</span> org.junit.Test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.PrintStream;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Desc: Oozie client Test</span></span><br><span class="line"><span class="comment"> * Mail: chk@terminus.io</span></span><br><span class="line"><span class="comment"> * Created by IceMimosa</span></span><br><span class="line"><span class="comment"> * Date: 16/7/31</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OozieClientTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> XOozieClient client;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Before</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span> <span class="keyword">throws</span> OozieClientException </span>&#123;</span><br><span class="line">        client = <span class="keyword">new</span> XOozieClient(<span class="string">"http://127.0.0.1:11000/oozie"</span>);</span><br><span class="line">        <span class="comment">// Map&lt;String, String&gt; configuration = client.getServerConfiguration();</span></span><br><span class="line">        <span class="comment">// System.out.println(configuration.get("oozie.service.WorkflowAppService.system.libpath"));</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 测试workflow详情</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> OozieClientException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test_WorkflowJobs</span><span class="params">()</span> <span class="keyword">throws</span> OozieClientException </span>&#123;</span><br><span class="line">        WorkflowJob workflowJob = client.getJobInfo(<span class="string">"0000000-160704142405284-oozie-icem-W"</span>);</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"----------------------  Workflow job ------------------------"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 遍历 workflowJob</span></span><br><span class="line">        print(<span class="string">"[Workflow Job id]"</span>, workflowJob.getId());</span><br><span class="line">        print(<span class="string">"[Workflow Job appName]"</span>, workflowJob.getAppName());</span><br><span class="line">        print(<span class="string">"[Workflow Job appPath]"</span>, workflowJob.getAppPath());</span><br><span class="line">        print(<span class="string">"[Workflow Job conf]"</span>, workflowJob.getConf());</span><br><span class="line">        print(<span class="string">"[Workflow Job console url]"</span>, workflowJob.getConsoleUrl());</span><br><span class="line">        print(<span class="string">"[Workflow Job status]"</span>, workflowJob.getStatus());</span><br><span class="line">        print(<span class="string">"[Workflow Job parent id]"</span>, workflowJob.getParentId());</span><br><span class="line">        print(<span class="string">"[Workflow Job external id]"</span>, workflowJob.getExternalId());</span><br><span class="line">        print(<span class="string">"[Workflow Job user]"</span>, workflowJob.getUser());</span><br><span class="line">        print(<span class="string">"[Workflow Job group]"</span>, workflowJob.getGroup());</span><br><span class="line">        print(<span class="string">"[Workflow Job acl]"</span>, workflowJob.getAcl());</span><br><span class="line">        print(<span class="string">"[Workflow Job run]"</span>, workflowJob.getRun());</span><br><span class="line">        print(<span class="string">"[Workflow Job create time]"</span>, workflowJob.getCreatedTime());</span><br><span class="line">        print(<span class="string">"[Workflow Job start time]"</span>, workflowJob.getStartTime());</span><br><span class="line">        print(<span class="string">"[Workflow Job end time]"</span>, workflowJob.getEndTime());</span><br><span class="line">        print(<span class="string">"[Workflow Job last modify time]"</span>, workflowJob.getLastModifiedTime());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// workflowJob.getActions().forEach(this::printAction);</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">printAction</span><span class="params">(WorkflowAction action)</span> </span>&#123;</span><br><span class="line">        System.out.println();</span><br><span class="line">        System.out.println(<span class="string">"----------------------  Workflow job Action ------------------------"</span>);</span><br><span class="line"></span><br><span class="line">        print(<span class="string">"[WF Action id]"</span>, action.getId());</span><br><span class="line">        print(<span class="string">"[WF Action name]"</span>, action.getName());</span><br><span class="line">        <span class="comment">// print("[WF Action cred]", action.getCred());</span></span><br><span class="line">        print(<span class="string">"[WF Action type]"</span>, action.getType());</span><br><span class="line">        print(<span class="string">"[WF Action conf]"</span>, action.getConf());</span><br><span class="line">        print(<span class="string">"[WF Action tracker uri]"</span>, action.getTrackerUri());</span><br><span class="line">        print(<span class="string">"[WF Action console url]"</span>, action.getConsoleUrl());</span><br><span class="line">        print(<span class="string">"[WF Action status]"</span>, action.getStatus());</span><br><span class="line">        print(<span class="string">"[WF Action statistic]"</span>, action.getStats());</span><br><span class="line">        print(<span class="string">"[WF Action data]"</span>, action.getData());</span><br><span class="line">        print(<span class="string">"[WF Action external id]"</span>, action.getExternalId());</span><br><span class="line">        print(<span class="string">"[WF Action external child ids]"</span>, action.getExternalChildIDs());</span><br><span class="line">        print(<span class="string">"[WF Action external status]"</span>, action.getExternalStatus());</span><br><span class="line">        print(<span class="string">"[WF Action error code]"</span>, action.getErrorCode());</span><br><span class="line">        print(<span class="string">"[WF Action error message]"</span>, action.getErrorMessage());</span><br><span class="line"></span><br><span class="line">        print(<span class="string">"[WF Action start time]"</span>, action.getStartTime());</span><br><span class="line">        print(<span class="string">"[WF Action end time]"</span>, action.getEndTime());</span><br><span class="line">        print(<span class="string">"[WF Action transition]"</span>, action.getTransition());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// print("[WF Action retries]", action.getRetries());</span></span><br><span class="line">        <span class="comment">// print("[WF Action RetryCount]", action.getUserRetryCount());</span></span><br><span class="line">        <span class="comment">// print("[WF Action RetryInterval]", action.getUserRetryInterval());</span></span><br><span class="line">        <span class="comment">// print("[WF Action RetryMax]", action.getUserRetryMax());</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 测试Coordinator详情</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> OozieClientException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test_CoordinatorJobs</span><span class="params">()</span> <span class="keyword">throws</span> OozieClientException </span>&#123;</span><br><span class="line">        CoordinatorJob coordJobInfo = client.getCoordJobInfo(<span class="string">"0000006-160922094314569-oozie-icem-C"</span>);</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"----------------------  Workflow job ------------------------"</span>);</span><br><span class="line"></span><br><span class="line">        print(<span class="string">"[Coordinator Job id]"</span>, coordJobInfo.getId());</span><br><span class="line">        print(<span class="string">"[Coordinator app name]"</span>, coordJobInfo.getAppName());</span><br><span class="line">        print(<span class="string">"[Coordinator app path]"</span>, coordJobInfo.getAppPath());</span><br><span class="line">        print(<span class="string">"[Coordinator status]"</span>, coordJobInfo.getStatus());</span><br><span class="line">        print(<span class="string">"[Coordinator ExternalId]"</span>, coordJobInfo.getExternalId());</span><br><span class="line">        print(<span class="string">"[Coordinator bundle id]"</span>, coordJobInfo.getBundleId());</span><br><span class="line">        print(<span class="string">"[Coordinator Concurrency]"</span>, coordJobInfo.getConcurrency());</span><br><span class="line">        print(<span class="string">"[Coordinator Conf]"</span>, coordJobInfo.getConf());</span><br><span class="line">        print(<span class="string">"[Coordinator user]"</span>, coordJobInfo.getUser());</span><br><span class="line">        print(<span class="string">"[Coordinator acl]"</span>, coordJobInfo.getAcl());</span><br><span class="line">        print(<span class="string">"[Coordinator group]"</span>, coordJobInfo.getGroup());</span><br><span class="line">        print(<span class="string">"[Coordinator ConsoleUrl]"</span>, coordJobInfo.getConsoleUrl());</span><br><span class="line">        print(<span class="string">"[Coordinator Frequency]"</span>, coordJobInfo.getFrequency());</span><br><span class="line">        print(<span class="string">"[Coordinator ExecutionOrder]"</span>, coordJobInfo.getExecutionOrder());</span><br><span class="line"></span><br><span class="line">        print(<span class="string">"[Coordinator start time]"</span>, coordJobInfo.getStartTime());</span><br><span class="line">        print(<span class="string">"[Coordinator end time]"</span>, coordJobInfo.getEndTime());</span><br><span class="line">        print(<span class="string">"[Coordinator pause time]"</span>, coordJobInfo.getPauseTime());</span><br><span class="line">        print(<span class="string">"[Coordinator NextMaterializedTime]"</span>, coordJobInfo.getNextMaterializedTime());</span><br><span class="line">        print(<span class="string">"[Coordinator LastActionTime]"</span>, coordJobInfo.getLastActionTime());</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        print(<span class="string">"[Coordinator TimeUnit]"</span>, coordJobInfo.getTimeUnit());</span><br><span class="line">        print(<span class="string">"[Coordinator TimeZone]"</span>, coordJobInfo.getTimeZone());</span><br><span class="line">        print(<span class="string">"[Coordinator Timeout]"</span>, coordJobInfo.getTimeout());</span><br><span class="line"></span><br><span class="line">        coordJobInfo.getActions().forEach(<span class="keyword">this</span>::printCoordAction);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">printCoordAction</span><span class="params">(CoordinatorAction action)</span> </span>&#123;</span><br><span class="line">        System.out.println();</span><br><span class="line">        System.out.println(<span class="string">"----------------------  Coordinator job Action ------------------------"</span>);</span><br><span class="line"></span><br><span class="line">        print(<span class="string">"COORD Action id"</span>, action.getId());</span><br><span class="line">        print(<span class="string">"COORD Action coordinator job id"</span>, action.getJobId());</span><br><span class="line">        print(<span class="string">"COORD Action status"</span>, action.getStatus());</span><br><span class="line">        print(<span class="string">"COORD Action ActionNumber"</span>, action.getActionNumber());</span><br><span class="line">        print(<span class="string">"COORD Action ConsoleUrl"</span>, action.getConsoleUrl());</span><br><span class="line">        print(<span class="string">"COORD Action TrackerUri"</span>, action.getTrackerUri());</span><br><span class="line">        print(<span class="string">"COORD Action CreatedConf"</span>, action.getCreatedConf());</span><br><span class="line">        print(<span class="string">"COORD Action RunConf"</span>, action.getRunConf());</span><br><span class="line"></span><br><span class="line">        print(<span class="string">"COORD Action ExternalId"</span>, action.getExternalId());</span><br><span class="line">        print(<span class="string">"COORD Action ExternalStatus"</span>, action.getExternalStatus());</span><br><span class="line"></span><br><span class="line">        print(<span class="string">"COORD Action CreatedTime"</span>, action.getCreatedTime());</span><br><span class="line">        print(<span class="string">"COORD Action NominalTime"</span>, action.getNominalTime());</span><br><span class="line">        print(<span class="string">"COORD Action LastModifiedTime"</span>, action.getLastModifiedTime());</span><br><span class="line">        print(<span class="string">"COORD Action MissingDependencies"</span>, action.getMissingDependencies());</span><br><span class="line">        print(<span class="string">"COORD Action PushMissingDependencies"</span>, action.getPushMissingDependencies());</span><br><span class="line"></span><br><span class="line">        print(<span class="string">"COORD Action ErrorCode"</span>, action.getErrorCode());</span><br><span class="line">        print(<span class="string">"COORD Action ErrorMessage"</span>, action.getErrorMessage());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test_getWF_by_Coordinator</span><span class="params">()</span> <span class="keyword">throws</span> OozieClientException </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/// List&lt;WorkflowJob&gt; wfsForCoordAction = client.getWfsForCoordAction("0000000-160814191812274-oozie-icem-C@1");</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 其他</span></span><br><span class="line"><span class="comment">     * 1. 日志</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> OozieClientException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test_Other</span><span class="params">()</span> <span class="keyword">throws</span> OozieClientException </span>&#123;</span><br><span class="line">        ByteArrayOutputStream buffer = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">        client.getJobLog(<span class="string">"0000090-160822184432088-oozie-admi-C"</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="string">"loglevel=WARN;recent=168h"</span>, <span class="keyword">new</span> PrintStream(buffer));</span><br><span class="line">        System.out.println(buffer.toString());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(String message, Object value)</span> </span>&#123;</span><br><span class="line">        System.out.println(message + <span class="string">" -----&gt; "</span> + value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/oozie/">oozie</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/oozie/">oozie</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.patamon.me/icemimosa/oozie/Oozie-7_Java API/" data-title="Oozie-7_Java API | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/icemimosa/oozie/Oozie搭建常见问题/" title="Oozie搭建常见问题">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  Oozie搭建常见问题</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/icemimosa/oozie/Oozie-6_Web Service API/" title="Oozie-6_Web Service API">
+ <strong>NEXT:</strong><br> 
+ <span>Oozie-6_Web Service API
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Oozie-7-Java-API"><span class="toc-text">Oozie-7_Java API</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-一个简单的例子"><span class="toc-text">1. 一个简单的例子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-获取任务详情-Junit-测试"><span class="toc-text">2. 获取任务详情 (Junit 测试)</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list">
+		
+		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/IceMimosa" target="_blank" title="github"></a>
+		
+		
+		
+		
+		<a href="mailto:514793425@qq.com" target="_blank" title="email"></a>
+		
+	</div>
+</div>
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/categories/java/" title="java">java<sup>26</sup></a></li>
+		
+			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/categories/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/categories/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/categories/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
+		
+			<li><a href="/categories/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
+		
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/tags/impala/" title="impala">impala<sup>1</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>27</sup></a></li>
+		
+			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/tags/lombok/" title="lombok">lombok<sup>3</sup></a></li>
+		
+			<li><a href="/tags/mac/" title="mac">mac<sup>2</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>1</sup></a></li>
+		
+			<li><a href="/tags/olap/" title="olap">olap<sup>4</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/tags/react/" title="react">react<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/tags/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/tags/spring/" title="spring">spring<sup>2</sup></a></li>
+		
+			<li><a href="/tags/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
+		
+			<li><a href="/tags/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/JavaScript/" style="font-size: 11px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 17px;">hbase</a> <a href="/tags/hive/" style="font-size: 16px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12px;">lombok</a> <a href="/tags/mac/" style="font-size: 11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/olap/" style="font-size: 13px;">olap</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/pulsar/" style="font-size: 10px;">pulsar</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/redis/" style="font-size: 18px;">redis</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/spring/" style="font-size: 11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13px;">sqoop</a> <a href="/tags/数仓/" style="font-size: 13px;">数仓</a> <a href="/tags/源码/" style="font-size: 19px;">源码</a>
+    </div>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    
+            <p class="copyright"> © 2023 
+		
+		<a href="http://www.patamon.me" target="_blank" title="IceMimosa">IceMimosa</a>
+		
+            <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
+            ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
+            </p></div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="/js/jquery-icemi-scroll2top.js"></script>
+<script src="/js/other.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  
+  // 回到顶部
+  $(document.body).scroll2Top({
+    background:"#66ccff",
+    shape:"circle",
+    bottom:40,
+    right:250
+  });
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    // m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,332-$(this).scrollTop()));
+  });
+});
+</script>
+
+<!-- GrowingIO Analytics code version 2.1 -->
+<!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
+<script type="text/javascript">
+!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
+gio('init','b988cbf13dfaa5ac', {});
+//custom page code begin here
+
+//custom page code end here
+gio('send');
+</script>
+<!-- End GrowingIO Analytics code version: 2.1 -->
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
+
+
+
+
+
+
+<script>
+    
+        var _bdImg = '4';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
+</html>
+

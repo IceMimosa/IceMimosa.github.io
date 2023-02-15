@@ -1,0 +1,674 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
+  
+    <title>03_Redis基本键的管理 | Ice の Mimosa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="IceMimosa">
+    
+    <meta name="description" content="[TOC]
+03_Redis基本键的管理1. 简介针对键的管理，如type，del，object，exists，expire等，下面介绍几个重要的。
+2. 单个键的命令2.1 键重命名123456789101112131415$ rename key newkey&amp;gt; 示例127.0.0.1:6">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="Ice の Mimosa" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon_mine.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/jquery-icemi-scroll2top.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='1cb536fd996cddc96154515a1ed1d72d';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+</html>
+  <body>
+    <header>
+      <div id="banner">
+		
+
+			<div id="erer" class="erer" style="">
+				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
+				<!-- <img id="i22" src="http://ice-img.dreamylost.cn/patamon-22.png" width=200 height=230></img> -->
+			</div>
+
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Ice の Mimosa">Ice の Mimosa</a></h1>
+				<a class="blog-motto">没有未来的未来不是我想要的未来</a>
+			</div>
+
+			<div id="sansan" class="sansan" style="">
+				<!-- <img src="/img/33.png" width=200 height=230></img> -->
+				<!-- <img src="http://ice-img.dreamylost.cn/patamon-33.png" width=200 height=230></img> -->
+			</div> 
+
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+					<li>
+					
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
+					
+					</form></li>
+				</ul>
+			</ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/icemimosa/redis/03_Redis基本键的管理/" title="03_Redis基本键的管理" itemprop="url">03_Redis基本键的管理</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2017-05-15T04:30:16.000Z" itemprop="datePublished">2017-05-15</time>
+    更新日期:<time datetime="2023-02-15T14:15:04.577Z" itemprop="dateModified">2023-02-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#03-Redis基本键的管理"><span class="toc-text">03_Redis基本键的管理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-单个键的命令"><span class="toc-text">2. 单个键的命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-键重命名"><span class="toc-text">2.1 键重命名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-随机返回一个键"><span class="toc-text">2.2 随机返回一个键</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-键过期"><span class="toc-text">2.3 键过期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-迁移键"><span class="toc-text">2.4 迁移键</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-1-move"><span class="toc-text">2.4.1 move</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-2-dump-restore"><span class="toc-text">2.4.2 dump+restore</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-3-migrate"><span class="toc-text">2.4.3 migrate</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-遍历键"><span class="toc-text">3. 遍历键</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-全量遍历"><span class="toc-text">3.1 全量遍历</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-渐进式遍历"><span class="toc-text">3.2 渐进式遍历</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-数据库管理"><span class="toc-text">4. 数据库管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-切换数据库"><span class="toc-text">4.1 切换数据库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-flushdb-flushall"><span class="toc-text">4.2 flushdb/flushall</span></a></li></ol></li></ol>
+		</div>
+		
+		<p>[TOC]</p>
+<h1 id="03-Redis基本键的管理"><a href="#03-Redis基本键的管理" class="headerlink" title="03_Redis基本键的管理"></a>03_Redis基本键的管理</h1><h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>针对键的管理，如<code>type</code>，<code>del</code>，<code>object</code>，<code>exists</code>，<code>expire</code>等，下面介绍几个重要的。</p>
+<h1 id="2-单个键的命令"><a href="#2-单个键的命令" class="headerlink" title="2. 单个键的命令"></a>2. 单个键的命令</h1><h2 id="2-1-键重命名"><a href="#2-1-键重命名" class="headerlink" title="2.1 键重命名"></a>2.1 键重命名</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ rename key newkey</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br><span class="line">127.0.0.1:6379&gt; set oldKey heihei</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; rename oldKey newKey</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get oldKey</span><br><span class="line">(nil)</span><br><span class="line">127.0.0.1:6379&gt; get newKey</span><br><span class="line">&quot;heihei&quot;</span><br><span class="line"></span><br><span class="line"># 如果newKey已经存在，将被覆盖</span><br><span class="line"># 所以Redis提供如下命令防止被覆盖。</span><br><span class="line">$ renamenx key newkey</span><br></pre></td></tr></table></figure>
+<p><strong>注意</strong>：</p>
+<ul>
+<li>由于rename执行期间会del旧的key，所以如果对应值比较大的时候，注意redis阻塞的可能性。</li>
+<li>在oldKey和newKey相同时，Redis3.2会返回OK，之前的版本会提示<code>key相同</code>的错误。</li>
+</ul>
+<h2 id="2-2-随机返回一个键"><a href="#2-2-随机返回一个键" class="headerlink" title="2.2 随机返回一个键"></a>2.2 随机返回一个键</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ randomkey</span><br><span class="line"></span><br><span class="line">&gt; 示例</span><br><span class="line">127.0.0.1:6379&gt; dbsize</span><br><span class="line">(integer) 10</span><br><span class="line">127.0.0.1:6379&gt; randomkey</span><br><span class="line">&quot;user:rank&quot;</span><br><span class="line">127.0.0.1:6379&gt; randomkey</span><br><span class="line">&quot;key2&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="2-3-键过期"><a href="#2-3-键过期" class="headerlink" title="2.3 键过期"></a>2.3 键过期</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 多少秒后</span><br><span class="line">$ expire key seconds</span><br><span class="line"># 多少毫秒后</span><br><span class="line">$ pexpire key milliseconds</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 在某个&quot;秒级时间戳&quot;后</span><br><span class="line">$ expireat key timestamp</span><br><span class="line"># 在某个&quot;毫秒级时间戳&quot;后d</span><br><span class="line">$ pexpireat key milliseconds-timestamp</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 查询键剩余过期时间（秒）</span><br><span class="line">$ ttl</span><br><span class="line"># 查询键剩余过期时间（毫秒）</span><br><span class="line">$ pttl</span><br></pre></td></tr></table></figure>
+<ul>
+<li>清除键的过期时间</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ persist key</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>注意：</strong>对于字符串类型的key，<code>执行set命令的同时会去掉过期时间</code>，这个问题需要注意下。</p>
+</blockquote>
+<ul>
+<li>Redis不支持二级数据结构（哈希，列表等）内部元素的过期功能。</li>
+</ul>
+<h2 id="2-4-迁移键"><a href="#2-4-迁移键" class="headerlink" title="2.4 迁移键"></a>2.4 迁移键</h2><p>Redis在发展过程中提供了<code>move</code>、<code>dump+restore</code>、<code>migrate</code>三种迁移方式，但是使用场景不太一样。</p>
+<h3 id="2-4-1-move"><a href="#2-4-1-move" class="headerlink" title="2.4.1 move"></a>2.4.1 move</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ move key db</span><br></pre></td></tr></table></figure>
+<p>move命令用于redis内部进行数据迁移，因为redis内部有多个数据库（后面会说），彼此在数据上是相互隔离的。<code>move</code>就是将指定的键从<code>源数据库</code>移动到<code>目标数据库</code>。</p>
+<blockquote>
+<p>注：不建议在生产中使用多数据库功能。</p>
+</blockquote>
+<h3 id="2-4-2-dump-restore"><a href="#2-4-2-dump-restore" class="headerlink" title="2.4.2 dump+restore"></a>2.4.2 dump+restore</h3><p><code>dump+restore</code>可以实现在不同redis实例之间迁移数据，功能分为两步，如下：</p>
+<ul>
+<li>dump命令将键序列化，格式采用RDB的格式。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dump key</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在目标Redis上，restore命令将上述的序列化的值进行复原。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ restore key ttl serialized-value [REPLACE]</span><br><span class="line"></span><br><span class="line"># ttl表示过期时间，0表示没有过期时间</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意点如下：</p>
+</blockquote>
+<ul>
+<li>整个迁移过程非原子性，是通过客户端分步完成的。</li>
+<li>迁移过程中开启了两个客户端连接，所以dump结果不是在<code>源Redis</code>和<code>目标Redis</code>之间传输的。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&gt; 示例</span><br><span class="line"></span><br><span class="line"># redis1</span><br><span class="line">127.0.0.1:6379&gt; set a hello</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; dump a</span><br><span class="line">&quot;\x00\x05hello\b\x00\xda_3\xc9\xcc-\xaa2&quot;</span><br><span class="line"></span><br><span class="line"># redis2</span><br><span class="line">127.0.0.1:6379&gt; restore a 0 &quot;\x00\x05hello\b\x00\xda_3\xc9\xcc-\xaa2&quot;</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get a</span><br><span class="line">&quot;hello&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="2-4-3-migrate"><a href="#2-4-3-migrate" class="headerlink" title="2.4.3 migrate"></a>2.4.3 migrate</h3><p><code>migrate</code>实际是将<code>dump、restore、del</code>三个命令进行组合，从而简化操作，且具有原子性。Redis3.0.6后支持多键迁移，有效提高了迁移效率。<code>migrate</code>在后续<code>水平扩展</code>中起到重要作用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$  migrate host port key| destination-db timeout [COPY] [REPLACE] [keys key[key...]]</span><br><span class="line"></span><br><span class="line"># host和port表示目标redis</span><br><span class="line"># key|&quot;&quot;：表示迁移key，可以多个。多个的话此处填`空字符串`</span><br><span class="line"># destination-db：目标redis的数据库</span><br><span class="line"># timeout：迁移的超时时间，毫秒。</span><br><span class="line"># COPY：表示只是拷贝操作</span><br><span class="line"># REPLACE：是否不管目标redis中key的存在性</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>示例</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 一个key</span><br><span class="line">$ migrate 127.0.0.1 6380 k1 0 1000</span><br><span class="line"></span><br><span class="line"># 多个可以</span><br><span class="line">$ migrate 127.0.0.1 6380 &quot;&quot; 0 5000 keys k1 k2 k3</span><br></pre></td></tr></table></figure>
+<h1 id="3-遍历键"><a href="#3-遍历键" class="headerlink" title="3. 遍历键"></a>3. 遍历键</h1><p>Redis提供两种遍历键的方式：<code>keys</code>和<code>scan</code></p>
+<h2 id="3-1-全量遍历"><a href="#3-1-全量遍历" class="headerlink" title="3.1 全量遍历"></a>3.1 全量遍历</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ keys pattern</span><br><span class="line"></span><br><span class="line"># pattern：正则匹配</span><br></pre></td></tr></table></figure>
+<p>如当想删除某一批键的时候，还是有很大帮助的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli keys video* | xargs redis-cli del</span><br></pre></td></tr></table></figure>
+<p>但是考虑到redis时单线程的架构，执行keys很有可能会造成redis阻塞，所以一般不建议在生产使用。如果要使用，可在如下情况中使用：</p>
+<ul>
+<li>在一个不对外提供服务的redis节点上执行，这样不会阻塞客户端的请求，但是会影响主从复制。</li>
+<li>如果确认键确实很少。</li>
+<li>使用scan命令，渐进式遍历。</li>
+</ul>
+<h2 id="3-2-渐进式遍历"><a href="#3-2-渐进式遍历" class="headerlink" title="3.2 渐进式遍历"></a>3.2 渐进式遍历</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ scan cursor [MATCH pattern] [COUNT count]</span><br><span class="line"></span><br><span class="line"># cursor：游标，第一次遍历从0开始。</span><br><span class="line">  每次遍历完会返回当前游标，直到游标值为0，表示遍历结束。</span><br><span class="line"># MATCH pattern：符合的正则</span><br><span class="line"># COUNT count：每次遍历键个数，默认是10</span><br></pre></td></tr></table></figure>
+<p>Redis2.8之后提供scan命令可以有效的解决keys带来的问题，所以要真正实现keys的功能，需要多次scan。</p>
+<p>Redis存储键值对实际使用的是<code>hashtable</code>的数据结构，简化模型如下，所以每次scan的时间复杂度是O(1)。</p>
+<p><img src="http://ice-img.dreamylost.cn/2018-03-11-075115.png?imageMogr2/thumbnail/!30p" alt=""></p>
+<p>除了<code>scan</code>，redis还提供面向哈希，集合，有序几个的扫描命令，解决<code>hgetall，smembers，zrange</code>可能产生的阻塞问题，命令分别是<code>hscan、sscan、zscan</code>，用法基本和scan类似：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hscan key cursor [MATCH pattern] [COUNT count]</span><br><span class="line">$ sscan key cursor [MATCH pattern] [COUNT count]</span><br><span class="line">$ zscan key cursor [MATCH pattern] [COUNT count]</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong> scan虽然可以有效解决keys所可能产生阻塞的问题，但也并非完美，如果在scan的过程中有键的变化（增加，删除，修改等），那么遍历的时候可能不能保证遍历出所有的键：如新增的键可能没有遍历到，遍历出重复的键等等。</p>
+<h1 id="4-数据库管理"><a href="#4-数据库管理" class="headerlink" title="4. 数据库管理"></a>4. 数据库管理</h1><p>Redis数据库提供了几个面向数据库的操作，分别是<code>dbsize、select、flushdb/flushall</code>命令。</p>
+<h2 id="4-1-切换数据库"><a href="#4-1-切换数据库" class="headerlink" title="4.1 切换数据库"></a>4.1 切换数据库</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ select index</span><br></pre></td></tr></table></figure>
+<p>redis默认配置中有16个数据库（配置是<code>databases 16</code>），从0开始。库与库之间没有任何关联，可以存在相同的键。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt; 示例</span><br><span class="line">127.0.0.1:6379&gt; set a hello</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get a</span><br><span class="line">&quot;hello&quot;</span><br><span class="line">127.0.0.1:6379&gt; select 1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379[1]&gt; get a</span><br><span class="line">(nil)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>问题？</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">可以将正式数据库放在0库中，测试数据放在1库中吗？</span><br></pre></td></tr></table></figure>
+<p>Redis3.0已经逐渐弱化了这个功能，例如Redis分布式实现Redis Cluster只允许使用0号库。只不过为了兼容旧版本，没有完全废弃掉这个功能。不建议使用的原因如下几点：</p>
+<ul>
+<li>Redis是单线程的</li>
+<li>多数据库的使用方式，会让调试和运维不同业务数据库变得很困难</li>
+<li>部分Redis客户端就不支持这种方式，即使支持，在开发过程也很容易造成混乱。</li>
+</ul>
+<p>建议如果需要使用多数据库的功能，完全可以在一台机器上部署多个redis实例，用端口来区分。</p>
+<h2 id="4-2-flushdb-flushall"><a href="#4-2-flushdb-flushall" class="headerlink" title="4.2 flushdb/flushall"></a>4.2 flushdb/flushall</h2><p>两个命令用去清楚数据库。flushdb清除当前库，flushall清除所有库。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ flushdb</span><br><span class="line">$ flushall</span><br></pre></td></tr></table></figure>
+<p>这两个命令可以非常方便清理数据，但是也带来两个问题：</p>
+<ul>
+<li>一旦执行，后果不堪设想。后面会将使用<code>rename-command</code>进行规避，或者误操作后快速恢复。</li>
+<li>当数据库键数据很多的时候，存在阻塞redis的可能性。</li>
+</ul>
+<blockquote>
+<p><strong>切记谨慎使用！！！！</strong></p>
+</blockquote>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/redis/">redis</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/redis/">redis</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.patamon.me/icemimosa/redis/03_Redis基本键的管理/" data-title="03_Redis基本键的管理 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/icemimosa/redis/04_Redis慢查询分析/" title="04_Redis慢查询分析">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  04_Redis慢查询分析</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/icemimosa/redis/02_Redis基本命令的使用-有序集合/" title="02_Redis基本命令的使用-有序集合">
+ <strong>NEXT:</strong><br> 
+ <span>02_Redis基本命令的使用-有序集合
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#03-Redis基本键的管理"><span class="toc-text">03_Redis基本键的管理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-简介"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-单个键的命令"><span class="toc-text">2. 单个键的命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-键重命名"><span class="toc-text">2.1 键重命名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-随机返回一个键"><span class="toc-text">2.2 随机返回一个键</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-键过期"><span class="toc-text">2.3 键过期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-迁移键"><span class="toc-text">2.4 迁移键</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-1-move"><span class="toc-text">2.4.1 move</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-2-dump-restore"><span class="toc-text">2.4.2 dump+restore</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-3-migrate"><span class="toc-text">2.4.3 migrate</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-遍历键"><span class="toc-text">3. 遍历键</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-全量遍历"><span class="toc-text">3.1 全量遍历</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-渐进式遍历"><span class="toc-text">3.2 渐进式遍历</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-数据库管理"><span class="toc-text">4. 数据库管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-切换数据库"><span class="toc-text">4.1 切换数据库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-flushdb-flushall"><span class="toc-text">4.2 flushdb/flushall</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list">
+		
+		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/IceMimosa" target="_blank" title="github"></a>
+		
+		
+		
+		
+		<a href="mailto:514793425@qq.com" target="_blank" title="email"></a>
+		
+	</div>
+</div>
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/categories/java/" title="java">java<sup>26</sup></a></li>
+		
+			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/categories/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/categories/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/categories/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
+		
+			<li><a href="/categories/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
+		
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/tags/impala/" title="impala">impala<sup>1</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>27</sup></a></li>
+		
+			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/tags/lombok/" title="lombok">lombok<sup>3</sup></a></li>
+		
+			<li><a href="/tags/mac/" title="mac">mac<sup>2</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>1</sup></a></li>
+		
+			<li><a href="/tags/olap/" title="olap">olap<sup>4</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/tags/react/" title="react">react<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/tags/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/tags/spring/" title="spring">spring<sup>2</sup></a></li>
+		
+			<li><a href="/tags/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
+		
+			<li><a href="/tags/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/JavaScript/" style="font-size: 11px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 17px;">hbase</a> <a href="/tags/hive/" style="font-size: 16px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12px;">lombok</a> <a href="/tags/mac/" style="font-size: 11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/olap/" style="font-size: 13px;">olap</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/pulsar/" style="font-size: 10px;">pulsar</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/redis/" style="font-size: 18px;">redis</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/spring/" style="font-size: 11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13px;">sqoop</a> <a href="/tags/数仓/" style="font-size: 13px;">数仓</a> <a href="/tags/源码/" style="font-size: 19px;">源码</a>
+    </div>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    
+            <p class="copyright"> © 2023 
+		
+		<a href="http://www.patamon.me" target="_blank" title="IceMimosa">IceMimosa</a>
+		
+            <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
+            ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
+            </p></div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="/js/jquery-icemi-scroll2top.js"></script>
+<script src="/js/other.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  
+  // 回到顶部
+  $(document.body).scroll2Top({
+    background:"#66ccff",
+    shape:"circle",
+    bottom:40,
+    right:250
+  });
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    // m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,332-$(this).scrollTop()));
+  });
+});
+</script>
+
+<!-- GrowingIO Analytics code version 2.1 -->
+<!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
+<script type="text/javascript">
+!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
+gio('init','b988cbf13dfaa5ac', {});
+//custom page code begin here
+
+//custom page code end here
+gio('send');
+</script>
+<!-- End GrowingIO Analytics code version: 2.1 -->
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
+
+
+
+
+
+
+<script>
+    
+        var _bdImg = '4';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
+</html>
+

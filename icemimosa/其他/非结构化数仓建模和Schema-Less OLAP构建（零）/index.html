@@ -1,0 +1,1141 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
+  
+    <title>非结构化数仓建模和Schema-Less OLAP构建（零） | Ice の Mimosa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="IceMimosa">
+    
+    <meta name="description" content="从这篇文章中，你可以学习到如下内容
+
+如何基于Bitmap（RoaringBitMap）构建非结构化数仓模型
+如何基于一份数据模型优化计算存储成本，并且统一取数口径
+如何搭建无表结构约束的OLAP分析
+如何有效快速地应对各种业务分析场景
+
+
+1、背景在用户行为的数据分析中，无论是无埋点，还是埋点，对">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="Ice の Mimosa" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon_mine.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/jquery-icemi-scroll2top.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='1cb536fd996cddc96154515a1ed1d72d';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+</html>
+  <body>
+    <header>
+      <div id="banner">
+		
+
+			<div id="erer" class="erer" style="">
+				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
+				<!-- <img id="i22" src="http://ice-img.dreamylost.cn/patamon-22.png" width=200 height=230></img> -->
+			</div>
+
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Ice の Mimosa">Ice の Mimosa</a></h1>
+				<a class="blog-motto">没有未来的未来不是我想要的未来</a>
+			</div>
+
+			<div id="sansan" class="sansan" style="">
+				<!-- <img src="/img/33.png" width=200 height=230></img> -->
+				<!-- <img src="http://ice-img.dreamylost.cn/patamon-33.png" width=200 height=230></img> -->
+			</div> 
+
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+					<li>
+					
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
+					
+					</form></li>
+				</ul>
+			</ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/icemimosa/其他/非结构化数仓建模和Schema-Less OLAP构建（零）/" title="非结构化数仓建模和Schema-Less OLAP构建（零）" itemprop="url">非结构化数仓建模和Schema-Less OLAP构建（零）</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2021-01-01T04:22:34.000Z" itemprop="datePublished">2021-01-01</time>
+    更新日期:<time datetime="2023-02-15T14:15:04.581Z" itemprop="dateModified">2023-02-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1、背景"><span class="toc-text">1、背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2、非结构化建模"><span class="toc-text">2、非结构化建模</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1、结构化-amp-非结构化"><span class="toc-text">2.1、结构化 &amp; 非结构化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2、架构"><span class="toc-text">2.2、架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3、数据需求"><span class="toc-text">2.3、数据需求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4、现有解决方案分析"><span class="toc-text">2.4、现有解决方案分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5、非结构化建模思路"><span class="toc-text">2.5、非结构化建模思路</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3、基于Bitmap的存储模型"><span class="toc-text">3、基于Bitmap的存储模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1、分离维度和指标"><span class="toc-text">3.1、分离维度和指标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2、维度存储模型"><span class="toc-text">3.2、维度存储模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3、指标存储模型"><span class="toc-text">3.3、指标存储模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4、指标存储优化"><span class="toc-text">3.4、指标存储优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-5-多维交叉导致的问题"><span class="toc-text">3.5 多维交叉导致的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-6、维度组合编号"><span class="toc-text">3.6、维度组合编号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-7、多维交叉下计算次数"><span class="toc-text">3.7、多维交叉下计算次数</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4、简单的性能对比"><span class="toc-text">4、简单的性能对比</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5、小结"><span class="toc-text">5、小结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6、应用到分析工具"><span class="toc-text">6、应用到分析工具</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1、事件分析"><span class="toc-text">6.1、事件分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-2、漏斗分析"><span class="toc-text">6.2、漏斗分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3、留存分析"><span class="toc-text">6.3、留存分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-4、标签计算"><span class="toc-text">6.4、标签计算</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-总结"><span class="toc-text">7 总结</span></a></li></ol>
+		</div>
+		
+		<blockquote>
+<p>从这篇文章中，你可以学习到如下内容</p>
+<ul>
+<li>如何基于Bitmap（RoaringBitMap）构建非结构化数仓模型</li>
+<li>如何基于一份数据模型优化计算存储成本，并且统一取数口径</li>
+<li>如何搭建无表结构约束的OLAP分析</li>
+<li>如何有效快速地应对各种业务分析场景</li>
+</ul>
+</blockquote>
+<h1 id="1、背景"><a href="#1、背景" class="headerlink" title="1、背景"></a>1、背景</h1><p>在用户行为的数据分析中，无论是无埋点，还是埋点，对于某一条行为数据的表达形式往往是：「某人」于「某个时间」在「某个维度」下做了「某个动作」「多少次」。<br>为了构建通用类型的数据分析，这种表达形式往往可以拆解成「时间」、「实体」、「维度」和「指标量」：</p>
+<ul>
+<li>时间：事件发生的时间，往往最后会聚合成分钟、小时、天。</li>
+<li>实体：分析的实体对象，可以是人、设备、视频、文章、作者等。</li>
+<li>维度：事件携带的变量，可以是城市、浏览器、用户属性、事件特有的属性等。</li>
+<li>指标量：事件携带的分析指标，可以是事件本身的次数，页面浏览量、停留时长、购买事件的金额等。</li>
+</ul>
+<p>在海量数据的背景下，如何高效、灵活地完成指标+维度的计算，一直是大数据分析领域比较热门的话题。<br>本文优先从底层的存储模型出发，从技术的角度，尝试让one-data，any-analysis成为一种尝试和可能。</p>
+<h1 id="2、非结构化建模"><a href="#2、非结构化建模" class="headerlink" title="2、非结构化建模"></a>2、非结构化建模</h1><h2 id="2-1、结构化-amp-非结构化"><a href="#2-1、结构化-amp-非结构化" class="headerlink" title="2.1、结构化 &amp; 非结构化"></a>2.1、结构化 &amp; 非结构化</h2><p>定义：</p>
+<ul>
+<li>结构化数据：指具有固定格式（模式）或有限长度的数据，如数据库，元数据等。</li>
+<li>非结构化数据：指不定长或无固定格式的数据，如邮件，word文档，图片，音乐等。</li>
+</ul>
+<p>存储到 HIVE 的表现形式：</p>
+<ul>
+<li>结构化：字符串、数字</li>
+<li>非结构化：binary</li>
+</ul>
+<h2 id="2-2、架构"><a href="#2-2、架构" class="headerlink" title="2.2、架构"></a>2.2、架构</h2><p>非结构化建模所处的架构位置</p>
+<p><img src="http://ice-img.dreamylost.cn/2021-03-15-123444.png" alt=""></p>
+<h2 id="2-3、数据需求"><a href="#2-3、数据需求" class="headerlink" title="2.3、数据需求"></a>2.3、数据需求</h2><p>假设有如下一组分析数据</p>
+<table>
+<thead>
+<tr>
+<th>时间（时间抽象）</th>
+<th>用户ID（分析实体）</th>
+<th>城市（分析维度）</th>
+<th>操作系统（分析维度）</th>
+<th>其他（分析维度）</th>
+<th>pv（分析指标）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2020-01-01</td>
+<td>1</td>
+<td>上海</td>
+<td>windows</td>
+<td>…</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2020-01-01</td>
+<td>2</td>
+<td>上海</td>
+<td>windows</td>
+<td>…</td>
+<td>3</td>
+</tr>
+<tr>
+<td>2020-01-01</td>
+<td>3</td>
+<td>上海</td>
+<td>mac</td>
+<td>…</td>
+<td>4</td>
+</tr>
+<tr>
+<td>2020-01-01</td>
+<td>4</td>
+<td>北京</td>
+<td>mac</td>
+<td>…</td>
+<td>5</td>
+</tr>
+<tr>
+<td>2020-01-01</td>
+<td>5</td>
+<td>北京</td>
+<td>windows</td>
+<td>…</td>
+<td>3</td>
+</tr>
+<tr>
+<td>2020-01-01</td>
+<td>6</td>
+<td>上海</td>
+<td>windows</td>
+<td>…</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>然后来了一个数据需求：<strong>「过去7天」在「城市」维度下，「操作系统: Mac」的人数是多少？</strong>，此时使用分析工具结果如下：<br><img src="http://ice-img.dreamylost.cn/2020-03-22-113238.png" alt=""></p>
+<p>实现SQL：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span></span><br><span class="line">  地区,</span><br><span class="line">  <span class="keyword">count</span>(<span class="keyword">distinct</span> 用户<span class="keyword">ID</span>)</span><br><span class="line"><span class="keyword">from</span> <span class="keyword">table</span></span><br><span class="line"><span class="keyword">where</span> 时间 = <span class="string">'过去七天'</span></span><br><span class="line">  <span class="keyword">and</span> 操作系统 = <span class="string">'Mac'</span></span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> 地区</span><br></pre></td></tr></table></figure>
+<p>但是通过 SQL 这种现查明细的方式，随着数据量的越来越大，几十亿或上百亿的时候，对计算所需要的资源和响应时间也会线性地增长，此时客户在使用平台工具最直观的感受就是“菊花”转转转，图表一直加载不出来。</p>
+<h2 id="2-4、现有解决方案分析"><a href="#2-4、现有解决方案分析" class="headerlink" title="2.4、现有解决方案分析"></a>2.4、现有解决方案分析</h2><ul>
+<li>数据预聚合、选择优秀的MOLAP引擎</li>
+</ul>
+<p>在数仓分层架构中，对于常用的维度组合，我们往往会通过离线计算或者构建cube的方式进行预聚合的计算，这样可以加速特定场景的分析。<br>但是这种方式往往会形成数据冗余，并且应付不了灵活的维度组合分析，因为产品和分析师的需求往往是千变万化的。</p>
+<ul>
+<li>堆机器、加资源、选择优秀的ROLAP引擎</li>
+</ul>
+<p>最直接粗暴的方式，就是增加更多的计算资源，或者对查询的结果进行缓存、预热。<br>这种方式可以很直接的解决多维分析的场景，但是在查询并发比较高，数据量线性递增的时候，再多的计算资源也会因为查询排队而遇到性能瓶颈。<br>其次对于目前大多的OLAP引擎，需要我们提前指定好「维度+指标」的结构，这样就需要我们提前充分的思考各种业务过程，来满足未来的各种需求，这样其实也有些适得其反。</p>
+<ul>
+<li>理想模型</li>
+</ul>
+<p>能不能有一种存储模型可以解决当前的各种痛点，她的特性如下：</p>
+<ul>
+<li>可以支持任意的分布式计算框架</li>
+<li>模型足够简单，计算和存储资源足够减少，数据冗余度降到最低，且满足高并发查询</li>
+<li>可以构建Table Schema-Less的OLAP分析</li>
+<li>可以满足各种分析场景（上卷，下钻，维度组合，留存，漏斗，用户画像标签等）</li>
+</ul>
+<h2 id="2-5、非结构化建模思路"><a href="#2-5、非结构化建模思路" class="headerlink" title="2.5、非结构化建模思路"></a>2.5、非结构化建模思路</h2><p>这里我们仍然采用<strong>数据预聚合</strong>的建模思想，只是需要做”亿点点“的改变。从当前主流OLAP分析框架来讲，在建立数据模型的时候，其中有几个没有摆脱的点：</p>
+<ul>
+<li>多个维度横向存储，无法满足所有业务场景</li>
+<li>维度和指标没有<strong>分离</strong>，需要table schema强绑定</li>
+<li>精准去重依赖原子粒度数据，伪预聚合</li>
+</ul>
+<h1 id="3、基于Bitmap的存储模型"><a href="#3、基于Bitmap的存储模型" class="headerlink" title="3、基于Bitmap的存储模型"></a>3、基于Bitmap的存储模型</h1><blockquote>
+<p>其实现在很多的框架为了满足特定的业务场景，比如分群画像，精准去重等，其实也使用了bitmap的结构，这里我们想把这种数据结构应用到更多的场景中。<br>关于BitMap的介绍这里就不重复阐述了，这里底层使用的是优化后的  <a href="https://github.com/RoaringBitmap/RoaringBitmap" target="_blank" rel="noopener">RoaringBitmap</a></p>
+</blockquote>
+<h2 id="3-1、分离维度和指标"><a href="#3-1、分离维度和指标" class="headerlink" title="3.1、分离维度和指标"></a>3.1、分离维度和指标</h2><blockquote>
+<p>这里其实也是可以分离「实体」的，为了简单，先讨论「维度」和「指标」。同时「时间」在下面的列举中也一并忽略。</p>
+</blockquote>
+<p>依然采用2.3的原子数据，这里我们将数据做些简单的改变。</p>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>分析实体</th>
+<th>分析维度</th>
+<th>分析指标</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2020-01-01</td>
+<td>1</td>
+<td>{  _city: 上海, _os: windows, …. }</td>
+<td>{  _pv: 1, …  }</td>
+</tr>
+<tr>
+<td>2020-01-01</td>
+<td>2</td>
+<td>{  _city: 上海, _os: windows, …. }</td>
+<td>{  _pv: 3, …  }</td>
+</tr>
+<tr>
+<td>2020-01-01</td>
+<td>3</td>
+<td>{  _city: 上海, _os: mac, …. }</td>
+<td>{  _pv: 4, …  }</td>
+</tr>
+<tr>
+<td>2020-01-01</td>
+<td>4</td>
+<td>{  _city: 北京, _os: mac, …. }</td>
+<td>{  _pv: 5, … }</td>
+</tr>
+<tr>
+<td>2020-01-01</td>
+<td>5</td>
+<td>{  _city: 北京, _os: windows, …. }</td>
+<td>{  _pv: 3, …  }</td>
+</tr>
+<tr>
+<td>2020-01-01</td>
+<td>6</td>
+<td>{  _city: 上海, _os: windows, …. }</td>
+<td>{  _pv: 2, …  }</td>
+</tr>
+</tbody>
+</table>
+<p>为了构建Schema-Less分析，我们将维度和指标变成类似Map的结构存储方式。</p>
+<h2 id="3-2、维度存储模型"><a href="#3-2、维度存储模型" class="headerlink" title="3.2、维度存储模型"></a>3.2、维度存储模型</h2><ul>
+<li>存储结构</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>维度标识</th>
+<th>纬度值</th>
+<th>用户集合（bitmap）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_city</td>
+<td>北京</td>
+<td>[4,5]</td>
+</tr>
+<tr>
+<td>_city</td>
+<td>上海</td>
+<td>[1,2,3,6]</td>
+</tr>
+<tr>
+<td>_os</td>
+<td>windows</td>
+<td>[1,2,5,6]</td>
+</tr>
+<tr>
+<td>_os</td>
+<td>mac</td>
+<td>[3,4]</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>此时计算「城市: 北京」和「操作系统: Mac」的「用户量」</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">第一步：取出对应的用户集合</span><br><span class="line"></span><br><span class="line">第二步：做交集计算</span><br><span class="line">[4,5] and [3,4] = [4]</span><br><span class="line"></span><br><span class="line">第三部：用户量 = 1</span><br></pre></td></tr></table></figure>
+<p>OK！这样可以很灵活的解决各种维度组合起来的问题了，而且连用户的分群也能直接获取。<br>使用这种存储方式的优点：</p>
+<ul>
+<li>可以直接获取用户和分群</li>
+<li>满足群体的交并差计算</li>
+<li><strong>无需提前预估维度的数量，直接将维度“变高”即可。</strong></li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>在做实际分析，选择维度过多的情况下，需要应对<strong>笛卡尔积</strong>所带来的挑战。不过在大多分析实例中，4~5个维度基本就能满足大多分析场景了。</li>
+</ul>
+<h2 id="3-3、指标存储模型"><a href="#3-3、指标存储模型" class="headerlink" title="3.3、指标存储模型"></a>3.3、指标存储模型</h2><p>为了解决指标次数的存储问题，需要用一个 Map 的结构来存储「总的次数」: <strong>Map&lt;Int, BitMap&gt;</strong> （其中key为次数，value为符合访问次数的人）</p>
+<table>
+<thead>
+<tr>
+<th>指标标识</th>
+<th>用户集合</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_pv</td>
+<td>{ 1: [1], 2: [6], 3: [2,5], 4: [3], 5: [4] }</td>
+</tr>
+<tr>
+<td>停留时长</td>
+<td>…</td>
+</tr>
+<tr>
+<td>跳出次数</td>
+<td>…</td>
+</tr>
+<tr>
+<td>某个埋点</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>此时计算「城市: 北京」和「操作系统: Mac」的「pv」</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">第一步：取出「维度表」中对应维度的人</span><br><span class="line">[4,5] and [3,4] = [4]</span><br><span class="line"></span><br><span class="line">第二步：取出pv对应的指标，进行计算</span><br><span class="line">&#123;</span><br><span class="line">   1: [1],</span><br><span class="line">   2: [6],</span><br><span class="line">   3: [2,5],       and   [4] = &#123; 5: [4] &#125;</span><br><span class="line">   4: [3],</span><br><span class="line">   5: [4]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">第三步：计算值，总共1个人</span><br><span class="line">pv = 5 * 1 = 5（次）</span><br></pre></td></tr></table></figure>
+<h2 id="3-4、指标存储优化"><a href="#3-4、指标存储优化" class="headerlink" title="3.4、指标存储优化"></a>3.4、指标存储优化</h2><p>在 Map&lt;Int, BitMap&gt; 这个结构中，key 存储的是 10 进制的数字。这就会导致 Map 的 key 变得特别特别多，所以需要有一种方式来优化一下结构。<br>方式就是用将 10 进制转化为 2 进制的方式去存储次数，此时 Map 的 key 存储是 二进制为 1 的位置：</p>
+<ul>
+<li>比如 2 的二进制是: 「10」，从右向左分别表示（下标i从0开始）「第0位是0」，「第1位是1」。所以将key为1的 bitmap 中存储这个人。</li>
+<li>比如5的二进制是: 「101」，从右向左分别表示「第0位是1」，「第1位是0」，「第2位是1」。所以将 key 为 0 和 2 的 bitmap 中存储这个人。</li>
+</ul>
+<p>然后将上节的数据存储如下：</p>
+<table>
+<thead>
+<tr>
+<th>指标标识</th>
+<th>用户集合</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_pv</td>
+<td>{ 0: [1,2,4,5], 1: [2,5,6], 2: [3,4] }</td>
+</tr>
+<tr>
+<td>停留时长</td>
+<td>…</td>
+</tr>
+<tr>
+<td>跳出次数</td>
+<td>…</td>
+</tr>
+<tr>
+<td>某个埋点</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>此时计算「城市: 北京」和「操作系统: Mac」的「pv」</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">第一步：取出「维度表」中对应维度的人</span><br><span class="line">[4,5] and [3,4] = [4]</span><br><span class="line"></span><br><span class="line">第二步：取出pv对应的指标，进行计算</span><br><span class="line">&#123;</span><br><span class="line">   0: [1,2,4,5],</span><br><span class="line">   1: [2,5,6],         and   [4] = &#123; 0: [4], 2: [4] &#125;</span><br><span class="line">   2: [3,4]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">第三步：计算值</span><br><span class="line">pv = 2^0 * 1 + 2^2 * 1 = 5（次）</span><br></pre></td></tr></table></figure>
+<h2 id="3-5-多维交叉导致的问题"><a href="#3-5-多维交叉导致的问题" class="headerlink" title="3.5 多维交叉导致的问题"></a>3.5 多维交叉导致的问题</h2><p>理想是美好的，但是现实很残酷。在 3.1 小节的例子中，每个用户的维度组合<strong>只有一种</strong>，但是现实中往往一个用户行为可能会存在多种维度组合交叉的情况。</p>
+<blockquote>
+<p>维度组合: 一条数据中唯一的所有维度值，称为一个组合。<br>PS: 如果你的系统中某个 ID 的维度组合只有一种。比如某个订单，一旦生成了，他的价格，商品，物流等信息基本都是固定的。那么之前的模型基本都能满足大多场景了。</p>
+</blockquote>
+<p>所面临的问题：假设又来了一批数据如下</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>时间</th>
+<th>分析实体</th>
+<th>分析维度</th>
+<th>分析指标</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>2020-01-01</td>
+<td>1</td>
+<td>{  _city: 上海, _os: windows, …. }</td>
+<td>{  _pv: 1, …  }</td>
+</tr>
+<tr>
+<td></td>
+<td>2020-01-01</td>
+<td>2</td>
+<td>{  _city: 上海, _os: windows, …. }</td>
+<td>{  _pv: 3, …  }</td>
+</tr>
+<tr>
+<td>⭐️</td>
+<td>2020-01-01</td>
+<td>2</td>
+<td>{  _city: 北京, _os: mac, …. }</td>
+<td>{  _pv: 5, …  }</td>
+</tr>
+<tr>
+<td></td>
+<td>2020-01-01</td>
+<td>3</td>
+<td>{  _city: 上海, _os: mac, …. }</td>
+<td>{  _pv: 4, …  }</td>
+</tr>
+<tr>
+<td></td>
+<td>2020-01-01</td>
+<td>4</td>
+<td>{  _city: 北京, _os: mac, …. }</td>
+<td>{  _pv: 5, … }</td>
+</tr>
+<tr>
+<td></td>
+<td>2020-01-01</td>
+<td>5</td>
+<td>{  _city: 北京, _os: windows, …. }</td>
+<td>{  _pv: 3, …  }</td>
+</tr>
+<tr>
+<td></td>
+<td>2020-01-01</td>
+<td>6</td>
+<td>{  _city: 上海, _os: windows, …. }</td>
+<td>{  _pv: 2, …  }</td>
+</tr>
+</tbody>
+</table>
+<p>此时多了一个「用户2」在「北京」使用了「mac」访问了「pv: 5」。按照之前的维度存储模型如下：</p>
+<table>
+<thead>
+<tr>
+<th>维度标识</th>
+<th>纬度值</th>
+<th>用户集合</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_city</td>
+<td>北京</td>
+<td>[2,4,5]</td>
+</tr>
+<tr>
+<td>_city</td>
+<td>上海</td>
+<td>[1,2,3,6]</td>
+</tr>
+<tr>
+<td>_os</td>
+<td>windows</td>
+<td>[1,2,5,6]</td>
+</tr>
+<tr>
+<td>_os</td>
+<td>mac</td>
+<td>[2,3,4]</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>此时计算「地区: 北京」的用户：直接返回 [2,4,5]，问题不大</li>
+<li>此时要是想要计算「地区：北京」，「操作系统：windows」的用户</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[2,4,5] and [1,2,5,6] = [2,5]</span><br></pre></td></tr></table></figure>
+<p>❌ 你会发现，得出的结果是错的，应该只有「用户 5 」满足才对。</p>
+<h2 id="3-6、维度组合编号"><a href="#3-6、维度组合编号" class="headerlink" title="3.6、维度组合编号"></a>3.6、维度组合编号</h2><p>其实问题出在将维度分开进行存储的时候，丢失了「维度组合关系」这个重要的衡量条件。「用户 2 」虽然在「北京」待过，也使用过「Windows」，<strong>但是他却没有同时满足这个条件</strong>，这就是问题所在。<br>所以需要一种方式来存储「维度组合关系」这一重要信息。</p>
+<p>使用维度组合编号的方式解决这种问题，将<strong>每个人</strong>维度组合进行顺序编号，得到如下结果：</p>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>时间</th>
+<th>分析实体</th>
+<th>分析维度</th>
+<th>分析指标</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>2020-01-01</td>
+<td>1</td>
+<td>{  _city: 上海, _os: windows, …. }</td>
+<td>{  _pv: 1, …  }</td>
+</tr>
+<tr>
+<td>0</td>
+<td>2020-01-01</td>
+<td>2</td>
+<td>{  _city: 上海, _os: windows, …. }</td>
+<td>{  _pv: 3, …  }</td>
+</tr>
+<tr>
+<td>⭐️1</td>
+<td>2020-01-01</td>
+<td>2</td>
+<td>{  _city: 北京, _os: mac, …. }</td>
+<td>{  _pv: 5, …  }</td>
+</tr>
+<tr>
+<td>0</td>
+<td>2020-01-01</td>
+<td>3</td>
+<td>{  _city: 上海, _os: mac, …. }</td>
+<td>{  _pv: 4, …  }</td>
+</tr>
+<tr>
+<td>0</td>
+<td>2020-01-01</td>
+<td>4</td>
+<td>{  _city: 北京, _os: mac, …. }</td>
+<td>{  _pv: 5, … }</td>
+</tr>
+<tr>
+<td>0</td>
+<td>2020-01-01</td>
+<td>5</td>
+<td>{  _city: 北京, _os: windows, …. }</td>
+<td>{  _pv: 3, …  }</td>
+</tr>
+<tr>
+<td>0</td>
+<td>2020-01-01</td>
+<td>6</td>
+<td>{  _city: 上海, _os: windows, …. }</td>
+<td>{  _pv: 2, …  }</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>注意：编号是对应到每个人的，相同的维度组合，编号是一样的。</p>
+</blockquote>
+<p>此时维度对应的存储结构也发生了变化：Map&lt;Short, BitMap&gt;（ key 代表编号，value 代表人的集合）</p>
+<table>
+<thead>
+<tr>
+<th>维度标识</th>
+<th>纬度值</th>
+<th>用户集合</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_city</td>
+<td>北京</td>
+<td>{ 0: [4,5], 1: [2]  }</td>
+</tr>
+<tr>
+<td>_city</td>
+<td>上海</td>
+<td>{ 0: [1,2,3,6] }</td>
+</tr>
+<tr>
+<td>_os</td>
+<td>windows</td>
+<td>{ 0: [1,2,5,6] }</td>
+</tr>
+<tr>
+<td>_os</td>
+<td>mac</td>
+<td>{ 0: [3,4], 1: [2] }</td>
+</tr>
+</tbody>
+</table>
+<p>此时要是想要计算「地区：北京」，「操作系统：windows」的用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123; 0: [4,5], 1: [2]  &#125;  and &#123; 0: [1,2,5,6] &#125; = &#123; 0: [5] &#125;</span><br><span class="line"></span><br><span class="line">&gt; 计算规则：相同维度编号的进行计算</span><br></pre></td></tr></table></figure>
+<p>此时只有5一个用户，算出来的数据就变准确了。</p>
+<h2 id="3-7、多维交叉下计算次数"><a href="#3-7、多维交叉下计算次数" class="headerlink" title="3.7、多维交叉下计算次数"></a>3.7、多维交叉下计算次数</h2><p>其实稍微想一下就是两层的 Map 结构：Map&lt;Int, Map&lt;Short, BitMap&gt;&gt;，之前存储次数的结构如下：</p>
+<table>
+<thead>
+<tr>
+<th>指标标识</th>
+<th>用户集合</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>_pv</td>
+<td>{ 0: {0: [1,2,4,5], 1: [2]}, 1: {0: [2,5,6]}, 2: {0: [3,4], 1: [2]} }</td>
+</tr>
+<tr>
+<td>停留时长</td>
+<td>…</td>
+</tr>
+<tr>
+<td>跳出次数</td>
+<td>…</td>
+</tr>
+<tr>
+<td>某个埋点</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p>此时要是想要计算「地区：北京」，「操作系统：windows」的「pv」</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">第一步：取出对应维度的人</span><br><span class="line">&#123; 0: [4,5], 1: [2]  &#125;  and  &#123; 0: [1,2,5,6] &#125;  =  &#123; 0: [5] &#125;</span><br><span class="line"></span><br><span class="line">第二步：取出pv对应的指标，进行计算</span><br><span class="line">&#123;</span><br><span class="line">  0: &#123; 0: [1,2,4,5], 1: [2] &#125;, </span><br><span class="line">  1: &#123; 0: [2,5,6] &#125;,                   and  &#123; 0: [5] &#125;</span><br><span class="line">  2: &#123; 0: [3,4], 1: [2] &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">=</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  0: &#123; 0: [5] &#125;, </span><br><span class="line">  1: &#123; 0: [5] &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">第三步：计算次数</span><br><span class="line">pv = 2^0 * 1 + 2^1 * 1 = 3（次）</span><br></pre></td></tr></table></figure>
+<h1 id="4、简单的性能对比"><a href="#4、简单的性能对比" class="headerlink" title="4、简单的性能对比"></a>4、简单的性能对比</h1><p>环境准备：SparkSQL（local[16], 内存4G）, BitMap 单线程计算（内存4G）<br>场景：简单的 2 ~ 3 个维度组合求人数、次数，按照值的降序取 Top 1000</p>
+<p><img src="http://ice-img.dreamylost.cn/2021-03-15-123200.png" alt=""></p>
+<blockquote>
+<p>x轴含义: 数据量/用户量。<br>y轴含义: 计算时间, 单位毫秒。</p>
+</blockquote>
+<p>可以看到随着数据量的不断递增，SparkSQL 的计算时间也在不断递增，但是 BitMap 的计算时间却相对比较稳定。<br>对于数据量偏小的产品，理论上在计算出基础模型之后，查询这块单台机器就能搞定。</p>
+<h1 id="5、小结"><a href="#5、小结" class="headerlink" title="5、小结"></a>5、小结</h1><p>BitMap 是一个<strong>兼并计算和存储优势</strong>的数据结构，在存储上百万甚至上千万的 ID 时，也能得到很好的计算效果。<br>并且当你使用 BitMap 存储的时候，就已经天然支持很多的业务场景，比如分群计算、标签计算、漏斗分析、留存分析、用户触达等，因为无需再重新计算人群。</p>
+<p>本篇主要揭晓如何基于 BitMap 来作为底层的数据模型，当然在实际应用过程中还有很多的挑战，由于篇幅原因，这里就不展开讲述了。</p>
+<p>以下列出一些当前面临的问题以及未来的攻克方向：</p>
+<ul>
+<li>bitmap 是以 int 值进行存储的，但是在实际生产中，你的 ID 数据可能是类似 UUID 的这种字符串，那么需要解决 string 转唯一 int 的问题，这块可以使用「分布式ID服务」来解决。</li>
+<li>如何使 bitmap 在分布式环境下达到更好的计算效果，并且在计算层面做到延迟物化。</li>
+<li>如何解决高基维度所带来的挑战。</li>
+<li>如何在实时、图表分析、自定义标签、分群画像以及更多的业务场景中进行使用。</li>
+<li>如何设计一个类 SQL 语言来兼容这种数据模型，这个也是我目前正在研究的方向，因为现在主流的BI工具如superset，metabase，都是需要对接SQL语言的。<br>……</li>
+</ul>
+<h1 id="6、应用到分析工具"><a href="#6、应用到分析工具" class="headerlink" title="6、应用到分析工具"></a>6、应用到分析工具</h1><p>下面将列举一些简单的分析场景，看一下这种数据模型是如何在实战中应用的。</p>
+<h2 id="6-1、事件分析"><a href="#6-1、事件分析" class="headerlink" title="6.1、事件分析"></a>6.1、事件分析</h2><p>前面例举计算pv的例子就是基于「多维分析」的事件分析工具进行阐述的，这里就不重复了。</p>
+<h2 id="6-2、漏斗分析"><a href="#6-2、漏斗分析" class="headerlink" title="6.2、漏斗分析"></a>6.2、漏斗分析</h2><p><img src="http://ice-img.dreamylost.cn/2021-03-15-123223.png" alt=""></p>
+<p>如果进行维度对比，比如「city」，可以直接取「city」维度对应的bitmap去”削“图中的结果即可。</p>
+<h2 id="6-3、留存分析"><a href="#6-3、留存分析" class="headerlink" title="6.3、留存分析"></a>6.3、留存分析</h2><p><img src="http://ice-img.dreamylost.cn/2021-03-15-123241.png" alt=""></p>
+<h2 id="6-4、标签计算"><a href="#6-4、标签计算" class="headerlink" title="6.4、标签计算"></a>6.4、标签计算</h2><p><img src="http://ice-img.dreamylost.cn/2021-03-15-123314.png" alt=""></p>
+<blockquote>
+<p>PS：需要pv的bitmap支持各种四则运算。</p>
+</blockquote>
+<h1 id="7-总结"><a href="#7-总结" class="headerlink" title="7 总结"></a>7 总结</h1><p>欢迎吐槽。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/数仓/">数仓</a><a href="/tags/olap/">olap</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/数仓/">数仓</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.patamon.me/icemimosa/其他/非结构化数仓建模和Schema-Less OLAP构建（零）/" data-title="非结构化数仓建模和Schema-Less OLAP构建（零） | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/icemimosa/其他/非结构化数仓建模和Schema-Less OLAP构建 - 优化分层数仓（一）/" title="非结构化数仓建模和Schema-Less OLAP构建 - 优化分层数仓（一）">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  非结构化数仓建模和Schema-Less OLAP构建 - 优化分层数仓（一）</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/icemimosa/其他/基于BitMap的海量数据分析/" title="基于BitMap的海量数据分析">
+ <strong>NEXT:</strong><br> 
+ <span>基于BitMap的海量数据分析
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1、背景"><span class="toc-text">1、背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2、非结构化建模"><span class="toc-text">2、非结构化建模</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1、结构化-amp-非结构化"><span class="toc-text">2.1、结构化 &amp; 非结构化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2、架构"><span class="toc-text">2.2、架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3、数据需求"><span class="toc-text">2.3、数据需求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4、现有解决方案分析"><span class="toc-text">2.4、现有解决方案分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5、非结构化建模思路"><span class="toc-text">2.5、非结构化建模思路</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3、基于Bitmap的存储模型"><span class="toc-text">3、基于Bitmap的存储模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1、分离维度和指标"><span class="toc-text">3.1、分离维度和指标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2、维度存储模型"><span class="toc-text">3.2、维度存储模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3、指标存储模型"><span class="toc-text">3.3、指标存储模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4、指标存储优化"><span class="toc-text">3.4、指标存储优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-5-多维交叉导致的问题"><span class="toc-text">3.5 多维交叉导致的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-6、维度组合编号"><span class="toc-text">3.6、维度组合编号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-7、多维交叉下计算次数"><span class="toc-text">3.7、多维交叉下计算次数</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4、简单的性能对比"><span class="toc-text">4、简单的性能对比</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5、小结"><span class="toc-text">5、小结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6、应用到分析工具"><span class="toc-text">6、应用到分析工具</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#6-1、事件分析"><span class="toc-text">6.1、事件分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-2、漏斗分析"><span class="toc-text">6.2、漏斗分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3、留存分析"><span class="toc-text">6.3、留存分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-4、标签计算"><span class="toc-text">6.4、标签计算</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-总结"><span class="toc-text">7 总结</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list">
+		
+		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/IceMimosa" target="_blank" title="github"></a>
+		
+		
+		
+		
+		<a href="mailto:514793425@qq.com" target="_blank" title="email"></a>
+		
+	</div>
+</div>
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/categories/java/" title="java">java<sup>26</sup></a></li>
+		
+			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/categories/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/categories/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/categories/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
+		
+			<li><a href="/categories/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
+		
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/tags/impala/" title="impala">impala<sup>1</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>27</sup></a></li>
+		
+			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/tags/lombok/" title="lombok">lombok<sup>3</sup></a></li>
+		
+			<li><a href="/tags/mac/" title="mac">mac<sup>2</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>1</sup></a></li>
+		
+			<li><a href="/tags/olap/" title="olap">olap<sup>4</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/tags/react/" title="react">react<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/tags/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/tags/spring/" title="spring">spring<sup>2</sup></a></li>
+		
+			<li><a href="/tags/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
+		
+			<li><a href="/tags/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/JavaScript/" style="font-size: 11px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 17px;">hbase</a> <a href="/tags/hive/" style="font-size: 16px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12px;">lombok</a> <a href="/tags/mac/" style="font-size: 11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/olap/" style="font-size: 13px;">olap</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/pulsar/" style="font-size: 10px;">pulsar</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/redis/" style="font-size: 18px;">redis</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/spring/" style="font-size: 11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13px;">sqoop</a> <a href="/tags/数仓/" style="font-size: 13px;">数仓</a> <a href="/tags/源码/" style="font-size: 19px;">源码</a>
+    </div>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    
+            <p class="copyright"> © 2023 
+		
+		<a href="http://www.patamon.me" target="_blank" title="IceMimosa">IceMimosa</a>
+		
+            <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
+            ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
+            </p></div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="/js/jquery-icemi-scroll2top.js"></script>
+<script src="/js/other.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  
+  // 回到顶部
+  $(document.body).scroll2Top({
+    background:"#66ccff",
+    shape:"circle",
+    bottom:40,
+    right:250
+  });
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    // m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,332-$(this).scrollTop()));
+  });
+});
+</script>
+
+<!-- GrowingIO Analytics code version 2.1 -->
+<!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
+<script type="text/javascript">
+!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
+gio('init','b988cbf13dfaa5ac', {});
+//custom page code begin here
+
+//custom page code end here
+gio('send');
+</script>
+<!-- End GrowingIO Analytics code version: 2.1 -->
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
+
+
+
+
+
+
+<script>
+    
+        var _bdImg = '4';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
+</html>
+

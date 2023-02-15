@@ -1,0 +1,897 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8">
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88">
+  
+    <title>Hive-2_DDL使用 | Ice の Mimosa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="IceMimosa">
+    
+    <meta name="description" content="Hive-2_DDL使用[TOC]
+1. DDL (Hive Data Definition Language) 概述和一般的RDBMS一样，Hive也有自己的DDL语句。且不管是DDL，还是DML，感觉都和mysql很相似。
+
+Hive DDL 大致包括如下：
+
+
+CREATE DATABASE/">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="Ice の Mimosa" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon_mine.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/jquery-icemi-scroll2top.css">
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='1cb536fd996cddc96154515a1ed1d72d';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+</html>
+  <body>
+    <header>
+      <div id="banner">
+		
+
+			<div id="erer" class="erer" style="">
+				<!-- <img id="i22" src="/img/22.png" width=200 height=230></img> -->
+				<!-- <img id="i22" src="http://ice-img.dreamylost.cn/patamon-22.png" width=200 height=230></img> -->
+			</div>
+
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Ice の Mimosa">Ice の Mimosa</a></h1>
+				<a class="blog-motto">没有未来的未来不是我想要的未来</a>
+			</div>
+
+			<div id="sansan" class="sansan" style="">
+				<!-- <img src="/img/33.png" width=200 height=230></img> -->
+				<!-- <img src="http://ice-img.dreamylost.cn/patamon-33.png" width=200 height=230></img> -->
+			</div> 
+
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+					<li>
+					
+                                            <form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value="8360843150509117428"><input type="text" name="q" size="30" placeholder="搜索"><br>
+					
+					</form></li>
+				</ul>
+			</ul></nav>
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope="" itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/icemimosa/hive/Hive-2_DDL使用/" title="Hive-2_DDL使用" itemprop="url">Hive-2_DDL使用</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://www.patamon.me" title="IceMimosa">IceMimosa</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2016-09-21T07:30:16.000Z" itemprop="datePublished">2016-09-21</time>
+    更新日期:<time datetime="2023-02-15T14:15:04.572Z" itemprop="dateModified">2023-02-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hive-2-DDL使用"><span class="toc-text">Hive-2_DDL使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-DDL-Hive-Data-Definition-Language-概述"><span class="toc-text">1. DDL (Hive Data Definition Language) 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Database-相关"><span class="toc-text">2. Database 相关</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-Create-Database"><span class="toc-text">2.1 Create Database</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-Drop-Database"><span class="toc-text">2.2 Drop Database</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-Alter-Database"><span class="toc-text">2.3 Alter Database</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-Use-Database"><span class="toc-text">2.4 Use Database</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-Table-相关"><span class="toc-text">3. Table 相关</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-Create-Table"><span class="toc-text">3.1 Create Table</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-1-Row-Format-Storage-Format-and-SerDe"><span class="toc-text">3.1.1 Row Format, Storage Format, and SerDe</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-2-Partitioned-Tables"><span class="toc-text">3.1.2 Partitioned Tables</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-3-External-Tables"><span class="toc-text">3.1.3 External Tables</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-4-Create-Table-As-Select"><span class="toc-text">3.1.4 Create Table As Select</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-5-Create-Table-Like"><span class="toc-text">3.1.5 Create Table Like</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-7-Skewed-Tables"><span class="toc-text">3.1.7 Skewed Tables</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-8-Temporary-Tables"><span class="toc-text">3.1.8 Temporary Tables</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-Drop-Table"><span class="toc-text">3.2 Drop Table</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-Truncate-Table"><span class="toc-text">3.3 Truncate Table</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-Alter-Table"><span class="toc-text">3.4 Alter Table</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-1-Rename-Table"><span class="toc-text">3.4.1 Rename Table</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-2-Alter-Table-Properties"><span class="toc-text">3.4.2 Alter Table Properties</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-3-Add-SerDe-Properties"><span class="toc-text">3.4.3 Add SerDe Properties</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-4-Alter-Table-Storage-Properties"><span class="toc-text">3.4.4 Alter Table Storage Properties</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-4-Alter-Table-Skewed-or-Stored-as-Directories"><span class="toc-text">3.4.4 Alter Table Skewed or Stored as Directories</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-5-Alter-Partition"><span class="toc-text">3.5 Alter Partition</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-1-Add-Partitions"><span class="toc-text">3.5.1 Add Partitions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-2-Rename-Partition"><span class="toc-text">3.5.2 Rename Partition</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-3-Exchange-Partition"><span class="toc-text">3.5.3 Exchange Partition</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-4-Recover-Partitions-MSCK-REPAIR-TABLE"><span class="toc-text">3.5.4 Recover Partitions (MSCK REPAIR TABLE)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-5-Drop-Partitions"><span class="toc-text">3.5.5 Drop Partitions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-6-Un-Archive-Partition"><span class="toc-text">3.5.6 (Un)Archive Partition</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-6-Alter-Either-Table-or-Partition"><span class="toc-text">3.6 Alter Either Table or Partition</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6-1-Alter-Table-Partition-File-Format"><span class="toc-text">3.6.1 Alter Table/Partition File Format</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6-2-Alter-Table-Partition-Location"><span class="toc-text">3.6.2 Alter Table/Partition Location</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6-3-Alter-Table-Partition-Touch"><span class="toc-text">3.6.3 Alter Table/Partition Touch</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6-4-Alter-Table-Partition-Protections"><span class="toc-text">3.6.4 Alter Table/Partition Protections</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6-5-Alter-Table-Partition-Compact"><span class="toc-text">3.6.5 Alter Table/Partition Compact</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6-6-Alter-Table-Partition-Concatenate"><span class="toc-text">3.6.6 Alter Table/Partition Concatenate</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-7-Alter-Column"><span class="toc-text">3.7 Alter Column</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-7-1-Change-Column-Name-Type-Position-Comment"><span class="toc-text">3.7.1 Change Column Name/Type/Position/Comment</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-7-2-Add-Replace-Columns"><span class="toc-text">3.7.2 Add/Replace Columns</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-View-相关"><span class="toc-text">4 View 相关</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-Create-View"><span class="toc-text">4.1 Create View</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-Drop-View"><span class="toc-text">4.2 Drop View</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-Alter-View-Properties"><span class="toc-text">4.3 Alter View Properties</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-Alter-View-As-Select"><span class="toc-text">4.4 Alter View As Select</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-Index-相关"><span class="toc-text">5. Index 相关</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-Macro-相关"><span class="toc-text">6. Macro 相关</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-Function-相关"><span class="toc-text">7. Function 相关</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8-Roles-and-Privileges-相关"><span class="toc-text">8. Roles and Privileges 相关</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#9-Show-相关"><span class="toc-text">9. Show 相关</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#9-1-Show-Databases"><span class="toc-text">9.1 Show Databases</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-2-Show-Tables"><span class="toc-text">9.2 Show Tables</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-3-Show-Partitions"><span class="toc-text">9.3 Show Partitions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-4-Show-Table-Partition-Extended"><span class="toc-text">9.4 Show Table/Partition Extended</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-5-Show-Table-Properties"><span class="toc-text">9.5 Show Table Properties</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-6-Show-Create-Table"><span class="toc-text">9.6 Show Create Table</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-7-Show-Columns"><span class="toc-text">9.7 Show Columns</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-8-Show-Indexes"><span class="toc-text">9.8 Show Indexes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-9-Show-Functions"><span class="toc-text">9.9 Show Functions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-10-Show-Granted-Roles-and-Privileges"><span class="toc-text">9.10 Show Granted Roles and Privileges</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-11-Show-Locks"><span class="toc-text">9.11 Show Locks</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-12-Show-Conf"><span class="toc-text">9.12 Show Conf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-13-Show-Transactions"><span class="toc-text">9.13 Show Transactions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-14-Show-Compactions"><span class="toc-text">9.14 Show Compactions</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#10-Describe-相关"><span class="toc-text">10 Describe 相关</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#10-1-Describe-Database"><span class="toc-text">10.1 Describe Database</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-2-Describe-Table-View-Column"><span class="toc-text">10.2 Describe Table/View/Column</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-3-Describe-Partition"><span class="toc-text">10.3 Describe Partition</span></a></li></ol></li></ol>
+		</div>
+		
+		<h1 id="Hive-2-DDL使用"><a href="#Hive-2-DDL使用" class="headerlink" title="Hive-2_DDL使用"></a>Hive-2_DDL使用</h1><p>[TOC]</p>
+<h1 id="1-DDL-Hive-Data-Definition-Language-概述"><a href="#1-DDL-Hive-Data-Definition-Language-概述" class="headerlink" title="1. DDL (Hive Data Definition Language) 概述"></a>1. DDL (Hive Data Definition Language) 概述</h1><p>和一般的RDBMS一样，Hive也有自己的DDL语句。且不管是DDL，还是DML，感觉都和mysql很相似。</p>
+<blockquote>
+<p>Hive DDL 大致包括如下：</p>
+</blockquote>
+<ul>
+<li>CREATE DATABASE/SCHEMA, TABLE, VIEW, FUNCTION, INDEX</li>
+<li>DROP DATABASE/SCHEMA, TABLE, VIEW, INDEX</li>
+<li>TRUNCATE TABLE</li>
+<li>ALTER DATABASE/SCHEMA, TABLE, VIEW</li>
+<li>MSCK REPAIR TABLE (or ALTER TABLE RECOVER PARTITIONS)</li>
+<li>SHOW DATABASES/SCHEMAS, TABLES, TBLPROPERTIES, PARTITIONS, FUNCTIONS, INDEX[ES], COLUMNS, CREATE TABLE</li>
+<li>DESCRIBE DATABASE/SCHEMA, table_name, view_name</li>
+</ul>
+<p><code>partition 语句</code> 经常是 <code>table 语句</code> 的选项，除了 <code>SHOW PARTITIONS</code></p>
+<blockquote>
+<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL" target="_blank" rel="noopener">原文参考</a></p>
+</blockquote>
+<blockquote>
+<p>关键字参考</p>
+</blockquote>
+<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL#LanguageManualDDL-Keywords,Non-reservedKeywordsandReservedKeywords" target="_blank" rel="noopener">Keywords, Non-reserved Keywords and Reserved Keywords</a></p>
+<h1 id="2-Database-相关"><a href="#2-Database-相关" class="headerlink" title="2. Database 相关"></a>2. Database 相关</h1><h2 id="2-1-Create-Database"><a href="#2-1-Create-Database" class="headerlink" title="2.1 Create Database"></a>2.1 Create Database</h2><blockquote>
+<p>语法: </p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> (<span class="keyword">DATABASE</span>|<span class="keyword">SCHEMA</span>) [<span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] database_name</span><br><span class="line">  [<span class="keyword">COMMENT</span> database_comment]</span><br><span class="line">  [LOCATION hdfs_path]</span><br><span class="line">  [<span class="keyword">WITH</span> DBPROPERTIES (property_name=property_value, ...)];</span><br><span class="line">  </span><br><span class="line"><span class="comment">-- LOCATION: 指定数据库位于hdfs的路径, 默认位于HDFS的 /user/hive/warehouse 下面的 database_name.db</span></span><br><span class="line"><span class="comment">-- DBPROPERTIES: 创建数据库的 key-value 键值对。</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>DATABASE 和 SCHEMA 的使用是可以互换的(一个东西)。</li>
+</ul>
+<blockquote>
+<p>例子(进入hive的命令行窗口 <code>hive&gt;</code>):</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 输入, 列出所有的数据库</span></span><br><span class="line"><span class="keyword">show</span> <span class="keyword">databases</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 输出</span></span><br><span class="line">OK</span><br><span class="line">default</span><br><span class="line">Time taken: 0.202 seconds, Fetched: 1 row(s)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- default 数据库是Hive自带的数据库, 位于HDFS的 /user/hive/warehouse, </span></span><br><span class="line"><span class="comment">-- 路径由 hive-site.xml 中的 `hive.metastore.warehouse.dir` 指定</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 输入, 创建一个数据库, 名称为 test</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> <span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> <span class="keyword">test</span> </span><br><span class="line"><span class="keyword">COMMENT</span> <span class="string">'test database'</span> </span><br><span class="line"><span class="keyword">WITH</span> DBPROPERTIES (<span class="string">'creator'</span>=<span class="string">'mimosa'</span>, <span class="string">'data'</span>=<span class="string">'2016-09-04'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 输出</span></span><br><span class="line">OK</span><br><span class="line">Time taken: 0.12 seconds</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 此时就创建了一个test数据库, 位于HDFS的 /user/hive/warehouse/test.db</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 输入</span></span><br><span class="line"><span class="keyword">DESCRIBE</span> <span class="keyword">DATABASE</span> <span class="keyword">test</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 输出</span></span><br><span class="line">OK</span><br><span class="line">test	 test database hdfs://localhost:9000/user/hive/warehouse/test.db icemimosa USER</span><br><span class="line">Time taken: 0.027 seconds, Fetched: 1 row(s)</span><br></pre></td></tr></table></figure>
+<h2 id="2-2-Drop-Database"><a href="#2-2-Drop-Database" class="headerlink" title="2.2 Drop Database"></a>2.2 Drop Database</h2><blockquote>
+<p>语法:</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> (<span class="keyword">DATABASE</span>|<span class="keyword">SCHEMA</span>) [<span class="keyword">IF</span> <span class="keyword">EXISTS</span>] database_name [RESTRICT|<span class="keyword">CASCADE</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 删除默认行为是 RESTRICT, 此时如果数据库不为空, 则删除失败</span></span><br><span class="line"><span class="comment">-- CASCADE 表示不管数据库是否为空, 都删除</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-3-Alter-Database"><a href="#2-3-Alter-Database" class="headerlink" title="2.3 Alter Database"></a>2.3 Alter Database</h2><blockquote>
+<p>语法:</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> (<span class="keyword">DATABASE</span>|<span class="keyword">SCHEMA</span>) database_name <span class="keyword">SET</span> DBPROPERTIES (property_name=property_value, ...);</span><br><span class="line"></span><br><span class="line"><span class="keyword">ALTER</span> (<span class="keyword">DATABASE</span>|<span class="keyword">SCHEMA</span>) database_name <span class="keyword">SET</span> OWNER [<span class="keyword">USER</span>|<span class="keyword">ROLE</span>] user_or_role;</span><br></pre></td></tr></table></figure>
+<h2 id="2-4-Use-Database"><a href="#2-4-Use-Database" class="headerlink" title="2.4 Use Database"></a>2.4 Use Database</h2><blockquote>
+<p>语法:</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">USE</span> database_name;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 使用指定的数据库, 如果返回默认数据库使用 USE DEFAULT; </span></span><br><span class="line"><span class="comment">-- 查看当前数据: SELECT current_database();</span></span><br></pre></td></tr></table></figure>
+<h1 id="3-Table-相关"><a href="#3-Table-相关" class="headerlink" title="3. Table 相关"></a>3. Table 相关</h1><h2 id="3-1-Create-Table"><a href="#3-1-Create-Table" class="headerlink" title="3.1 Create Table"></a>3.1 Create Table</h2><blockquote>
+<p>语法:</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> [<span class="keyword">TEMPORARY</span>] [<span class="keyword">EXTERNAL</span>] <span class="keyword">TABLE</span> [<span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] [db_name.]table_name    <span class="comment">-- (<span class="doctag">Note:</span> TEMPORARY available in Hive 0.14.0 and later)</span></span><br><span class="line">  [(col_name data_type [<span class="keyword">COMMENT</span> col_comment], ...)]</span><br><span class="line">  [<span class="keyword">COMMENT</span> table_comment]</span><br><span class="line">  [PARTITIONED <span class="keyword">BY</span> (col_name data_type [<span class="keyword">COMMENT</span> col_comment], ...)]</span><br><span class="line">  [CLUSTERED <span class="keyword">BY</span> (col_name, col_name, ...) [SORTED <span class="keyword">BY</span> (col_name [<span class="keyword">ASC</span>|<span class="keyword">DESC</span>], ...)] <span class="keyword">INTO</span> num_buckets BUCKETS]</span><br><span class="line">  [SKEWED <span class="keyword">BY</span> (col_name, col_name, ...)                  <span class="comment">-- (<span class="doctag">Note:</span> Available in Hive 0.10.0 and later)]</span></span><br><span class="line">     <span class="keyword">ON</span> ((col_value, col_value, ...), (col_value, col_value, ...), ...)</span><br><span class="line">     [<span class="keyword">STORED</span> <span class="keyword">AS</span> DIRECTORIES]</span><br><span class="line">  [</span><br><span class="line">   [<span class="keyword">ROW</span> <span class="keyword">FORMAT</span> row_format] </span><br><span class="line">   [<span class="keyword">STORED</span> <span class="keyword">AS</span> file_format]</span><br><span class="line">     | <span class="keyword">STORED</span> <span class="keyword">BY</span> <span class="string">'storage.handler.class.name'</span> [<span class="keyword">WITH</span> SERDEPROPERTIES (...)]  <span class="comment">-- (<span class="doctag">Note:</span> Available in Hive 0.6.0 and later)</span></span><br><span class="line">  ]</span><br><span class="line">  [LOCATION hdfs_path]</span><br><span class="line">  [TBLPROPERTIES (property_name=property_value, ...)]   <span class="comment">-- (<span class="doctag">Note:</span> Available in Hive 0.6.0 and later)</span></span><br><span class="line">  [<span class="keyword">AS</span> select_statement];   <span class="comment">-- (<span class="doctag">Note:</span> Available in Hive 0.5.0 and later; not supported for external tables)</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">-- 解释</span></span><br><span class="line"><span class="keyword">CREATE</span> [<span class="keyword">TEMPORARY</span>] [<span class="keyword">EXTERNAL</span>] <span class="keyword">TABLE</span> [<span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] [db_name.]table_name</span><br><span class="line">  <span class="keyword">LIKE</span> existing_table_or_view_name</span><br><span class="line">  [LOCATION hdfs_path];</span><br><span class="line"> </span><br><span class="line">data_type</span><br><span class="line">  : primitive_type</span><br><span class="line">  | array_type</span><br><span class="line">  | map_type</span><br><span class="line">  | struct_type</span><br><span class="line">  | union_type  <span class="comment">-- (<span class="doctag">Note:</span> Available in Hive 0.7.0 and later)</span></span><br><span class="line"> </span><br><span class="line">primitive_type</span><br><span class="line">  : TINYINT</span><br><span class="line">  | SMALLINT</span><br><span class="line">  | INT</span><br><span class="line">  | BIGINT</span><br><span class="line">  | BOOLEAN</span><br><span class="line">  | FLOAT</span><br><span class="line">  | DOUBLE</span><br><span class="line">  | STRING</span><br><span class="line">  | BINARY      <span class="comment">-- (<span class="doctag">Note:</span> Available in Hive 0.8.0 and later)</span></span><br><span class="line">  | TIMESTAMP   <span class="comment">-- (<span class="doctag">Note:</span> Available in Hive 0.8.0 and later)</span></span><br><span class="line">  | DECIMAL     <span class="comment">-- (<span class="doctag">Note:</span> Available in Hive 0.11.0 and later)</span></span><br><span class="line">  | DECIMAL(precision, scale)  <span class="comment">-- (<span class="doctag">Note:</span> Available in Hive 0.13.0 and later)</span></span><br><span class="line">  | DATE        <span class="comment">-- (<span class="doctag">Note:</span> Available in Hive 0.12.0 and later)</span></span><br><span class="line">  | VARCHAR     <span class="comment">-- (<span class="doctag">Note:</span> Available in Hive 0.12.0 and later)</span></span><br><span class="line">  | CHAR        <span class="comment">-- (<span class="doctag">Note:</span> Available in Hive 0.13.0 and later)</span></span><br><span class="line"> </span><br><span class="line">array_type</span><br><span class="line">  : ARRAY &lt; data_type &gt;</span><br><span class="line"> </span><br><span class="line">map_type</span><br><span class="line">  : MAP &lt; primitive_type, data_type &gt;</span><br><span class="line"> </span><br><span class="line">struct_type</span><br><span class="line">  : STRUCT &lt; col_name : data_type [COMMENT col_comment], ...&gt;</span><br><span class="line"> </span><br><span class="line">union_type</span><br><span class="line">   : UNIONTYPE &lt; data_type, data_type, ... &gt;  -- (Note: Available in Hive 0.7.0 and later)</span><br><span class="line"> </span><br><span class="line">row_format</span><br><span class="line">  : DELIMITED [FIELDS TERMINATED BY char [ESCAPED BY char]] [COLLECTION ITEMS TERMINATED BY char]</span><br><span class="line">        [MAP KEYS TERMINATED BY char] [LINES TERMINATED BY char]</span><br><span class="line">        [NULL DEFINED AS char]   <span class="comment">-- (<span class="doctag">Note:</span> Available in Hive 0.13 and later)</span></span><br><span class="line">  | SERDE serde_name [<span class="keyword">WITH</span> SERDEPROPERTIES (property_name=property_value, property_name=property_value, ...)]</span><br><span class="line"> </span><br><span class="line">file_format:</span><br><span class="line">  : SEQUENCEFILE</span><br><span class="line">  | TEXTFILE    <span class="comment">-- (Default, depending on hive.default.fileformat configuration)</span></span><br><span class="line">  | RCFILE      <span class="comment">-- (<span class="doctag">Note:</span> Available in Hive 0.6.0 and later)</span></span><br><span class="line">  | ORC         <span class="comment">-- (<span class="doctag">Note:</span> Available in Hive 0.11.0 and later)</span></span><br><span class="line">  | PARQUET     <span class="comment">-- (<span class="doctag">Note:</span> Available in Hive 0.13.0 and later)</span></span><br><span class="line">  | AVRO        <span class="comment">-- (<span class="doctag">Note:</span> Available in Hive 0.14.0 and later)</span></span><br><span class="line">  | INPUTFORMAT input_format_classname OUTPUTFORMAT output_format_classname</span><br></pre></td></tr></table></figure>
+<ul>
+<li>创建一个名称为 <code>table_name</code> 的表, 如果相同名称的表已经存在, 那么会抛出异常。可以使用 <code>IF NOT EXISTS</code>。</li>
+<li><code>表的名称</code>和<code>列的名称</code>都是大小写<code>不敏感</code>的。但是 <code>properties 的名称</code>的大小写<code>敏感</code>的。</li>
+<li><code>表和列</code> 的 COMMENT 是单引号字符串。</li>
+<li><code>TBLPROPERTIES</code> 和 <code>DBPROPERTIES</code> 一样，可以自定义 key-value 键值对。但是也存在一些Hive预定义好的property，如 <code>last_modified_user</code> 和 <code>last_modified_time</code>等等。</li>
+<li><code>USE database_name</code> 优先于<code>创建表语句</code> 以及使用 <code>database_name.table.name</code>的情况</li>
+</ul>
+<blockquote>
+<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL#LanguageManualDDL-CreateTable" target="_blank" rel="noopener">详情参考 CREATE TABLE</a></p>
+</blockquote>
+<h3 id="3-1-1-Row-Format-Storage-Format-and-SerDe"><a href="#3-1-1-Row-Format-Storage-Format-and-SerDe" class="headerlink" title="3.1.1 Row Format, Storage Format, and SerDe"></a>3.1.1 Row Format, Storage Format, and SerDe</h3><p>创建一个表的时候可以指定 <code>custom SerDe</code> 或者 <code>native SerDe</code>。<br>SerDe 是 <code>Serializer/Deserializer</code> 的缩写</p>
+<ul>
+<li><p><code>native SerDe</code> 可以使用 <strong>row_format</strong> 的 <code>DELIMITED</code>。</p>
+<ul>
+<li><code>DELIMITED</code> 可以指定 <code>FIELDS分隔符</code>, <code>LINES分隔符</code>等等</li>
+<li><code>ESCAPED</code> 可以指定以什么符号进行转义(<code>如 ESCAPED BY &#39;\&#39;</code>)</li>
+<li><code>NULL DEFINED AS char</code> 可以指定自定义的 NULL (默认是 <code>&#39;\N&#39;</code> )</li>
+</ul>
+</li>
+<li><p><code>file_format</code> 默认是 <code>TEXTFILE</code> 的格式, 但是可以通过 <code>hive.default.fileformat</code> 修改</p>
+<ul>
+<li><code>SEQUENCEFILE</code> 格式：存储的数据将会被 <code>压缩</code>, <a href="https://cwiki.apache.org/confluence/display/Hive/CompressedStorage" target="_blank" rel="noopener">CompressedStorage</a></li>
+<li><code>ORC</code>格式：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+ORC#LanguageManualORC-HiveQLSyntax" target="_blank" rel="noopener">ORC</a></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL#LanguageManualDDL-RowFormat,StorageFormat,andSerDe" target="_blank" rel="noopener">更多SerDes和Storage Format参考</a></p>
+</blockquote>
+<h3 id="3-1-2-Partitioned-Tables"><a href="#3-1-2-Partitioned-Tables" class="headerlink" title="3.1.2 Partitioned Tables"></a>3.1.2 Partitioned Tables</h3><p>创建 <code>分区表</code> 可以使用 <code>PARTITIONED BY</code> 语句。</p>
+<ul>
+<li>注意 <code>PARTITIONED BY</code> 指定的列只是可以查询的伪列, 且名称不能和表的列名重复, 否则Hive会抛出异常。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FAILED: SemanticException [Error 10035]: Column repeated in partitioning columns</span><br></pre></td></tr></table></figure>
+<ul>
+<li>例如创建一张如下表：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> orders (</span><br><span class="line">	<span class="keyword">id</span> <span class="built_in">BIGINT</span> <span class="keyword">COMMENT</span> <span class="string">'id'</span>, </span><br><span class="line">	buyer <span class="keyword">STRING</span> <span class="keyword">COMMENT</span> <span class="string">'买家名称'</span>, </span><br><span class="line">	item <span class="keyword">STRING</span> <span class="keyword">COMMENT</span> <span class="string">'商品名称'</span>, </span><br><span class="line">	amount <span class="built_in">INT</span> <span class="keyword">COMMENT</span> <span class="string">'购买数量'</span>, </span><br><span class="line">	price <span class="keyword">DOUBLE</span> <span class="keyword">COMMENT</span> <span class="string">'商品单价'</span>, </span><br><span class="line">	<span class="built_in">date</span> <span class="built_in">DATE</span> <span class="keyword">COMMENT</span> <span class="string">'下单时间'</span></span><br><span class="line">) <span class="keyword">COMMENT</span> <span class="string">'订单表'</span> </span><br><span class="line">PARTITIONED <span class="keyword">BY</span> (pt <span class="built_in">DATE</span> <span class="keyword">COMMENT</span> <span class="string">'下单时间'</span>)  </span><br><span class="line"><span class="keyword">ROW</span> <span class="keyword">FORMAT</span> <span class="keyword">DELIMITED</span> <span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\t'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建一张订单表 orders</span></span><br><span class="line"><span class="comment">-- 按 `下单时间` 进行分区, 因为不能和date字段重复, 改为 pt(值可以为另一种格式)</span></span><br><span class="line"><span class="comment">-- 行的字段分隔符是 \t</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 问题：</span></span><br><span class="line">	<span class="comment">-- 1. DESCRIBE orders; 正常, 不会出现中文乱码</span></span><br><span class="line">	<span class="comment">-- 2. SHOW CREATE TABLE orders; 中文出现乱码</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-1-3-External-Tables"><a href="#3-1-3-External-Tables" class="headerlink" title="3.1.3 External Tables"></a>3.1.3 External Tables</h3><p>使用关键字 <code>EXTERNAL</code> 并且提供一个 <code>LOCATION</code>, 创建一个外部表。这样Hive就不会使用默认的路径去存储数据。与内部表不同的是, 当删除一个外部表时(只删除表的<code>元数据</code>)，数据是 <code>不会被删除</code> 的。</p>
+<p>外部表的路径可以指向 HDFS 的任何一个地方, 而不是限制在Hive的默认路径中(hive.metastore.warehouse.dir)。</p>
+<ul>
+<li>例子：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> student(</span><br><span class="line">	<span class="keyword">name</span> <span class="keyword">STRING</span>, </span><br><span class="line">	age <span class="built_in">INT</span></span><br><span class="line">) </span><br><span class="line"><span class="keyword">ROW</span> <span class="keyword">FORMAT</span> <span class="keyword">DELIMITED</span> <span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\t'</span> </span><br><span class="line">LOCATION <span class="string">'/user/icemimosa/student'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 如何目录不存在, Hive会自动在 HDFS 下面创建 `/user/icemimosa/student` 目录</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>然后创建一个文本(如 s.txt), 内容如下( <code>\t</code> 分隔)：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mimosa 	22</span><br><span class="line">张三   	23</span><br><span class="line">王五   	28</span><br></pre></td></tr></table></figure>
+<p>然后使用命令 <code>hadoop dfs -put s.txt /user/icemimosa/student</code><br>这样hive就能够读取到数据了。</p>
+<ul>
+<li><code>select * from student</code>;</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 输出</span></span><br><span class="line">OK</span><br><span class="line">mimosa 	22</span><br><span class="line">张三   	23</span><br><span class="line">王五   	28</span><br><span class="line">Time taken: 0.5 seconds, Fetched: 3 row(s)</span><br></pre></td></tr></table></figure>
+<h3 id="3-1-4-Create-Table-As-Select"><a href="#3-1-4-Create-Table-As-Select" class="headerlink" title="3.1.4 Create Table As Select"></a>3.1.4 Create Table As Select</h3><p>Hive 可以从一个 <code>select</code> 语句中创建一张表, Hive能够自动从select结果中分析出表的结构。</p>
+<ul>
+<li><p>你可以为 CREATE 的表添加一些属性, 如 <code>SerDe</code> 和 <code>storage format</code>, 但是有一些限制:</p>
+<ul>
+<li>不能是 <code>partitioned</code> 表</li>
+<li>不能是 <code>external</code> 表</li>
+<li>不能是 <code>bucketing</code> 表</li>
+</ul>
+</li>
+<li><p>例子：</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> student_as <span class="keyword">AS</span> <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> student;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>注意如果在 select 语句中, 不指定 <code>别名</code>(select count(1) 别名)。那么创建表的列名就会自动的按 _col0, _col1, _col2 … 命名</li>
+</ul>
+<h3 id="3-1-5-Create-Table-Like"><a href="#3-1-5-Create-Table-Like" class="headerlink" title="3.1.5 Create Table Like"></a>3.1.5 Create Table Like</h3><p>与 <code>Create Table As Select</code> 不同的是, <code>Create Table Like</code>只拷贝已经存在表的结构, 而不拷贝数据。</p>
+<ul>
+<li>例子:</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> student_like <span class="keyword">LIKE</span> student;</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">* 注意：创建的表只会采用源表的 `fields` 和 `partition columns`, `SerDe` 和 `file formats` 采取Hive默认的配置。</span><br><span class="line"></span><br><span class="line"><span class="comment">### 3.1.6 Bucketed Sorted Tables</span></span><br><span class="line">使用 `CLUSTERED BY` 和 `SORTED BY` 来将数据进行打散分桶放置, 并按一定的顺序排列数据。</span><br><span class="line">这样有利于查询效率的提高。</span><br><span class="line"></span><br><span class="line">由于数据进行分桶放置, 那么在插入数据的时候要确保reducer的数量和桶的数量一致。</span><br><span class="line"></span><br><span class="line">* 例子：</span><br><span class="line"></span><br><span class="line">```sql</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> student_bucket(</span><br><span class="line">	<span class="keyword">name</span> <span class="keyword">STRING</span>, </span><br><span class="line">	age <span class="built_in">INT</span></span><br><span class="line">) CLUSTERED <span class="keyword">BY</span> (<span class="keyword">name</span>) SORTED <span class="keyword">BY</span>(age) <span class="keyword">INTO</span> <span class="number">4</span> BUCKETS;</span><br></pre></td></tr></table></figure>
+<p>在插入数据的时候, <code>HIVE2</code>以前的版本是需要指定 <code>set hive.enforce.bucketing = true;</code>(默认配置是false) ,这样就能根据BUCKETS的数量生成正确的reducers。</p>
+<p>参考：<br>1、<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL#LanguageManualDDL-BucketedSortedTables" target="_blank" rel="noopener">Bucketed Sorted Tables</a><br>2、<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL+BucketedTables" target="_blank" rel="noopener">BucketedTables Examples</a></p>
+<h3 id="3-1-7-Skewed-Tables"><a href="#3-1-7-Skewed-Tables" class="headerlink" title="3.1.7 Skewed Tables"></a>3.1.7 Skewed Tables</h3><blockquote>
+<p>TODO</p>
+</blockquote>
+<h3 id="3-1-8-Temporary-Tables"><a href="#3-1-8-Temporary-Tables" class="headerlink" title="3.1.8 Temporary Tables"></a>3.1.8 Temporary Tables</h3><blockquote>
+<p>TODO</p>
+</blockquote>
+<h2 id="3-2-Drop-Table"><a href="#3-2-Drop-Table" class="headerlink" title="3.2 Drop Table"></a>3.2 Drop Table</h2><blockquote>
+<p>语法</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> [<span class="keyword">IF</span> <span class="keyword">EXISTS</span>] table_name [<span class="keyword">PURGE</span>];</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意事项：</p>
+</blockquote>
+<ul>
+<li><ol>
+<li>DROP TABLE 将会删除元数据和数据(使用 <code>hadoop dfs -rm</code> 命令)。如果配置了 <code>Trash</code>(不指定 <code>PURGE</code> ), 数据将会丢到 <code>hdfs user&#39;s</code> 目录的 <code>.Trash</code> 中(防止误删, 便于恢复)。</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>如果指定了 <code>PURGE</code>, 那么数据就不会转移到Trash中, 且无法恢复。该属性也可以在 CREATE TABLE 的 <code>tblproperties</code> 中指定 <code>auto.purge=true</code></li>
+</ol>
+</li>
+<li><ol start="3">
+<li>In Hive 0.7.0 or later, DROP returns an error if the table doesn’t exist, unless <code>IF EXISTS</code> is specified or the configuration variable <code>hive.exec.drop.ignorenonexistent</code> is set to true.(默认的配置就是 <code>true</code>)</li>
+</ol>
+</li>
+</ul>
+<h2 id="3-3-Truncate-Table"><a href="#3-3-Truncate-Table" class="headerlink" title="3.3 Truncate Table"></a>3.3 Truncate Table</h2><blockquote>
+<p>语法</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">TRUNCATE</span> <span class="keyword">TABLE</span> table_name [<span class="keyword">PARTITION</span> partition_spec];</span><br><span class="line"> </span><br><span class="line"><span class="comment">-- partition_spec:</span></span><br><span class="line">  : (partition_column = partition_col_value, partition_column = partition_col_value, ...)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>清空表的所有数据(或指定分区清空), 删除的数据同样是放置在 <code>Trash</code> 中(如果配置了Trash的话)。</li>
+<li>被清空的表必须是 <code>managed table</code> (非外部表), 否则会抛出异常。</li>
+</ul>
+<h2 id="3-4-Alter-Table"><a href="#3-4-Alter-Table" class="headerlink" title="3.4 Alter Table"></a>3.4 Alter Table</h2><p>Alter Table 可以允许修改已存在的表的结构, 包括 <code>列/分区/SerDe</code> 或 <code>表本身</code> 等等。</p>
+<h3 id="3-4-1-Rename-Table"><a href="#3-4-1-Rename-Table" class="headerlink" title="3.4.1 Rename Table"></a>3.4.1 Rename Table</h3><p>修改表名称</p>
+<blockquote>
+<p>语法</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">RENAME</span> <span class="keyword">TO</span> new_table_name;</span><br></pre></td></tr></table></figure>
+<p>这个操作在Hive0.6之后同时会移动HDFS的路径。(老版本只修改元数据表的名称)</p>
+<h3 id="3-4-2-Alter-Table-Properties"><a href="#3-4-2-Alter-Table-Properties" class="headerlink" title="3.4.2 Alter Table Properties"></a>3.4.2 Alter Table Properties</h3><p>修改或添加表的属性</p>
+<blockquote>
+<p>语法</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">SET</span> TBLPROPERTIES table_properties;</span><br><span class="line"> </span><br><span class="line">table_properties:</span><br><span class="line">  : (property_name = property_value, property_name = property_value, ... )</span><br></pre></td></tr></table></figure>
+<ul>
+<li>你可以通过这种方法对表新增自定义的表元数据。<code>last_modified_user</code> 和 <code>last_modified_time</code> 属性Hive会自动设置。</li>
+<li>可以使用 <code>DESCRIBE EXTENDED table_name</code> 获取这些信息</li>
+</ul>
+<blockquote>
+<p>比如你可以修改表的注释</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">SET</span> TBLPROPERTIES (<span class="string">'comment'</span> = new_comment);</span><br></pre></td></tr></table></figure>
+<h3 id="3-4-3-Add-SerDe-Properties"><a href="#3-4-3-Add-SerDe-Properties" class="headerlink" title="3.4.3 Add SerDe Properties"></a>3.4.3 Add SerDe Properties</h3><blockquote>
+<p>TODO</p>
+</blockquote>
+<h3 id="3-4-4-Alter-Table-Storage-Properties"><a href="#3-4-4-Alter-Table-Storage-Properties" class="headerlink" title="3.4.4 Alter Table Storage Properties"></a>3.4.4 Alter Table Storage Properties</h3><blockquote>
+<p>TODO</p>
+</blockquote>
+<h3 id="3-4-4-Alter-Table-Skewed-or-Stored-as-Directories"><a href="#3-4-4-Alter-Table-Skewed-or-Stored-as-Directories" class="headerlink" title="3.4.4 Alter Table Skewed or Stored as Directories"></a>3.4.4 Alter Table Skewed or Stored as Directories</h3><blockquote>
+<p>TODO</p>
+</blockquote>
+<h2 id="3-5-Alter-Partition"><a href="#3-5-Alter-Partition" class="headerlink" title="3.5 Alter Partition"></a>3.5 Alter Partition</h2><p>通过 <code>alter partition</code> 语句，你可以对表的分区进行 <code>新增</code>, <code>重命名</code>, <code>交换(moved)</code>, <code>删除</code> 或者 <code>存档</code> 等操作。</p>
+<h3 id="3-5-1-Add-Partitions"><a href="#3-5-1-Add-Partitions" class="headerlink" title="3.5.1 Add Partitions"></a>3.5.1 Add Partitions</h3><p>新增分区</p>
+<blockquote>
+<p>语法</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">ADD</span> [<span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] <span class="keyword">PARTITION</span> partition_spec </span><br><span class="line">  [LOCATION <span class="string">'location1'</span>] partition_spec [LOCATION <span class="string">'location2'</span>] ...;</span><br><span class="line"> </span><br><span class="line">partition_spec:</span><br><span class="line">  : (partition_column = partition_col_value, partition_column = partition_col_value, ...)</span><br><span class="line">  </span><br><span class="line"><span class="comment">## partition_col_value: 如果是String，需要引号括起来</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>新增分区只是修改了表的元数据, 并不会去加载实际数据。</li>
+<li>如果分区存在, 那么会抛出异常(除非使用 <code>IF NOT EXISTS</code>)</li>
+<li><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL#LanguageManualDDL-AddPartitions" target="_blank" rel="noopener">注意不同hive版本的使用</a></li>
+</ul>
+<h3 id="3-5-2-Rename-Partition"><a href="#3-5-2-Rename-Partition" class="headerlink" title="3.5.2 Rename Partition"></a>3.5.2 Rename Partition</h3><p>重新命名分区</p>
+<blockquote>
+<p>语法</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">PARTITION</span> partition_spec <span class="keyword">RENAME</span> <span class="keyword">TO</span> <span class="keyword">PARTITION</span> partition_spec;</span><br></pre></td></tr></table></figure>
+<h3 id="3-5-3-Exchange-Partition"><a href="#3-5-3-Exchange-Partition" class="headerlink" title="3.5.3 Exchange Partition"></a>3.5.3 Exchange Partition</h3><p>交换(移动)分区</p>
+<blockquote>
+<p>语法</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name_1 <span class="keyword">EXCHANGE</span> <span class="keyword">PARTITION</span> (partition_spec) <span class="keyword">WITH</span> <span class="keyword">TABLE</span> table_name_2;</span><br><span class="line"><span class="comment">-- multiple partitions</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name_1 <span class="keyword">EXCHANGE</span> <span class="keyword">PARTITION</span> (partition_spec, partition_spec2, ...) <span class="keyword">WITH</span> <span class="keyword">TABLE</span> table_name_2;</span><br><span class="line"></span><br><span class="line">multiple partitions 仅在 Hive versions 1.2.2, 1.3.0, and 2.0.0+ 中有效</span><br></pre></td></tr></table></figure>
+<h3 id="3-5-4-Recover-Partitions-MSCK-REPAIR-TABLE"><a href="#3-5-4-Recover-Partitions-MSCK-REPAIR-TABLE" class="headerlink" title="3.5.4 Recover Partitions (MSCK REPAIR TABLE)"></a>3.5.4 Recover Partitions (MSCK REPAIR TABLE)</h3><p>由于分区也是一个目录，当你手动(hadoop dfs -put)创建分区目录的时候，hive是无法自动识别的，除非你使用 <code>ALTER TABLE table_name ADD PARTITION</code> 来添加分区。</p>
+<p>当然你也使用如下名(metastore check repair)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MSCK REPAIR TABLE table_name;</span><br></pre></td></tr></table></figure>
+<h3 id="3-5-5-Drop-Partitions"><a href="#3-5-5-Drop-Partitions" class="headerlink" title="3.5.5 Drop Partitions"></a>3.5.5 Drop Partitions</h3><p>删除分区</p>
+<blockquote>
+<p>语法</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">DROP</span> [<span class="keyword">IF</span> <span class="keyword">EXISTS</span>] <span class="keyword">PARTITION</span> partition_spec[, <span class="keyword">PARTITION</span> partition_spec, ...]</span><br><span class="line">  [<span class="keyword">IGNORE</span> <span class="keyword">PROTECTION</span>] [<span class="keyword">PURGE</span>];            <span class="comment">-- (<span class="doctag">Note:</span> PURGE available in Hive 1.2.0 and later, IGNORE PROTECTION not available 2.0.0 and later)</span></span><br></pre></td></tr></table></figure>
+<p>命令将会删除分区和数据。</p>
+<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL#LanguageManualDDL-DropPartitions" target="_blank" rel="noopener">其他不同hive版本说明</a></p>
+<h3 id="3-5-6-Un-Archive-Partition"><a href="#3-5-6-Un-Archive-Partition" class="headerlink" title="3.5.6 (Un)Archive Partition"></a>3.5.6 (Un)Archive Partition</h3><blockquote>
+<p>TODO</p>
+</blockquote>
+<h2 id="3-6-Alter-Either-Table-or-Partition"><a href="#3-6-Alter-Either-Table-or-Partition" class="headerlink" title="3.6 Alter Either Table or Partition"></a>3.6 Alter Either Table or Partition</h2><h3 id="3-6-1-Alter-Table-Partition-File-Format"><a href="#3-6-1-Alter-Table-Partition-File-Format" class="headerlink" title="3.6.1 Alter Table/Partition File Format"></a>3.6.1 Alter Table/Partition File Format</h3><p>修改文件存储格式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE table_name [PARTITION partition_spec] SET FILEFORMAT file_format;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>改操作只修改元数据，数据的转换必须在hive之外完成</li>
+</ul>
+<h3 id="3-6-2-Alter-Table-Partition-Location"><a href="#3-6-2-Alter-Table-Partition-Location" class="headerlink" title="3.6.2 Alter Table/Partition Location"></a>3.6.2 Alter Table/Partition Location</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE table_name [PARTITION partition_spec] SET LOCATION &quot;new location&quot;;</span><br></pre></td></tr></table></figure>
+<h3 id="3-6-3-Alter-Table-Partition-Touch"><a href="#3-6-3-Alter-Table-Partition-Touch" class="headerlink" title="3.6.3 Alter Table/Partition Touch"></a>3.6.3 Alter Table/Partition Touch</h3><blockquote>
+<p>TODO</p>
+</blockquote>
+<h3 id="3-6-4-Alter-Table-Partition-Protections"><a href="#3-6-4-Alter-Table-Partition-Protections" class="headerlink" title="3.6.4 Alter Table/Partition Protections"></a>3.6.4 Alter Table/Partition Protections</h3><p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL#LanguageManualDDL-AlterTable/PartitionProtections" target="_blank" rel="noopener">hive不同版本说明</a></p>
+<blockquote>
+<p>语法: </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE table_name [PARTITION partition_spec] ENABLE|DISABLE NO_DROP [CASCADE];</span><br><span class="line"> </span><br><span class="line">ALTER TABLE table_name [PARTITION partition_spec] ENABLE|DISABLE OFFLINE;</span><br></pre></td></tr></table></figure>
+<h3 id="3-6-5-Alter-Table-Partition-Compact"><a href="#3-6-5-Alter-Table-Partition-Compact" class="headerlink" title="3.6.5 Alter Table/Partition Compact"></a>3.6.5 Alter Table/Partition Compact</h3><blockquote>
+<p>TODO</p>
+</blockquote>
+<h3 id="3-6-6-Alter-Table-Partition-Concatenate"><a href="#3-6-6-Alter-Table-Partition-Concatenate" class="headerlink" title="3.6.6 Alter Table/Partition Concatenate"></a>3.6.6 Alter Table/Partition Concatenate</h3><blockquote>
+<p>TODO</p>
+</blockquote>
+<h2 id="3-7-Alter-Column"><a href="#3-7-Alter-Column" class="headerlink" title="3.7 Alter Column"></a>3.7 Alter Column</h2><h3 id="3-7-1-Change-Column-Name-Type-Position-Comment"><a href="#3-7-1-Change-Column-Name-Type-Position-Comment" class="headerlink" title="3.7.1 Change Column Name/Type/Position/Comment"></a>3.7.1 Change Column Name/Type/Position/Comment</h3><blockquote>
+<p>语法</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name [<span class="keyword">PARTITION</span> partition_spec] <span class="keyword">CHANGE</span> [<span class="keyword">COLUMN</span>] col_old_name col_new_name column_type</span><br><span class="line">  [<span class="keyword">COMMENT</span> col_comment] [<span class="keyword">FIRST</span>|<span class="keyword">AFTER</span> column_name] [<span class="keyword">CASCADE</span>|RESTRICT];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改表的列名，列类型，注释以及列位置。</li>
+<li>只会修改表元数据, 不会修改数据。用户使用的时候需要确保数据的一致性。</li>
+</ul>
+<h3 id="3-7-2-Add-Replace-Columns"><a href="#3-7-2-Add-Replace-Columns" class="headerlink" title="3.7.2 Add/Replace Columns"></a>3.7.2 Add/Replace Columns</h3><blockquote>
+<p>语法</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name </span><br><span class="line">  [<span class="keyword">PARTITION</span> partition_spec]                 <span class="comment">-- (<span class="doctag">Note:</span> Hive 0.14.0 and later)</span></span><br><span class="line">  <span class="keyword">ADD</span>|<span class="keyword">REPLACE</span> <span class="keyword">COLUMNS</span> (col_name data_type [<span class="keyword">COMMENT</span> col_comment], ...)</span><br><span class="line">  [<span class="keyword">CASCADE</span>|RESTRICT]                         <span class="comment">-- (<span class="doctag">Note:</span> Hive 0.15.0 and later)</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>ADD 会在所有columns ( <code>partition列之前</code> ) 新增一个 column</li>
+<li>REPLACE 会移除所有的列, 然后再新增指定的列, 这个需要注意。当然，通过replace可以进行列的删除</li>
+</ul>
+<h1 id="4-View-相关"><a href="#4-View-相关" class="headerlink" title="4 View 相关"></a>4 View 相关</h1><h2 id="4-1-Create-View"><a href="#4-1-Create-View" class="headerlink" title="4.1 Create View"></a>4.1 Create View</h2><blockquote>
+<p>语法</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> [<span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] [db_name.]view_name [(column_name [<span class="keyword">COMMENT</span> column_comment], ...) ]</span><br><span class="line">  [<span class="keyword">COMMENT</span> view_comment]</span><br><span class="line">  [TBLPROPERTIES (property_name = property_value, ...)]</span><br><span class="line">  <span class="keyword">AS</span> <span class="keyword">SELECT</span> ...;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>没有创建视图没有指定列，那么会自动从select语句中选取。</li>
+<li>View是只读的</li>
+</ul>
+<h2 id="4-2-Drop-View"><a href="#4-2-Drop-View" class="headerlink" title="4.2 Drop View"></a>4.2 Drop View</h2><blockquote>
+<p>语法</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">VIEW</span> [<span class="keyword">IF</span> <span class="keyword">EXISTS</span>] [db_name.]view_name;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>将会删除视图的元数据 (不能对view使用 <code>DROP TABLE</code> )</li>
+</ul>
+<h2 id="4-3-Alter-View-Properties"><a href="#4-3-Alter-View-Properties" class="headerlink" title="4.3 Alter View Properties"></a>4.3 Alter View Properties</h2><blockquote>
+<p>语法</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">VIEW</span> [db_name.]view_name <span class="keyword">SET</span> TBLPROPERTIES table_properties;</span><br><span class="line"> </span><br><span class="line">table_properties:</span><br><span class="line">  : (property_name = property_value, property_name = property_value, ...)</span><br></pre></td></tr></table></figure>
+<h2 id="4-4-Alter-View-As-Select"><a href="#4-4-Alter-View-As-Select" class="headerlink" title="4.4 Alter View As Select"></a>4.4 Alter View As Select</h2><blockquote>
+<p>语法</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">VIEW</span> [db_name.]view_name <span class="keyword">AS</span> select_statement;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>类似于 <code>CREATE VIEW</code> 操作, 当然 <code>CREATE OR REPLACE VIEW</code> 也是有效的</li>
+</ul>
+<h1 id="5-Index-相关"><a href="#5-Index-相关" class="headerlink" title="5. Index 相关"></a>5. Index 相关</h1><h1 id="6-Macro-相关"><a href="#6-Macro-相关" class="headerlink" title="6. Macro 相关"></a>6. Macro 相关</h1><h1 id="7-Function-相关"><a href="#7-Function-相关" class="headerlink" title="7. Function 相关"></a>7. Function 相关</h1><h1 id="8-Roles-and-Privileges-相关"><a href="#8-Roles-and-Privileges-相关" class="headerlink" title="8. Roles and Privileges 相关"></a>8. Roles and Privileges 相关</h1><p>see <code>https://cwiki.apache.org/confluence/display/Hive/SQL+Standard+Based+Hive+Authorization</code></p>
+<h1 id="9-Show-相关"><a href="#9-Show-相关" class="headerlink" title="9. Show 相关"></a>9. Show 相关</h1><h2 id="9-1-Show-Databases"><a href="#9-1-Show-Databases" class="headerlink" title="9.1 Show Databases"></a>9.1 Show Databases</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW (DATABASES|SCHEMAS) [LIKE &apos;identifier_with_wildcards&apos;];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>identifier_with_wildcards(正则匹配): <code>*</code> 表示任意字符匹配, <code>|</code> 表示或者匹配</li>
+</ul>
+<h2 id="9-2-Show-Tables"><a href="#9-2-Show-Tables" class="headerlink" title="9.2 Show Tables"></a>9.2 Show Tables</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW TABLES [IN database_name] [&apos;identifier_with_wildcards&apos;];</span><br></pre></td></tr></table></figure>
+<h2 id="9-3-Show-Partitions"><a href="#9-3-Show-Partitions" class="headerlink" title="9.3 Show Partitions"></a>9.3 Show Partitions</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW PARTITIONS [db_name.]table_name [PARTITION(partition_spec)];   -- (Note: Hive 0.13.0 and later)</span><br></pre></td></tr></table></figure>
+<h2 id="9-4-Show-Table-Partition-Extended"><a href="#9-4-Show-Table-Partition-Extended" class="headerlink" title="9.4 Show Table/Partition Extended"></a>9.4 Show Table/Partition Extended</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW TABLE EXTENDED [IN|FROM database_name] LIKE &apos;identifier_with_wildcards&apos; [PARTITION(partition_spec)];</span><br></pre></td></tr></table></figure>
+<h2 id="9-5-Show-Table-Properties"><a href="#9-5-Show-Table-Properties" class="headerlink" title="9.5 Show Table Properties"></a>9.5 Show Table Properties</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SHOW TBLPROPERTIES tblname;</span><br><span class="line">SHOW TBLPROPERTIES tblname(&quot;foo&quot;);</span><br></pre></td></tr></table></figure>
+<h2 id="9-6-Show-Create-Table"><a href="#9-6-Show-Create-Table" class="headerlink" title="9.6 Show Create Table"></a>9.6 Show Create Table</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW CREATE TABLE ([db_name.]table_name|view_name);</span><br></pre></td></tr></table></figure>
+<h2 id="9-7-Show-Columns"><a href="#9-7-Show-Columns" class="headerlink" title="9.7 Show Columns"></a>9.7 Show Columns</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW COLUMNS (FROM|IN) table_name [(FROM|IN) db_name];</span><br></pre></td></tr></table></figure>
+<h2 id="9-8-Show-Indexes"><a href="#9-8-Show-Indexes" class="headerlink" title="9.8 Show Indexes"></a>9.8 Show Indexes</h2><h2 id="9-9-Show-Functions"><a href="#9-9-Show-Functions" class="headerlink" title="9.9 Show Functions"></a>9.9 Show Functions</h2><h2 id="9-10-Show-Granted-Roles-and-Privileges"><a href="#9-10-Show-Granted-Roles-and-Privileges" class="headerlink" title="9.10 Show Granted Roles and Privileges"></a>9.10 Show Granted Roles and Privileges</h2><h2 id="9-11-Show-Locks"><a href="#9-11-Show-Locks" class="headerlink" title="9.11 Show Locks"></a>9.11 Show Locks</h2><h2 id="9-12-Show-Conf"><a href="#9-12-Show-Conf" class="headerlink" title="9.12 Show Conf"></a>9.12 Show Conf</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW CONF &lt;configuration_name&gt;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><a href="https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties" target="_blank" rel="noopener">Hive Configuration Properties</a></li>
+</ul>
+<h2 id="9-13-Show-Transactions"><a href="#9-13-Show-Transactions" class="headerlink" title="9.13 Show Transactions"></a>9.13 Show Transactions</h2><h2 id="9-14-Show-Compactions"><a href="#9-14-Show-Compactions" class="headerlink" title="9.14 Show Compactions"></a>9.14 Show Compactions</h2><h1 id="10-Describe-相关"><a href="#10-Describe-相关" class="headerlink" title="10 Describe 相关"></a>10 Describe 相关</h1><h2 id="10-1-Describe-Database"><a href="#10-1-Describe-Database" class="headerlink" title="10.1 Describe Database"></a>10.1 Describe Database</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DESCRIBE DATABASE [EXTENDED] db_name;</span><br><span class="line">DESCRIBE SCHEMA [EXTENDED] db_name;     -- (Note: Hive 0.15.0 and later)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>EXTENDED also shows the database properties.</li>
+</ul>
+<h2 id="10-2-Describe-Table-View-Column"><a href="#10-2-Describe-Table-View-Column" class="headerlink" title="10.2 Describe Table/View/Column"></a>10.2 Describe Table/View/Column</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DESCRIBE [EXTENDED|FORMATTED] </span><br><span class="line">  [db_name.]table_name[ col_name ( [.field_name] | [.&apos;$elem$&apos;] | [.&apos;$key$&apos;] | [.&apos;$value$&apos;] )* ];</span><br><span class="line">                                        -- (Note: Hive 1.x.x and 0.x.x only. See &quot;Hive 2.0+: New Syntax&quot; below)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL#LanguageManualDDL-Hive2.0+:SyntaxChange" target="_blank" rel="noopener">Hive 2.0+: New Syntax</a></li>
+</ul>
+<h2 id="10-3-Describe-Partition"><a href="#10-3-Describe-Partition" class="headerlink" title="10.3 Describe Partition"></a>10.3 Describe Partition</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DESCRIBE [EXTENDED|FORMATTED] [db_name.]table_name [column_name] PARTITION partition_spec;</span><br><span class="line">                                        -- (Note: Hive 1.x.x and 0.x.x only. See &quot;Hive 2.0+: New Syntax&quot; below)</span><br></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/hadoop/">hadoop</a><a href="/tags/hive/">hive</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/hive/">hive</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://www.patamon.me/icemimosa/hive/Hive-2_DDL使用/" data-title="Hive-2_DDL使用 | Ice の Mimosa" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev">
+ <a href="/icemimosa/hive/Hive-3_DML使用/" title="Hive-3_DML使用">
+  <strong>PREVIOUS:</strong><br>
+  <span>
+  Hive-3_DML使用</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/icemimosa/hive/Hive-1_安装配置/" title="Hive-1_安装配置">
+ <strong>NEXT:</strong><br> 
+ <span>Hive-1_安装配置
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+<!--PC和WAP自适应版-->
+<div id="SOHUCS" class="comment"></div>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hive-2-DDL使用"><span class="toc-text">Hive-2_DDL使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-DDL-Hive-Data-Definition-Language-概述"><span class="toc-text">1. DDL (Hive Data Definition Language) 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Database-相关"><span class="toc-text">2. Database 相关</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-Create-Database"><span class="toc-text">2.1 Create Database</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-Drop-Database"><span class="toc-text">2.2 Drop Database</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-Alter-Database"><span class="toc-text">2.3 Alter Database</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-Use-Database"><span class="toc-text">2.4 Use Database</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-Table-相关"><span class="toc-text">3. Table 相关</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-Create-Table"><span class="toc-text">3.1 Create Table</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-1-Row-Format-Storage-Format-and-SerDe"><span class="toc-text">3.1.1 Row Format, Storage Format, and SerDe</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-2-Partitioned-Tables"><span class="toc-text">3.1.2 Partitioned Tables</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-3-External-Tables"><span class="toc-text">3.1.3 External Tables</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-4-Create-Table-As-Select"><span class="toc-text">3.1.4 Create Table As Select</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-5-Create-Table-Like"><span class="toc-text">3.1.5 Create Table Like</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-7-Skewed-Tables"><span class="toc-text">3.1.7 Skewed Tables</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-8-Temporary-Tables"><span class="toc-text">3.1.8 Temporary Tables</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-Drop-Table"><span class="toc-text">3.2 Drop Table</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-Truncate-Table"><span class="toc-text">3.3 Truncate Table</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-Alter-Table"><span class="toc-text">3.4 Alter Table</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-1-Rename-Table"><span class="toc-text">3.4.1 Rename Table</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-2-Alter-Table-Properties"><span class="toc-text">3.4.2 Alter Table Properties</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-3-Add-SerDe-Properties"><span class="toc-text">3.4.3 Add SerDe Properties</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-4-Alter-Table-Storage-Properties"><span class="toc-text">3.4.4 Alter Table Storage Properties</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-4-Alter-Table-Skewed-or-Stored-as-Directories"><span class="toc-text">3.4.4 Alter Table Skewed or Stored as Directories</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-5-Alter-Partition"><span class="toc-text">3.5 Alter Partition</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-1-Add-Partitions"><span class="toc-text">3.5.1 Add Partitions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-2-Rename-Partition"><span class="toc-text">3.5.2 Rename Partition</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-3-Exchange-Partition"><span class="toc-text">3.5.3 Exchange Partition</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-4-Recover-Partitions-MSCK-REPAIR-TABLE"><span class="toc-text">3.5.4 Recover Partitions (MSCK REPAIR TABLE)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-5-Drop-Partitions"><span class="toc-text">3.5.5 Drop Partitions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-6-Un-Archive-Partition"><span class="toc-text">3.5.6 (Un)Archive Partition</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-6-Alter-Either-Table-or-Partition"><span class="toc-text">3.6 Alter Either Table or Partition</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6-1-Alter-Table-Partition-File-Format"><span class="toc-text">3.6.1 Alter Table/Partition File Format</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6-2-Alter-Table-Partition-Location"><span class="toc-text">3.6.2 Alter Table/Partition Location</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6-3-Alter-Table-Partition-Touch"><span class="toc-text">3.6.3 Alter Table/Partition Touch</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6-4-Alter-Table-Partition-Protections"><span class="toc-text">3.6.4 Alter Table/Partition Protections</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6-5-Alter-Table-Partition-Compact"><span class="toc-text">3.6.5 Alter Table/Partition Compact</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6-6-Alter-Table-Partition-Concatenate"><span class="toc-text">3.6.6 Alter Table/Partition Concatenate</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-7-Alter-Column"><span class="toc-text">3.7 Alter Column</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-7-1-Change-Column-Name-Type-Position-Comment"><span class="toc-text">3.7.1 Change Column Name/Type/Position/Comment</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-7-2-Add-Replace-Columns"><span class="toc-text">3.7.2 Add/Replace Columns</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-View-相关"><span class="toc-text">4 View 相关</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-Create-View"><span class="toc-text">4.1 Create View</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-Drop-View"><span class="toc-text">4.2 Drop View</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-Alter-View-Properties"><span class="toc-text">4.3 Alter View Properties</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-Alter-View-As-Select"><span class="toc-text">4.4 Alter View As Select</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-Index-相关"><span class="toc-text">5. Index 相关</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-Macro-相关"><span class="toc-text">6. Macro 相关</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-Function-相关"><span class="toc-text">7. Function 相关</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8-Roles-and-Privileges-相关"><span class="toc-text">8. Roles and Privileges 相关</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#9-Show-相关"><span class="toc-text">9. Show 相关</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#9-1-Show-Databases"><span class="toc-text">9.1 Show Databases</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-2-Show-Tables"><span class="toc-text">9.2 Show Tables</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-3-Show-Partitions"><span class="toc-text">9.3 Show Partitions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-4-Show-Table-Partition-Extended"><span class="toc-text">9.4 Show Table/Partition Extended</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-5-Show-Table-Properties"><span class="toc-text">9.5 Show Table Properties</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-6-Show-Create-Table"><span class="toc-text">9.6 Show Create Table</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-7-Show-Columns"><span class="toc-text">9.7 Show Columns</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-8-Show-Indexes"><span class="toc-text">9.8 Show Indexes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-9-Show-Functions"><span class="toc-text">9.9 Show Functions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-10-Show-Granted-Roles-and-Privileges"><span class="toc-text">9.10 Show Granted Roles and Privileges</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-11-Show-Locks"><span class="toc-text">9.11 Show Locks</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-12-Show-Conf"><span class="toc-text">9.12 Show Conf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-13-Show-Transactions"><span class="toc-text">9.13 Show Transactions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-14-Show-Compactions"><span class="toc-text">9.14 Show Compactions</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#10-Describe-相关"><span class="toc-text">10 Describe 相关</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#10-1-Describe-Database"><span class="toc-text">10.1 Describe Database</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-2-Describe-Table-View-Column"><span class="toc-text">10.2 Describe Table/View/Column</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-3-Describe-Partition"><span class="toc-text">10.3 Describe Partition</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list">
+		
+		<a href="http://weibo.com/3699593035" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/IceMimosa" target="_blank" title="github"></a>
+		
+		
+		
+		
+		<a href="mailto:514793425@qq.com" target="_blank" title="email"></a>
+		
+	</div>
+</div>
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hadoop/" title="hadoop">hadoop<sup>2</sup></a></li>
+		
+			<li><a href="/categories/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/categories/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/categories/java/" title="java">java<sup>26</sup></a></li>
+		
+			<li><a href="/categories/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/categories/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/categories/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/categories/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/categories/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/categories/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/categories/sqoop/" title="sqoop">sqoop<sup>3</sup></a></li>
+		
+			<li><a href="/categories/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>2</sup></a></li>
+		
+			<li><a href="/tags/hadoop/" title="hadoop">hadoop<sup>11</sup></a></li>
+		
+			<li><a href="/tags/hbase/" title="hbase">hbase<sup>12</sup></a></li>
+		
+			<li><a href="/tags/hive/" title="hive">hive<sup>11</sup></a></li>
+		
+			<li><a href="/tags/impala/" title="impala">impala<sup>1</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>27</sup></a></li>
+		
+			<li><a href="/tags/kotlin/" title="kotlin">kotlin<sup>1</sup></a></li>
+		
+			<li><a href="/tags/lombok/" title="lombok">lombok<sup>3</sup></a></li>
+		
+			<li><a href="/tags/mac/" title="mac">mac<sup>2</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>1</sup></a></li>
+		
+			<li><a href="/tags/olap/" title="olap">olap<sup>4</sup></a></li>
+		
+			<li><a href="/tags/oozie/" title="oozie">oozie<sup>10</sup></a></li>
+		
+			<li><a href="/tags/pulsar/" title="pulsar">pulsar<sup>1</sup></a></li>
+		
+			<li><a href="/tags/react/" title="react">react<sup>1</sup></a></li>
+		
+			<li><a href="/tags/redis/" title="redis">redis<sup>13</sup></a></li>
+		
+			<li><a href="/tags/spark/" title="spark">spark<sup>5</sup></a></li>
+		
+			<li><a href="/tags/spring/" title="spring">spring<sup>2</sup></a></li>
+		
+			<li><a href="/tags/springboot/" title="springboot">springboot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sqoop/" title="sqoop">sqoop<sup>4</sup></a></li>
+		
+			<li><a href="/tags/数仓/" title="数仓">数仓<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/JavaScript/" style="font-size: 11px;">JavaScript</a> <a href="/tags/hadoop/" style="font-size: 16px;">hadoop</a> <a href="/tags/hbase/" style="font-size: 17px;">hbase</a> <a href="/tags/hive/" style="font-size: 16px;">hive</a> <a href="/tags/impala/" style="font-size: 10px;">impala</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/kotlin/" style="font-size: 10px;">kotlin</a> <a href="/tags/lombok/" style="font-size: 12px;">lombok</a> <a href="/tags/mac/" style="font-size: 11px;">mac</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/olap/" style="font-size: 13px;">olap</a> <a href="/tags/oozie/" style="font-size: 15px;">oozie</a> <a href="/tags/pulsar/" style="font-size: 10px;">pulsar</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/redis/" style="font-size: 18px;">redis</a> <a href="/tags/spark/" style="font-size: 14px;">spark</a> <a href="/tags/spring/" style="font-size: 11px;">spring</a> <a href="/tags/springboot/" style="font-size: 11px;">springboot</a> <a href="/tags/sqoop/" style="font-size: 13px;">sqoop</a> <a href="/tags/数仓/" style="font-size: 13px;">数仓</a> <a href="/tags/源码/" style="font-size: 19px;">源码</a>
+    </div>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer">
+    
+            <p class="copyright"> © 2023 
+		
+		<a href="http://www.patamon.me" target="_blank" title="IceMimosa">IceMimosa</a>
+		
+            <!-- && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a> -->
+            ❖ Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a>
+            </p></div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="/js/jquery-icemi-scroll2top.js"></script>
+<script src="/js/other.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  
+  // 回到顶部
+  $(document.body).scroll2Top({
+    background:"#66ccff",
+    shape:"circle",
+    bottom:40,
+    right:250
+  });
+
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    // m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,332-$(this).scrollTop()));
+  });
+});
+</script>
+
+<!-- GrowingIO Analytics code version 2.1 -->
+<!-- Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com -->
+<script type="text/javascript">
+!function(e,t,n,g,i){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(arguments)},n=t.createElement("script"),tag=t.getElementsByTagName("script")[0],n.async=1,n.src=('https:'==document.location.protocol?'https://':'http://')+g,tag.parentNode.insertBefore(n,tag)}(window,document,"script","assets.growingio.com/2.1/gio.js","gio");
+gio('init','b988cbf13dfaa5ac', {});
+//custom page code begin here
+
+//custom page code end here
+gio('send');
+</script>
+<!-- End GrowingIO Analytics code version: 2.1 -->
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    // t.css('display','none');
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+      ta.css("right", 65);
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top", Math.max(140,380-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<script type="text/javascript"> 
+  (function(){ 
+    var appid = "cyt6xqnNX";
+    var conf = 'prod_97c2bd32b8416b2df1809e56a3f6d431'; 
+    var width = window.innerWidth || document.documentElement.clientWidth; 
+    if (width < 960) { 
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); 
+    } else { 
+      var loadJs = function(d,a) {
+        var c = document.getElementsByTagName("head")[0]||document.head||document.documentElement;
+        var b = document.createElement("script");
+        b.setAttribute("type","text/javascript");
+        b.setAttribute("charset","UTF-8");
+        b.setAttribute("src",d);
+        if(typeof a==="function") {
+          if(window.attachEvent) {
+            b.onreadystatechange = function() {
+              var e = b.readyState;
+              if(e==="loaded"||e==="complete") {
+                b.onreadystatechange=null;
+                a()
+              }
+            }
+          } else {
+            b.onload = a
+          }
+        }
+        c.appendChild(b)};
+        loadJs("https://changyan.sohu.com/upload/changyan.js",
+          function() {
+            window.changyan.api.config({
+              appid: appid, 
+              conf: conf
+            })
+          }
+        ); 
+      } 
+    })();
+</script> 
+
+
+
+
+
+
+<script>
+    
+        var _bdImg = '4';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":240,"vOffset":-45},"mobile":{"show":false},"log":false,"tagMode":false});</script></body>
+</html>
+
